@@ -61,6 +61,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     KeyFactorsTags: typeof import('./components/KeyFactorsTags.vue')['default']
     KnockoutBracket: typeof import('./components/KnockoutBracket.vue')['default']
+    LeaderboardRewardDialog: typeof import('./components/LeaderboardRewardDialog.vue')['default']
     LegendsShowcase: typeof import('./components/LegendsShowcase.vue')['default']
     MatchEventsTimeline: typeof import('./components/MatchEventsTimeline.vue')['default']
     MatchMobileList: typeof import('./components/MatchMobileList.vue')['default']

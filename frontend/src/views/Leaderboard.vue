@@ -164,6 +164,8 @@
         </template>
       </div>
     </div>
+
+    <LeaderboardRewardDialog v-model="showRewardDialog" />
   </div>
 </template>
 
@@ -182,6 +184,8 @@ import { getTeamContribution } from '../api/profile'
 import { authState, fetchMe } from '../stores/authStore'
 import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
+import LeaderboardRewardDialog from '../components/LeaderboardRewardDialog.vue'
+import { shouldShowLeaderboardRewardPrompt } from '../utils/leaderboardRewardPrompt'
 
 const route = useRoute()
 const board = ref('points')
@@ -200,6 +204,7 @@ const accuracyRows = ref<any[]>([])
 const fanRank = ref<{ team: string; fans: number }[]>([])
 const contribution = ref<{ user_id: number; nickname: string; season_points: number; battalion_points?: number }[]>([])
 const loading = ref(false)
+const showRewardDialog = ref(false)
 
 const boardTitle = computed(() => {
   const map: Record<string, string> = {
@@ -305,6 +310,11 @@ onMounted(() => {
   }
   load()
   window.addEventListener('leaderboard-refresh', onLeaderboardRefresh)
+  if (shouldShowLeaderboardRewardPrompt()) {
+    window.setTimeout(() => {
+      showRewardDialog.value = true
+    }, 400)
+  }
 })
 
 onUnmounted(() => {
