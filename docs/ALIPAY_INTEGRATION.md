@@ -31,6 +31,44 @@ ALIPAY_MOCK=false
 
 **沙箱**与**生产**使用不同的 AppID 与证书包；开发时可 `ALIPAY_SANDBOX=true` 配沙箱证书。
 
+## 开放平台产品签约（必做）
+
+同一 AppID / 证书可复用，但需在 [支付宝开放平台](https://open.alipay.com) → 应用 → **产品绑定** 分别开通：
+
+| 产品能力 | 后端接口 | 适用场景 |
+|----------|----------|----------|
+| **电脑网站支付** | `alipay.trade.page.pay` | PC 浏览器 |
+| **手机网站支付** | `alipay.trade.wap.pay` | 手机 Safari / Chrome 等 |
+
+未签约「手机网站支付」时，手机端调用 `wap_pay` 会报产品未开通类错误。
+
+### 应用网关 vs 支付异步通知
+
+| 配置 | 位置 | 说明 |
+|------|------|------|
+| `ALIPAY_NOTIFY_URL` | `backend/.env` | **支付到账关键**：每笔下单带入 `notify_url`，支付宝 POST 到 `/api/pay/alipay/notify` |
+| `ALIPAY_RETURN_URL` | `backend/.env` | 用户付完后浏览器跳回 `/shop/result` |
+| **应用网关** | 开放平台「开发信息」 | 平台级消息通道；**可选**，建议填与 `ALIPAY_NOTIFY_URL` 相同 |
+
+即使不填应用网关，只要 `ALIPAY_NOTIFY_URL` 为公网 HTTPS 且 Nginx 反代正常，支付异步通知仍可用。
+
+## 电脑 vs 手机支付
+
+创建订单 `POST /api/pay/alipay/create` 支持 `pay_channel`：
+
+| 值 | 行为 |
+|----|------|
+| `auto`（默认） | 根据 `User-Agent`：手机 → WAP，电脑 → Page |
+| `page` | 强制电脑网站支付 |
+| `wap` | 强制手机网站支付 |
+
+响应含 `pay_channel`（实际使用的 `page` 或 `wap`）与 `pay_url`。
+
+前端 [`frontend/src/utils/payEnv.ts`](../frontend/src/utils/payEnv.ts)：
+
+- 手机浏览器传 `wap`，电脑传 `page`
+- **微信内置浏览器**拦截跳转，提示用户「在浏览器中打开」
+
 ## 支付流程
 
 ```mermaid
@@ -77,6 +115,8 @@ sequenceDiagram
 | 下单失败 | AppID 与证书不匹配（沙箱/生产混用） |
 | 生产启动报错 | 缺证书文件或未关 `ALIPAY_MOCK` / `ALIPAY_SANDBOX` |
 | notify 无到账 | `ALIPAY_NOTIFY_URL` 非 HTTPS 公网地址，或防火墙拦截 |
+| 手机仍是 PC 收银台 | 未签约「手机网站支付」或前端未传 `pay_channel=wap` |
+| 微信内无法支付 | 预期行为；需用系统浏览器打开站点 |
 
 ## 幂等
 

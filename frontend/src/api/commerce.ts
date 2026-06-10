@@ -1,5 +1,6 @@
 import { apiClient } from './client'
 import type { AuthUser } from '../stores/authStore'
+import type { PayChannel } from '../utils/payEnv'
 
 export interface GameMatch {
   id: number
@@ -404,11 +405,20 @@ export interface OrderDetail {
   alipay_trade_no: string | null
 }
 
-export async function createOrder(productId: number, ageConfirmed = true) {
-  const { data } = await apiClient.post<{ order: { id: number; out_trade_no: string; status: string }; pay_url: string }>(
-    '/api/pay/alipay/create',
-    { product_id: productId, age_confirmed: ageConfirmed }
-  )
+export async function createOrder(
+  productId: number,
+  ageConfirmed = true,
+  payChannel: 'auto' | PayChannel = 'auto',
+) {
+  const { data } = await apiClient.post<{
+    order: { id: number; out_trade_no: string; status: string }
+    pay_url: string
+    pay_channel: PayChannel
+  }>('/api/pay/alipay/create', {
+    product_id: productId,
+    age_confirmed: ageConfirmed,
+    pay_channel: payChannel,
+  })
   return data
 }
 

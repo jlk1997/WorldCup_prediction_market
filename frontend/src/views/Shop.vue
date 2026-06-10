@@ -145,6 +145,7 @@ import PurchaseConfirmDialog from '../components/PurchaseConfirmDialog.vue'
 import PayProcessingOverlay from '../components/PayProcessingOverlay.vue'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildProductGrantPreview, cosmeticPreviewFromProduct } from '../utils/entitlements'
+import { isWeChatBrowser, resolvePayChannel, WECHAT_PAY_HINT } from '../utils/payEnv'
 import { useStadiumStore } from '../stores/stadiumStore'
 
 const AGE_AGREED_KEY = 'wc_shop_age_agreed'
@@ -308,11 +309,19 @@ function onPurchaseConfirmed() {
 
 async function executeBuy(productId: number) {
   if (payProcessing.value) return
+  if (isWeChatBrowser()) {
+    await ElMessageBox.alert(WECHAT_PAY_HINT, '请用浏览器打开', {
+      confirmButtonText: '我知道了',
+      type: 'warning',
+    })
+    return
+  }
   payProcessing.value = true
   payProcessingMessage.value = '正在创建订单…'
   payProcessingHint.value = ''
   try {
-    const { order, pay_url } = await createOrder(productId, ageAgreed.value)
+    const payChannel = resolvePayChannel()
+    const { order, pay_url } = await createOrder(productId, ageAgreed.value, payChannel)
     const isMock = pay_url.includes('mock=1')
 
     if (isMock) {
@@ -330,7 +339,8 @@ async function executeBuy(productId: number) {
     }
 
     payProcessingMessage.value = '正在跳转支付宝…'
-    payProcessingHint.value = '请在支付宝页面完成支付'
+    payProcessingHint.value =
+      payChannel === 'wap' ? '请在支付宝页面完成支付（可唤起支付宝 App）' : '请在支付宝页面完成支付'
     sessionStorage.setItem('wc_pending_out_trade_no', order.out_trade_no)
     window.location.href = pay_url
   } catch (e) {

@@ -569,8 +569,17 @@ def create_alipay_order(
     if not body.age_confirmed:
         raise BadRequestError("请先确认已满 18 周岁并知悉虚拟商品规则")
     rate_limit_pay(user.id)
-    order, pay_url = PaymentService(db).create_order(user.id, body.product_id)
-    return CreatePayResponse(order=OrderOut.model_validate(order), pay_url=pay_url)
+    order, pay_url, channel = PaymentService(db).create_order(
+        user.id,
+        body.product_id,
+        pay_channel=body.pay_channel,
+        user_agent=request.headers.get("user-agent"),
+    )
+    return CreatePayResponse(
+        order=OrderOut.model_validate(order),
+        pay_url=pay_url,
+        pay_channel=channel,
+    )
 
 
 @router_pay.post("/alipay/notify")

@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -285,8 +286,10 @@ class OrderDetailOut(OrderOut):
 class CreateOrderRequest(BaseModel):
     product_id: int
     age_confirmed: bool = Field(description="用户确认已满18周岁并知悉虚拟商品规则")
+    pay_channel: Literal["auto", "page", "wap"] = "auto"
 
 
 class CreatePayResponse(BaseModel):
     order: OrderOut
     pay_url: str
+    pay_channel: Literal["page", "wap"]

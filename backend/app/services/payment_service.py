@@ -9,6 +9,7 @@ from app.core.config import Settings, get_settings
 from app.core.exceptions import BadRequestError, NotFoundError
 from app.db.models.commerce import Order, PaymentNotification, Product, User, UserBadge
 from app.db.repositories.user_repository import UserRepository, WalletRepository
+from app.utils.pay_channel import PayChannel, PayChannelRequest, resolve_pay_channel
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,14 @@ class PaymentService:
             .all()
         )
 
-    def create_order(self, user_id: int, product_id: int) -> tuple[Order, str]:
+    def create_order(
+        self,
+        user_id: int,
+        product_id: int,
+        *,
+        pay_channel: PayChannelRequest = "auto",
+        user_agent: str | None = None,
+    ) -> tuple[Order, str, PayChannel]:
         user = self.db.query(User).filter(User.id == user_id).with_for_update().first()
         if not user:
             raise NotFoundError("用户不存在")
@@ -41,6 +49,8 @@ class PaymentService:
             raise NotFoundError("商品不存在")
         if product.pay_currency == "redeem":
             raise BadRequestError("该商品请使用积分兑换")
+
+        channel = resolve_pay_channel(pay_channel, user_agent)
 
         reuse_cutoff = _utcnow() - timedelta(minutes=self.settings.order_pending_reuse_minutes)
         existing = (
@@ -55,8 +65,8 @@ class PaymentService:
             .first()
         )
         if existing:
-            pay_url = self._build_pay_url(existing, product)
-            return existing, pay_url
+            pay_url = self._build_pay_url(existing, product, channel)
+            return existing, pay_url, channel
 
         out_trade_no = f"WC{datetime.now().strftime('%Y%m%d%H%M%S')}{uuid.uuid4().hex[:8].upper()}"
         order = Order(
@@ -70,8 +80,8 @@ class PaymentService:
         self.db.commit()
         self.db.refresh(order)
 
-        pay_url = self._build_pay_url(order, product)
-        return order, pay_url
+        pay_url = self._build_pay_url(order, product, channel)
+        return order, pay_url, channel
 
     def _build_alipay_client(self):
         from alipay import DCAliPay
@@ -89,19 +99,23 @@ class PaymentService:
             alipay_root_cert_string=root_cert,
         )
 
-    def _build_pay_url(self, order: Order, product: Product) -> str:
+    def _build_pay_url(self, order: Order, product: Product, channel: PayChannel = "page") -> str:
         if self.settings.alipay_mock or not self.settings.alipay_configured:
             return f"{self.settings.alipay_return_url}?mock=1&out_trade_no={order.out_trade_no}"
 
         try:
             alipay = self._build_alipay_client()
-            order_string = alipay.api_alipay_trade_page_pay(
-                out_trade_no=order.out_trade_no,
-                total_amount=f"{order.amount_fen / 100:.2f}",
-                subject=product.name,
-                return_url=self.settings.alipay_return_url,
-                notify_url=self.settings.alipay_notify_url,
-            )
+            pay_kwargs = {
+                "out_trade_no": order.out_trade_no,
+                "total_amount": f"{order.amount_fen / 100:.2f}",
+                "subject": product.name,
+                "return_url": self.settings.alipay_return_url,
+                "notify_url": self.settings.alipay_notify_url,
+            }
+            if channel == "wap":
+                order_string = alipay.api_alipay_trade_wap_pay(**pay_kwargs)
+            else:
+                order_string = alipay.api_alipay_trade_page_pay(**pay_kwargs)
             gateway = (
                 "https://openapi.alipaydev.com/gateway.do"
                 if self.settings.alipay_sandbox
@@ -109,7 +123,7 @@ class PaymentService:
             )
             return f"{gateway}?{order_string}"
         except Exception as exc:
-            logger.exception("Alipay build pay url failed")
+            logger.exception("Alipay build pay url failed channel=%s", channel)
             raise BadRequestError(f"支付初始化失败: {exc}") from exc
 
     def _verify_notify_signature(self, data: dict) -> bool:
