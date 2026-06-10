@@ -97,6 +97,7 @@ import {
   getOrderByTradeNo,
   mockPay,
   pollOrderUntilPaid,
+  syncAlipayOrder,
   type OrderDetail,
 } from '../api/commerce'
 import { getErrorMessage } from '../api/client'
@@ -215,7 +216,12 @@ async function refreshStatus() {
   if (!order.value?.out_trade_no) return
   refreshing.value = true
   try {
-    const detail = await getOrderByTradeNo(order.value.out_trade_no)
+    let detail: OrderDetail
+    try {
+      detail = await syncAlipayOrder(order.value.out_trade_no)
+    } catch {
+      detail = await getOrderByTradeNo(order.value.out_trade_no)
+    }
     order.value = detail
     if (detail.status === 'paid') {
       await afterSuccess(detail)

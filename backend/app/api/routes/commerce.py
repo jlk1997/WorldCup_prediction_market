@@ -590,6 +590,19 @@ async def alipay_notify(request: Request, db: Session = Depends(get_db)):
     return result
 
 
+@router_pay.post("/alipay/sync", response_model=OrderDetailOut)
+def sync_alipay_order(
+    out_trade_no: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """When async notify failed, query Alipay and fulfill if already paid."""
+    rate_limit_pay(user.id)
+    svc = PaymentService(db)
+    order = svc.sync_order_from_alipay(out_trade_no, user.id)
+    return OrderDetailOut.model_validate(svc.order_detail(order))
+
+
 @router_pay.post("/alipay/mock-pay", response_model=OrderDetailOut)
 def mock_pay(
     out_trade_no: str,

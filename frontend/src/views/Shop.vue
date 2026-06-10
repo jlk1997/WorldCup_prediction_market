@@ -136,6 +136,7 @@ import {
   getRedeemProducts,
   getRedeemRules,
   redeemPurchase,
+  syncAlipayOrder,
   type Product,
   type RedeemProduct,
   type RedeemShopRules,
@@ -281,8 +282,28 @@ async function loadRedeem() {
   }
 }
 
+async function syncPendingPayment() {
+  const pendingNo = sessionStorage.getItem('wc_pending_out_trade_no')
+  if (!pendingNo || !authState.accessToken) return
+  try {
+    const detail = await syncAlipayOrder(pendingNo)
+    if (detail.status === 'paid') {
+      sessionStorage.removeItem('wc_pending_out_trade_no')
+      await fetchMe()
+      const grant =
+        detail.coins_grant > 0 ? `，已到账 ${detail.coins_grant} 球迷币` : ''
+      ElMessage.success(`支付成功${grant}`)
+    }
+  } catch {
+    /* still pending or notify not fixed yet */
+  }
+}
+
 async function load() {
-  if (authState.accessToken) await fetchMe()
+  if (authState.accessToken) {
+    await fetchMe()
+    await syncPendingPayment()
+  }
   await Promise.all([loadCash(), loadRedeem()])
 }
 

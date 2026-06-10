@@ -436,6 +436,14 @@ export async function getOrderByTradeNo(outTradeNo: string): Promise<OrderDetail
   return data
 }
 
+/** Ask backend to query Alipay when async notify may have failed. */
+export async function syncAlipayOrder(outTradeNo: string): Promise<OrderDetail> {
+  const { data } = await apiClient.post<OrderDetail>(
+    `/api/pay/alipay/sync?out_trade_no=${encodeURIComponent(outTradeNo)}`,
+  )
+  return data
+}
+
 export type PollOrderResult =
   | { ok: true; order: OrderDetail }
   | { ok: false; reason: 'timeout' | 'failed'; order?: OrderDetail }
@@ -448,6 +456,13 @@ export async function pollOrderUntilPaid(
   const timeoutMs = opts.timeoutMs ?? 30_000
   const deadline = Date.now() + timeoutMs
   let last: OrderDetail | undefined
+
+  try {
+    last = await syncAlipayOrder(outTradeNo)
+    if (last.status === 'paid') return { ok: true, order: last }
+  } catch {
+    // notify may still be in flight; fall through to polling
+  }
 
   while (Date.now() < deadline) {
     last = await getOrderByTradeNo(outTradeNo)

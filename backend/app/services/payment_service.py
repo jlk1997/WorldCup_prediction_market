@@ -65,6 +65,10 @@ class PaymentService:
             .first()
         )
         if existing:
+            if existing.amount_fen != product.price_fen:
+                existing.amount_fen = product.price_fen
+                self.db.commit()
+                self.db.refresh(existing)
             pay_url = self._build_pay_url(existing, product, channel)
             return existing, pay_url, channel
 
@@ -226,6 +230,61 @@ class PaymentService:
 
         self._fulfill_order(order, alipay_trade_no=trade_no)
         return "success"
+
+    def sync_order_from_alipay(self, out_trade_no: str, user_id: int) -> Order:
+        """Query Alipay for payment status and fulfill pending orders (notify fallback)."""
+        if self.settings.alipay_mock or not self.settings.alipay_configured:
+            raise BadRequestError("支付宝未配置，无法同步订单")
+        order = (
+            self.db.query(Order)
+            .filter(Order.out_trade_no == out_trade_no)
+            .with_for_update()
+            .first()
+        )
+        if not order:
+            raise NotFoundError("订单不存在")
+        if order.user_id != user_id:
+            raise BadRequestError("无权操作该订单")
+        if order.status == "paid":
+            self.db.commit()
+            return order
+
+        try:
+            alipay = self._build_alipay_client()
+            result = alipay.api_alipay_trade_query(out_trade_no=out_trade_no)
+        except Exception as exc:
+            logger.exception("Alipay trade query failed out_trade_no=%s", out_trade_no)
+            raise BadRequestError(f"查询支付宝订单失败: {exc}") from exc
+
+        if result.get("code") != "10000":
+            self.db.commit()
+            msg = result.get("sub_msg") or result.get("msg") or "查询失败"
+            raise BadRequestError(f"支付宝未确认支付: {msg}")
+
+        trade_status = result.get("trade_status")
+        if trade_status not in ("TRADE_SUCCESS", "TRADE_FINISHED"):
+            self.db.commit()
+            return order
+
+        if not self._amount_matches_order(
+            order,
+            {"total_amount": result.get("total_amount"), "buyer_pay_amount": result.get("buyer_pay_amount")},
+        ):
+            self.db.commit()
+            logger.error(
+                "Alipay sync amount mismatch order=%s expected_fen=%s got=%s",
+                out_trade_no,
+                order.amount_fen,
+                result.get("total_amount"),
+            )
+            raise BadRequestError("支付金额与订单不一致，请联系客服")
+
+        trade_no = result.get("trade_no") or ""
+        if order.alipay_trade_no and order.alipay_trade_no != trade_no:
+            self.db.commit()
+            raise BadRequestError("支付宝交易号冲突，请联系客服")
+
+        return self._fulfill_order(order, alipay_trade_no=trade_no)
 
     def _fulfill_order(self, order: Order, alipay_trade_no: str) -> Order:
         if order.status == "paid":

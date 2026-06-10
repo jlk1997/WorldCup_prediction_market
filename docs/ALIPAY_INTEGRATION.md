@@ -114,7 +114,8 @@ sequenceDiagram
 | 验签失败 | 使用了密钥模式的支付宝公钥 PEM，而非三份证书 |
 | 下单失败 | AppID 与证书不匹配（沙箱/生产混用） |
 | 生产启动报错 | 缺证书文件或未关 `ALIPAY_MOCK` / `ALIPAY_SANDBOX` |
-| notify 无到账 | `ALIPAY_NOTIFY_URL` 非 HTTPS 公网地址，或防火墙拦截 |
+| notify 无到账 | `ALIPAY_NOTIFY_URL` 非 HTTPS 公网地址，或防火墙拦截；或缺少 `python-multipart`（见 `requirements.txt`） |
+| 已付款但订单仍 pending | 先 `pip install python-multipart` 并重启 API；支付宝会重试 notify；或登录后调用 `POST /api/pay/alipay/sync?out_trade_no=订单号` 主动查单补账 |
 | 手机仍是 PC 收银台 | 未签约「手机网站支付」或前端未传 `pay_channel=wap` |
 | 微信内无法支付 | 预期行为；需用系统浏览器打开站点 |
 
