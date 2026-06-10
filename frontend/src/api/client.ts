@@ -1,6 +1,7 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import type { ApiErrorBody } from '../types/api'
 import { getAccessToken, logout, refreshSession } from '../stores/authStore'
+import { isRateLimited, pauseForRateLimit, rateLimitMessageFromBody } from './rateLimitGuard'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:10086'
 
@@ -10,6 +11,9 @@ export const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (isRateLimited()) {
+    return Promise.reject(new Error('请求过于频繁，请稍后再试'))
+  }
   const token = getAccessToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -42,7 +46,13 @@ apiClient.interceptors.response.use(
       }
     }
 
+    const rateMsg = rateLimitMessageFromBody(error.response?.data)
+    if (rateMsg) {
+      pauseForRateLimit()
+    }
+
     const message =
+      rateMsg ||
       error.response?.data?.message ||
       error.message ||
       '网络请求失败，请检查后端是否已启动'

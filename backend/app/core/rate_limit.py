@@ -112,7 +112,14 @@ def rate_limit_referral_register(inviter_id: int, ip: str | None, *, limit: int 
 
 
 def rate_limit_global_ip(request: Request) -> None:
-    check_rate_limit(f"rl:global:ip:{client_ip(request)}", limit=120, window_sec=60)
+    from app.core.config import get_settings
+
+    settings = get_settings()
+    check_rate_limit(
+        f"rl:global:ip:{client_ip(request)}",
+        limit=settings.global_rate_limit_per_minute,
+        window_sec=settings.global_rate_limit_window_sec,
+    )
 
 
 def reset_rate_limit_memory() -> None:

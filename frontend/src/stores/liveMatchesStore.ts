@@ -1,10 +1,12 @@
 import { ref } from 'vue'
 import { apiClient } from '@/api/client'
+import { isRateLimited } from '@/api/rateLimitGuard'
 import type { LiveMatch } from '@/types/api'
 
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:10086/ws/live'
-const POLL_FAST_MS = 30_000
-const POLL_SLOW_MS = 90_000
+const POLL_FAST_MS = 45_000
+const POLL_SLOW_MS = 120_000
+const POLL_BACKOFF_MS = 120_000
 
 export function mergeLiveMatches(prev: LiveMatch[], incoming: LiveMatch[]): LiveMatch[] {
   if (!incoming.length) return prev
@@ -32,9 +34,30 @@ let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 let reconnectDelay = 3000
 let started = false
+let pollBackoffUntil = 0
+let tabVisible = typeof document !== 'undefined' ? !document.hidden : true
 
 function currentPollMs() {
+  if (Date.now() < pollBackoffUntil || isRateLimited()) return POLL_BACKOFF_MS
   return wsConnected.value ? POLL_SLOW_MS : POLL_FAST_MS
+}
+
+function onVisibilityChange() {
+  tabVisible = !document.hidden
+  if (tabVisible && started && subscriberCount > 0) {
+    void fetchMatches({ silent: true })
+  }
+  resetPollTimer()
+}
+
+function bindVisibility() {
+  if (typeof document === 'undefined') return
+  document.addEventListener('visibilitychange', onVisibilityChange)
+}
+
+function unbindVisibility() {
+  if (typeof document === 'undefined') return
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 }
 
 function resetPollTimer() {
@@ -46,14 +69,23 @@ function resetPollTimer() {
 }
 
 async function fetchMatches(opts?: { silent?: boolean; forceLoading?: boolean }) {
+  if (!tabVisible && !opts?.forceLoading) return
+  if (isRateLimited()) return
   const silent = opts?.silent ?? wsConnected.value
   if (!silent || opts?.forceLoading) loading.value = true
   error.value = null
   try {
     const res = await apiClient.get<LiveMatch[]>('/api/live/matches')
     matches.value = mergeLiveMatches(matches.value, res.data)
+    pollBackoffUntil = 0
+    resetPollTimer()
   } catch (e) {
-    error.value = e instanceof Error ? e.message : '加载失败'
+    const msg = e instanceof Error ? e.message : '加载失败'
+    error.value = msg
+    if (/过于频繁|too many requests|rate limit/i.test(msg)) {
+      pollBackoffUntil = Date.now() + POLL_BACKOFF_MS
+      resetPollTimer()
+    }
   } finally {
     if (!silent || opts?.forceLoading) loading.value = false
   }
@@ -105,11 +137,10 @@ function connectWebSocket() {
 function startLiveMatches() {
   if (started) return
   started = true
+  bindVisibility()
   void fetchMatches({ forceLoading: true })
   connectWebSocket()
-  timer = setInterval(() => {
-    void fetchMatches({ silent: wsConnected.value })
-  }, currentPollMs())
+  resetPollTimer()
 }
 
 function stopLiveMatches() {
@@ -122,6 +153,7 @@ function stopLiveMatches() {
     reconnectTimer = null
   }
   closeWebSocket(1000, 'page leave')
+  unbindVisibility()
   started = false
 }
 

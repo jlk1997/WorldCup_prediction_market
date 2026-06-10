@@ -6,7 +6,7 @@
     :show-close="true"
     :close-on-click-modal="false"
     class="onboarding-dialog"
-    @closed="finish"
+    @closed="onDialogClosed"
   >
     <template #header>
       <div class="onboard-header">
@@ -66,14 +66,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, type Component } from 'vue'
+import { ref, type Component } from 'vue'
 import { useRouter } from 'vue-router'
 import { DataBoard, Trophy, MagicStick, View, Share } from '@element-plus/icons-vue'
 
 const STORAGE_KEY = 'wc2026_onboarded'
+const STEP_KEY = 'wc2026_tour_step'
 const router = useRouter()
 const visible = ref(true)
-const step = ref(0)
+
+function readStep() {
+  const raw = sessionStorage.getItem(STEP_KEY)
+  const n = raw ? Number.parseInt(raw, 10) : 0
+  return Number.isFinite(n) && n >= 0 && n < 5 ? n : 0
+}
+
+const step = ref(readStep())
+
+function saveStep(value: number) {
+  sessionStorage.setItem(STEP_KEY, String(value))
+}
 
 interface TourStep {
   title: string
@@ -130,6 +142,7 @@ const steps: TourStep[] = [
 const routes = ['/', '/live', '/agent', '/', '/invite']
 
 function finish() {
+  sessionStorage.removeItem(STEP_KEY)
   localStorage.setItem(STORAGE_KEY, '1')
 }
 
@@ -141,12 +154,14 @@ function skip() {
 function prev() {
   if (step.value > 0) {
     step.value -= 1
+    saveStep(step.value)
     router.push(routes[step.value] || '/')
   }
 }
 
 function goStep(i: number) {
   step.value = i
+  saveStep(i)
   router.push(routes[i] || '/')
 }
 
@@ -158,12 +173,13 @@ function next() {
     return
   }
   step.value += 1
+  saveStep(step.value)
   router.push(routes[step.value] || '/')
 }
 
-watch(visible, (open) => {
-  if (!open) finish()
-})
+function onDialogClosed() {
+  finish()
+}
 </script>
 
 <style scoped>

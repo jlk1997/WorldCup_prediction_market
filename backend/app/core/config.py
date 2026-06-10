@@ -61,6 +61,8 @@ class Settings(BaseSettings):
     )
     redis_url: str = ""
     trusted_proxy_count: int = 0
+    global_rate_limit_per_minute: int = 300
+    global_rate_limit_window_sec: int = 60
     agent_max_steps: int = 8
     agent_default_mode: str = "pre_match"
     agent_enable_tool_loop: bool = False
