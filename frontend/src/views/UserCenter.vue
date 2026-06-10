@@ -364,7 +364,7 @@ import {
 import { getQuizToday, answerQuiz as submitQuizAnswer } from '../api/profile'
 import { getUnreadNotificationCount } from '../api/notifications'
 import { getReferralMe, type ReferralMe } from '../api/referral'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 import { scrollMeFocus } from '../utils/dailyActionNav'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import {
@@ -474,7 +474,7 @@ async function changeNickname() {
     ElMessage.success('昵称已更新，已扣除 20 球迷币')
     await load()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     nickLoading.value = false
   }
@@ -520,7 +520,7 @@ async function reloadQuiz() {
     quiz.value = await getQuizToday()
     quizLoadFailed.value = false
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 
@@ -537,7 +537,7 @@ async function doSignin() {
     const battalionMsg = battalion ? ` · +${battalion} 军团贡献` : ''
     ElMessage.success(`签到成功，+${res.added} 球迷币${bonus}${streakMsg}${chestMsg}${battalionMsg}`)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 
@@ -553,7 +553,7 @@ async function answerQuiz(idx: number) {
         : '答错了，明天再来',
     )
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 

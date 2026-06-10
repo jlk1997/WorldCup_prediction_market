@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.routes import agent, arena, commerce, health, legal, live, news, players, predictions, profile, referral, schedule, stats, sync, teams, websocket
 from app.core.config import get_settings
-from app.core.exceptions import AppError
+from app.core.exceptions import AppError, RateLimitError, rate_limit_error_body
 from app.core.middleware import GlobalRateLimitMiddleware, RequestLoggingMiddleware, SecurityHeadersMiddleware, setup_logging
 
 logger = logging.getLogger(__name__)
@@ -145,6 +145,12 @@ def create_app() -> FastAPI:
 
     @app.exception_handler(AppError)
     async def app_error_handler(_: Request, exc: AppError):
+        if isinstance(exc, RateLimitError):
+            return JSONResponse(
+                status_code=exc.status_code,
+                content=rate_limit_error_body(exc),
+                headers={"Retry-After": str(exc.retry_after_sec)},
+            )
         return JSONResponse(
             status_code=exc.status_code,
             content={"status": "error", "message": exc.message},

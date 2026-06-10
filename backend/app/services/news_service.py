@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
+
 from sqlalchemy.orm import Session
 
 from app.core.cache import cache_get, cache_set
+from app.core.config import get_settings
 from app.db.models import Team
 from app.db.models.commerce import User
 from app.db.repositories.match_repository import NewsRepository
@@ -18,6 +21,11 @@ class NewsService:
     def __init__(self, db: Session):
         self.db = db
         self.repo = NewsRepository(db)
+        self.settings = get_settings()
+
+    def list_cutoff(self) -> datetime:
+        days = max(self.settings.news_max_age_days, 1)
+        return datetime.utcnow() - timedelta(days=days)
 
     def list_articles(
         self,
@@ -41,6 +49,7 @@ class NewsService:
             lang=lang,
             prioritize=prioritize or None,
             fetch_cap=NEWS_FETCH_CAP,
+            since=self.list_cutoff(),
         )
         main, sub = (prioritize[0], prioritize[1]) if len(prioritize) >= 2 else (
             (prioritize[0], None) if prioritize else (None, None)
@@ -63,6 +72,12 @@ class NewsService:
         ]
         cache_set(cache_key, out, NEWS_LIST_CACHE_TTL)
         return out
+
+    def lang_stats(self) -> dict[str, int]:
+        counts = self.repo.count_by_lang(since=self.list_cutoff())
+        en = counts.get("en", 0)
+        zh = counts.get("zh", 0)
+        return {"en": en, "zh": zh, "total": en + zh}
 
     def _prioritize_teams(self, user: User | None) -> tuple[str, ...]:
         if not user:

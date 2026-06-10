@@ -141,7 +141,7 @@ import {
   type RedeemProduct,
   type RedeemShopRules,
 } from '../api/commerce'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 import PurchaseConfirmDialog from '../components/PurchaseConfirmDialog.vue'
 import PayProcessingOverlay from '../components/PayProcessingOverlay.vue'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
@@ -269,7 +269,7 @@ async function loadCash() {
   try {
     cashProducts.value = await getProducts()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loadingCash.value = false
   }
@@ -282,7 +282,7 @@ async function loadRedeem() {
     redeemProducts.value = products
     redeemRules.value = rules
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loadingRedeem.value = false
   }
@@ -373,7 +373,7 @@ async function executeBuy(productId: number) {
     sessionStorage.setItem(PENDING_ORDER_KEY, order.out_trade_no)
     window.location.href = pay_url
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     payProcessing.value = false
   }
@@ -387,7 +387,7 @@ async function redeem(p: RedeemProduct) {
     const stockMsg = res.stock_remaining != null ? ` · 全服剩余 ${res.stock_remaining}` : ''
     ElMessage.success(`兑换成功！已获得 ${grantSummary(p)} · 剩余 ${res.redeem_points_after} 可用积分${stockMsg}`)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 

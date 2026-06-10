@@ -5,10 +5,11 @@ import uuid
 from collections.abc import Callable
 
 from fastapi import Request, Response
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.core.exceptions import BadRequestError
-from app.core.rate_limit import rate_limit_global_ip
+from app.core.exceptions import RateLimitError, rate_limit_error_body
+from app.core.rate_limit import client_ip, rate_limit_global_ip
 
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 
@@ -64,11 +65,17 @@ class GlobalRateLimitMiddleware(BaseHTTPMiddleware):
         if path.startswith("/api") and path not in _SKIP_GLOBAL_RL:
             try:
                 rate_limit_global_ip(request)
-            except BadRequestError as exc:
-                return Response(
-                    content='{"status":"error","message":"' + exc.message + '"}',
+            except RateLimitError as exc:
+                logger.warning(
+                    "global rate limit path=%s ip=%s msg=%s",
+                    path,
+                    client_ip(request),
+                    exc.message,
+                )
+                return JSONResponse(
                     status_code=exc.status_code,
-                    media_type="application/json",
+                    content=rate_limit_error_body(exc),
+                    headers={"Retry-After": str(exc.retry_after_sec)},
                 )
         return await call_next(request)
 

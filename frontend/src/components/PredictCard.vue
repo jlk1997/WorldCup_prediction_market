@@ -32,7 +32,8 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { submitPrediction, getPredictableMatches } from '../api/commerce'
 import { authState, fetchMe } from '../stores/authStore'
-import { getErrorMessage } from '../api/client'
+import { getErrorMessage, isRateLimitError } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 const props = defineProps<{ matchId: number; aiPick?: string }>()
 
@@ -100,6 +101,8 @@ async function submit() {
     userFree.value = useFree.value
     userStatus.value = 'pending'
   } catch (e) {
+    showApiError(e)
+    if (isRateLimitError(e) && e.notified) return
     const msg = getErrorMessage(e)
     errorMsg.value = msg
     if (msg.includes('已竞猜过')) {

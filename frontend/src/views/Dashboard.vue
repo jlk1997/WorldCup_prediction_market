@@ -659,7 +659,7 @@ onMounted(async () => {
 /* ======= 顶部统计条 ======= */
 .stats-strip {
   position: absolute;
-  top: 52px;
+  top: 12px;
   left: 20px;
   right: 20px;
   z-index: 25;
@@ -1724,7 +1724,7 @@ onMounted(async () => {
   }
 
   .stats-strip {
-    top: calc(var(--wc-mobile-header-height) + 4px);
+    top: 8px;
     left: 8px;
     right: 8px;
     flex-direction: row;
@@ -1743,13 +1743,13 @@ onMounted(async () => {
   }
 
   .focus-section {
-    padding-top: 88px;
+    padding-top: 64px;
     overflow: visible;
     min-height: auto;
   }
 
   .focus-section.lineup-open {
-    padding-top: 88px;
+    padding-top: 64px;
   }
 
   .focus-title {

@@ -55,10 +55,15 @@ class Settings(BaseSettings):
 
     news_rss_feeds: str = "https://feeds.bbci.co.uk/sport/football/rss.xml"
     news_rss_feeds_en: str = ""
+    # 中文源优先足球专项；综合体育源入库时会做足球关键词过滤
     news_rss_feeds_zh: str = (
+        "https://rsshub.rssforever.com/hupu/soccer,"
         "http://www.people.com.cn/rss/sports.xml,"
         "https://www.chinanews.com.cn/rss/sports.xml"
     )
+    news_max_age_days: int = 30
+    news_ingest_max_age_days: int = 14
+    news_retention_days: int = 90
     redis_url: str = ""
     trusted_proxy_count: int = 0
     global_rate_limit_per_minute: int = 300

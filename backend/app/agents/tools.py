@@ -83,7 +83,10 @@ class AgentTools:
         }
 
     def search_news(self, teams: list[str], days: int = 7) -> list[dict]:
-        items = NewsRepository(self.db).list_recent(limit=20)
+        from datetime import datetime, timedelta
+
+        since = datetime.utcnow() - timedelta(days=max(days, 1))
+        items = NewsRepository(self.db).list_recent(limit=20, since=since)
         result = []
         for n in items:
             if n.team_tags and any(t in (n.team_tags or []) for t in teams):

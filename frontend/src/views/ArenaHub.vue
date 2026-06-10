@@ -162,7 +162,7 @@ import {
   type StarHeatRow,
 } from '../api/arena'
 import { fetchMe } from '../stores/authStore'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 const loading = ref(false)
 const overview = ref<Awaited<ReturnType<typeof getArenaOverview>> | null>(null)
@@ -192,7 +192,7 @@ async function load() {
     await loadStars()
     accuracyRows.value = await getStarAccuracy()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }
@@ -210,7 +210,7 @@ async function doBoostStar(playerId: number) {
     ElMessage.success('球星应援成功')
     await load()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 
@@ -221,7 +221,7 @@ async function doRally() {
     ElMessage.success('动员成功')
     await load()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 

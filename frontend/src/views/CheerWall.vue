@@ -111,7 +111,7 @@ import { getCheerStatus, submitCheer } from '../api/profile'
 import { boostCheerExtra } from '../api/arena'
 import { authState, fetchMe } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 const route = useRoute()
 const loading = ref(false)
@@ -153,7 +153,7 @@ async function load() {
     if (authState.accessToken) await fetchProfileStatus()
     status.value = await getCheerStatus(id)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }
@@ -166,7 +166,7 @@ async function cheer(teamId: number) {
     await fetchProfileStatus(true)
     ElMessage.success('助威成功！+10 助威值 · +10 军团贡献')
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 
@@ -177,7 +177,7 @@ async function cheerExtra() {
     await fetchMe()
     ElMessage.success('助威加码成功 +20 军团贡献')
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   }
 }
 

@@ -134,7 +134,7 @@ import {
   type ReferralRules,
   type InviteeJourneyStep,
 } from '../api/referral'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 import { downloadSharePoster } from '../utils/sharePoster'
 import { formatMilestoneReward, milestoneLabel } from '../utils/referralRules'
 
@@ -182,7 +182,7 @@ async function load() {
     rules.value = rulesData
     trackRankChange(meData.weekly_rank?.rank)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }

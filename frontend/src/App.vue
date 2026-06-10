@@ -4,11 +4,16 @@
 
     <el-container class="layout-container">
       <el-header class="app-header safe-area-top">
-        <router-link to="/" class="logo" aria-label="最后一舞 世界杯2026 首页">
+        <router-link
+          to="/"
+          class="logo"
+          :class="{ 'logo--mobile': isMobile }"
+          aria-label="最后一舞 世界杯2026 首页"
+        >
           <AppLogo class="logo-img" />
           <div class="brand-text">
             <span class="title-main">最后一舞</span>
-            <span class="title-sub">世界杯2026</span>
+            <span v-if="!isMobile" class="title-sub">世界杯2026</span>
           </div>
         </router-link>
 
@@ -40,50 +45,47 @@
 
           <!-- 移动端精简顶栏 -->
           <div v-if="isMobile" class="mobile-header-actions hide-desktop-flex">
-            <button
-              v-if="isLoggedIn"
-              type="button"
-              class="mobile-avatar-chip touch-target"
-              :class="avatarFrameClass"
-              aria-label="进入球迷中心"
-              @click="router.push('/me')"
-            >
-              <span class="mobile-avatar-letter">{{ mobileAvatarInitial }}</span>
-              <span v-if="passActive" class="pass-badge">通</span>
-            </button>
-            <button
-              v-if="isLoggedIn"
-              type="button"
-              class="mobile-balance-chip touch-target"
-              aria-label="球迷币与积分，点击进入商城"
-              @click="router.push('/shop')"
-            >
-              <span class="balance-row">
-                <span class="coin-icon">🪙</span>
-                <span class="coins">{{ authState.user?.fan_coins ?? 0 }}</span>
-              </span>
-              <span class="balance-row sub">
-                <span class="pts-label">可用分</span>
-                <span class="redeem-pts">{{ authState.user?.redeem_points ?? 0 }}</span>
-              </span>
-            </button>
-            <el-button v-else type="primary" plain size="small" @click="router.push('/login')">登录</el-button>
-            <button
-              v-if="showProfileHeaderChip"
-              type="button"
-              class="mobile-profile-chip touch-target"
-              @click="router.push('/onboarding')"
-            >
-              完善档案
-            </button>
+            <div class="mobile-header-scroll">
+              <button
+                v-if="isLoggedIn"
+                type="button"
+                class="mobile-avatar-chip touch-target"
+                :class="avatarFrameClass"
+                aria-label="进入球迷中心"
+                @click="router.push('/me')"
+              >
+                <span class="mobile-avatar-letter">{{ mobileAvatarInitial }}</span>
+                <span v-if="passActive" class="pass-badge">通</span>
+              </button>
+              <button
+                v-if="isLoggedIn"
+                type="button"
+                class="mobile-balance-chip touch-target"
+                aria-label="球迷币与积分，点击进入商城"
+                @click="router.push('/shop')"
+              >
+                <span class="balance-row">
+                  <span class="coin-icon">🪙</span>
+                  <span class="coins">{{ authState.user?.fan_coins ?? 0 }}</span>
+                  <span class="balance-divider">·</span>
+                  <span class="pts-inline">{{ authState.user?.redeem_points ?? 0 }} 分</span>
+                </span>
+              </button>
+              <el-button v-else type="primary" plain size="small" class="mobile-login-btn" @click="router.push('/login')">
+                登录
+              </el-button>
+            </div>
             <button
               type="button"
               class="mobile-more-btn touch-target"
-              aria-label="更多菜单"
+              :class="{ 'has-alert': showProfileHeaderChip }"
+              aria-label="打开更多菜单"
               @click="moreOpen = true"
             >
-              <el-icon :size="20"><Menu /></el-icon>
-              <span class="more-label">更多</span>
+              <span class="more-icon-bars" aria-hidden="true">
+                <span /><span /><span />
+              </span>
+              <span class="more-label">菜单</span>
             </button>
           </div>
 
@@ -132,6 +134,8 @@
         </div>
       </el-header>
 
+      <RateLimitBanner />
+
       <el-main
         class="main-content safe-area-bottom"
         :class="{
@@ -173,6 +177,7 @@ import PredictSettlementNotifier from './components/PredictSettlementNotifier.vu
 import ReferralNotifier from './components/ReferralNotifier.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
 import MobileMoreDrawer from './components/MobileMoreDrawer.vue'
+import RateLimitBanner from './components/RateLimitBanner.vue'
 import { useBreakpoint } from './composables/useBreakpoint'
 import { authState, isLoggedIn, initAuth, fetchMe } from './stores/authStore'
 import { fetchPaidPendingOrder } from './api/commerce'
@@ -282,8 +287,11 @@ function onNav(path: string) {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(10, 12, 24, 0.88);
+  flex-shrink: 0;
+  min-height: var(--wc-header-height);
+  background: rgba(10, 12, 24, 0.92);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid transparent;
   border-image: linear-gradient(
     90deg,
@@ -294,8 +302,10 @@ function onNav(path: string) {
   ) 1;
   padding: 0 40px;
   height: var(--wc-header-height);
-  position: relative;
-  z-index: 100;
+  position: sticky;
+  top: 0;
+  z-index: 400;
+  overflow: visible;
 }
 
 .el-main {
@@ -364,20 +374,56 @@ function onNav(path: string) {
   flex: 1;
   justify-content: flex-end;
   min-width: 0;
+  overflow: hidden;
+}
+
+.logo--mobile {
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.logo--mobile .title-main {
+  font-size: 16px;
+  letter-spacing: 2px;
+  white-space: nowrap;
 }
 
 .mobile-header-actions {
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-left: auto;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  justify-content: flex-end;
+}
+
+.mobile-header-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-right: 2px;
+}
+
+.mobile-header-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-login-btn {
+  flex-shrink: 0;
 }
 
 .mobile-balance-chip {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   gap: 2px;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 12px;
   border: 1px solid rgba(212, 165, 116, 0.4);
   background: rgba(14, 16, 32, 0.92);
@@ -385,8 +431,8 @@ function onNav(path: string) {
   cursor: pointer;
   font-size: 12px;
   line-height: 1.2;
-  flex-shrink: 1;
-  min-width: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .balance-row {
@@ -396,7 +442,18 @@ function onNav(path: string) {
 }
 
 .balance-row.sub {
-  opacity: 0.95;
+  display: none;
+}
+
+.balance-divider {
+  color: rgba(212, 165, 116, 0.45);
+  margin: 0 2px;
+}
+
+.pts-inline {
+  color: #f0a0b0;
+  font-weight: 700;
+  font-size: 11px;
 }
 
 .coin-icon {
@@ -470,27 +527,61 @@ function onNav(path: string) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 4px 8px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(212, 165, 116, 0.55);
-  background: linear-gradient(180deg, rgba(212, 165, 116, 0.22), rgba(212, 165, 116, 0.08));
-  color: var(--wc-accent-gold-light);
+  gap: 2px;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 4px 6px;
+  border-radius: 14px;
+  border: 2px solid rgba(232, 200, 138, 0.75);
+  background: linear-gradient(165deg, rgba(212, 165, 116, 0.42), rgba(139, 41, 66, 0.28));
+  color: #fff8ee;
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: 0 0 14px rgba(212, 165, 116, 0.2);
+  box-shadow:
+    0 2px 14px rgba(212, 165, 116, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  position: relative;
+  z-index: 2;
+}
+
+.more-icon-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 18px;
+}
+
+.more-icon-bars span {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #f5e6c8, var(--wc-accent-gold));
 }
 
 .mobile-more-btn .more-label {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.5px;
+  color: #f5e6c8;
+}
+
+.mobile-more-btn.has-alert::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f56c6c;
+  border: 1.5px solid rgba(10, 12, 24, 0.9);
+  box-shadow: 0 0 6px rgba(245, 108, 108, 0.65);
 }
 
 .mobile-more-btn:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 .mobile-profile-chip {
@@ -631,7 +722,22 @@ function onNav(path: string) {
 @media (max-width: 768px) {
   .app-header {
     height: var(--wc-mobile-header-height);
-    padding: 0 10px;
+    min-height: var(--wc-mobile-header-height);
+    padding: 0 8px 0 10px;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+  }
+
+  .layout-container {
+    /* 防止 flex 子项把顶栏挤没 */
+    min-height: 0;
+  }
+
+  .layout-container > .el-header {
+    flex: 0 0 auto !important;
+    height: auto !important;
   }
 
   .tablet-nav {

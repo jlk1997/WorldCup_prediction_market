@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import desc, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.db.models import DataSyncLog, Match, NewsArticle
@@ -71,6 +71,10 @@ class MatchRepository:
 
 
 class NewsRepository:
+    @staticmethod
+    def _effective_date():
+        return func.coalesce(NewsArticle.published_at, NewsArticle.created_at)
+
     def __init__(self, db: Session):
         self.db = db
 
@@ -81,12 +85,14 @@ class NewsRepository:
         lang: str | None = None,
         prioritize: tuple[str, ...] | None = None,
         fetch_cap: int = 100,
+        since=None,
     ) -> list[NewsArticle]:
-        stmt = select(NewsArticle).order_by(
-            desc(NewsArticle.published_at), desc(NewsArticle.id)
-        )
+        effective = self._effective_date()
+        stmt = select(NewsArticle).order_by(desc(effective), desc(NewsArticle.id))
         if lang and lang != "all":
             stmt = stmt.where(NewsArticle.lang == lang)
+        if since is not None:
+            stmt = stmt.where(effective >= since)
 
         if team:
             stmt = stmt.where(NewsArticle.team_tags.contains([team]))
@@ -102,6 +108,22 @@ class NewsRepository:
         stmt = stmt.limit(limit)
         return list(self.db.scalars(stmt).all())
 
+    def count_by_lang(self, *, since=None) -> dict[str, int]:
+        effective = self._effective_date()
+        stmt = select(NewsArticle.lang, func.count(NewsArticle.id)).group_by(NewsArticle.lang)
+        if since is not None:
+            stmt = stmt.where(effective >= since)
+        rows = self.db.execute(stmt).all()
+        return {lang: cnt for lang, cnt in rows}
+
+    @staticmethod
+    def _article_timestamp(article: NewsArticle) -> float:
+        if article.published_at:
+            return article.published_at.timestamp()
+        if article.created_at:
+            return article.created_at.timestamp()
+        return 0.0
+
     @staticmethod
     def _sort_by_teams(items: list[NewsArticle], prioritize: tuple[str, ...]) -> list[NewsArticle]:
         def score(article: NewsArticle) -> int:
@@ -113,8 +135,10 @@ class NewsRepository:
             return best
 
         def sort_key(article: NewsArticle) -> tuple:
-            pub = article.published_at.timestamp() if article.published_at else 0
-            return (-score(article), -pub, -article.id)
+            pub = NewsRepository._article_timestamp(article)
+            # 时间优先，主队标签最多往前推 6 小时
+            boosted = pub + score(article) * 6 * 3600
+            return (-boosted, -article.id)
 
         return sorted(items, key=sort_key)
 

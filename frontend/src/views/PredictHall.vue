@@ -346,7 +346,8 @@ import { getPredictableMatches, submitPrediction, raisePredictionStake, getDaily
 
 import { calcPredictPreview, formatPredictPreviewText } from '../utils/predictPreview'
 
-import { getErrorMessage } from '../api/client'
+import { getErrorMessage, isRateLimitError } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 import FanRecommendationsBar from '../components/FanRecommendationsBar.vue'
 import DailyRitualPanel from '../components/DailyRitualPanel.vue'
@@ -529,6 +530,8 @@ async function raiseStake(matchId: number) {
     ElMessage.success(`已追加质押 ${amount} 币，当前共 ${(m.user_stake_coins ?? 0) + amount} 币`)
     await load({ silent: true })
   } catch (e) {
+    showApiError(e)
+    if (isRateLimitError(e) && e.notified) return
     const msg = getErrorMessage(e)
     raiseErrors[matchId] = msg
     if (isCoinRelatedError(msg)) {
@@ -555,7 +558,7 @@ async function doSignin() {
     dailyStatus.value = await getDailyStatus().catch(() => null)
     ElMessage.success(`签到成功 +${res.added} 币${res.streak_bonus ? ` · 连签奖励 +${res.streak_bonus}` : ''}`)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     signingIn.value = false
   }
@@ -604,7 +607,7 @@ async function load(options: { silent?: boolean } = {}) {
       if (!m.user_predicted) updatePreview(m.id)
     }
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
 
   } finally {
 
@@ -686,6 +689,8 @@ async function submit(matchId: number) {
     dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
     await load({ silent: true })
   } catch (e) {
+    showApiError(e)
+    if (isRateLimitError(e) && e.notified) return
     const msg = getErrorMessage(e)
     submitErrors[matchId] = msg
     if (msg.includes('已竞猜过')) {

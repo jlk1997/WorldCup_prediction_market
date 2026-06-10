@@ -345,7 +345,8 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 
 import { ElMessage, ElNotification } from 'element-plus'
 
-import { apiClient, getErrorMessage } from '@/api/client'
+import { apiClient, getErrorMessage, isRateLimitError } from '@/api/client'
+import { showApiError } from '@/utils/errorHandler'
 
 import {
   streamAgentAnalyze,
@@ -824,7 +825,7 @@ async function loadRun(id: number) {
 
   } catch (e) {
 
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
 
   } finally {
 
@@ -982,6 +983,10 @@ async function runAnalysis(fromAuto = false) {
 
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
+      return
+    }
+    if (isRateLimitError(e) && e.notified) {
+      streamError.value = getErrorMessage(e)
       return
     }
     const msg = formatAnalyzeError(getErrorMessage(e))

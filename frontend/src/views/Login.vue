@@ -67,7 +67,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { authState, isLoggedIn, sendCode, verifyCode } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 import { previewReferralCode, type ReferralPreview } from '../api/referral'
 import LegendsShowcase from '../components/LegendsShowcase.vue'
@@ -159,7 +159,7 @@ async function onSendCode() {
     code.value = ''
     ElMessage.success('验证码已发送到邮箱，请查收（含垃圾箱）')
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }
@@ -197,7 +197,7 @@ async function onVerify() {
     }
     await redirectAfterAuth(!!data.referral?.bound)
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
     verifying.value = false

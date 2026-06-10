@@ -38,18 +38,11 @@ def list_news(
 
 @router.get("/stats")
 def news_stats(db: Session = Depends(get_db)):
-    """Counts by language for UI tabs."""
-    from sqlalchemy import func
-
-    from app.db.models import NewsArticle
-
-    rows = db.query(NewsArticle.lang, func.count(NewsArticle.id)).group_by(NewsArticle.lang).all()
-    counts = {lang: cnt for lang, cnt in rows}
-    return {
-        "en": counts.get("en", 0),
-        "zh": counts.get("zh", 0),
-        "total": sum(counts.values()),
-    }
+    """Counts by language for UI tabs (within freshness window)."""
+    try:
+        return NewsService(db).lang_stats()
+    except SQLAlchemyError as exc:
+        raise ServiceUnavailableError(str(exc)) from exc
 
 
 @router.post("/sync", dependencies=[Depends(require_manual_sync)])

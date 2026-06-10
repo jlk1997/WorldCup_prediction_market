@@ -100,7 +100,8 @@ import {
   resolvePaidOrder,
   type OrderDetail,
 } from '../api/commerce'
-import { getErrorMessage } from '../api/client'
+import { getErrorMessage, isRateLimitError } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 import { useStadiumStore } from '../stores/stadiumStore'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildOrderGrantSummary } from '../utils/entitlements'
@@ -227,9 +228,12 @@ async function resolvePayment() {
     failMessage.value = '订单未支付成功，请返回商城重新购买。'
     clearQuery()
   } catch (e) {
-    phase.value = 'failed'
-    failTitle.value = '无法确认支付'
-    failMessage.value = getErrorMessage(e)
+    showApiError(e)
+    if (!(isRateLimitError(e) && e.notified)) {
+      phase.value = 'failed'
+      failTitle.value = '无法确认支付'
+      failMessage.value = getErrorMessage(e)
+    }
     clearQuery()
   }
 }
@@ -247,7 +251,10 @@ async function refreshStatus() {
     const detail = await getOrderByTradeNo(outTradeNo)
     order.value = detail
   } catch (e) {
-    failMessage.value = getErrorMessage(e)
+    showApiError(e)
+    if (!(isRateLimitError(e) && e.notified)) {
+      failMessage.value = getErrorMessage(e)
+    }
   } finally {
     refreshing.value = false
   }

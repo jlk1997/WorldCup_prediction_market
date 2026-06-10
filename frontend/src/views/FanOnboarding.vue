@@ -93,7 +93,7 @@ import { getTeams, getPlayersForTeams, setupProfile, getRecommendations, type Te
 import { getReferralMe, type InviteeJourney } from '../api/referral'
 import { fetchMe } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 const router = useRouter()
 const step = ref(0)
@@ -184,7 +184,7 @@ async function next() {
       )
       step.value++
     } catch (e) {
-      ElMessage.error(getErrorMessage(e))
+      showApiError(e)
     } finally {
       loading.value = false
     }

@@ -207,5 +207,7 @@ export interface AnalysisResponse {
 export interface ApiErrorBody {
   status: 'error'
   message: string
+  code?: string
+  retry_after_sec?: number
   details?: unknown
 }

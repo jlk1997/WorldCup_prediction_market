@@ -182,7 +182,7 @@ import { getStarAccuracy, getStarHeat, type StarHeatRow } from '../api/arena'
 import { getTeamContribution } from '../api/profile'
 import { authState, fetchMe } from '../stores/authStore'
 import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/referral'
-import { getErrorMessage } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 
 const route = useRoute()
 const board = ref('points')
@@ -290,7 +290,7 @@ async function load() {
     }
     await loadMySummary()
   } catch (e) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }

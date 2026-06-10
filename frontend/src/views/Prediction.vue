@@ -64,7 +64,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { apiClient, getErrorMessage } from '../api/client'
+import { apiClient } from '../api/client'
+import { showApiError } from '../utils/errorHandler'
 import type { AnalysisData, AnalysisResponse } from '../types/api'
 
 const route = useRoute()
@@ -101,7 +102,7 @@ const fetchAnalysis = async (forceRefresh = false) => {
       ElMessage.error('分析失败')
     }
   } catch (e: unknown) {
-    ElMessage.error(getErrorMessage(e))
+    showApiError(e)
   } finally {
     loading.value = false
   }
