@@ -32,7 +32,13 @@ from app.api.schemas.commerce import (
     LeaderboardBoardOut,
 )
 from app.core.exceptions import BadRequestError
-from app.core.rate_limit import client_ip, rate_limit_pay, rate_limit_redeem, rate_limit_refresh
+from app.core.rate_limit import (
+    client_ip,
+    rate_limit_pay,
+    rate_limit_pay_sync,
+    rate_limit_redeem,
+    rate_limit_refresh,
+)
 from app.db.models.commerce import Product, User
 from app.services.arena_service import ArenaService
 from app.services.auth_service import AuthService
@@ -597,7 +603,7 @@ def sync_alipay_order(
     db: Session = Depends(get_db),
 ):
     """When async notify failed, query Alipay and fulfill if already paid."""
-    rate_limit_pay(user.id)
+    rate_limit_pay_sync(user.id)
     svc = PaymentService(db)
     order = svc.sync_order_from_alipay(out_trade_no, user.id)
     return OrderDetailOut.model_validate(svc.order_detail(order))

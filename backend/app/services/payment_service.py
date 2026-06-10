@@ -258,8 +258,13 @@ class PaymentService:
 
         if result.get("code") != "10000":
             self.db.commit()
-            msg = result.get("sub_msg") or result.get("msg") or "查询失败"
-            raise BadRequestError(f"支付宝未确认支付: {msg}")
+            logger.warning(
+                "Alipay query not ready out_trade_no=%s code=%s sub=%s",
+                out_trade_no,
+                result.get("code"),
+                result.get("sub_code") or result.get("sub_msg"),
+            )
+            return order
 
         trade_status = result.get("trade_status")
         if trade_status not in ("TRADE_SUCCESS", "TRADE_FINISHED"):

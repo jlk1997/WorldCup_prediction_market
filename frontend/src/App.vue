@@ -174,7 +174,9 @@ import ReferralNotifier from './components/ReferralNotifier.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
 import MobileMoreDrawer from './components/MobileMoreDrawer.vue'
 import { useBreakpoint } from './composables/useBreakpoint'
-import { authState, isLoggedIn, initAuth } from './stores/authStore'
+import { authState, isLoggedIn, initAuth, fetchMe } from './stores/authStore'
+import { fetchPaidPendingOrder } from './api/commerce'
+import { clearPendingOrder, PENDING_ORDER_KEY } from './utils/payEnv'
 import { avatarFrameClass as frameClassUtil, hasActiveSeasonPass } from './utils/entitlements'
 import { fetchProfileStatus, fetchRecommendations, profileState } from './stores/profileStore'
 import { useGuideVisibility } from './composables/useGuideVisibility'
@@ -221,6 +223,19 @@ const passActive = computed(() => hasActiveSeasonPass(authState.user))
 onMounted(async () => {
   await initAuth()
   if (authState.accessToken) {
+    const pendingNo =
+      typeof sessionStorage !== 'undefined'
+        ? sessionStorage.getItem(PENDING_ORDER_KEY)
+        : null
+    if (pendingNo && route.path !== '/shop/result') {
+      const paid = await fetchPaidPendingOrder()
+      if (paid) {
+        clearPendingOrder()
+        await fetchMe()
+      }
+      await router.replace({ path: '/shop/result', query: { out_trade_no: pendingNo } })
+      return
+    }
     try {
       await Promise.all([fetchProfileStatus(), fetchRecommendations()])
     } catch {

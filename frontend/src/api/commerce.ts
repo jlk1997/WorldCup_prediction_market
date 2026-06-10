@@ -1,6 +1,7 @@
 import { apiClient } from './client'
 import type { AuthUser } from '../stores/authStore'
 import type { PayChannel } from '../utils/payEnv'
+import { PENDING_ORDER_KEY } from '../utils/payEnv'
 
 export interface GameMatch {
   id: number
@@ -444,6 +445,31 @@ export async function syncAlipayOrder(outTradeNo: string): Promise<OrderDetail> 
   return data
 }
 
+/** Read cached pending order and return detail if already paid. */
+export async function fetchPaidPendingOrder(): Promise<OrderDetail | null> {
+  if (typeof sessionStorage === 'undefined') return null
+  const pendingNo = sessionStorage.getItem(PENDING_ORDER_KEY)
+  if (!pendingNo) return null
+  return resolvePaidOrder(pendingNo)
+}
+
+/** Try sync + DB read until we know the order is paid (post-Alipay return). */
+export async function resolvePaidOrder(outTradeNo: string): Promise<OrderDetail | null> {
+  try {
+    const synced = await syncAlipayOrder(outTradeNo)
+    if (synced.status === 'paid') return synced
+  } catch {
+    /* notify may still be in flight */
+  }
+  try {
+    const detail = await getOrderByTradeNo(outTradeNo)
+    if (detail.status === 'paid') return detail
+  } catch {
+    /* ignore */
+  }
+  return null
+}
+
 export type PollOrderResult =
   | { ok: true; order: OrderDetail }
   | { ok: false; reason: 'timeout' | 'failed'; order?: OrderDetail }
@@ -453,18 +479,20 @@ export async function pollOrderUntilPaid(
   opts: { intervalMs?: number; timeoutMs?: number } = {},
 ): Promise<PollOrderResult> {
   const intervalMs = opts.intervalMs ?? 1500
-  const timeoutMs = opts.timeoutMs ?? 30_000
+  const timeoutMs = opts.timeoutMs ?? 45_000
   const deadline = Date.now() + timeoutMs
   let last: OrderDetail | undefined
+  let polls = 0
 
-  try {
-    last = await syncAlipayOrder(outTradeNo)
-    if (last.status === 'paid') return { ok: true, order: last }
-  } catch {
-    // notify may still be in flight; fall through to polling
-  }
+  const paid = await resolvePaidOrder(outTradeNo)
+  if (paid) return { ok: true, order: paid }
 
   while (Date.now() < deadline) {
+    if (polls > 0 && polls % 4 === 0) {
+      const synced = await resolvePaidOrder(outTradeNo)
+      if (synced) return { ok: true, order: synced }
+    }
+    polls += 1
     last = await getOrderByTradeNo(outTradeNo)
     if (last.status === 'paid') return { ok: true, order: last }
     if (last.status === 'failed' || last.status === 'cancelled') {
@@ -472,6 +500,9 @@ export async function pollOrderUntilPaid(
     }
     await new Promise((r) => setTimeout(r, intervalMs))
   }
+
+  const final = await resolvePaidOrder(outTradeNo)
+  if (final) return { ok: true, order: final }
 
   if (last?.status === 'pending') return { ok: false, reason: 'timeout', order: last }
   return { ok: false, reason: 'timeout', order: last }

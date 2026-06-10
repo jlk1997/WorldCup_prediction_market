@@ -90,20 +90,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { authState, fetchMe } from '../stores/authStore'
 import {
   getOrderByTradeNo,
   mockPay,
   pollOrderUntilPaid,
-  syncAlipayOrder,
+  resolvePaidOrder,
   type OrderDetail,
 } from '../api/commerce'
 import { getErrorMessage } from '../api/client'
 import { useStadiumStore } from '../stores/stadiumStore'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildOrderGrantSummary } from '../utils/entitlements'
+import { clearPendingOrder, resolveOutTradeNo } from '../utils/payEnv'
 
 type Phase = 'processing' | 'success' | 'pending' | 'failed'
 
@@ -132,7 +133,27 @@ const previewTheme = computed(() => {
 })
 
 const isDev = !import.meta.env.PROD
-let handled = false
+
+function runResolve() {
+  phase.value = 'processing'
+  void resolvePayment()
+}
+
+onMounted(() => {
+  setUiOverlay('shop-payment-result', true)
+  runResolve()
+})
+
+watch(
+  () => route.query.out_trade_no,
+  (next, prev) => {
+    if (next && next !== prev) runResolve()
+  },
+)
+
+onUnmounted(() => {
+  setUiOverlay('shop-payment-result', false)
+})
 
 function formatTime(iso: string) {
   try {
@@ -151,6 +172,7 @@ function clearQuery() {
 async function afterSuccess(detail: OrderDetail) {
   order.value = detail
   phase.value = 'success'
+  clearPendingOrder()
   await fetchMe()
   balancePulse.value = true
   setTimeout(() => {
@@ -160,7 +182,7 @@ async function afterSuccess(detail: OrderDetail) {
 }
 
 async function resolvePayment() {
-  const outTradeNo = route.query.out_trade_no as string | undefined
+  const outTradeNo = resolveOutTradeNo(route.query as Record<string, unknown>)
   const isMock = route.query.mock === '1'
 
   if (!outTradeNo) {
@@ -213,19 +235,17 @@ async function resolvePayment() {
 }
 
 async function refreshStatus() {
-  if (!order.value?.out_trade_no) return
+  const outTradeNo = order.value?.out_trade_no ?? resolveOutTradeNo(route.query as Record<string, unknown>)
+  if (!outTradeNo) return
   refreshing.value = true
   try {
-    let detail: OrderDetail
-    try {
-      detail = await syncAlipayOrder(order.value.out_trade_no)
-    } catch {
-      detail = await getOrderByTradeNo(order.value.out_trade_no)
+    const paid = await resolvePaidOrder(outTradeNo)
+    if (paid) {
+      await afterSuccess(paid)
+      return
     }
+    const detail = await getOrderByTradeNo(outTradeNo)
     order.value = detail
-    if (detail.status === 'paid') {
-      await afterSuccess(detail)
-    }
   } catch (e) {
     failMessage.value = getErrorMessage(e)
   } finally {
@@ -248,18 +268,6 @@ function goFanCard() {
 function retryPay() {
   router.push('/shop')
 }
-
-onMounted(() => {
-  setUiOverlay('shop-payment-result', true)
-  if (!handled) {
-    handled = true
-    void resolvePayment()
-  }
-})
-
-onUnmounted(() => {
-  setUiOverlay('shop-payment-result', false)
-})
 </script>
 
 <style scoped>

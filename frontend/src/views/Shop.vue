@@ -136,7 +136,7 @@ import {
   getRedeemProducts,
   getRedeemRules,
   redeemPurchase,
-  syncAlipayOrder,
+  fetchPaidPendingOrder,
   type Product,
   type RedeemProduct,
   type RedeemShopRules,
@@ -146,7 +146,13 @@ import PurchaseConfirmDialog from '../components/PurchaseConfirmDialog.vue'
 import PayProcessingOverlay from '../components/PayProcessingOverlay.vue'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildProductGrantPreview, cosmeticPreviewFromProduct } from '../utils/entitlements'
-import { isWeChatBrowser, resolvePayChannel, WECHAT_PAY_HINT } from '../utils/payEnv'
+import {
+  isWeChatBrowser,
+  clearPendingOrder,
+  PENDING_ORDER_KEY,
+  resolvePayChannel,
+  WECHAT_PAY_HINT,
+} from '../utils/payEnv'
 import { useStadiumStore } from '../stores/stadiumStore'
 
 const AGE_AGREED_KEY = 'wc_shop_age_agreed'
@@ -282,27 +288,29 @@ async function loadRedeem() {
   }
 }
 
-async function syncPendingPayment() {
-  const pendingNo = sessionStorage.getItem('wc_pending_out_trade_no')
-  if (!pendingNo || !authState.accessToken) return
-  try {
-    const detail = await syncAlipayOrder(pendingNo)
-    if (detail.status === 'paid') {
-      sessionStorage.removeItem('wc_pending_out_trade_no')
-      await fetchMe()
-      const grant =
-        detail.coins_grant > 0 ? `，已到账 ${detail.coins_grant} 球迷币` : ''
-      ElMessage.success(`支付成功${grant}`)
-    }
-  } catch {
-    /* still pending or notify not fixed yet */
+async function syncPendingPayment(): Promise<boolean> {
+  if (!authState.accessToken) return false
+  const pendingNo = sessionStorage.getItem(PENDING_ORDER_KEY)
+  if (!pendingNo) return false
+
+  const paid = await fetchPaidPendingOrder()
+  if (paid) {
+    clearPendingOrder()
+    await fetchMe()
+    await router.replace({ path: '/shop/result', query: { out_trade_no: paid.out_trade_no } })
+    return true
   }
+
+  // 刚从支付宝回来、notify 尚未到达：进结果页轮询，不要停在商城
+  await router.replace({ path: '/shop/result', query: { out_trade_no: pendingNo } })
+  return true
 }
 
 async function load() {
   if (authState.accessToken) {
+    const redirected = await syncPendingPayment()
+    if (redirected) return
     await fetchMe()
-    await syncPendingPayment()
   }
   await Promise.all([loadCash(), loadRedeem()])
 }
@@ -362,7 +370,7 @@ async function executeBuy(productId: number) {
     payProcessingMessage.value = '正在跳转支付宝…'
     payProcessingHint.value =
       payChannel === 'wap' ? '请在支付宝页面完成支付（可唤起支付宝 App）' : '请在支付宝页面完成支付'
-    sessionStorage.setItem('wc_pending_out_trade_no', order.out_trade_no)
+    sessionStorage.setItem(PENDING_ORDER_KEY, order.out_trade_no)
     window.location.href = pay_url
   } catch (e) {
     ElMessage.error(getErrorMessage(e))

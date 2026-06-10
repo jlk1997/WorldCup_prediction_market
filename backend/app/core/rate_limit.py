@@ -93,6 +93,11 @@ def rate_limit_pay(user_id: int) -> None:
     check_rate_limit(f"rl:pay:user:{user_id}", limit=5, window_sec=60)
 
 
+def rate_limit_pay_sync(user_id: int) -> None:
+    """Separate bucket from create-order; sync is safe to retry often."""
+    check_rate_limit(f"rl:pay_sync:user:{user_id}", limit=30, window_sec=60)
+
+
 def rate_limit_redeem(user_id: int) -> None:
     check_rate_limit(f"rl:redeem:user:{user_id}", limit=10, window_sec=60)
 
