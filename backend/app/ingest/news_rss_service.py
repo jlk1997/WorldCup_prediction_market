@@ -96,11 +96,32 @@ class NewsRssService:
 
     def sync(self) -> dict[str, int]:
         """Sync all configured feeds. Returns inserted count per lang."""
+        en_feeds = self.settings.news_rss_feed_list_en
+        zh_feeds = self.settings.news_rss_feed_list_zh
+        db_total = self.db.scalar(select(func.count(NewsArticle.id))) or 0
+        logger.info(
+            "News sync start: db_total=%s en_feeds=%s zh_feeds=%s",
+            db_total,
+            len(en_feeds),
+            len(zh_feeds),
+        )
+        if not en_feeds:
+            logger.warning("No English RSS feeds configured (NEWS_RSS_FEEDS / NEWS_RSS_FEEDS_EN)")
+
         cn_teams = list(self.db.scalars(select(Team.name)).all())
-        inserted_en = self._sync_feeds(self.settings.news_rss_feed_list_en, "en", cn_teams)
-        inserted_zh = self._sync_feeds(self.settings.news_rss_feed_list_zh, "zh", cn_teams)
+        inserted_en = self._sync_feeds(en_feeds, "en", cn_teams)
+        inserted_zh = self._sync_feeds(zh_feeds, "zh", cn_teams)
         pruned = self._prune_stale()
         scrubbed = self._scrub_irrelevant()
+        db_total_after = self.db.scalar(select(func.count(NewsArticle.id))) or 0
+        logger.info(
+            "News sync done: inserted_en=%s inserted_zh=%s pruned=%s scrubbed=%s db_total=%s",
+            inserted_en,
+            inserted_zh,
+            pruned,
+            scrubbed,
+            db_total_after,
+        )
         if inserted_en or inserted_zh or pruned or scrubbed:
             cache_delete_prefix("news:list:")
         if not inserted_en and not inserted_zh and not self.settings.news_rss_feed_list_zh:
@@ -121,6 +142,8 @@ class NewsRssService:
         inserted = 0
         skipped_old = 0
         skipped_irrelevant = 0
+        skipped_duplicate = 0
+        parsed_total = 0
         seen_urls: set[str] = set()
         ingest_cutoff = datetime.utcnow() - timedelta(days=self.settings.news_ingest_max_age_days)
 
@@ -137,6 +160,7 @@ class NewsRssService:
                 logger.warning("RSS fetch failed [%s] %s: %s", lang, feed_url, exc)
                 continue
 
+            parsed_total += len(items)
             source = _source_from_url(feed_url)
             for item in items:
                 url = _normalize_url(item.get("url", ""))
@@ -146,6 +170,7 @@ class NewsRssService:
 
                 exists = self.db.scalar(select(NewsArticle.id).where(NewsArticle.url == url))
                 if exists:
+                    skipped_duplicate += 1
                     seen_urls.add(url)
                     continue
 
@@ -180,14 +205,27 @@ class NewsRssService:
                     logger.debug("Skip duplicate news url: %s", url)
 
         self.db.commit()
+        logger.info(
+            "RSS sync [%s] parsed=%s inserted=%s duplicate=%s old=%s irrelevant=%s feeds=%s",
+            lang,
+            parsed_total,
+            inserted,
+            skipped_duplicate,
+            skipped_old,
+            skipped_irrelevant,
+            len(feeds),
+        )
         self._log(
             f"rss_{lang}",
             "ok",
             inserted,
             error=(
                 None
-                if not skipped_old and not skipped_irrelevant
-                else f"skipped_old={skipped_old},skipped_irrelevant={skipped_irrelevant}"
+                if not skipped_old and not skipped_irrelevant and not skipped_duplicate
+                else (
+                    f"parsed={parsed_total},duplicate={skipped_duplicate},"
+                    f"skipped_old={skipped_old},skipped_irrelevant={skipped_irrelevant}"
+                )
             ),
         )
         return inserted

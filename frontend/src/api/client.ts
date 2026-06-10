@@ -3,7 +3,6 @@ import type { ApiErrorBody } from '../types/api'
 import { getAccessToken, logout, refreshSession } from '../stores/authStore'
 import {
   handleRateLimitResponse,
-  RateLimitError,
   rejectIfRateLimited,
 } from './rateLimitGuard'
 

@@ -77,6 +77,7 @@ declare module 'vue' {
     PredictSettlementNotifier: typeof import('./components/PredictSettlementNotifier.vue')['default']
     ProfileIncompleteBanner: typeof import('./components/ProfileIncompleteBanner.vue')['default']
     PurchaseConfirmDialog: typeof import('./components/PurchaseConfirmDialog.vue')['default']
+    RateLimitBanner: typeof import('./components/RateLimitBanner.vue')['default']
     ReferralNotifier: typeof import('./components/ReferralNotifier.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
