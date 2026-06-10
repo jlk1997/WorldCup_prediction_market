@@ -1,0 +1,3157 @@
+{
+  "team_info": {
+    "english_name": "New Zealand",
+    "city": "奥克兰",
+    "founded_year": 1891,
+    "stadium": "未提供",
+    "capacity": "未提供",
+    "market_value": "€32.8M"
+  },
+  "squad": [
+    {
+      "name": "贝兹利",
+      "number": null,
+      "position": "教练",
+      "age": 53,
+      "height": 178,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1972-10-05",
+      "nationality": "新西兰",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "新西兰足球锦标赛冠军 × 2",
+        "大洋洲足球冠军联赛冠军 × 1",
+        "Minor Premiership Winner (nzl) × 1"
+      ],
+      "transfers": [
+        {
+          "date": "2005-07-01",
+          "from": "沃尔索尔",
+          "to": "新西兰骑士",
+          "type": "免签"
+        },
+        {
+          "date": "2002-07-12",
+          "from": "狼队",
+          "to": "沃尔索尔",
+          "type": "免签"
+        },
+        {
+          "date": "1999-07-13",
+          "from": "沃特福德",
+          "to": "狼队",
+          "type": "免签"
+        }
+      ],
+      "injuries": [],
+      "source_url": "https://www.dongqiudi.com/player/50015653"
+    },
+    {
+      "name": "克林特-戈斯林",
+      "number": null,
+      "position": "守门员教练",
+      "age": 66,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1960-05-01",
+      "nationality": "新西兰",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "1993-07-01",
+          "match": "悉尼奥林匹克 → 拉卡斯尔喷气机",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1988-01-01",
+          "match": "帕拉玛塔 → 悉尼奥林匹克",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1980-01-01",
+          "match": "奥克兰东郊 → 惠灵顿大学山",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/51123077"
+    },
+    {
+      "name": "克里斯·伍德",
+      "number": "14",
+      "position": "前锋",
+      "age": 34,
+      "height": 191,
+      "weight": 92,
+      "preferred_foot": "右脚",
+      "value": "500万欧元",
+      "birth_date": "1991-12-07",
+      "nationality": "新西兰",
+      "overall_rating": 81,
+      "stats": {
+        "速度": 59,
+        "力量": 81,
+        "防守": 46,
+        "盘带": 72,
+        "传球": 47,
+        "射门": 82
+      },
+      "recent_matches": [
+        {
+          "date": "05/24",
+          "match": "诺丁汉森林 - 伯恩茅斯",
+          "score": "1-1",
+          "rating": "6",
+          "status": "D"
+        },
+        {
+          "date": "05/17",
+          "match": "曼联 - 诺丁汉森林",
+          "score": "3-2",
+          "rating": "4",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "诺丁汉森林 - 维卡拉姆中端",
+          "score": "1-1",
+          "rating": "8",
+          "status": "D"
+        },
+        {
+          "date": "05/07",
+          "match": "埃弗顿 - 诺丁汉森林",
+          "score": "4-0",
+          "rating": "4",
+          "status": "L"
+        },
+        {
+          "date": "05/04",
+          "match": "切尔西 - 诺丁汉森林",
+          "score": "1-3",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "04/30",
+          "match": "诺丁汉森林 - 利物浦",
+          "score": "1-0",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "04/24",
+          "match": "南安普顿 - 诺丁汉森林",
+          "score": "0-2",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "诺丁汉森林 - 布伦特福德",
+          "score": "4-1",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "04/16",
+          "match": "纽卡斯尔 - 诺丁汉森林",
+          "score": "1-0",
+          "rating": "10",
+          "status": "L"
+        },
+        {
+          "date": "04/13",
+          "match": "诺丁汉森林 - 阿斯顿维拉",
+          "score": "1-1",
+          "rating": "8",
+          "status": "D"
+        },
+        {
+          "date": "04/09",
+          "match": "西汉姆联 - 诺丁汉森林",
+          "score": "1-1",
+          "rating": "8",
+          "status": "D"
+        },
+        {
+          "date": "03/22",
+          "match": "托特纳姆热刺 - 诺丁汉森林",
+          "score": "0-3",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "03/00",
+          "match": "莱切斯特城 - 诺丁汉森林",
+          "score": "3-0",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "03/19",
+          "match": "诺丁汉森林 - 阿森纳",
+          "score": "1-2",
+          "rating": "10",
+          "status": "L"
+        },
+        {
+          "date": "03/15",
+          "match": "诺丁汉森林 - 富勒姆",
+          "score": "0-0",
+          "rating": "8",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50054168"
+    },
+    {
+      "name": "贾斯特",
+      "number": 21,
+      "position": "前锋",
+      "age": 26,
+      "height": "174cm",
+      "weight": "69kg",
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-05-01",
+      "nationality": "新西兰",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 81,
+        "力量": 53,
+        "防守": 42,
+        "盘带": 69,
+        "传球": 63,
+        "射门": 67
+      },
+      "recent_matches": [
+        {
+          "date": "05/16",
+          "match": "希伯尼安 vs 马瑟韦尔",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "马瑟韦尔 vs 凯尔特人",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "马瑟韦尔 vs 哈茨",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "福尔柯克 vs 马瑟韦尔",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "格拉斯哥流浪者 vs 马瑟韦尔",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "哈茨 vs 马瑟韦尔",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "马瑟韦尔 vs 福尔柯克",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "新西兰 vs 牙买加",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "马瑟韦尔 vs 希伯尼安",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "凯尔特人 vs 马瑟韦尔",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "邓迪FC vs 马瑟韦尔",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "马瑟韦尔 vs 列斯联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "圣米伦 vs 马瑟韦尔",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/18",
+          "match": "阿伯丁 vs 马瑟韦尔",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50402922"
+    },
+    {
+      "name": "魏纳",
+      "number": 19,
+      "position": "前锋",
+      "age": 24,
+      "height": 179,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-06-11",
+      "nationality": "新西兰",
+      "overall_rating": 62,
+      "stats": {
+        "速度": 77,
+        "力量": 66,
+        "防守": 44,
+        "盘带": 60,
+        "传球": 54,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "04/28",
+          "match": "西托克波特郡 vs 埃尔港",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "普利茅斯 vs 埃尔港",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/22",
+          "match": "卡迪夫城 vs 埃尔港",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "埃尔港 vs 桑德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/16",
+          "match": "彼得堡联 vs 埃尔港",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "埃尔港 vs 巴恩斯利",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/07",
+          "match": "埃尔港 vs 罗瑟汉姆",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "切勿西 vs 埃尔港",
+          "score": "7-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "斯旺西 vs 莱斯特",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/28",
+          "match": "韦康比流浪者 vs 埃尔港",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "普利茅斯 vs 十字军",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "埃尔港 vs 博尔顿流浪者",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/17",
+          "match": "布莱克浦 vs 埃尔港",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "埃尔港 vs 哈德斯菲尔德",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/11",
+          "match": "埃尔港 vs 布拉德福德城",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50428206"
+    },
+    {
+      "name": "巴巴罗塞斯",
+      "number": null,
+      "position": "前锋",
+      "age": 36,
+      "height": 171,
+      "weight": 68,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-02-19",
+      "nationality": "新西兰",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 78,
+        "力量": 77,
+        "防守": 40,
+        "盘带": 69,
+        "传球": 58,
+        "射门": 69
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/08",
+          "match": "西悉尼流浪者 - 悉尼",
+          "score": "22:16",
+          "rating": 4,
+          "status": "W"
+        },
+        {
+          "date": "2024/02/25",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "26:26",
+          "rating": 10,
+          "status": "D"
+        },
+        {
+          "date": "2023/02/24",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "28:27",
+          "rating": 13,
+          "status": "L"
+        },
+        {
+          "date": "2022/02/23",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "24:15",
+          "rating": 2,
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "悉尼 - 悉尼",
+          "score": "2:2",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2021/02/22",
+          "match": "悉尼 - 悉尼",
+          "score": "11:6",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2020/02/21",
+          "match": "悉尼 - 悉尼",
+          "score": "27:27",
+          "rating": 9,
+          "status": "D"
+        },
+        {
+          "date": "2019/02/20",
+          "match": "悉尼 - 悉尼",
+          "score": "34:31",
+          "rating": 8,
+          "status": "W"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "墨尔本胜利 - 墨尔本胜利",
+          "score": "33:32",
+          "rating": 15,
+          "status": "W"
+        },
+        {
+          "date": "2017/02/18",
+          "match": "墨尔本胜利 - 墨尔本胜利",
+          "score": "30:30",
+          "rating": 12,
+          "status": "D"
+        },
+        {
+          "date": "2016/02/17",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "25:25",
+          "rating": 5,
+          "status": "D"
+        },
+        {
+          "date": "2015/02/16",
+          "match": "墨尔本胜利 - 墨尔本胜利",
+          "score": "32:31",
+          "rating": 7,
+          "status": "W"
+        },
+        {
+          "date": "2014/02/15",
+          "match": "墨尔本胜利 - 墨尔本胜利",
+          "score": "25:22",
+          "rating": 6,
+          "status": "W"
+        },
+        {
+          "date": "2013/02/14",
+          "match": "墨尔本胜利 - 墨尔本胜利",
+          "score": "30:24",
+          "rating": 6,
+          "status": "W"
+        },
+        {
+          "date": "2012/02/13",
+          "match": "帕纳辛奈科斯 - 帕纳辛奈科斯",
+          "score": "15:9",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2011/02/12",
+          "match": "弗拉季高加索斯巴达 - 弗拉季高加索斯巴达",
+          "score": "14:6",
+          "rating": 2,
+          "status": "W"
+        },
+        {
+          "date": "2010/02/11",
+          "match": "布里斯班狮吼 - 布里斯班狮吼",
+          "score": "33:29",
+          "rating": 12,
+          "status": "W"
+        },
+        {
+          "date": "2009/02/10",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "13:3",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2008/02/09",
+          "match": "惠灵顿凤凰 - 惠灵顿凤凰",
+          "score": "4:3",
+          "rating": 1,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50013582"
+    },
+    {
+      "name": "兰达尔",
+      "number": 21,
+      "position": "前锋",
+      "age": 23,
+      "height": 176,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-08-19",
+      "nationality": "新西兰",
+      "overall_rating": 64,
+      "stats": {
+        "速度": 83,
+        "力量": 62,
+        "防守": 37,
+        "盘带": 65,
+        "传球": 56,
+        "射门": 64,
+        "国际声望": 2,
+        "逆足能力": 2,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-01",
+          "match": "查尔斯顿电池 vs 惠灵顿奥林匹克",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-03-22",
+          "match": "惠灵顿奥林匹克 vs 查尔斯顿电池",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-10-01",
+          "match": "塔斯曼联 vs 鹰啸联队",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50535710"
+    },
+    {
+      "name": "萨尔佩特·辛格",
+      "number": null,
+      "position": "中场",
+      "age": 27,
+      "height": 175,
+      "weight": 71,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1999-02-20",
+      "nationality": "新西兰",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 67,
+        "力量": 57,
+        "防守": 49,
+        "盘带": 69,
+        "传球": 69,
+        "射门": 65
+      },
+      "recent_matches": [
+        {
+          "date": "2025/03/06",
+          "match": "惠灵顿凤凰",
+          "score": "2-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/03/06",
+          "match": "托波特",
+          "score": "15-10",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024/03/05",
+          "match": "莱里亚",
+          "score": "20-10",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024/03/04",
+          "match": "罗斯托克",
+          "score": "16-5",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023/03/04",
+          "match": "罗斯特洛队",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023/03/03",
+          "match": "雷根斯堡",
+          "score": "14-13",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021/03/02",
+          "match": "雷根斯堡",
+          "score": "27-26",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020/03/01",
+          "match": "拜仁慕尼黑二队",
+          "score": "16-12",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020/03/01",
+          "match": "哈伦堡",
+          "score": "13-6",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2019/03/01",
+          "match": "拜仁慕尼黑",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50232334"
+    },
+    {
+      "name": "麦克科瓦特",
+      "number": 17,
+      "position": "中场",
+      "age": 27,
+      "height": 179,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-04-30",
+      "nationality": "新西兰",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 76,
+        "力量": 71,
+        "防守": 55,
+        "盘带": 69,
+        "传球": 68,
+        "射门": 70
+      },
+      "recent_matches": [
+        {
+          "date": "05/17",
+          "match": "赫特列西堡 vs 锡尔克堡",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "锡尔克堡 vs 哥本哈根",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "欧登塞 vs 锡尔克堡",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "锡尔克堡 vs 兰德斯",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "瓦埃勒 vs 锡尔克堡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "锡尔克堡 vs 赫特列西堡",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/12",
+          "match": "锡尔克堡 vs 欧登塞",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "哥本哈根 vs 锡尔克堡",
+          "score": "7-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "新西兰 vs 芬兰",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "兰德斯 vs 锡尔克堡",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/16",
+          "match": "赫特列西堡 vs 瓦埃勒",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "赫特列西堡 vs 锡尔克堡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/22",
+          "match": "锡尔克堡 vs 中日德兰",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/16",
+          "match": "桑德捷斯基 vs 锡尔克堡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50250808"
+    },
+    {
+      "name": "加伯特",
+      "number": 28,
+      "position": "中场",
+      "age": 24,
+      "height": 188,
+      "weight": 69,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "2002-04-13",
+      "nationality": "新西兰",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 68,
+        "力量": 65,
+        "防守": 52,
+        "盘带": 65,
+        "传球": 62,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/02",
+          "match": "彼得堡联 vs 唐卡斯特",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/28",
+          "match": "彼得堡联 vs 曼斯菲尔德",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "斯托克波特郡 vs 彼得堡联",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "彼得堡联 vs 伯顿",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/16",
+          "match": "彼得堡联 vs 维尔港",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "布莱克浦 vs 彼得堡联",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/31",
+          "match": "彼得堡联 vs 地域斯菲尔德",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/27",
+          "match": "斯蒂夫尼奇 vs 彼得堡联",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/24",
+          "match": "布雷比流浪者 vs 彼得堡联",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/17",
+          "match": "彼得堡联 vs 普利茅斯",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/10",
+          "match": "彼得堡联 vs 博尔顿流浪者",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/04",
+          "match": "林肯城 vs 彼得堡联",
+          "score": "5-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/01",
+          "match": "罗瑟汉姆 vs 彼得堡联",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/29",
+          "match": "彼得堡联 vs 雷丁",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "12/26",
+          "match": "彼得堡联 vs 英联东方",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50474695"
+    },
+    {
+      "name": "斯塔梅尼奇",
+      "number": "6",
+      "position": "中场",
+      "age": 24,
+      "height": 188,
+      "weight": 80,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-02-19",
+      "nationality": "希腊",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 65,
+        "射门": 75,
+        "传球": 87,
+        "盘带": 70,
+        "防守": 66,
+        "力量": 59
+      },
+      "recent_matches": [
+        {
+          "date": "05/02",
+          "match": "斯旺西 vs 普利茅斯",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "诺维奇 vs 斯旺西",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/21",
+          "match": "女王公园巡游者 vs 斯旺西",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "斯旺西 vs 雷克瑟姆",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "莱斯特城 vs 斯旺西",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "斯旺西 vs 米德尔斯堡",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "谢菲尔德联 vs 斯旺西",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "斯旺西 vs 法兰",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "斯旺西 vs 考文垂",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "雷克瑟姆 vs 斯旺西",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "朴茨茅斯 vs 斯旺西",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "斯旺西 vs 斯托克城",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "伊普斯维奇 vs 斯旺西",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/24",
+          "match": "斯旺西 vs 普雷斯顿",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50535708"
+    },
+    {
+      "name": "鲁弗",
+      "number": 14,
+      "position": "中场",
+      "age": 29,
+      "height": 184,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-06-12",
+      "nationality": "新西兰",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 64,
+        "力量": 77,
+        "防守": 63,
+        "盘带": 65,
+        "传球": 64,
+        "射门": 59
+      },
+      "recent_matches": [],
+      "honors": [
+        "大洋洲国家杯冠军 × 1",
+        "大洋洲U17锦标赛冠军 × 2",
+        "大洋洲U20锦标赛冠军 × 1",
+        "大洋洲太平洋运动会冠军 × 1"
+      ],
+      "injuries": [
+        {
+          "club": "惠灵顿凤凰",
+          "injury": "撞伤",
+          "date_range": "2020.02.06 ~ 2020.02.09"
+        },
+        {
+          "club": "惠灵顿凤凰",
+          "injury": "未知伤病",
+          "date_range": "2025.06.12 ~ 2025.08.17"
+        },
+        {
+          "club": "惠灵顿凤凰",
+          "injury": "生肉",
+          "date_range": "2025.01.01 ~ 2025.02.13"
+        },
+        {
+          "club": "惠灵顿凤凰",
+          "injury": "肌肉拉伤",
+          "date_range": "2024.02.19 ~ 2024.02.19"
+        },
+        {
+          "club": "惠灵顿凤凰",
+          "injury": "十字韧带撕裂",
+          "date_range": "2022.03.16 ~ 2022.12.10"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50180581"
+    },
+    {
+      "name": "乔·贝尔",
+      "number": null,
+      "position": "中场",
+      "age": 27,
+      "height": 182,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": "60万欧",
+      "birth_date": "1999-04-27",
+      "nationality": "新西兰",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 70,
+        "力量": 82,
+        "防守": 71,
+        "盘带": 72,
+        "传球": 73,
+        "射门": 65
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025/2026",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "布隆德比",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "布隆德比",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "布隆德比",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018",
+          "match": "维京",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "惠灵顿凤凰预备队",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "惠灵顿凤凰预备队",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "惠灵顿凤凰预备队",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50229805"
+    },
+    {
+      "name": "拉克伦·贝利斯",
+      "number": 8,
+      "position": "中场",
+      "age": 23,
+      "height": 179,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-07-24",
+      "nationality": "新西兰",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 74,
+        "力量": 57,
+        "防守": 58,
+        "盘带": 65,
+        "传球": 60,
+        "射门": 56
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "纽卡斯尔喷气机",
+          "score": null,
+          "rating": 27,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "纽卡斯尔喷气机",
+          "score": null,
+          "rating": 26,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "纽卡斯尔喷气机",
+          "score": null,
+          "rating": 11,
+          "status": null
+        },
+        {
+          "date": "2023",
+          "match": "中央海岸水手U21",
+          "score": null,
+          "rating": 4,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50855981"
+    },
+    {
+      "name": "瑞安·托马斯",
+      "number": null,
+      "position": "中场",
+      "age": 31,
+      "height": 176,
+      "weight": 64,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-02-20",
+      "nationality": "新西兰",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 57,
+        "力量": 66,
+        "防守": 57,
+        "盘带": 69,
+        "传球": 68,
+        "射门": 58
+      },
+      "recent_matches": [
+        {
+          "date": "05/03",
+          "match": "纽沃勒 vs 河利维罗大力神",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/23",
+          "match": "PSV埃因霍温 vs 纽沃勒",
+          "score": "6-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "纽沃勒 vs SAV精英",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "诺德之鹰 vs 纽沃勒",
+          "score": "5-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "PA桑万腾 vs 阿尔",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "PA桑万腾 vs 开云",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "纽沃勒 vs 布雷达",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/13",
+          "match": "纽沃勒 vs 格罗宁根",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/08",
+          "match": "鹿特丹斯巴达 vs 纽沃勒",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "纽沃勒 vs 阿贾克斯",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/22",
+          "match": "乌德勒支 vs 纽沃勒",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/15",
+          "match": "海伦芬 vs 纽沃勒",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/07",
+          "match": "纽沃勒 vs 福伦丹",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/31",
+          "match": "纽沃勒 vs 特罗姆达",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/24",
+          "match": "奈梅亨 vs 纽沃勒",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50137556"
+    },
+    {
+      "name": "宾登",
+      "number": 6,
+      "position": "后卫",
+      "age": 21,
+      "height": 190,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2005-01-27",
+      "nationality": "新西兰",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 58,
+        "力量": 73,
+        "防守": 68,
+        "盘带": 64,
+        "传球": 59,
+        "射门": 46
+      },
+      "recent_matches": [
+        {
+          "date": "04/22",
+          "match": "谢菲尔德联 vs 布莱克本流浪者",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "沃特福德 vs 谢菲尔德联",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "谢菲尔德联 vs 赫尔城",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "布里斯托尔城 vs 谢菲尔德联",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "谢菲尔德联 vs 斯旺西",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 新西兰 vs 牙买加",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "谢菲尔德联 vs 雷克瑟姆",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "伯明翰 vs 谢菲尔德联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/11",
+          "match": "诺维奇 vs 谢菲尔德联",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "谢菲尔德联 vs 西布朗",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/28",
+          "match": "女王公园巡游者 vs 谢菲尔德联",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/25",
+          "match": "谢菲尔德联 vs 考文垂",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/22",
+          "match": "谢菲尔德联 vs 湖南三",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/14",
+          "match": "朴茨茅斯 vs 谢菲尔德联",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50900867"
+    },
+    {
+      "name": "蒂姆·佩恩",
+      "number": null,
+      "position": "后卫",
+      "age": 32,
+      "height": 179,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-01-10",
+      "nationality": "新西兰",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 64,
+        "力量": 75,
+        "防守": 59,
+        "盘带": 58,
+        "传球": 58,
+        "射门": 56
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/06",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 14,
+          "status": null
+        },
+        {
+          "date": "2024/02/05",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 20,
+          "status": null
+        },
+        {
+          "date": "2023/08/24",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 25,
+          "status": null
+        },
+        {
+          "date": "2022/08/23",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 24,
+          "status": null
+        },
+        {
+          "date": "2021/08/22",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 24,
+          "status": null
+        },
+        {
+          "date": "2020/08/21",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 26,
+          "status": null
+        },
+        {
+          "date": "2019/08/20",
+          "match": "惠灵顿凤凰",
+          "score": null,
+          "rating": 16,
+          "status": null
+        },
+        {
+          "date": "2018/08/19",
+          "match": "奥克兰东郊",
+          "score": null,
+          "rating": 19,
+          "status": null
+        },
+        {
+          "date": "2017/08/18",
+          "match": "奥克兰东郊",
+          "score": null,
+          "rating": 16,
+          "status": null
+        },
+        {
+          "date": "2016/08/17",
+          "match": "奥克兰东郊",
+          "score": null,
+          "rating": 16,
+          "status": null
+        },
+        {
+          "date": "2015",
+          "match": "波特兰伐木者二队",
+          "score": null,
+          "rating": 23,
+          "status": null
+        },
+        {
+          "date": "2014",
+          "match": "奥克兰城",
+          "score": null,
+          "rating": 4,
+          "status": null
+        },
+        {
+          "date": "2010/08/11",
+          "match": "怀塔科拉联",
+          "score": null,
+          "rating": 8,
+          "status": null
+        },
+        {
+          "date": "2009/08/10",
+          "match": "奥克兰城",
+          "score": null,
+          "rating": 1,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50082495"
+    },
+    {
+      "name": "德弗里斯",
+      "number": 15,
+      "position": "后卫",
+      "age": 31,
+      "height": 188,
+      "weight": 80,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1994-11-28",
+      "nationality": "新西兰",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 66,
+        "力量": 78,
+        "防守": 64,
+        "盘带": 62,
+        "传球": 68,
+        "射门": 54,
+        "国际声望": 3,
+        "逆足能力": 2,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-01",
+          "match": "奥克兰东郊 → 奥克兰FC",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023-03-12",
+          "match": "瓦纳联 → 奥克兰东郊",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2017-11-24",
+          "match": "温哥华白浪二队 → 坎特伯雷",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2017-03-16",
+          "match": "温哥华白浪 → 温哥华白浪二队",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2012-01-01",
+          "match": "坎特伯雷 → 巴塞尔U18",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50400491"
+    },
+    {
+      "name": "博克索尔",
+      "number": 13,
+      "position": "后卫",
+      "age": 37,
+      "height": 191,
+      "weight": 95,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1988-08-18",
+      "nationality": "新西兰",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 52,
+        "力量": 80,
+        "防守": 71,
+        "盘带": 37,
+        "传球": 60,
+        "射门": 43
+      },
+      "recent_matches": [
+        {
+          "date": "05/23",
+          "match": "明尼苏达联 vs 莫里森湖城",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/16",
+          "match": "新英格兰革命 vs 明尼苏达联",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "明尼苏达联 vs 科罗拉多急流",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "明尼苏达联 vs 奥斯汀",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "哥伦布机员 vs 明尼苏达联",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "明尼苏达联 vs 辛辛那提",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "奥斯汀 vs 明尼苏达联",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/14",
+          "match": "亚特兰大联 vs 明尼苏达联",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/11",
+          "match": "华盛顿特区联 vs 明尼苏达联",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "11/25",
+          "match": "圣地亚哥 vs 明尼苏达联",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "11/19",
+          "match": "迈阿密国际 vs 新西兰",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "11/16",
+          "match": "哥伦比亚 vs 新西兰",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "11/08",
+          "match": "明尼苏达联 vs 西雅图海湾人",
+          "score": "3-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "11/04",
+          "match": "西雅图海湾人 vs 明尼苏达联",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "10/28",
+          "match": "明尼苏达联 vs 西雅图海湾人",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50034725"
+    },
+    {
+      "name": "卡卡切",
+      "number": 13,
+      "position": "后卫",
+      "age": 23,
+      "height": 183,
+      "weight": 81,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-09-27",
+      "nationality": "新西兰",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 72,
+        "力量": 74,
+        "防守": 69,
+        "盘带": 71,
+        "传球": 67,
+        "射门": 60
+      },
+      "recent_matches": [
+        {
+          "date": "05/02",
+          "match": "雷克瑟姆 vs 米德尔斯堡",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/26",
+          "match": "考文垂 vs 雷克瑟姆",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/17",
+          "match": "布里斯托尔城 vs 雷克瑟姆",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/13",
+          "match": "雷克瑟姆 vs 伊普斯维奇",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/07",
+          "match": "雷克瑟姆 vs 水晶宫",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/31",
+          "match": "谢周三 vs 雷克瑟姆",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/24",
+          "match": "女王公园巡游者 vs 雷克瑟姆",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/20",
+          "match": "雷克瑟姆 vs 莱斯特城",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/17",
+          "match": "雷克瑟姆 vs 战锤",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/09",
+          "match": "雷克瑟姆 vs 诺丁汉森林",
+          "score": "3-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/04",
+          "match": "韦比郡 vs 雷克瑟姆",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/01",
+          "match": "布莱克本流浪者 vs 雷克瑟姆",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/29",
+          "match": "雷克瑟姆 vs 普雷斯顿",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/26",
+          "match": "雷克瑟姆 vs 谢菲尔德联",
+          "score": "5-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/19",
+          "match": "桑托西 vs 雷克瑟姆",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50386548"
+    },
+    {
+      "name": "派纳克尔",
+      "number": 4,
+      "position": "后卫",
+      "age": 27,
+      "height": 191,
+      "weight": 88,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1999-02-25",
+      "nationality": "新西兰",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 60,
+        "力量": 79,
+        "防守": 65,
+        "盘带": 53,
+        "传球": 54,
+        "射门": 48
+      },
+      "recent_matches": [
+        {
+          "date": "2024-09-03",
+          "match": "斯莱戈流浪者 - 奥克兰FC",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-01-01",
+          "match": "阿德河 - 斯莱戈流浪者",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-11-30",
+          "match": "斯莱戈流浪者 - 阿德河",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-02-08",
+          "match": "阿德河 - 斯莱戈流浪者",
+          "score": "租借",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-12-31",
+          "match": "赫尔辛格 - 阿德河",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-08-31",
+          "match": "阿德河 - 赫尔辛格",
+          "score": "租借",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-08-29",
+          "match": "草蜢 - 阿德河",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-06-17",
+          "match": "草蜢U21 - 草蜢",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-01-29",
+          "match": "托尔斯坦达 - 草蜢U21",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019-08-01",
+          "match": "奥克兰东郊 - 托尔斯坦达",
+          "score": "免签",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50472940"
+    },
+    {
+      "name": "芬·苏尔曼",
+      "number": 20,
+      "position": "后卫",
+      "age": 22,
+      "height": 190,
+      "weight": 81,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2003-09-23",
+      "nationality": "新西兰",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 65,
+        "力量": 78,
+        "防守": 66,
+        "盘带": 55,
+        "传球": 49,
+        "射门": 33
+      },
+      "recent_matches": [
+        {
+          "date": "05/24",
+          "match": "波特兰伐木者 vs 圣何塞地震",
+          "score": "1-3",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "迈阿密国际 vs 波特兰伐木者",
+          "score": "2-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "波特利奇 vs 波特兰伐木者",
+          "score": "2-2",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "05/10",
+          "match": "波特兰伐木者 vs 堪萨斯城体育",
+          "score": "6-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "皇家盐湖城 vs 波特兰伐木者",
+          "score": "2-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "圣地亚哥 vs 波特兰伐木者",
+          "score": "1-2",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "明尼苏达联 vs 波特兰伐木者",
+          "score": "2-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "波特兰伐木者 vs 洛杉矶",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "温哥华白浪 vs 波特兰伐木者",
+          "score": "3-2",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 新西兰 vs 智利",
+          "score": "4-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 新西兰 vs 芬兰",
+          "score": "0-2",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "波特兰伐木者 vs 洛杉矶银河",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "03/15",
+          "match": "休斯敦迪纳摩 vs 波特兰伐木者",
+          "score": "3-2",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "波特兰伐木者 vs 温哥华白浪",
+          "score": "1-4",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "科罗拉多急流 vs 波特兰伐木者",
+          "score": "2-0",
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50539354"
+    },
+    {
+      "name": "奥尔德",
+      "number": 11,
+      "position": "后卫",
+      "age": 23,
+      "height": 173,
+      "weight": 73,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-05-15",
+      "nationality": "德国",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 82,
+        "力量": 70,
+        "防守": 58,
+        "盘带": 71,
+        "传球": 63,
+        "射门": 58
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "尼斯 vs 圣埃蒂安",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/15",
+          "match": "圣埃蒂安 vs 罗德兹",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "圣埃蒂安 vs 亚眠",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "罗德兹 vs 圣埃蒂安",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "圣埃蒂安 vs 特鲁瓦",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "巴斯蒂亚 vs 圣埃蒂安",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "圣埃蒂安 vs 欧塞尔",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "南锡 vs 圣埃蒂安",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "新西兰 vs 芬兰",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "圣埃蒂安 vs 阿讷西",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "格勒诺布尔 vs 圣埃蒂安",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "圣埃蒂安 vs 红星",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "波城 vs 圣埃蒂安",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "圣埃蒂安 vs 拉瓦勒",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50535707"
+    },
+    {
+      "name": "卡伦·埃利奥特",
+      "number": 17,
+      "position": "后卫",
+      "age": 26,
+      "height": 175,
+      "weight": 68,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-07-07",
+      "nationality": "新西兰",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 76,
+        "力量": 68,
+        "防守": 56,
+        "盘带": 43,
+        "传球": 56,
+        "射门": 48
+      },
+      "recent_matches": [
+        {
+          "date": "05/23",
+          "match": "奥克兰FC vs 悉尼",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/15",
+          "match": "阿德莱德联 vs 奥克兰FC",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "奥克兰FC vs 珀斯果糖联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "奥克兰FC vs 墨尔本城",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "悉尼 vs 奥克兰FC",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "奥克兰FC vs 中央海岸水手",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "奥克兰FC vs 墨尔本胜利",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "阿德莱德联 vs 奥克兰FC",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "新西兰 vs 牙买加",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "奥克兰FC vs 麦克阿瑟FC",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "纽卡斯尔喷气机 vs 奥克兰FC",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "奥克兰FC vs 帕斯光荣",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/28",
+          "match": "奥克兰FC vs 墨尔本城",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "惠灵顿凤凰 vs 奥克兰FC",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50386559"
+    },
+    {
+      "name": "汤米·史密斯",
+      "number": 15,
+      "position": "后卫",
+      "age": 36,
+      "height": 188,
+      "weight": 82,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1990-03-31",
+      "nationality": "新西兰",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 39,
+        "力量": 72,
+        "防守": 62,
+        "盘带": 47,
+        "传球": 48,
+        "射门": 37
+      },
+      "recent_matches": [
+        {
+          "date": "2025-08-02",
+          "match": "奥克兰FC - 布伦特里",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024-07-01",
+          "match": "麦克阿瑟FC - 奥克兰FC",
+          "score": "1-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2024-02-06",
+          "match": "米尔顿凯恩斯 - 麦克阿瑟FC",
+          "score": "2-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023-07-28",
+          "match": "科尔切斯特联 - 米尔顿凯恩斯",
+          "score": "2-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020-08-29",
+          "match": "自由球员 - 科尔切斯特联",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020-05-21",
+          "match": "桑德兰 - 自由球员",
+          "score": "1-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2020-02-21",
+          "match": "自由球员 - 桑德兰",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020-01-01",
+          "match": "科罗拉多急流 - 自由球员",
+          "score": "1-0",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2018-01-22",
+          "match": "伊普斯维奇 - 科罗拉多急流",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2017-05-31",
+          "match": "科尔切斯特联 - 伊普斯维奇",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2017-03-17",
+          "match": "伊普斯维奇 - 科尔切斯特联",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2010-03-01",
+          "match": "布伦特福德 - 伊普斯维奇",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50037923"
+    },
+    {
+      "name": "克罗科姆",
+      "number": 15,
+      "position": "门将",
+      "age": 32,
+      "height": 194,
+      "weight": 88,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-08-12",
+      "nationality": "新西兰",
+      "overall_rating": 68,
+      "stats": {
+        "扑救": 68,
+        "位置": 69,
+        "速度": 47,
+        "反应": 67,
+        "开球": 64,
+        "手型": 69
+      },
+      "recent_matches": [
+        {
+          "date": "05/11",
+          "match": "米尔沃尔 vs 赫尔城",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/08",
+          "match": "赫尔城 vs 米尔沃尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "米尔沃尔 vs 牛津联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/24",
+          "match": "查斯特城 vs 米尔沃尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/21",
+          "match": "斯托克城 vs 米尔沃尔",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "米尔沃尔 vs 女王公园巡游者",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/10",
+          "match": "西布朗 vs 米尔沃尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/06",
+          "match": "米尔沃尔 vs 诺维奇",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "米德尔斯堡 vs 米尔沃尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 英格兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 英格兰 vs 芬兰",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "伊普斯维奇 vs 米尔沃尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "米尔沃尔 vs 布莱克本流浪者",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "米尔沃尔 vs 维拉郡",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "赫尔城 vs 米尔沃尔",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50139015"
+    },
+    {
+      "name": "保尔森",
+      "number": 18,
+      "position": "门将",
+      "age": 23,
+      "height": 184,
+      "weight": 83,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-07-04",
+      "nationality": "新西兰",
+      "overall_rating": 70,
+      "stats": {
+        "扑救": 71,
+        "位置": 65,
+        "速度": 55,
+        "反应": 73,
+        "开球": 71,
+        "手型": 66
+      },
+      "recent_matches": [
+        {
+          "date": "05/17",
+          "match": "波兰超 格但斯克莱希亚 vs 华沙莱吉亚",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "波兰超 罗兹维泽夫 vs 格但斯克莱希亚",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/04",
+          "match": "波兰超 拉多米亚克 vs 格但斯克莱希亚",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "波兰超 格但斯克莱希亚 vs 球斯托霍瓦",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/20",
+          "match": "波兰超 格但斯克莱希亚 vs 皮亚斯特",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/10",
+          "match": "波兰超 普沃茨克维斯瓦 vs 格但斯克莱希亚",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/06",
+          "match": "波兰超 格但斯克莱希亚 vs 凯尔采王冠",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 新西兰 vs 牙买加",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "波兰超 格但斯克莱希亚 vs 什切青波贡",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "波兰超 GKS卡托维兹 vs 格但斯克莱希亚",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/06",
+          "match": "波兰超 格但斯克莱希亚 vs 波兹南",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "波兰超 格丁尼亚 vs 格但斯克莱希亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/23",
+          "match": "波兰超 格但斯克莱希亚 vs 卢宾",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/15",
+          "match": "波兰超 卢布林摩托 vs 格但斯克莱希亚",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50474840"
+    },
+    {
+      "name": "迈克尔·沃德",
+      "number": 1,
+      "position": "门将",
+      "age": 27,
+      "height": 196,
+      "weight": 89,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1999-01-16",
+      "nationality": "新西兰",
+      "overall_rating": 60,
+      "stats": {
+        "扑救": 65,
+        "位置": 59,
+        "速度": 39,
+        "反应": 63,
+        "开球": 64,
+        "手型": 49
+      },
+      "recent_matches": [
+        {
+          "date": "05/23",
+          "match": "奥克兰FC vs 惠灵顿凤凰",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/15",
+          "match": "阿德莱德联 vs 奥克兰FC",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "奥克兰FC vs 阿德莱德联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "奥克兰FC vs 惠灵顿凤凰",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "惠灵顿凤凰 vs 奥克兰FC",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "奥克兰FC vs 中央海岸水手",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "奥克兰FC vs 惠灵顿凤凰",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "阿德莱德联 vs 奥克兰FC",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "新西兰 vs 智利",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "新西兰 vs 中国",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "奥克兰FC vs 澳大利亚FC",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "纽卡斯尔喷气机 vs 奥克兰FC",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "奥克兰FC vs 珀斯光荣",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/28",
+          "match": "奥克兰FC vs 悉尼FC",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "澳超联赛 vs 奥克兰FC",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50232262"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "2026-06-27 14:15",
+      "competition": "FIFA系列赛",
+      "home_team": "新西兰",
+      "away_team": "芬兰",
+      "score": "0 - 2"
+    },
+    {
+      "date": "2026-06-30 14:15",
+      "competition": "FIFA系列赛",
+      "home_team": "新西兰",
+      "away_team": "智利",
+      "score": "4 - 1"
+    },
+    {
+      "date": "2026-06-03 08:00",
+      "competition": "友谊赛",
+      "home_team": "海地",
+      "away_team": "新西兰",
+      "score": null
+    },
+    {
+      "date": "2026-06-07 04:00",
+      "competition": "友谊赛",
+      "home_team": "英格兰",
+      "away_team": "新西兰",
+      "score": null
+    },
+    {
+      "date": "2026-06-16 09:00",
+      "competition": "世界杯",
+      "home_team": "伊朗",
+      "away_team": "新西兰",
+      "score": null
+    },
+    {
+      "date": "2026-06-27 11:00",
+      "competition": "世界杯",
+      "home_team": "新西兰",
+      "away_team": "比利时",
+      "score": null
+    }
+  ]
+}

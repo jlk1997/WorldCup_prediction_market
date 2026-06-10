@@ -1,0 +1,1627 @@
+This document is non-independent research and a marketing communication and has been prepared and 
+distributed by Panmure Liberum Limited. This communication has not been prepared in accordance with legal 
+requirements under COBS 12 of the FCA Handbook designed to promote the independence of investment 
+research and is not subject to a prohibition on dealing ahead of the dissemination of investment research. 
+However, Panmure Liberum is required by the FCA to have policies in place to identify and manage the conflicts 
+of interest which may arise in its production, which include preventing dealing ahead. Please refer to the end of 
+the document for a list of items which could create a conflict of interest, other material interests in relation to the 
+company(ies) detailed in this research and Reg-AC certification. If this document is distributed by another firm, it 
+is considered independent third-party research and additional information regarding such firm is provided at the 
+end of the document. Investors should be aware that Panmure Liberum may have a conflict of interest that could 
+affect the objectivity of this communication. Investors should consider this communication as only a single factor 
+in making their investment decision. ^Completed when first distributed.
+Lead Author
+Joachim Klement
+Research Analyst
++44 (0)20 3100 2073
+joachim.klement@panmureliberum.com
+Every four years, I write a note that has many more readers 
+than anything else I publish. This is the note. It is our 
+forecast for the FIFA World Cup, this year in Canada, the 
+United States and Mexico. It has become a tradition among 
+banks to make these forecasts to show that economists 
+have a sense of humour (they don’t) and can actually 
+forecast things that matter. They can’t. Or rather, most of 
+them can’t. I developed a proprietary econometric model in 
+2014 to forecast the winner of the previous three World 
+Cups and so far, my track record is 100% accurate. Clearly, 
+nothing can go wrong in making another forecast.
+As you might have guessed from the intro, this note is very 
+much tongue in cheek and has absolutely nothing to do with 
+investments – or has it?
+Our track record
+
+2014: Germany correctly forecast
+
+2018: France correctly forecast
+
+2022: Argentina correctly forecast
+
+2026: …
+Three biggest surprises
+
+Japan with one of the biggest 
+upsets in World Cup history
+
+Another all-European semi-final
+
+An unlikely champion
+Why it matters
+
+During a World Cup, the US stock 
+market underperforms by 3.9% 
+compared to normal periods.
+
+Markets in countries that win a 
+match outperform the next day.
+What the bookies say
+
+Spain 5/1
+
+France 6/1
+
+England 13/2
+
+Argentina 17/2
+ 
+Strategy Economics & ESG | All Cap Strategy - Fundamental & Multi Asset | 09 
+April 2026^
+Strategy
+FIFA World Cup Predictions 2026
+   
+
+FIFA World Cup Predictions
+09 April 2026
+2
+Contents
+First, some much-needed perspective .....................................3
+Why the World Cup matters..........................................................3
+The model .....................................................................................4
+Excuses: If I am right, it’s skill and if I am wrong, it’s 
+somebody else’s fault ...................................................................5
+The forecast.................................................................................7
+The group stage............................................................................7
+The last 32: One of the biggest upsets in World Cup history......10
+The last 16: Germany vs France in the last 16 ...........................11
+Quarter-finals: England vs Japan again......................................12
+Semi-finals: Four European teams .............................................13
+And the winner is….....................................................................14
+Disclaimer..................................................................................18
+
+FIFA World Cup Predictions
+09 April 2026
+3
+First, some much-needed perspective
+In this section, I set the scene for our World Cup predictions. To put 
+some perspective on this exercise, let me stress that a football World 
+Cup isn’t everything. It’s the only thing. Nothing in the world is more 
+important than who wins the World Cup. Your job, your marriage, the 
+birth of your children, none of that matters compared to the question of 
+which random assortment of 20-something millionaires are most 
+successful at kicking a children’s toy across a lawn. Hence, I have put 
+great effort into building a model that can predict the outcome of this life-
+changing event. In this section, I will explain how this model works and 
+provide a series of excuses I will deploy in the unlikely case that any of 
+my forecasts do not come true.
+Why the World Cup matters
+It is superfluous to explain to any football fan worth his or her salt why the 
+World Cup matters. But for readers who wonder what all the fuss is about, I 
+recommend John Oliver’s explanation from 2014, which is as accurate today 
+as it was back then: Football is a religion.
+Apart from being a substitute religion for middle-aged men like me, football in 
+general and the World Cup in particular can be an influential force in stock 
+markets as well. 
+It starts with the very day a country is announced as the host of a future World 
+Cup. Bijen Ramdas, Reinette van Gaalen and Jordy Bolton1 looked at the 
+stock market reaction of countries after they had been announced as the host 
+of a future World Cup and found no systematic effect. Rather, the true 
+significance of the announcement seems to be for countries that lose the bid. 
+While there is no significantly positive effect on the stock market of future host 
+countries, countries that lose their bid to host the tournament experience 
+significantly negative abnormal returns.2
+But while the announcement effect may be small and irrelevant, the 
+tournament has everyone in its grip, and the mood swings from winning or 
+losing games impact stock markets. In 2007, the world’s most prestigious 
+finance journal published a study by Alex Edmans, Diego Garcia and Oyvind 
+Norli. It showed that if a country loses in the knockout stage of a World Cup, 
+the local stock market in that country experiences an abnormal loss of 0.49% 
+the next day.3 Studies of eight different stock markets from Spain to the UK 
+and Uruguay showed that the results of the national football team at the World 
+Cup do influence the returns of the local stock market, with markets performing 
+better after victories and worse after losses.4 In the case of the US stock 
+market, clearly not a country where football is particularly popular, Guy 
+Kaplanski and Haim Levy found that during the World Cup, the US stock 
+market underperforms by 3.9%.5 
+1 Ramdas, B., R. van Gaalen, and J. Bolton (2015). “The Announcement Impact of Hosting the FIFA World Cup 
+on Host Country Stock Markets.” Procedia Economics and finance, vol. 30, 226-238.
+2 Charles, A. and O. Darné (2016). “Stock Market Reactions to FIFA World Cup Announcements: An Event 
+Study.” Economics Bulletin, vol. 36(4), 2028-2036.
+3 Edmans, A. D. Garcia, and O. Norli (2007). “Sports Sentiment and Stock Returns.” Journal of Finance, vol. 
+62(4), 1967-1998.
+4 Gomez Martinez, R, and C. P. Roman (2014). “Sentimento del Inversor, Selecciones Nacionales de Futbol y su 
+Influencia sobre sus Indices Nacionales.” Revista Europea de Direccion y Economia de la  Empresa, vol. 23, 99-
+114.
+5 Kaplanski, G. and H. Levy (2010). “Exploitable Predictable Irrationality: the FIFA World Cup Effect on the U.S. 
+Stock Market.” Journal of Financial and Quantitative Analysis, vol. 45 (2), 535-553.
+
+FIFA World Cup Predictions
+09 April 2026
+4
+The literature is pretty consistent in pointing to investor inattention and 
+sentiment swings as the main drivers of abnormal stock market returns during 
+the World Cup. Because investors are distracted by football matches, markets 
+tend to drift lower during the tournament, but if a team wins, the enthusiasm 
+this victory creates makes investors more risk-seeking and pushes up prices 
+the next day. Meanwhile, if a team loses, investors are more risk-averse (or 
+simply hungover) the next day and take fewer risks, thus creating additional 
+downward pressure on prices. 
+The model
+Football matters – so much that academics have spent some of their time 
+developing models to forecast the matches. The model used in this note has 
+its roots in a study by Robert Hoffmann, Lee Chew Ging and Bala Ramasamy 
+from the University of Nottingham.6 They show that certain economic and 
+climatic variables can predict success in international football matches:
+
+GDP/capita: The good thing about football is that it can be played 
+anywhere, but for a national team to be successful at the World Cup, a country 
+needs some important infrastructure. Decent football pitches and academies 
+where young players can be developed are essential to tap into the existing 
+talent pool. Countries that are too poor to invest in stadiums or academies or 
+don’t have a national talent development programme lose out. Thus, the richer 
+a country is, the better its football team will likely be. But there is a decline in 
+the marginal success rate that eventually becomes negative. If a country is too 
+rich, kids may choose other sports or video games over playing football. Even 
+today, football remains a game mostly played by working- and middle-class 
+people and very rich countries have significant difficulty in keeping young 
+talent in their programmes. 
+
+Population size is also an important influence. If a country has more 
+people, the talent pool is bigger, and it is more likely that the country will 
+develop world-class players who excel on the international stage. But why then 
+are countries like China and India underperforming in football? The problem is 
+that the talent pool only matters if football is a mainstream sport. In the study 
+mentioned above, the researchers found that population size matters mostly 
+for Latin American countries where football is a religion, and every kid plays 
+the game at some point in their lives.
+
+Another important contributing factor is temperature. If a country is too 
+cold or too hot, it becomes too difficult or even impossible to play football. The 
+ideal temperature for football seems to be 14C or roughly the average annual 
+temperature experienced in much of Southern Europe and South America. Is it 
+a wonder that apart from England in 1966 and Germany in 1954, 1974, 1990, 
+and 2014, all World Cups were won by countries from these areas?
+
+Finally, being a host country helps. The support from the majority of the 
+fans in a stadium gives a team that slight edge that can make the difference 
+between winning, drawing, and losing.
+Our model uses all these socioeconomic variables to predict the outcome of 
+the World Cup, but also adds the current FIFA ranking points to indicate the 
+strength of the current squad.
+Using these variables, I can explain some 55% of the variation in success 
+across nations in a World Cup. But this means that some 45% of the outcome 
+6 Hoffmann, R., L. C. Ging, and B. Ramasamy (2002). “The Socio-Economic Determinants of International 
+Soccer Performance.” Journal of applied Economics, vol. 5 (2), 253-272.
+
+FIFA World Cup Predictions
+09 April 2026
+5
+is determined by luck. Thus, my model includes an element of chance when 
+determining the outcome of matches between any two teams. Yes, a team can 
+have a high chance of winning against another team, but upsets happen, and 
+my model takes these effects into account. 
+As mentioned above, I developed this model in 2014 to predict the outcome of 
+the World Cup in Brazil. I used the same model to predict the outcome of the 
+2018 World Cup in Russia and the 2022 World Cup in Qatar, which gives me a 
+track record of three events. Originally, this was supposed to be an exercise in 
+humility to show the world how stupid and unreliable economic models are, yet 
+economists think they can forecast everything from inflation to the pandemic to 
+football world cups.
+And the worst thing happened. I got it right. And then a second time. And a 
+third time. The result was that for the last four years, I have been inundated 
+with questions about whether I would forecast the Euros, the Rugby World 
+Cup, the Olympic Games, the Premier League, etc. And this year, I have been 
+asked nonstop since January when our predictions would be published, so 
+people could bet on the winner of the World Cup 2026. Maybe, being 
+inundated with these requests is the reason why this year, I make a very 
+unlikely prediction for the winner that subjectively feels wrong. Alas, the model 
+is the model, and I trust the system.
+Let’s be very clear: If you take this model and these forecasts seriously, 
+you are deluding yourself. If you bet money on the World Cup because of 
+this model, nobody can help you, and you shouldn’t be surprised to lose 
+money. 
+In asset management, a common observation is that fund managers who have 
+had several years of spectacular outperformance tend to attract a ton of new 
+investments. Yet, even by chance, a coin will come up heads three or four 
+times in a row. That doesn’t mean that it will come up heads again next time. 
+So, inevitably, when the string of outperformance ends for these supposedly 
+skilled fund managers, people complain and want their money back. 
+Remember that when you go online and bet your life savings on something 
+that is essentially random.
+Excuses: If I am right, it’s skill and if I am wrong, it’s 
+somebody else’s fault
+I have been working in the financial services industry for more than 20 years, 
+and if I have perfected one thing, it is how to find excuses for faulty predictions. 
+This time, some crucial characteristics of a World Cup are different. Most 
+importantly, we are dealing with a massively expanded tournament with 48 
+teams rather than 32. Plus, there is an additional knockout stage, and with 
+every knockout game, luck plays an increased role. Underdogs can beat 
+superior teams in any single game, but it is much less likely that they make it 
+out of the group stage after three games. 
+Of course, in this World Cup, almost all teams will make it out of the group 
+stage anyway, so the result will be knockout matches in the round of 32 where 
+clear underdogs are matched up against some football heavyweights. All these 
+underdogs need to do to progress is get a 0-0 or a 1-1 draw over the 120 
+minutes plus injury time and then hope for the best in a penalty shootout. If 
+
+FIFA World Cup Predictions
+09 April 2026
+6
+that were to happen to one of the tournament favourites, like say, England, it is 
+highly likely that England will lose the penalty shootout and be eliminated.
+So, that’s one excuse down. But as James Montier so eloquently puts it in his 
+Little Book of Behavioural Investing, there are also five generic excuses for 
+forecasters that are commonly used. Here they are with James’s comments 
+and my version of the excuse for the World Cup predictions:
+1. The ‘if only’ defence: “If only the Fed had raised rates, then it would have 
+been true.” Effectively, the experts claim that they would have been correct 
+if only their advice had been followed. 
+My version for this World Cup: “If only France had made it out of the 
+group stage, they would have made it into the last 32 [change the phrases 
+“France”, “group stage”, and “last 32” as needed].”
+2. Ceteris paribus: Something outside of the model of analysis occurred; 
+therefore, it isn’t my fault.
+My version for this World Cup: “Kyllian Mbappe got injured; therefore, it 
+isn’t my fault that France didn’t make it past the group stage [change player 
+name, country and tournament stage as needed].”
+3. I was almost right: “Although the predicted outcome didn’t occur, it almost 
+did.”
+My version for this World Cup: “Although France didn’t make it into the 
+finals, they made it into the semi-finals [change country and tournament 
+stages as needed].”
+4. It just hasn’t happened, yet: “I wasn’t wrong, it just hasn’t occurred yet.” 
+My version for this World Cup: “I wasn’t wrong, I was just predicting 
+another World Cup.”
+5. The single prediction: “You can’t judge me by the performance of a single 
+forecast.” 
+My version for this World Cup: “You can’t judge me by the performance 
+of the 2026 prediction. Look at my predictions for 2014, 2018, and 2022.”
+
+FIFA World Cup Predictions
+09 April 2026
+7
+The forecast
+As always, many favourites will make it through the group stage without 
+problems, but some will struggle. And there is always a major football 
+country that is eliminated in the group stage, but nobody can say in 
+advance which one it will be. As we enter the knockout phase, luck plays 
+an increasingly important role, particularly in this expanded tournament 
+with 32 teams in the knockout phase rather than the 16 teams we were 
+used to. But our model will hopefully be able to cope with all that and 
+provide an accurate prediction of what is going to happen.
+The group stage 
+Our model was built for the old World Cup format, where two out of four teams 
+in each group made it out of the group stage and into the knockout phase. This 
+is still the case this time, but it is complicated by the fact that the eight best 
+third-placed teams will also make it out of the group stage. Thanks for nothing, 
+Gianni Infantino.
+To deal with this complexity, I show the likelihood of each team to make it into 
+the top two of the group and automatically qualify for the knockout stage. 
+Because two teams get promoted in each group, the likelihoods sum up to 
+200% rather than 100%. Once we get the two top-placed teams out of the way, 
+I will do a separate ranking of the third-placed teams to identify the eight best 
+teams in this bunch that will make it into the knockout stage. 
+As always, I emphasise the probabilistic nature of the forecast. In Group A, for 
+example, South Korea is favoured to win the group and has a 72% chance of 
+coming first or second. But that doesn’t mean that South Korea will make it into 
+the knockout stages with certainty. It just means that if we were to replay the 
+World Cup many times, on average, in one of four cases, South Korea would 
+be placed third or fourth in the group and may be eliminated or only make it 
+into the knockout stages as one of the best third-placed teams.
+Overall, Group A is one of the more competitive groups, where the other three 
+teams in the group (Mexico, Czechia, and South Africa) are all of similar 
+strength at the moment. The result is that each team has a decent chance to 
+make it at least to third place, if not second. In the end, I expect Czechia to 
+have the edge over Mexico in the run for second place, with Mexico coming in 
+third.
+In Group B, Switzerland is the runaway favourite to top the group, while 
+Canada, Qatar, and Bosnia-Herzegovina are again relatively evenly matched. 
+While Qatar may have a surprisingly high likelihood of advancing to the 
+knockout stage, the home crowd will lift Canada into second place after 
+Switzerland, while Qatar will come in third after winning for the first time ever at 
+a World Cup in its match against Bosnia. It may sound disappointing, but Qatar 
+is making progress as a footballing nation and is on a good track to becoming 
+a more established contender at World Cups.
+What can I say about Group C that isn’t obvious? Clearly, Brazil is going to 
+win this group, and Haiti will get a participation trophy at their first-ever World 
+Cup. When it comes to second and third place, Morocco is the clear favourite 
+to clinch automatic promotion as the second-placed team in the group. After 
+all, we are talking here about the African champions (if you believe the official 
+statistics; to me, Senegal remains the champion) and the team that made it 
+
+FIFA World Cup Predictions
+09 April 2026
+8
+into the semi-finals in the last World Cup. Scotland, meanwhile, returns to the 
+tournament for the first time in the 21st century with a solid team that is 
+unfortunately lacking a striker like Archie Gemmill, which is why they will lose 
+the crucial match against Morocco. Plus, the World Cup is played in sunshine 
+and on a pristine pitch rather than in rain and on a potato field, so the Scottish 
+players are facing a rather unfamiliar environment that is likely to impede their 
+performance.
+Group D is the most evenly matched group of all in this World Cup. In truth, 
+every one of the four teams can come first in the group, and all of them can 
+come last. It will all depend on the form on the day who will succeed, but I think 
+the Australians will summon their cricket spirit and win the group in the same 
+way they win the Ashes – mostly due to the ineptitude of their opponents, and 
+if that isn’t enough, then cheating. 
+As one of the host nations, I would have guessed that the US would make it 
+into the top two in the group, but it turns out the host nation advantage is 
+declining and is likely to be even less pronounced in this World Cup, which is 
+split between three countries and spread over an entire continent. Anyone who 
+can remember the European Championships of 2021 (can anyone?) will 
+remember that it was one of the least atmospheric tournaments of all time 
+because there was never a chance for the people in a country to get into the 
+hype of hosting a major tournament. I don’t think this is going to be a problem 
+in a football-mad country like Mexico, but I do think that the US and Canada 
+will not get the host nation support that past hosts have enjoyed. So, the US is 
+in third place.
+Which means that Turkey, in its first tournament since 2002, will make it into 
+second place in the group.
+Which brings me to Group E. As a German, this is the most important group to 
+watch, especially after Germany failed to make it out of the group stage in the 
+last two World Cups. Luckily, it is extremely unlikely that this will happen again 
+this year, given the expanded tournament and the relatively easy opponents 
+Germany faces in the group stage. Curacao should be no problem, and 
+between the Ivory Coast and Ecuador, I would expect Germany to at least 
+come in second in the group. Most likely, though, they will top the group with 
+Ecuador in second place.
+Group F is a much harder group, with the Netherlands the favourite. But a 
+Japanese team that is a dark horse in this tournament, and a Swedish team 
+with Viktor Gyökeres and Alexander Isak, it is not going to be easy. In the end, 
+I think the Netherlands and Japan will prevail and emerge hardened by a tough 
+group phase – something that will give them an edge in the knockout stages, 
+since many experts will not fancy either of these teams, given a couple of 
+scrappy matches against tough opponents. But in my view, these two teams 
+will need less time to adapt to the all-or-nothing stakes of a knockout match, 
+which gives them an advantage.
+New Zealand is the rank outsider in Group G, while Belgium is the strongest 
+team. When it comes to the remaining two teams, I think Iran and Egypt are 
+currently evenly matched in terms of strength. Obviously, it is unclear at this 
+point if Iran will even participate in a World Cup in the US, given the war, but if 
+they do, I think they will have the edge over Egypt and come second in the 
+group. Should Iran choose to boycott the tournament, it could be replaced by 
+the UAE, which is a weaker team than Egypt. That would then change the 
+
+FIFA World Cup Predictions
+09 April 2026
+9
+knockout bracket with Egypt as the second-placed team in the group and UAE 
+or New Zealand in third. But long story short, even if Iran withdraws from the 
+tournament, it wouldn’t change the forecasts for the semi-finals or the final, so 
+let’s not bother with that eventuality any longer.
+Group H is one of the easiest groups to call. Spain is so much better than all 
+the other teams in the group that it would be a major upset if the team does not 
+win the group. Meanwhile, both Saudi Arabia and Cape Verde are no match 
+for Uruguay, so the South Americans will follow Spain into the knockout stage.
+Group I is dominated by France as the clear favourite to win the group, but it is 
+going to be a tight race between a strong Norwegian team and Africa Cup-
+winning Senegal. My model gives Senegal the edge over Norway, but Norway 
+is likely to progress as one of the best third-placed teams.
+Even without Messi, Argentina will top Group J, and if Messi decides to play in 
+the tournament, the team’s edge over Austria, Algeria and Jordan will be even 
+bigger. However, I don’t buy the considerable number of pundits who claim 
+that Argentina is a favourite to win the tournament. I think that is a case of 
+hindsight bias. The Argentina of today is nowhere near as strong as the team 
+four years ago. But it is strong enough to win the group and progress together 
+with Austria.
+Both Group K and Group L have two teams that are clearly better than the 
+rest, so I expect that these teams will place first and second in their groups. 
+For Group K, that means that Portugal and Colombia will advance to the 
+knockout stages, with Portugal winning the group. 
+In Group L, England should win the group even if Harry Kane is not fit or, for 
+once, doesn’t score a goal. With Kane on board, winning the group should be 
+a walk in the park for England. And as always, small Croatia will once again 
+punch well above its weight and progress to the knockout stages. Luka Modric 
+has retired, and Ivan Perisic is 37, but they have Josip Stanisic from Bayern 
+Munich and Josko Gvardiol from Manchester City at the back, Lovro Majer and 
+Mario Pasalic in midfield and Andrej Kramaric in front. That should be enough 
+quality to secure second place in the group.
+Figure 1: Likelihood of making it into the top 2 in each group
+Switzerland (90%)
+Qatar (43%)
+Canada (35%)
+Bosnia (32%)
+Group B
+South Korea (72%)
+Czechia (52%)
+Mexico (44%)
+South Africa (33%)
+Group A
+Brazil (99%)
+Morocco (59%)
+Scotland (38%)
+Haiti (5%)
+Group C
+Australia (61%)
+Turkey (59%)
+USA (43%)
+Paraguay (37%)
+Group D
+Netherlands (73%)
+Japan (58%)
+Sweden (41%)
+Tunisia (28%)
+Group F
+Germany (93%)
+Ecuador (65%)
+Ivory coast (37%)
+Curacao (5%)
+Group E
+Belgium (85%)
+Iran (57%)
+Egypt (43%)
+New Zealand (15%)
+Group G
+Spain (99%)
+Uruguay (63%)
+Saudi Arabia (25%)
+Cape Verde (13%)
+Group H
+Argentina (91%)
+Austria (52%)
+Algeria (40%)
+Jordan (17%)
+Group J
+France (85%)
+Senegal (48%)
+Norway (41%)
+Iraq (25%)
+Group I
+Portugal (77%)
+Colombia (73%)
+Uzbekistan (28%)
+DR Congo (23%)
+Group K
+England (89%)
+Croatia (70%)
+Panama (36%)
+Ghana (5%)
+Group L
+Source: Panmure Liberum estimates
+
+FIFA World Cup Predictions
+09 April 2026
+10
+That’s the group stages dealt with. Or rather, that should have been the group 
+stages dealt with. But FIFA had to go for the usual money grab and expand the 
+tournament, so that eight of the twelve third-place finishers will be promoted to 
+the round of 32 as well. 
+I had to expand the model a bit and looked at the twelve candidates for third-
+place finisher, together with their likely points scored, to assess who will be 
+most likely to be promoted. Long story short, the eight teams that will be 
+promoted, according to my model, are Mexico (Group A), Scotland (Group C), 
+USA (Group D), Ivory Coast (Group E), Sweden (Group F), Egypt (Group G), 
+Norway (Group I), and Algeria (Group J).
+This means that number 281 of the 495 possible permutations for third-place 
+finishers will be activated for the round of 32. I know, it is ridiculous, but here 
+we are.
+The last 32: One of the biggest upsets in World Cup history
+On to the newly introduced round of 32. I hasten to emphasise that in a 
+knockout match, luck plays a much more important role than in the group 
+stage because even highly favoured teams can have an off day or a scrappy 
+underdog can win via penalties or in overtime.
+Having said that, Germany will easily beat the USA, Portugal will beat the Ivory 
+Coast, France will dispose of Sweden, Spain of Austria, Belgium of Mexico, 
+and England of Norway. 
+Mexico’s defeat against Belgium will be one more heartbreak for its fans since 
+even in this expanded tournament, the country will still miss out on its 
+ephemeral ‘fifth game’ in a tournament.
+Then there are the nailbiters, which will likely be extremely tight matches 
+between evenly matched opponents. 
+While there is less of a home advantage in this tournament than in past ones, 
+Canada should still be able to beat Czechia with the help of its supporters. The 
+Netherlands will likely win 1-0 or something close to that against a Moroccan 
+team with a very strong defence. Another evenly matched pair is Colombia vs 
+Croatia, where the experience of Croatia will likely make the difference in their 
+favour. 
+Ecuador and Senegal are of similar strength on paper, but given their most 
+recent form, Senegal should have the edge and advance to the last 16. 
+Meanwhile, South Korea isn’t as good as it used to be, but it's still good 
+enough to beat Scotland (sorry, Scottish readers). Similarly, Turkey isn’t at the 
+height of its powers, but strong enough to edge a win against Iran.
+Which leaves us with Australia vs Algeria, which is likely to go in favour of 
+Australia, but only just and Switzerland vs Egypt, which is likely to be closer 
+than people may think. In the end, the greater depth and breadth of the Swiss 
+team should help them advance.
+This leaves us with the two South American powerhouses, Argentina (vs 
+Uruguay) and Brazil (vs Japan).
+
+FIFA World Cup Predictions
+09 April 2026
+11
+The title of this section gives away the results. While Argentina wins against 
+Uruguay, Japan will win against Brazil in what is likely to be one of the biggest 
+upsets in World Cup history.
+I can already hear the gasps of many readers. Brazil remains an eternal fan 
+favourite and is always favoured to win a World Cup. Plus, there is the stupid 
+statistic that, except for the World Cup 2014 in Brazil, every tournament in the 
+Americas has been won by a South American team. 
+Yeah, and in 2014, you didn’t believe me when I said Germany would win. May 
+I remind you of one of my favourite football matches of all time at the Mineirao 
+Stadium in Belo Horizonte on 8 July 2014? It’s become so famous that it has 
+its own Wikipedia page. As a German, all I can say is Müller (11’), Klose (23’), 
+Kroos (24’), Kroos again (26’), Khedira (29’), Schürrle (69’) and Schürrle again 
+(79’). 
+Meanwhile, Japan is on a real run. The team beat Germany at the World Cup 
+four years ago (let’s not dwell on that…), beat Brazil 3-2 in a friendly in 
+October 2025, and beat both Scotland and England 1-0 in the last few weeks. 
+And they beat England even without three of their best players (Ko Itakura, 
+Takefusa Kubo, and captain Wataru Endo). 
+So, out with Brazil in the last 32 and on for the rest to the last 16.
+The last 16: Germany vs France in the last 16
+The good news for both Germany and France in the World Cup draw was that 
+they both got relatively easy opponents in the group stage. The bad news was 
+that if they both win their groups, as I predict they will, they will face each other 
+in the round of 16.
+Throughout much of football history, a match between France and Germany 
+could have been the final of a World Cup or a European championship. 
+Though ironically, the ups and downs of the two teams have never been 
+synchronised, so they have never met in a major tournament final. Instead, it 
+has been tense quarter-finals and the like. The last time the two met in a World 
+Cup was in the quarter-finals of the 2014 World Cup, where Germany 
+prevailed 1-0. But since then, France has won every one of the four 
+encounters they have had at major tournaments. In the semi-final of the Euro 
+2016, the group stage of the 2018/19 Nations League, the group stage of the 
+Euro 2020, and the final of the 2025 Nations League. 
+It pains me to say this, but France is clearly a much better team than Germany 
+(and together with Spain one of the two best teams in the world right now) and 
+will win this match against Germany as well.
+The other matches are less glamorous, and like in the round of 32, there are 
+some matches where the balance of power is very lopsided. Spain can easily 
+beat Croatia, and the Netherlands should have no problem with Canada, while 
+England should be able to beat South Korea without any problems.
+A somewhat tighter match-up is Argentina vs Turkey, but even there, Messi 
+proves he can still make a difference and score the winning goal to send 
+Argentina through to the quarter-finals.
+
+FIFA World Cup Predictions
+09 April 2026
+12
+The remaining matchups are Australia vs Belgium, and lo and behold, the first 
+time the Socceroos encounter an opponent that isn’t totally rubbish, they lose. 
+Revenge for the Ashes at last…
+The remaining two matches are Japan vs Senegal and Switzerland vs 
+Portugal. My model predicts that Japan will use the momentum from their 
+massive win against Brazil to edge out Senegal and progress to a quarter-final 
+against… England.
+Meanwhile, Switzerland meets Portugal, and this is where the quality of the 
+individual players in Portugal’s team makes a real difference. If coach Roberto 
+Martinez doesn’t make the mistake to field Cristiano Ronaldo (ideally, he 
+doesn’t even nominate him for the tournament), then the likes of Bruno 
+Fernandes, Joao Neves, Goncalo Ramos and Bernardo Silva will make sure 
+Portugal advances.
+Quarter-finals: England vs Japan again
+As I write these lines, the sports pundits in the English press are still 
+hyperventilating about the crushing 1-0 defeat of a desolate England team 
+against Japan on 31 March. Under Thomas Tuchel, England has played 
+against three teams in the top 20 of the world rankings. They couldn’t win any 
+of them. The headlines in the English press range from ‘A failed experiment as 
+Tuchel gets grim glimpse of life without Harry Kane’ (BBC) to ‘England’s 
+experiment vs Japan and Uruguay was a disgrace’ (Daily Express) and 
+‘Woeful Three Lions BOOED off as flops miserably fail final World Cup audition 
+before summer’ (The Sun). You can always count on The Sun for a decent 
+headline…
+Personally, the defeat against Japan was not too surprising since it was a 
+friendly where Tuchel experimented a lot and was missing the one key player 
+who makes a difference. But by the time England plays against Japan in the 
+quarter-final of the tournament, Kane will be on the pitch, and Tuchel will rely 
+on a well-coordinated team. Result: England beats Japan and marches on to 
+the semi-finals. 
+Who will England face in the semi-finals? The quarter-final between Argentina 
+and Portugal pits the defending champion and last remaining South American 
+team who still relies heavily on an ageing star against a team that never won 
+the World Cup and still relies heavily on an ageing star. But unlike Argentina, 
+Portugal’s breadth and depth in the squad is much, much better and as long as 
+Ronaldo gets out of the way, Portugal should win this in overtime. 
+The third quarter-final is played between Spain and Belgium, and I am sorry, 
+but Spain is so much better than Belgium that I don’t really have to say 
+anything about this match other than Belgium can be glad if they lose by less 
+than three goals.
+This leaves me with the final matchup between France and the Netherlands 
+and a potential mouthwatering semi-final between Spain and France.
+I have already stated my admiration for France. It is an absolutely brilliant 
+team. Of course, Mbappé is the star, but look at the rest of the squad. The 
+offence is mind-blowing with Mbappé, Ousmane Dembélé, Michael Olise, and 
+potentially Christopher Nkunku or Kingsley Coman. 
+
+FIFA World Cup Predictions
+09 April 2026
+13
+In midfield, they have Aurélien Tchouaméni together with N’Golo Kanté. And 
+as everyone knows, water covers 70% of the Earth, and Kanté covers the rest. 
+But it is not just the offence. In defence, they have Dayo Upamecano, one of 
+the best centre-backs in the world right now. They also have Ibrahima Konaté, 
+as well as Théo and Lucas Hernandez.
+Plus, their coach, Didier Deschamps, has managed them for 14 years and won 
+both the World Cup and the European Championship with them. 
+Clearly, they are going to win against a good but not great Dutch team, unless 
+they have a very bad day. And they do and lose 1-0 against the Netherlands 
+due to an own goal by a French player (who I will not name to spare him the 
+embarrassment).
+Semi-finals: Four European teams
+The 2018 World Cup in Russia was the last one where all semi-finalists came 
+from Europe. But this is not as rare as you may think. The same happened in 
+2006, 1982, 1966, and 1934. Five times in 25 tournaments, or 20% of the 
+cases.
+The first semi-final is between the Netherlands, which is increasingly emerging 
+as a surprise team in the tournament and Spain, the other great team in the 
+world right now. 
+With Spain, I could do the same as with France and mention all the fantastic 
+players they have. The front line features the world’s most in-form player, 
+Lamine Yamal, together with Ferran Torres, Álvaro Morata and Nico Williams. 
+The midfield, always the best part of great Spanish teams, features Rodri, 
+Pedri, Dani Olmo, Fabián Ruiz, Gavi and Martin Zubimendi. The only weak 
+spot, if there is any, could be the defence around Aymeric Laporte and Dani 
+Carvajal.
+And that is what becomes their downfall, as the team only manages to draw 
+against the Netherlands over 120 minutes and then loses in the penalty 
+shootout. It’s a cruel world if you are Spanish.
+The other semi-final between England and Portugal is also a tight contest. Two 
+exceptionally talented groups of individuals, two teams where pundits and fans 
+alike like to criticise their managers for not getting the best out of the collective. 
+Thomas Tuchel never managed a national team before he took over the 
+England job, and as I have discussed above, his track record against top 
+teams isn’t that great. But he knows how to be successful at tournaments, 
+having coached Paris Saint-Germain to a Champions League final in 2020 
+before winning the trophy with Chelsea a year later.
+Roberto Martinez, on the other hand, is tasked with the impossible job of 
+managing a vain Cristiano Ronaldo who still thinks he is the most important 
+player in the team and prevents Martinez from forming a true collective 
+necessary to succeed. And his track record as a manager is clearly not as 
+impressive as that of Tuchel. His biggest successes so far have been 
+managing Belgium to a third place in the 2018 World Cup and winning the 
+Nations League with Portugal in 2025.
+
+FIFA World Cup Predictions
+09 April 2026
+14
+But as I keep mentioning again and again, in a knock-out match, anything can 
+happen, and if two teams of similar quality meet in a World Cup semi-final, it is 
+basically down to luck which one will win. And in this case, my model predicts 
+that Portugal’s players win narrowly in a scrappy, unattractive match with few 
+goals as both teams try to avoid conceding goals on this important stage. 
+Figure 2: The knockout stage
+Germany
+USA
+France
+Sweden
+Czechia
+Canada
+Netherlands
+Morocco
+Colombia
+Croatia
+Spain
+Austria
+Australia
+Algeria
+Belgium
+Mexico
+Brazil
+Japan
+Ecuador
+Senegal
+South Korea
+Scotland
+England
+Norway
+Argentina
+Uruguay
+Turkey
+Iran
+Switzerland
+Egypt
+Portugal
+Ivory Coast
+Germany
+France
+Canada
+Netherlands
+Croatia
+Spain
+Australia
+Belgium
+Japan
+Senegal
+South Korea
+England
+Argentina
+Turkey
+Switzerland
+Portugal
+France
+Netherlands
+Spain
+Belgium
+Japan
+England
+Argentina
+Portugal
+Netherlands
+Spain
+England
+Portugal
+Netherlands
+Portugal
+Source: Panmure Liberum estimates
+And the winner is…
+This means we are going to see a final between two teams, neither of which 
+has ever won a World Cup. It’s like Spain vs the Netherlands in the 2010 
+World Cup. We will have a newly minted world champion. 
+To be honest, neither of these teams features typically among the conventional 
+favourites to win. Current Polymarket predictions put Portugal’s chances of 
+winning the trophy at 7% and the Netherlands’ at 3%.
+
+FIFA World Cup Predictions
+09 April 2026
+15
+Figure 3: Polymarket predictions for World Cup 2026 winner
+16%
+13%
+12%
+9%
+9%
+7%
+5%
+3%
+3%
+2%
+0%
+2%
+4%
+6%
+8%
+10%
+12%
+14%
+16%
+18%
+Spain
+France
+England
+Argenntina
+Brazil
+Portugal
+Germany
+Netherlands
+Norway
+Belgium
+Polymarket probability to win
+Source: Polymarket
+Historically, the Netherlands is arguably the best footballing nation in the world 
+that has never won the World Cup (having been beaten in a final three times). 
+Portugal similarly has always been a good team, but except for the Euro 2016, 
+they have never won any major trophy either. 
+But the Euro 2016 is a prime example of how a team can win a major 
+tournament without performing all that well. In that tournament, Portugal didn’t 
+win a single match in their group and only managed to advance to the quarter-
+finals as one of the best third-place teams. Then they drew 1-1 with Poland in 
+the quarter-finals and won on penalties. In the semi-final, they won 2-0 against 
+Wales before drawing 0-0 with France in the final and only winning the title 
+thanks to a goal by Eder.
+Our model does not predict either the Netherlands or Portugal to be exciting to 
+watch. The Netherlands had to grind out victories against Morocco, France 
+and Spain to get to the final, while Portugal had to face England and 
+Argentina. It’s been hard work for both teams to get here. Alas, only one of 
+them can win it.
+And as so often is the case, the final once again is a tight contest with few 
+goals, much more like the 2010 and 2014 finals than the 2018 and 2022 finals. 
+Younger readers may think that World Cup finals tend to be exciting and full of 
+goals. And I have to say the 2022 final between France and Argentina was by 
+far the best World Cup final I have ever seen in my lifetime, and possibly the 
+best final ever. But typically, in a World Cup final, both teams are trying to 
+make as few mistakes as possible, and teams that have never won the trophy 
+tend to be even more intimidated. The result is that these matches tend to end 
+1-0 with a penalty goal or something like that. And this happens again, this 
+time with the winner ultimately being…
+
+FIFA World Cup Predictions
+09 April 2026
+16
+Figure 4: World Cup winner 2026: The Netherlands
+Source: Wikimedia Commons
+Congratulations to the Netherlands for finally winning the trophy that they 
+should have won a long time ago. Keep the trophy safe for us Germans 
+because we will come in four years to ask for it back.
+
+FIFA World Cup Predictions
+09 April 2026
+17
+Conflicts of Interest
+Panmure Liberum has established policies, procedures, systems and controls to identify and prevent (where possible) conflicts of interest arising through the production of 
+investment recommendations and has a conflicts management policy relating to its research and marketing communication activities. Such controls include the 
+maintenance of information barriers such that confidential and/or inside information is controlled according to applicable law and regulations and the content and timing of 
+investment recommendations is not selectively disclosed prior to publication through Panmure Liberum’s normal distribution channels. The content of this communication 
+may have been disclosed to the company(ies) referenced herein prior to dissemination in order to verify factual accuracy. Please see below for specific conflicts of interest 
+disclosures relevant to the company(ies) the subject of this report. For Panmure Liberum’s Conflict of Interest policy please visit 
+www.panmureliberum.com/equities/regulatory-and-compliance
+Company Specific Disclosures
+Click or tap here to enter text.
+Distribution of Research Recommendations Produced by Panmure Liberum or its Affiliates During the Last Quarter
+Recommendations
+All Coverage
+Corporate Relationship
+Buy
+75.1%
+48.1 (% of all Buy recommendations during the quarter)
+Hold
+22.7%
+2.3 (% of all Hold recommendations during the quarter)
+Sell
+2.2%
+0.1 (% of all Sell recommendations during the quarter)
+ 
+Investment Recommendation Definitions
+Any investment recommendation within this communication reflect the author’s assessment of a stock's potential return:
+BUY stocks are expected to have a positive total shareholder return of at least +10%.
+HOLD stocks are expected to have a total shareholder return of between -10% and +10%.
+SELL stocks are expected to have a total shareholder return of between -10% or less.
+The time horizon for which the recommendation is deemed valid is 12 months unless otherwise specified in the particular communication. 
+Valuation Methodology
+Panmure Liberum analysts use several methods to produce a recommendation which may include, but are not limited to, peer group valuation metrics (including P/E, 
+dividend yield, EV/Sales, EV/EBITDA, EV/EBIT and FCFe Yield), sum-of-the-parts, EV/ROIC and DCF. The analyst assesses the risk by reference to a number of metrics 
+such as the company’s beta, market capital, NAV, net debt, revenue growth, and EBIT margin. Please visit the company specific page on Panmure Liberum’s Research 
+Portal linked above for details of the key risks of the company and risks related to the investment recommendation.. 
+Planned Frequency of Updates
+Recommendations in research are under constant review and as such, there is no formal timetable for the review of such recommendations. 
+Recommendation History
+To access a list of all research recommendations produced by Panmure Liberum in the past 12 months, please refer to www.panmureliberum.com/research-
+recommendation-history and www.panmureliberum.com/legal/sales-recommendation-history 
+
+FIFA World Cup Predictions
+09 April 2026
+18
+Disclaimer
+This communication has been issued in the UK 
+by Panmure Liberum Limited (“Panmure 
+Liberum”) which is authorised and regulated by 
+the Financial Conduct Authority ("FCA") and is 
+a member of The London Stock Exchange 
+PLC. The registered address of Panmure 
+Liberum is Ropemaker Place, 25 Ropemaker 
+Street, London EC2Y 9LY. Telephone: 020 
+3100 2000. Panmure Liberum is a subsidiary of 
+Panmure Liberum Group Limited (the “Group”). 
+For more information regarding disclosures 
+relevant to Panmure Liberum or the Group, 
+please email 
+compliance@panmureliberum.com.
+This communication has been prepared by its 
+author(s) as non-independent research and is a 
+marketing communication in relation to 
+company(ies) discussed herein (each a 
+"Company"). Accordingly, it has not been 
+prepared in accordance with UK legal 
+requirements designed to promote the 
+independence of investment research and is 
+not subject to any prohibition on dealing ahead 
+of the dissemination of investment research. 
+However, Panmure Liberum is required by the 
+rules of the FCA to have policies in place to 
+identify and manage the conflicts of interest 
+which may arise in its business activities 
+including in relation to the production of this 
+communication, which include preventing 
+dealing ahead. Information regarding our 
+policies is available at 
+www.panmureliberum.com In addition to the 
+conflicts of interest disclosed herein, a list of 
+items which could create a conflict of interest 
+and other material interests in relation to 
+research material is set out on our website. 
+Please refer to 
+www.panmureliberum.com/equities/regulatory-
+and-compliance.  
+This communication may include information 
+which has been produced by a systematic 
+analysis system provided to Panmure Liberum 
+Limited (“Panmure Liberum”) under licence by 
+Systematic Analysis Limited (“Panmure 
+Liberum SAM”) and is published in the UK by 
+Panmure Liberum. Panmure Liberum SAM is a 
+proprietary data-driven, systematic approach to 
+stock selection which calculates potential risks 
+and opportunities drawing on publicly available 
+reported financial information and consensus 
+forecasts.  Panmure Liberum and the 
+individuals overseeing the proper functioning 
+and efficacy of Panmure Liberum SAM may 
+have responsibilities that conflict with the 
+interests of the persons who receive 
+investment recommendations and information 
+may be known to Panmure Liberum or persons 
+connected with it which is not reflected in this 
+communication. For information about the 
+valuation or methodology and the underlying 
+assumptions used in this communication or in 
+relation to the proprietary models used to 
+produce the Summary score, revisions 
+momentum score, the shareholder value score 
+and/or the valuation score, please contact 
+panmureliberumsam@panmureliberum.com
+The individuals who prepared this 
+communication may be involved in providing 
+other financial services to the Company or 
+Companies referenced herein or to other 
+companies who might be said to be 
+competitors of the Company or Companies 
+referenced herein. As a result, both Panmure 
+Liberum and the individual employees who 
+prepared this communication may have 
+responsibilities that conflict with the interests of 
+the persons who receive this communication 
+and information may be known to Panmure 
+Liberum or persons connected with it which is 
+not reflected in this communication. Panmure 
+Liberum may provide or may have provided 
+corporate services to the Company(ies) 
+mentioned in this communication and recipients 
+should not therefore rely on it as being an 
+impartial document. 
+This communication is provided for information 
+purposes only and should not be regarded as 
+an offer or solicitation to buy or sell any security 
+or other financial instrument. This 
+communication is provided with the 
+understanding that Panmure Liberum is not 
+acting in a fiduciary capacity and it is not a 
+personal recommendation to you. This 
+communication has no regard for the specific 
+investment objectives, financial situation and 
+needs of any specific person or entity. The 
+investments discussed in this communication 
+may not be eligible for sale in some states or 
+countries and may not be suitable for all 
+investors. Investors should make their own 
+investment decisions based upon their own 
+financial objectives and financial resources 
+and, if in any doubt, should seek advice from 
+an investment advisor. Panmure Liberum 
+and/or its officers, directors and employees 
+may have or take positions in securities of 
+companies mentioned in this communication 
+(or in any related investment) and may from 
+time to time dispose of any such positions and 
+may also provide corporate finance or 
+underwriting services for or relating to those 
+companies, for which it is remunerated.  
+Panmure Liberum analysts, including the 
+author of this communication, receive 
+compensation based on a number of factors 
+including the quality of research, client 
+feedback, firm profitability and normal 
+competitive factors. This communication is 
+based on materials and sources that are 
+believed to be reliable; however, they are not 
+independently verified and are not guaranteed 
+as being accurate. All expressions of opinions, 
+projections, forecasts and estimates constitute 
+a judgment and are those of the author and the 
+research department of Panmure Liberum only, 
+and should not be relied upon and are subject 
+to change without notice. The content of this 
+communication may have been disclosed to the 
+company referenced herein prior to 
+dissemination in order to verify factual 
+accuracy, however the company takes no 
+responsibility for the accuracy or otherwise of 
+any opinion, projection, forecast or estimate 
+contained within this communication. This 
+report may include content generated with the 
+assistance of AI tools. While AI may have been 
+used to enhance efficiency and content 
+creation, all information has been reviewed to 
+ensure, where possible, its accuracy and 
+reliability. While Panmure Liberum endeavours 
+to update its research communications from 
+time to time it is under no obligation to do so. 
+No representation or warranty either expressed 
+or implied, is made nor responsibility of any 
+kind is accepted by Panmure Liberum, its 
+directors, officers, employees, or agents either 
+as to the accuracy or completeness of any 
+information stated in this document nor should 
+it be relied on as such. Panmure Liberum shall 
+not be liable for any direct or indirect damages, 
+including lost profits, arising in any way from 
+use of all or any of the information contained in 
+this communication. 
+Panmure Liberum may have issued other 
+communications that are inconsistent with and 
+reach different conclusions from, the 
+information contained in this communication. 
+Those communications reflect the different 
+assumptions, views and analytical methods of 
+the individuals that prepared them. This 
+communication is not guaranteed to be a 
+complete statement or summary of any 
+securities, markets, reports, or developments 
+referred to therein. Past performance is not 
+necessarily a guide to future performance. The 
+stated price of any securities mentioned herein 
+will generally be as at the end of the business 
+day immediately prior to the publication date on 
+this communication unless otherwise stated 
+and is not a representative that any transaction 
+can be effected at this price. This 
+communication is confidential and may not be 
+re-distributed, retransmitted or disclosed, in 
+whole or in part, or in any manner, without the 
+express written consent of Panmure Liberum. 
+For more information on models, please 
+contact the Analyst.
+In the United Kingdom
+This communication is for the use of (a) 
+Professional Clients and Eligible 
+Counterparties (such terms are defined by the 
+rules of the FCA) of Panmure Liberum and (b) 
+other persons who are not clients of Panmure 
+Liberum who have expressed interest in 
+receiving it and who are Qualified Investors (as 
+defined below) and either investment 
+professionals (persons having professional 
+experience in matters relating to investments, 
+as defined in Article 19(5) or Article 49(2)(a) to 
+(d) (high net worth companies, unincorporated 
+associations etc) of the Financial Services and 
+Markets Act 2000 (Financial Promotions) Order 
+2005 (as amended) or any other persons to 
+whom this communication for the purposes of 
+section 21 of the Financial Services and 
+Markets Act 2000 can otherwise lawfully be 
+communicated).For the purpose of clarity, this 
+communication is not intended for and should 
+not be relied upon by Retail Clients (as defined 
+by the rules of the Financial Conduct Authority).
+The content includes data provided by FTSE 
+International Limited (“FTSE”) © FTSE 2013. 
+“FTSE®” is a trademark of the London Stock 
+Exchange Group companies and is used by 
+FTSE under licence. All rights in the FTSE 
+indices and / or FTSE ratings vest in FTSE and 
+/ or its licensors. Neither FTSE nor its licensors 
+accept any liability for any errors or omissions 
+in the FTSE indices and / or FTSE ratings or 
+underlying data. No further distribution of FTSE 
+data is permitted without FTSE’s express 
+written consent.
+Distribution outside of the UK
+EU Third-Party Disclaimer
+If this communication is distributed in the 
+European Union (“EU”) by Raymond James & 
+Associates, Inc. (“RJA”), an entity registered 
+with the United States Securities and Exchange 
+Commission as a broker-dealer and a member 
+of the Financial Industry Regulatory Authority, 
+or its independent contractors or such 
+independent contractor’s tied agents 
+(collectively, the “independent contractors”) or 
+by Panmure Liberum to clients of RJA’s 
+independent contractors, then this 
+communication is independent third-party 
+research prepared for and distributed in the 
+relevant EU countries at the determination of 
+RJA and/or the independent contractors and 
+pursuant to an arrangement between RJA, 
+Panmure Liberum Inc. and Panmure Liberum. 
+Neither RJA, nor its independent contractors, 
+nor any of their affiliates has or had any 
+involvement in the production, content, or 
+timing of this communication and neither 
+Panmure Liberum Inc. nor Panmure Liberum 
+are affiliates of RJA or its independent 
+contractors.
+This communication is distributed solely to 
+persons who are Qualified Investors within the 
+meaning of Article 2(e) of EU Regulation 
+2017/1129 (as amended or superseded), and 
+this communication is only for such Qualified 
+Investors whose ordinary business activities 
+involve investing in equities, bonds, and 
+associated securities and/or derivative 
+securities and who have professional 
+experience reviewing and engaging in such 
+investments. This communication is therefore 
+not intended to be distributed or passed on, 
+directly or indirectly, to any other class of 
+persons, and is not intended for private 
+individuals or those who would not be classified 
+
+FIFA World Cup Predictions
+09 April 2026
+19
+as “Qualified Investors.” The delivery of this 
+communication is not a recommendation to 
+effect any transactions in the securities 
+discussed herein, nor an endorsement of any 
+opinion expressed herein. If you are receiving 
+this communication in one of the relevant EU 
+countries from RJA or its independent 
+contractors, or Panmure Liberum, as a 
+consequence of being a client of RJA’s 
+independent contractors, RJA accepts 
+responsibility for the distribution of the 
+communication. Any Qualified Investor who 
+receives this communication from RJA, its 
+independent contractors or directly from 
+Panmure Liberum as a consequence of being a 
+client of RJA’s independent contractors, is 
+receiving such communication solely as a 
+result of its relationship with RJA or its 
+independent contractor, as applicable, and 
+such recipient shall not be considered as 
+having a relationship with Panmure Liberum 
+Inc. or Panmure Liberum. For additional 
+disclosures about RJA, including those related 
+to material conflicts of interest, please visit: 
+https://www.raymondjames.com/-
+/media/rj/dotcom/files/legal-
+disclosures/Liberum-disclosures.pdf. For 
+further information regarding the above or 
+related to the above-mentioned securities, 
+please contact RJA’s independent contractors.
+For US Investors
+This communication is a marketing 
+communication and has been prepared and 
+distributed by Panmure Liberum.  Panmure 
+Liberum Inc is a U.S. registered broker-dealer 
+and an affiliate of Panmure Liberum. This 
+communication is distributed solely to persons 
+who qualify as “Major U.S. Institutional 
+Investors” or “U.S. Institutional Investors” as 
+defined in Rule 15a-6 under the Securities and 
+Exchange Act of 1934. This communication is 
+only for those Major U.S. Institutional Investors 
+and U.S. Institutional Investors whose ordinary 
+business activities involve investing in shares, 
+bonds, and associated securities and/or 
+derivative securities and who have professional 
+experience in such investments. Any person 
+who is not a U.S. Institutional Investor or Major 
+U.S. Institutional Investor must not rely on this 
+communication. The delivery of this research 
+communication to any person in the United 
+States of America is not a recommendation to 
+affect any transactions in the securities 
+discussed herein, nor an endorsement of any 
+opinion expressed herein. Panmure Liberum 
+Inc is a FINRA/SIPC member and is regulated 
+by the Securities Exchange Commission and 
+takes responsibility for the content of this 
+communication. Any U.S. recipient of this 
+communication that is not a registered broker-
+dealer or a bank acting in a broker or dealer 
+capacity and that wishes further information 
+regarding the securities or to place an order in 
+any of the above-mentioned securities please 
+contact a registered representative of Panmure 
+Liberum Inc or any other FINRA registered 
+broker-dealer. 
+Analyst Certification: The analyst(s) who 
+prepared this communication hereby certifies 
+that all of the views expressed in this 
+communication accurately reflect his / her 
+personal views about the subject securities or 
+issuers. The analyst(s) is not an associated 
+person of Panmure Liberum Inc and therefore 
+may not be subject to FINRA Rule 2241 and 
+restrictions on communications with the 
+company(ies) the subject of this report and 
+other conflicts management. No part of his/her 
+compensation was, is, or will be directly or 
+indirectly related to the inclusion of specific 
+recommendations or views in this 
+communication. The analyst(s) responsible for 
+preparing this research communication 
+received compensation that is based upon 
+various factors, including total revenues of 
+Panmure Liberum Inc and its affiliates, a 
+portion of which are or have been generated by 
+investment banking activities of Panmure 
+Liberum Inc and its affiliates. Save as agreed 
+with Panmure Liberum, research analysts, and 
+their households, are prohibited from dealing in 
+the securities of a company which they cover in 
+any manner. 
+Panmure Liberum Inc does not make a market 
+on other securities mentioned in the 
+communication. Panmure Liberum Inc has not 
+managed or co-managed a public offering of 
+any of the securities mentioned in the past 12 
+months. Panmure Liberum Inc has not received 
+compensation for investment banking services 
+from any of the companies mentioned in the 
+past 12 months. Panmure Liberum Inc neither 
+expects to receive nor intends to seek 
+compensation for investment banking services 
+from any of the companies mentioned within 
+the next 3 months.
+For Canadian Investors
+This information is not, and under no 
+circumstances is to be construed as, an 
+advertisement or a public offering of the 
+securities described herein in Canada or any 
+province or territory thereof. Under no 
+circumstances is this information to be 
+construed as an offer to sell securities or as a 
+solicitation of an offer to buy securities in any 
+jurisdiction of Canada. Any offer or sale of the 
+securities described herein in Canada will be 
+made only under an exemption from the 
+requirements to file a prospectus with the 
+relevant Canadian securities regulators and 
+only by a dealer properly registered under 
+applicable securities laws or, alternatively, 
+pursuant to an exemption from the registration 
+requirement in the relevant province or territory 
+of Canada in which such offer or sale is made. 
+This information is not, and under no 
+circumstances is it to be construed as, a 
+prospectus, an offering memorandum, an 
+advertisement or a public offering of any 
+securities in Canada. No securities commission 
+or similar regulatory authority in Canada has 
+reviewed or in any way passed upon these 
+materials, the information contained herein or 
+the merits of the securities described herein 
+and any representation to the contrary is an 
+offence. If you are located in Canada, this 
+information has been made available to you 
+based on your representation that you are an 
+“accredited investor” as such term is defined in 
+National Instrument 45-106 Prospectus 
+Exemptions and a “permitted client” as such 
+term is defined in National Instrument 31-103 
+Registration Requirements, Exemptions and 
+Ongoing Registrant Obligations.  Under no 
+circumstances is the information contained 
+herein to be construed as investment advice in 
+any province or territory of Canada nor should 
+it be construed as being tailored to the needs of 
+the recipient. Canadian recipients are advised 
+that Panmure Liberum Inc, its affiliates and its 
+authorised agents are not responsible for, nor 
+do they accept, any liability whatsoever for any 
+direct or consequential loss arising from any 
+use of this research communication or the 
+information contained herein.
+For Swiss Investors
+This publication is intended to be distributed to 
+professional investors in circumstances such 
+that there is no public offer. This publication 
+does not constitute a prospectus within the 
+meaning of Articles 652a and 1156 of the 
+Swiss Code of Obligations.
+For Australian Investors
+This communication is distributed in Australia 
+by Panmure Liberum Limited which is exempt 
+from the requirement to hold an Australian 
+Financial Services Licence. This 
+communication may only be distributed to a 
+"Wholesale Client" (within the meaning of 
+section 761G of the Corporations Act 2001 
+(Cth) (the “Act”) in reliance of subsection 6(1) 
+of the ASIC Corporations (Foreign Financial 
+Services Providers-Limited Connection) 
+Instrument 2017/182. Panmure Liberum is 
+regulated by the FCA under UK laws, which 
+differ from Australian laws.
+For South African Investors
+In South Africa, Panmure Liberum Limited 
+holds an exemption from the licensing 
+requirement of the Financial Advisory and 
+Intermediary Services Act, 2002 (as amended) 
+and it is therefore not regulated in South Africa.
+Other countries
+Laws and regulations of other countries may 
+also restrict the distribution of this 
+communication. Persons in possession of this 
+communication should inform themselves 
+about possible legal restrictions and observe 
+accordingly.
+
+Panmure Liberum Limited / Ropemaker Place, Level 12, 25 Ropemaker Street, London, EC2Y 9LY / T +44 (0)20 3100 2000 / F +44 (0)20 3100 2299 / 
+www.panmureliberum.com Authorised and regulated by the Financial Conduct Authority / Registered in England & Wales No. 5912554
+Research
+Alternatives
+Shonil Chande
++44 (0) 20 3100 2259
+shonil.chande@panmureliberum.com
+Investment Funds
+Callum Stokeld 
++44 (0)20 7886 2762
+callum.stokeld@panmureliberum.com
+Building
+Building Materials, Equipment Hire & 
+Housebuilders
+Adrian Kearsey
++44 (0)20 7886 2763
+adrian.kearsey@panmureliberum.com 
+Kate Middleton
++44 (0)20 7886 2765
+kate.middleton@panmureliberum.com
+Business Services 
+Support Services & Special Situations
+Joe Brent 
++44 (0)20 3100 2272
+joe.brent@panmureliberum.com
+Joe Walker
++44 (0)20 7886 2650
+joe.walker@panmureliberum.com
+Sanjay Vidyarthi
++44 (0)20 3100 2278
+sanjay.vidyarthi@panmureliberum.com
+Andy Smith
++44 (0)20 3100 2268
+andy.smith@panmureliberum.com
+Consumer
+Consumer Goods
+Anubhav Malhotra
++44 (0)20 3100 2197
+anubhav.malhotra@panmureliberum.com
+Retail
+Ben Hunt
++44 (0)20 7886 2766
+ben.hunt@panmureliberum.com
+Roving
+Wayne Brown
++44 (0) 20 3100 2082
+wayne.brown@panmureliberum.com
+Tobacco
+Rae Maile
++44 (0)20 7886 2860
+rae.maile@panmureliberum.com
+Financials
+Financial & Professional Services
+Rae Maile
++44 (0)20 7886 2860
+rae.maile@panmureliberum.com
+Ross Luckman
++44 (0)20 7886 2532
+ross.luckman@panmureliberum.com
+Insurance
+Abid Hussain
++44 (0)20 7886 2757
+abid.hussain@panmureliberum.com
+Healthcare
+Seb Jantet
++44 (0) 20 3100 2047
+seb.jantet@panmureliberum.com
+Dr Julie Simmonds
++44 (0)20 7886 2743
+julie.simmonds@panmureliberum.com
+Industrials
+Alexandro da Silva O’Hanlon
++44 (0)20 3100 2268
+alex.ohanlon@panmureliberum.com
+Oliver Swift
++44 (0)20 7886 2533
+oliver.swift@panmureliberum.com
+Leisure & Travel
+Leisure
+Anna Barnfather
++44 (0)20 3100 2176
+anna.barnfather@panmureliberum.com
+Real Estate
+Bjorn Zietsman
++44 (0)20 3100 2067
+bjorn.zietsman@panmureliberum.com
+Tim Leckie
++44 (0)20 3100 2268
+tim.leckie@panmureliberum.com
+Resources
+Mining & Commodities
+Duncan Hay 
++44 (0)20 7886 2562
+duncan.hay@panmureliberum.com
+Tom Price
++44 (0) 203 100 2085
+tom.price@panmureliberum.com
+Oil & Gas
+Ashley Kelty
++44 (0)20 7886 2510
+ashley.kelty@panmureliberum.com
+Strategy, Economics & ESG
+Joachim Klement
++44 (0)20 3100 2073
+joachim.klement@panmureliberum.com
+Economics
+Simon French (Head of Research)
++44 (0)20 3100 2268
+simon.french@panmureliberum.com
+Technology & Media
+Andrew Ripper
++44 (0)20 3100 2086
+andrew.ripper@panmureliberum.com
+Harvey Robinson
++44 (0)20 7886 2744
+harvey.robinson@panmureliberum.com
+Johnathan Barrett
++44 (0)20 7886 2974
+johnathan.barrett@panmureliberum.com
+Sean Kealy
++44 (0)20 7886 2726
+sean.kealy@panmureliberum.com
+Transport
+Gerald Khoo
++44 (0)20 3100 2195
+gerald.khoo@panmureliberum.com
+Investor Relations
+Sarah Downing 
+(Head of Investor Relations)
++44 (0)20 7886 2910
+sarah.downing@panmureliberum.com
+Jodi Hutchins
++44 (0)20 7886 2953
+jodi.hutchins@panmureliberum.com
+Francesca Hayward
++44 (0)2078 862 912
+francesca.hayward@panmureliberum.com
+Marcio Remedios
++44 (0)20 3100 2033
+marcio.remedios@panmureliberum.com
+Connie Owens
++44 (0)20 3100 2021
+connie.owens@panmureliberum.com
+Katie Micallef
++44 (0) 20 7886 2723
+katie.micallef@panmureliberum.com
+Equity Sales – London
+David Parsons (Head of Equities)
++44 (0)20 3100 2125
+david.parsons@panmureliberum.com
+Guy Froud (Head of Sales)
++44 (0)20 3100 2242
+guy.froud@panmureliberum.com 
+Joel Knight
++44 (0)20 3100 2030
+joel.knight@panmureliberum.com
+Oliver Houghton
++44 (0)20 3100 2129
+oliver.houghton@panmureliberum.com 
+Paras Amlani
++44 (0)20 3100 2113
+paras.amlani@panmureliberum.com
+ Anita Surana
++44 (0)20 7886 2695
+anita.surana@panmureliberum.com
+Christopher Cooper
++44 (0) 20 3100 2258
+christopher.cooper@panmureliberum.com 
+Regional Distribution
+James Roberts
++44 (0)20 3100 2114
+james.roberts@panmureliberum.com
+Specialist Sales
+Real Estate 
+John Mozley
++44 (0)20 3100 2115
+john.mozley@panmureliberum.com
+Resources
+Simon Fickling
++44 (0)20 3100 2112
+simon.fickling@panmureliberum.com
+Healthcare
+Dr David Cox
++44 (0)20 7886 2750
+david.cox@panmureliberum.com
+Investment Funds
+James Shields
++44 (0) 20 3100 2266
+james.shields@panmureliberum.com
+Equity Sales – New York
+Julian Plant (CEO - USA)
++1 212 596 4824
+julian.plant@panmureliberum.com
+Tony Beckett
++1 212 596 4807
+tony.beckett@panmureliberum.com
+Edward Husband
++1 212 596 4841
+edward.husband@panmureliberum.com
+Rachel Martin
++1 212 596 4814
+rachel.martin@panmureliberum.com
+Hugo Hewitt
++44 (0)20 7886 2704
+hugo.hewitt@panmureliberum.com
+Sales Trading
+Adam Howson (Head of Execution)
++44 (0)20 7886 2738
+adam.howson@panmureliberum.com
+Ben McCorkill 
++44 (0)20 7886 2734 
+ben.mccorkill@panmureliberum.com
+David Thompson 
++44 (0) 20 3100 2062
+david.thompson@panmureliberum.com
+Justin Lindop
++44 (0)20 7886 2699
+justin.lindop@panmureliberum.com 
+Mark O’Hara
++44 (0) 20 3100 2061
+mark.ohara@panmureliberum.com
+Mark Taylor
++44(0) 20 7886 2696
+mark.taylor@panmureliberum.com
+Matthew Hudson
++44 (0) 20 3100 2063
+matthew.hudson@panmureliberum.com
+Ross McNally
++44 (0)20 7886 2693
+ross.mccnally@panmureliberum.com
+Emma Horner
++44 (0) 20 7886 2733
+emma.horner@panmureliberum.com
+US Sales Trading
+Arthur Pyott
++1 212 596 4842
+arthur.pyott@panmureliberum.com
+Brian McCann
++44 (0)20 7886 2705
+brian.mccann@panmureliberum.com
+Investment Funds
+Michael Janes (Head of Investment 
+Funds, Sales & Execution)
++44 (0)20 7886 2649
+michael.janes@panmureliberum.com
+Christopher Lloyd (Head of VCT)
++44 (0)20 7886 2716
+christopher.lloyd@panmureliberum.com
+Ben Fuller (Head of Investment Funds 
+Trading)
++44 (0) 20 7886 2643 
+ben.fuller@panmureliberum.com
+Justin York (Sales Trader)
++44 (0)20 7886 2707
+justin.york@panmureliberum.com
+Lewis Brennan 
++44 (0)20 7886 2644
+lewis.brennan@panmureliberum.com
+Paul Nolan
++44 (0)20 7886 2717
+paul.nolan@panmureliberum.com
+Trading
+James Perry (Head of Trading)
++44 (0)20 7886 2656
+james.perry@panmureliberum.com
+Charles Borman 
++44 (0)20 3100 2205
+charlie.borman@panmureliberum.com
+Daniel Brown
++44 (0) 20 7886 2697
+dan.brown@panmureliberum.com
+Fletcher Francis
++44 (0) 20 7886 2647
+fletcher.francis@panmureliberum.com
+James Bastick
++44 (0) 20 7886 2739
+james.bastick@panmureliberum.com
+James Cass
++44 (0)20 3100 2205
+james.cass@panmureliberum.com
+Marco Varani 
++44 (0)20 7886 2654
+marco.varani@panmureliberum.com
+Paul Corney
++44 (0)20 7886 2736
+paul.corney@panmureliberum.com
+Peter Jennings
++44 (0) 20 3100 2207
+peter.jennings@panmureliberum.com
+Lee Hales
++44 (0)20 7886 2652
+lee.hales@panmureliberum.com
+STX 77440
++44 (0)20 3100 2200
+

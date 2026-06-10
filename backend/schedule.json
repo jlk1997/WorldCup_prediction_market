@@ -1,0 +1,209 @@
+[
+  {
+    "group": "A组 (揭幕战)",
+    "date": "2026年06月12日",
+    "time": "03:00",
+    "team1": "墨西哥",
+    "team2": "南非",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月12日",
+    "time": "10:00",
+    "team1": "韩国",
+    "team2": "捷克",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月13日",
+    "time": "03:00",
+    "team1": "加拿大",
+    "team2": "波黑",
+    "stadium": "多伦多 · BMO球场",
+    "status": "upcoming"
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月13日",
+    "time": "09:00",
+    "team1": "美国",
+    "team2": "巴拉圭",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月14日",
+    "time": "00:00",
+    "team1": "海地",
+    "team2": "苏格兰",
+    "stadium": "󠁧󠁢󠁳󠁣󠁴󠁿波士顿 · 吉列体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月14日",
+    "time": "03:00",
+    "team1": "澳大利亚",
+    "team2": "土耳其",
+    "stadium": "温哥华 · BC体育馆",
+    "status": "upcoming"
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月14日",
+    "time": "06:00",
+    "team1": "卡塔尔",
+    "team2": "瑞士",
+    "stadium": "旧金山 · 李维斯体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月14日",
+    "time": "09:00",
+    "team1": "巴西",
+    "team2": "摩洛哥",
+    "stadium": "纽约/新泽西 · 大都会人寿体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月15日",
+    "time": "01:00",
+    "team1": "德国",
+    "team2": "库拉索",
+    "stadium": "休斯敦 · NRG体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月15日",
+    "time": "04:00",
+    "team1": "荷兰",
+    "team2": "日本",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月15日",
+    "time": "07:00",
+    "team1": "科特迪瓦",
+    "team2": "厄瓜多尔",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "upcoming"
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月15日",
+    "time": "10:00",
+    "team1": "瑞典",
+    "team2": "突尼斯",
+    "stadium": "蒙特雷 · BBVA体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月16日",
+    "time": "00:00",
+    "team1": "西班牙",
+    "team2": "佛得角",
+    "stadium": "亚特兰大 · 梅赛德斯-奔驰体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月16日",
+    "time": "06:00",
+    "team1": "沙特阿拉伯",
+    "team2": "乌拉圭",
+    "stadium": "迈阿密 · 硬石体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月16日",
+    "time": "09:00",
+    "team1": "比利时",
+    "team2": "埃及",
+    "stadium": "西雅图 · 流明球场",
+    "status": "upcoming"
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月16日",
+    "time": "12:00",
+    "team1": "伊朗",
+    "team2": "新西兰",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月17日",
+    "time": "03:00",
+    "team1": "法国",
+    "team2": "塞内加尔",
+    "stadium": "纽约/新泽西 · 大都会人寿体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月17日",
+    "time": "06:00",
+    "team1": "伊拉克",
+    "team2": "挪威",
+    "stadium": "波士顿 · 吉列体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "J组",
+    "date": "2026年06月17日",
+    "time": "09:00",
+    "team1": "阿根廷",
+    "team2": "阿尔及利亚",
+    "stadium": "堪萨斯城 · 箭头体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "J组",
+    "date": "2026年06月17日",
+    "time": "12:00",
+    "team1": "奥地利",
+    "team2": "约旦",
+    "stadium": "旧金山 · 李维斯体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "K组",
+    "date": "2026年06月18日",
+    "time": "01:00",
+    "team1": "葡萄牙",
+    "team2": "刚果（金）",
+    "stadium": "休斯敦 · NRG体育场",
+    "status": "upcoming"
+  },
+  {
+    "group": "L组",
+    "date": "2026年06月18日",
+    "time": "07:00",
+    "team1": "加纳",
+    "team2": "巴拿马",
+    "stadium": "多伦多 · BMO球场",
+    "status": "upcoming"
+  },
+  {
+    "group": "K组",
+    "date": "2026年06月18日",
+    "time": "10:00",
+    "team1": "乌兹别克斯坦",
+    "team2": "哥伦比亚",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "upcoming"
+  }
+]

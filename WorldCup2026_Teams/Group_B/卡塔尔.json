@@ -1,0 +1,1987 @@
+{
+  "team_info": {
+    "english_name": "Qatar",
+    "city": "ad-Doha (Doha)",
+    "founded_year": 1960,
+    "stadium": null,
+    "capacity": null,
+    "market_value": "€20.5M"
+  },
+  "squad": [
+    {
+      "name": "胡安·奥乔亚",
+      "number": null,
+      "position": "助理教练",
+      "age": 47,
+      "height": 191,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1979-03-04",
+      "nationality": "西班牙",
+      "overall_rating": 62,
+      "stats": {
+        "速度": 43,
+        "力量": 66,
+        "防守": 63,
+        "盘带": 43,
+        "传球": 49,
+        "射门": 38
+      },
+      "recent_matches": [],
+      "transfer_history": [
+        {
+          "date": "2016-07-01",
+          "from": "洛尔卡竞技",
+          "to": "退役"
+        },
+        {
+          "date": "2016-01-11",
+          "from": "自由球员",
+          "to": "洛尔卡竞技"
+        },
+        {
+          "date": "2015-07-01",
+          "from": "欧本",
+          "to": "自由球员"
+        },
+        {
+          "date": "2013-07-10",
+          "from": "奥利胡埃拉",
+          "to": "欧本"
+        },
+        {
+          "date": "2012-09-21",
+          "from": "自由球员",
+          "to": "奥利胡埃拉"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50013810"
+    },
+    {
+      "name": "巴勃罗·桑斯",
+      "number": null,
+      "position": "助理教练",
+      "age": 52,
+      "height": "188cm",
+      "weight": "75kg",
+      "preferred_foot": "左右脚",
+      "value": null,
+      "birth_date": "1973-08-30",
+      "nationality": "西班牙",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2004/2005",
+          "match": "努曼西亚",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50205221"
+    },
+    {
+      "name": "奥斯卡·卡罗",
+      "number": null,
+      "position": "助理教练",
+      "age": 40,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1985-09-07",
+      "nationality": "西班牙",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51023897"
+    },
+    {
+      "name": "何塞-路易斯·席尔瓦",
+      "number": null,
+      "position": "守门员教练",
+      "age": 46,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1979-09-15",
+      "nationality": "西班牙",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51131189"
+    },
+    {
+      "name": "博尔哈-德阿尔瓦",
+      "number": null,
+      "position": "体能教练",
+      "age": 45,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1980-11-16",
+      "nationality": "西班牙",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51125256"
+    },
+    {
+      "name": "米莱夫斯基",
+      "number": null,
+      "position": "体能教练",
+      "age": null,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": null,
+      "nationality": "波兰",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51181485"
+    },
+    {
+      "name": "莫埃兹·阿里",
+      "number": 11,
+      "position": "前锋",
+      "age": 29,
+      "height": 180,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-08-19",
+      "nationality": "卡塔尔",
+      "overall_rating": 74,
+      "stats": {
+        "速度": 75,
+        "力量": 72,
+        "防守": 25,
+        "盘带": 67,
+        "传球": 58,
+        "射门": 75
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "杜海勒",
+          "score": "8 上场, 3 首发, 1 进球, 1 助攻, 2 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "杜海勒",
+          "score": "24 上场, 24 首发, 8 进球, 10 助攻, 8 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "杜海勒",
+          "score": "27 上场, 27 首发, 8 进球, 9 助攻, 8 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "杜海勒",
+          "score": "27 上场, 26 首发, 6 进球, 6 助攻, 7 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "杜海勒",
+          "score": "20 上场, 18 首发, 8 进球, 6 助攻, 4 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "杜海勒",
+          "score": "31 上场, 26 首发, 7 进球, 8 助攻, 5 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "杜海勒",
+          "score": "25 上场, 24 首发, 10 进球, 2 助攻, 5 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "杜海勒",
+          "score": "23 上场, 21 首发, 4 进球, 1 助攻, 5 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "杜海勒",
+          "score": "26 上场, 22 首发, 9 进球, 4 助攻, 5 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "杜海勒",
+          "score": "32 上场, 17 首发, 9 进球, 1 助攻, 7 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "莱昂文体",
+          "score": "10 上场, 6 首发, 1 进球, 0 助攻, 1 黄牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "林茨",
+          "score": "9 上场, 2 首发, 1 进球, 2 助攻, 1 黄牌",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50208322"
+    },
+    {
+      "name": "阿菲夫",
+      "number": 7,
+      "position": "前锋",
+      "age": 29,
+      "height": 176,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-11-18",
+      "nationality": "卡塔尔",
+      "overall_rating": 78,
+      "stats": {
+        "速度": 87,
+        "力量": 55,
+        "防守": 32,
+        "盘带": 80,
+        "传球": 73,
+        "射门": 76
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "伊蒂",
+          "score": "34-34",
+          "rating": 18,
+          "status": "D"
+        },
+        {
+          "date": "2024/2025",
+          "match": "伊蒂",
+          "score": "36-34",
+          "rating": 23,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "伊蒂",
+          "score": "35-34",
+          "rating": 30,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "伊蒂",
+          "score": "28-26",
+          "rating": 12,
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "伊蒂",
+          "score": "21-20",
+          "rating": 15,
+          "status": "W"
+        },
+        {
+          "date": "2020/2021",
+          "match": "伊蒂",
+          "score": "14-12",
+          "rating": 7,
+          "status": "W"
+        },
+        {
+          "date": "2019/2020",
+          "match": "伊蒂",
+          "score": "29-29",
+          "rating": 19,
+          "status": "D"
+        },
+        {
+          "date": "2018/2019",
+          "match": "伊蒂",
+          "score": "33-33",
+          "rating": 31,
+          "status": "D"
+        },
+        {
+          "date": "2017/2018",
+          "match": "伊蒂",
+          "score": "19-14",
+          "rating": 5,
+          "status": "W"
+        },
+        {
+          "date": "2017/2018",
+          "match": "欧本",
+          "score": "16-13",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2016/2017",
+          "match": "希洪体育",
+          "score": "11-2",
+          "rating": 0,
+          "status": "L"
+        },
+        {
+          "date": "2015/2016",
+          "match": "欧本",
+          "score": "17-17",
+          "rating": 6,
+          "status": "D"
+        },
+        {
+          "date": "2014/2015",
+          "match": "欧本",
+          "score": "9-9",
+          "rating": 2,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50216617"
+    },
+    {
+      "name": "艾哈迈德·阿拉丁",
+      "number": 30,
+      "position": "前锋",
+      "age": 33,
+      "height": 176,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-01-31",
+      "nationality": "卡塔尔",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 81,
+        "力量": 60,
+        "防守": 26,
+        "盘带": 65,
+        "传球": 48,
+        "射门": 63
+      },
+      "recent_matches": [
+        {
+          "date": "2025-06-30",
+          "match": "多哈阿拉伯人 - 加拉法体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-08-15",
+          "match": "加拉法体育 - 多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017-07-07",
+          "match": "赖扬 - 加拉法体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50115547"
+    },
+    {
+      "name": "艾哈迈德·加内希",
+      "number": 10,
+      "position": "前锋",
+      "age": 25,
+      "height": 178,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-09-22",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "transfer": [
+        {
+          "date": "2026-01-01",
+          "from": "加拉法体育",
+          "to": "赖扬",
+          "fee": "免签"
+        }
+      ],
+      "honors": [
+        "亚洲杯冠军",
+        "卡塔尔杯冠军"
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50481950"
+    },
+    {
+      "name": "优素福-阿卜杜里萨格",
+      "number": 13,
+      "position": "前锋",
+      "age": 26,
+      "height": 177,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-06-06",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/06",
+          "match": "沃克拉",
+          "score": "24-14",
+          "rating": 4,
+          "status": "W"
+        },
+        {
+          "date": "2024/02/05",
+          "match": "萨德",
+          "score": "24-9",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2023/02/24",
+          "match": "萨德",
+          "score": "27-15",
+          "rating": 6,
+          "status": "W"
+        },
+        {
+          "date": "2022/02/23",
+          "match": "沃克拉",
+          "score": "15-11",
+          "rating": 6,
+          "status": "W"
+        },
+        {
+          "date": "2022/02/22",
+          "match": "萨德",
+          "score": "3-0",
+          "rating": 0,
+          "status": "L"
+        },
+        {
+          "date": "2021/02/22",
+          "match": "萨德",
+          "score": "16-4",
+          "rating": 3,
+          "status": "W"
+        },
+        {
+          "date": "2020/02/21",
+          "match": "萨德",
+          "score": "21-9",
+          "rating": 5,
+          "status": "W"
+        },
+        {
+          "date": "2019/02/20",
+          "match": "多哈阿拉伯人",
+          "score": "17-13",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "多哈阿拉伯人",
+          "score": "6-5",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2019/02/20",
+          "match": "萨德",
+          "score": "5-2",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "萨德",
+          "score": "2-0",
+          "rating": 0,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50448162"
+    },
+    {
+      "name": "埃德米尔森·儒尼奥尔",
+      "number": 8,
+      "position": "前锋",
+      "age": 31,
+      "height": 181,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-08-19",
+      "nationality": "卡塔尔",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 82,
+        "力量": 66,
+        "防守": 44,
+        "盘带": 79,
+        "传球": 69,
+        "射门": 73
+      },
+      "recent_matches": [
+        {
+          "date": "2018-08-02",
+          "match": "标准列日 - 杜海勒",
+          "score": "转会 (520万欧元)",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016-01-07",
+          "match": "圣图尔登 - 标准列日",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2012-07-01",
+          "match": "标准列日U23 - 圣图尔登",
+          "score": "免签",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50165869"
+    },
+    {
+      "name": "穆罕默德-蒙塔里",
+      "number": "3",
+      "position": "前锋",
+      "age": 32,
+      "height": 192,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-12-20",
+      "nationality": "卡塔尔",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 63,
+        "力量": 69,
+        "防守": 27,
+        "盘带": 60,
+        "传球": 48,
+        "射门": 66
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "加拉法体育",
+          "score": "10 上场, 4 首发, 0 进球, 1 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "加拉法体育",
+          "score": "19 上场, 1 首发, 6 进球, 1 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "杜海勒",
+          "score": "16 上场, 10 首发, 3 进球, 0 助攻, 2 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "杜海勒",
+          "score": "11 上场, 3 首发, 2 进球, 1 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "杜海勒",
+          "score": "4 上场, 0 首发, 0 进球, 1 助攻, 1 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "杜海勒",
+          "score": "29 上场, 8 首发, 6 进球, 2 助攻, 4 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "杜海勒",
+          "score": "22 上场, 13 首发, 8 进球, 1 助攻, 7 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "杜海勒",
+          "score": "9 上场, 2 首发, 1 进球, 1 助攻, 1 黄牌, 1 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "多哈国民",
+          "score": "8 上场, 8 首发, 3 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "多哈国民",
+          "score": "9 上场, 6 首发, 3 进球, 0 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50183173"
+    },
+    {
+      "name": "塔赫辛·贾姆希德",
+      "number": 81,
+      "position": "前锋",
+      "age": 19,
+      "height": 177,
+      "weight": 206,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2006-06-16",
+      "nationality": "卡塔尔",
+      "overall_rating": 81,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-01",
+          "match": "杜海勒预备队 vs 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025-06-30",
+          "match": "阿尔科孔B队 vs 杜海勒预备队",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2024-07-01",
+          "match": "杜海勒预备队 vs 阿尔科孔B队",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50886024"
+    },
+    {
+      "name": "哈桑·海多斯",
+      "number": "10",
+      "position": "中场",
+      "age": 35,
+      "height": 174,
+      "weight": 66,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-12-11",
+      "nationality": "卡塔尔",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 76,
+        "力量": 43,
+        "防守": 34,
+        "盘带": 75,
+        "传球": 69,
+        "射门": 66
+      },
+      "recent_matches": [],
+      "荣誉": [
+        "亚洲杯冠军 × 2",
+        "亚足联冠军精英联赛冠军 × 1",
+        "赛季最佳球员 × 1",
+        "卡塔尔足球联赛冠军 × 7",
+        "西亚足球锦标赛冠军 × 1",
+        "海湾运动会男子足球赛冠军 × 1",
+        "卡塔尔元首杯冠军 × 3",
+        "卡塔尔杯冠军 × 1"
+      ],
+      "转会": [
+        {
+          "date": "2007-07-01",
+          "from": "萨德预备队",
+          "to": "萨德"
+        }
+      ],
+      "伤病": null,
+      "source_url": "https://www.dongqiudi.com/player/50046170"
+    },
+    {
+      "name": "贾西姆·贾比尔",
+      "number": 8,
+      "position": "中场",
+      "age": 24,
+      "height": 182,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": "50K",
+      "birth_date": "2002-02-20",
+      "nationality": "卡塔尔",
+      "overall_rating": 64,
+      "stats": {
+        "速度": 64,
+        "力量": 72,
+        "防守": 63,
+        "盘带": 55,
+        "传球": 54,
+        "射门": 44,
+        "国际声望": 2,
+        "逆足能力": 2,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "赖扬",
+          "score": null,
+          "rating": 26,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 22,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 19,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 14,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 15,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 15,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": 15,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545132"
+    },
+    {
+      "name": "艾哈迈德·法特希",
+      "number": 8,
+      "position": "中场",
+      "age": 32,
+      "height": "171cm",
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "24K",
+      "birth_date": "1993-01-25",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "多哈阿拉比人",
+          "score": "21-18",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "多哈阿拉比人",
+          "score": "22-21",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "多哈阿拉比人",
+          "score": "23-21",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "多哈阿拉比人",
+          "score": "25-23",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "多哈阿拉比人",
+          "score": "25-24",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "多哈阿拉比人",
+          "score": "23-22",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "多哈阿拉比人",
+          "score": "20-20",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "多哈阿拉比人",
+          "score": "15-15",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "多哈阿拉比人",
+          "score": "20-18",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "多哈阿拉比人",
+          "score": "20-17",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "多哈阿拉比人",
+          "score": "12-11",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "多哈阿拉比人",
+          "score": "17-15",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2013/2014",
+          "match": "多哈阿拉比人",
+          "score": "11-1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2012/2013",
+          "match": "多哈阿拉比人",
+          "score": "12-5",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50171993"
+    },
+    {
+      "name": "穆罕默德·曼纳伊",
+      "number": 12,
+      "position": "中场",
+      "age": 23,
+      "height": "179cm",
+      "weight": "74kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-10-25",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-01",
+          "match": "马希亚 vs 北部区体育",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2023-01-30",
+          "match": "萨德 vs 马希亚",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2021-07-01",
+          "match": "萨德预备队 vs 萨德",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50773270"
+    },
+    {
+      "name": "阿西姆·马迪博",
+      "number": 18,
+      "position": "中场",
+      "age": 29,
+      "height": 168,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-10-22",
+      "nationality": "卡塔尔",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 62,
+        "力量": 75,
+        "防守": 65,
+        "盘带": 61,
+        "传球": 53,
+        "射门": 38
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "沃克拉",
+          "score": "15/15",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024/2025",
+          "match": "加拉法体育",
+          "score": "21/10",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "杜海勒",
+          "score": "29/22",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "杜海勒",
+          "score": "8/4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "杜海勒",
+          "score": "18/10",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020/2021",
+          "match": "杜海勒",
+          "score": "7/4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2019/2020",
+          "match": "杜海勒",
+          "score": "13/12",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2018/2019",
+          "match": "杜海勒",
+          "score": "19/17",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2017/2018",
+          "match": "杜海勒",
+          "score": "2/1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2017/2018",
+          "match": "加拉法体育",
+          "score": "13/13",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2016/2017",
+          "match": "杜海勒",
+          "score": "16/3",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2015/2016",
+          "match": "莱昂文体",
+          "score": "1/0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2015/2016",
+          "match": "林茨",
+          "score": "1/0",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50216622"
+    },
+    {
+      "name": "卡里姆·布迪亚夫",
+      "number": 12,
+      "position": "中场",
+      "age": 35,
+      "height": 190,
+      "weight": 85,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-09-16",
+      "nationality": "卡塔尔",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 50,
+        "力量": 74,
+        "防守": 67,
+        "盘带": 69,
+        "传球": 71,
+        "射门": 62
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "杜海勒",
+          "score": "18",
+          "rating": 11,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "杜海勒",
+          "score": "25",
+          "rating": 21,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "杜海勒",
+          "score": "21",
+          "rating": 15,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "杜海勒",
+          "score": "23",
+          "rating": 20,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "杜海勒",
+          "score": "15",
+          "rating": 10,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "杜海勒",
+          "score": "24",
+          "rating": 21,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "杜海勒",
+          "score": "27",
+          "rating": 26,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "杜海勒",
+          "score": "23",
+          "rating": 19,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "杜海勒",
+          "score": "24",
+          "rating": 24,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "杜海勒",
+          "score": "32",
+          "rating": 31,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50100390"
+    },
+    {
+      "name": "卢卡斯·门德斯",
+      "number": 2,
+      "position": "后卫",
+      "age": 35,
+      "height": 184,
+      "weight": 80,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1990-07-03",
+      "nationality": "卡塔尔",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 52,
+        "力量": 70,
+        "防守": 68,
+        "盘带": 58,
+        "传球": 59,
+        "射门": 58
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/06",
+          "match": "沃克拉",
+          "score": "20",
+          "rating": "20",
+          "status": "W"
+        },
+        {
+          "date": "2024/02/25",
+          "match": "沃克拉",
+          "score": "19",
+          "rating": "17",
+          "status": "D"
+        },
+        {
+          "date": "2023/02/24",
+          "match": "沃克拉",
+          "score": "23",
+          "rating": "23",
+          "status": "L"
+        },
+        {
+          "date": "2022/02/23",
+          "match": "沃克拉",
+          "score": "23",
+          "rating": "23",
+          "status": "W"
+        },
+        {
+          "date": "2021/02/22",
+          "match": "沃克拉",
+          "score": "28",
+          "rating": "26",
+          "status": "D"
+        },
+        {
+          "date": "2020/02/21",
+          "match": "沃克拉",
+          "score": "26",
+          "rating": "26",
+          "status": "W"
+        },
+        {
+          "date": "2019/02/20",
+          "match": "沃克拉",
+          "score": "10",
+          "rating": "10",
+          "status": "W"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "加拉法体育",
+          "score": "8",
+          "rating": "8",
+          "status": "W"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "杜海勒",
+          "score": "12",
+          "rating": "12",
+          "status": "W"
+        },
+        {
+          "date": "2017/02/18",
+          "match": "杜海勒",
+          "score": "26",
+          "rating": "26",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50040462"
+    },
+    {
+      "name": "佩德罗·米格尔",
+      "number": 2,
+      "position": "后卫",
+      "age": 33,
+      "height": 180,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-08-06",
+      "nationality": "卡塔尔",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 73,
+        "力量": 78,
+        "防守": 64,
+        "盘带": 61,
+        "传球": 60,
+        "射门": 58
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "伊德",
+          "score": "28-27",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "伊德",
+          "score": "28-24",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "伊德",
+          "score": "15-12",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "伊德",
+          "score": "18-17",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "伊德",
+          "score": "17-16",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "伊德",
+          "score": "25-23",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "伊德",
+          "score": "29-28",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "伊德",
+          "score": "32-32",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "伊德",
+          "score": "27-26",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "伊德",
+          "score": "25-25",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "伊德",
+          "score": "1-1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "多哈国民",
+          "score": "13-13",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2013/2014",
+          "match": "多哈国民",
+          "score": "25-25",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2011/2012",
+          "match": "多哈国民",
+          "score": "6-6",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50133943"
+    },
+    {
+      "name": "布瓦勒姆·胡希",
+      "number": 16,
+      "position": "后卫",
+      "age": 33,
+      "height": 185,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-07-09",
+      "nationality": "卡塔尔",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 60,
+        "力量": 76,
+        "防守": 71,
+        "盘带": 54,
+        "传球": 57,
+        "射门": 60
+      },
+      "recent_matches": [
+        {
+          "date": "2017-07-01",
+          "match": "多哈阿拉伯人 -- 伊德",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2009-07-01",
+          "match": "JSM舍拉加 -- 多哈阿拉伯人",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2007-07-01",
+          "match": "JSM舍拉加U21 -- JSM舍拉加",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50102265"
+    },
+    {
+      "name": "霍马姆·艾哈迈德",
+      "number": 12,
+      "position": "后卫",
+      "age": 26,
+      "height": 188,
+      "weight": 75,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1999-08-25",
+      "nationality": "卡塔尔",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 76,
+        "力量": 70,
+        "防守": 62,
+        "盘带": 61,
+        "传球": 60,
+        "射门": 48
+      },
+      "recent_matches": [
+        {
+          "date": "2024-06-30",
+          "match": "莱昂文体 vs 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024-01-15",
+          "match": "杜海勒 vs 莱昂文体",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2024-07-11",
+          "match": "加拉法体育 vs 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2019-09-01",
+          "match": "欧本U21 vs 加拉法体育",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50445637"
+    },
+    {
+      "name": "哈什米·侯赛因",
+      "number": 4,
+      "position": "后卫",
+      "age": 22,
+      "height": 184,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "25€",
+      "birth_date": "2003-08-15",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-01",
+          "match": "多哈阿拉伯人预备队 vs 阿尔科孔B队",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-06-30",
+          "match": "卡拉霍拉B队 vs 多哈阿拉伯人预备队",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-07-01",
+          "match": "多哈阿拉伯人预备队 vs 卡拉霍拉B队",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50860864"
+    },
+    {
+      "name": "阿尤布-维",
+      "number": 18,
+      "position": "后卫",
+      "age": 19,
+      "height": 178,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "37.5€",
+      "birth_date": "2005-03-11",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "加拉法体育",
+          "score": "28 上场, 26 首发, 2 进球, 0 助攻, 6 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "加拉法体育",
+          "score": "1 上场, 0 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "加拉法体育",
+          "score": "3 上场, 1 首发, 0 进球, 0 助攻, 1 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "加拉法体育",
+          "score": "3 上场, 1 首发, 0 进球, 0 助攻, 1 黄牌, 1 红牌",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50799110"
+    },
+    {
+      "name": "苏丹·布雷克",
+      "number": 18,
+      "position": "后卫",
+      "age": 30,
+      "height": 175,
+      "weight": 62,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1996-04-07",
+      "nationality": "卡塔尔",
+      "overall_rating": 78,
+      "stats": {
+        "速度": 75,
+        "射门": 65,
+        "传球": 70,
+        "盘带": 68,
+        "防守": 80,
+        "力量": 72
+      },
+      "recent_matches": [
+        {
+          "date": "2017-07-01",
+          "match": "沃克拉 vs 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016-06-30",
+          "match": "莱昂文体 vs 沃克拉",
+          "score": null,
+          "rating": null,
+          "status": "胜"
+        },
+        {
+          "date": "2015-07-13",
+          "match": "沃克拉 vs 莱昂文体",
+          "score": null,
+          "rating": null,
+          "status": "平"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50216626"
+    },
+    {
+      "name": "赖扬-阿里",
+      "number": 26,
+      "position": "后卫",
+      "age": 20,
+      "height": 206,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "身价 206",
+      "birth_date": "2006-03-26",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "加拉法体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50886020"
+    },
+    {
+      "name": "玛莎勒-巴沙姆",
+      "number": 22,
+      "position": "门将",
+      "age": 26,
+      "height": 180,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1998-02-14",
+      "nationality": "卡塔尔",
+      "overall_rating": 70,
+      "stats": {
+        "扑救": 71,
+        "位置": 69,
+        "速度": 53,
+        "反应": 71,
+        "开球": 56,
+        "手型": 67
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "萨德",
+          "score": "32-32",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2024/2025",
+          "match": "萨德",
+          "score": "32-32",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023/2024",
+          "match": "萨德",
+          "score": "26-26",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2022/2023",
+          "match": "萨德",
+          "score": "10-10",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2021/2022",
+          "match": "萨德",
+          "score": "15-15",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020/2021",
+          "match": "萨德",
+          "score": "23-23",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2019/2020",
+          "match": "萨德",
+          "score": "5-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2018/2019",
+          "match": "萨德",
+          "score": "11-11",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2017/2018",
+          "match": "萨德",
+          "score": "8-8",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50424130"
+    },
+    {
+      "name": "穆罕默德·阿布纳达",
+      "number": 57,
+      "position": "门将",
+      "age": 26,
+      "height": 191,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "40K",
+      "birth_date": "2000-02-05",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "赖扬",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2023",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "多哈阿拉伯人",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50483154"
+    },
+    {
+      "name": "谢哈布·埃勒蒂",
+      "number": 99,
+      "position": "门将",
+      "age": 26,
+      "height": 180,
+      "weight": 84,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-04-18",
+      "nationality": "卡塔尔",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-09-10",
+          "match": "杜海勒 vs 沙赫尼亚",
+          "score": null,
+          "rating": null,
+          "status": "胜"
+        },
+        {
+          "date": "2021-06-30",
+          "match": "库拉提尔特 vs 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2019-10-01",
+          "match": "杜海勒 vs 库拉提尔特",
+          "score": null,
+          "rating": null,
+          "status": "胜"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50257167"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "3/26 21:00",
+      "competition": "友谊赛",
+      "home_team": "卡塔尔",
+      "away_team": "塞尔维亚",
+      "score": null
+    },
+    {
+      "date": "3/31 20:00",
+      "competition": "友谊赛",
+      "home_team": "卡塔尔",
+      "away_team": "阿根廷",
+      "score": null
+    },
+    {
+      "date": "5/21 23:30",
+      "competition": "友谊赛",
+      "home_team": "卡塔尔",
+      "away_team": "苏丹",
+      "score": null
+    },
+    {
+      "date": "5/29 02:45",
+      "competition": "友谊赛",
+      "home_team": "爱尔兰",
+      "away_team": "卡塔尔",
+      "score": "1 - 0"
+    },
+    {
+      "date": "6/7 04:00",
+      "competition": "友谊赛",
+      "home_team": "卡塔尔",
+      "away_team": "萨尔瓦多",
+      "score": null
+    },
+    {
+      "date": "6/25 03:00",
+      "competition": "世界杯",
+      "home_team": "波黑",
+      "away_team": "卡塔尔",
+      "score": null
+    }
+  ]
+}

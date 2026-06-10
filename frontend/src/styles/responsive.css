@@ -1,0 +1,213 @@
+/* 跨页复用响应式工具类 */
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-header-row h2 {
+  margin: 0;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-scroll-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.table-scroll-wrap .el-table {
+  min-width: 560px;
+}
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+/* Tabs 横向滚动 */
+.tabs-scroll .el-tabs__nav-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs-scroll .el-tabs__nav-scroll {
+  overflow: visible;
+}
+
+.tabs-scroll .el-tabs__nav {
+  flex-wrap: nowrap;
+}
+
+.tabs-scroll .el-tabs__item {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 移动端页面容器：占满屏宽，统一边距，避免与 main-content 双层挤压 */
+.mobile-page,
+.page-shell {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .page-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-header-actions {
+    width: 100%;
+  }
+
+  .page-header-actions .el-input {
+    width: 100% !important;
+    flex: 1;
+  }
+
+  .page-shell,
+  .mobile-page {
+    padding: var(--wc-mobile-pad-y) var(--wc-mobile-pad-x);
+    padding-bottom: calc(var(--wc-mobile-pad-y) + var(--wc-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-shell,
+  .mobile-page {
+    /* 小屏也保持 16px 左右边距，不再收得更窄 */
+    padding-left: var(--wc-mobile-pad-x);
+    padding-right: var(--wc-mobile-pad-x);
+  }
+}
+
+/* 表格列隐藏 — Teams */
+@media (max-width: 768px) {
+  .teams-table-compact .el-table__header-wrapper th:nth-child(1),
+  .teams-table-compact .el-table__body-wrapper td:nth-child(1),
+  .teams-table-compact .el-table__header-wrapper th:nth-child(3),
+  .teams-table-compact .el-table__body-wrapper td:nth-child(3),
+  .teams-table-compact .el-table__header-wrapper th:nth-child(6),
+  .teams-table-compact .el-table__body-wrapper td:nth-child(6) {
+    display: none;
+  }
+}
+
+/* 表格列隐藏 — Players */
+@media (max-width: 768px) {
+  .players-table-compact .el-table__header-wrapper th:nth-child(4),
+  .players-table-compact .el-table__body-wrapper td:nth-child(4),
+  .players-table-compact .el-table__header-wrapper th:nth-child(5),
+  .players-table-compact .el-table__body-wrapper td:nth-child(5) {
+    display: none;
+  }
+}
+
+/* 表格列隐藏 — MatchTable */
+@media (max-width: 768px) {
+  .match-table-compact .el-table__header-wrapper th:nth-child(5),
+  .match-table-compact .el-table__body-wrapper td:nth-child(5) {
+    display: none;
+  }
+
+  .match-table-compact .el-button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+
+/* ===== 移动端 H5 工具类 ===== */
+
+.has-bottom-nav {
+  padding-bottom: calc(var(--wc-bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px) !important;
+}
+
+.mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.mobile-full-btn {
+  width: 100%;
+  min-height: 44px;
+}
+
+.mobile-segment {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.mobile-segment::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-segment .el-radio-button__inner,
+.mobile-segment .el-button {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hide-mobile {
+  display: block;
+}
+
+.hide-desktop {
+  display: none;
+}
+
+.mobile-viewport-fill {
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .hide-desktop {
+    display: block;
+  }
+
+  .hide-desktop-flex {
+    display: flex;
+  }
+
+  .mobile-form-full .el-select,
+  .mobile-form-full .el-input,
+  .mobile-form-full .el-input-number {
+    width: 100% !important;
+  }
+
+  .team-table-compact .el-table__header-wrapper th:nth-child(1),
+  .team-table-compact .el-table__body-wrapper td:nth-child(1) {
+    display: none;
+  }
+}

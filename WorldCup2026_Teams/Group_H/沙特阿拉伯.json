@@ -1,0 +1,3609 @@
+{
+  "team_info": {
+    "english_name": "Saudi Arabia",
+    "city": "Ar-Riyad (Riyadh)",
+    "founded": 1956,
+    "stadium": "法赫德国王国际体育场",
+    "capacity": 68752,
+    "market_value": "€31.4M"
+  },
+  "squad": [
+    {
+      "name": "多尼斯",
+      "number": null,
+      "position": "教练",
+      "age": 56,
+      "height": 180,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1969-10-22",
+      "nationality": "希腊",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "english_name": "Georgios Donis",
+      "source_url": "https://www.dongqiudi.com/player/50100033"
+    },
+    {
+      "name": "安耶利纳斯",
+      "number": null,
+      "position": "助理教练",
+      "age": 58,
+      "height": 192,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1967-08-18",
+      "nationality": "希腊",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50741100"
+    },
+    {
+      "name": "凯尔韦朗",
+      "number": null,
+      "position": "助理教练",
+      "age": 34,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1992-05-09",
+      "nationality": "法国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50952097"
+    },
+    {
+      "name": "杜奇",
+      "number": null,
+      "position": "助理教练",
+      "age": 57,
+      "height": "174cm",
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1969-03-25",
+      "nationality": "法国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "1990-07-01",
+          "match": "马蒂格 → 阿雅克肖加泽莱克",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "1989-07-01",
+          "match": "摩纳哥U21 → 马蒂格",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "1984-07-01",
+          "match": "未知球队 → 摩纳哥U21",
+          "score": "?",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/51060948"
+    },
+    {
+      "name": "弗朗索瓦-罗德里格斯",
+      "number": null,
+      "position": "助理教练",
+      "age": 56,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1969-12-10",
+      "nationality": "法国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51060949"
+    },
+    {
+      "name": "马利亚里齐斯",
+      "number": null,
+      "position": "守门员教练",
+      "age": 56,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1970-04-13",
+      "nationality": "希腊",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51232438"
+    },
+    {
+      "name": "斯塔夫里诺斯",
+      "number": null,
+      "position": "体能教练",
+      "age": 38,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1988-01-07",
+      "nationality": "希腊",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51126643"
+    },
+    {
+      "name": "约吉察斯",
+      "number": null,
+      "position": "体能教练",
+      "age": 58,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1968-01-21",
+      "nationality": "希腊",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51232439"
+    },
+    {
+      "name": "菲拉斯·布赖坎",
+      "number": 9,
+      "position": "前锋",
+      "age": 26,
+      "height": 185,
+      "weight": 79,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-05-14",
+      "nationality": "吉达国民",
+      "overall_rating": 74,
+      "stats": {
+        "速度": 80,
+        "力量": 74,
+        "防守": 48,
+        "盘带": 71,
+        "传球": 61,
+        "射门": 71
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "吉达国民 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/20",
+          "match": "沙特联 vs 吉达国民",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "吉达国民 vs 达斯尔亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/11",
+          "match": "沙特联 vs 吉达国民",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "吉达国民 vs 哈萨征服",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "吉达国民 vs 阿科多",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 吉达国民",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "吉达国民 vs 蔚山浦项",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "神户胜利船 vs 吉达国民",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "吉达国民 vs 桑德山",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "吉达国民 vs 杜海勒",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "费哈 vs 吉达国民",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/04",
+          "match": "吉达国民 vs 达马克",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "莱切城 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50391475"
+    },
+    {
+      "name": "萨利赫·谢赫里",
+      "number": 11,
+      "position": "前锋",
+      "age": 32,
+      "height": 184,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-11-01",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 66,
+        "力量": 73,
+        "防守": 26,
+        "盘带": 63,
+        "传球": 52,
+        "射门": 66
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "利雅得青年 vs 吉达联合",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "沙特联 vs 吉达联合",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "吉达联合 vs 达马克",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "麦加联 vs 吉达联合",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/09",
+          "match": "吉达联合 vs 希拉尔",
+          "score": "3-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "吉达联合 vs 哈森姆",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "麦加联 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "麦加联 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "沙特国王杯 vs 吉达联合",
+          "score": "2-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "利雅得体育 vs 吉达联合",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "吉达联合 vs 阿布扎比联合",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "吉达联合 vs 吉达联合",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/27",
+          "match": "吉达联合 vs 麦地那体育",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/24",
+          "match": "吉达联合 vs 哈森姆",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50149881"
+    },
+    {
+      "name": "萨勒姆·达瓦萨里",
+      "number": "34",
+      "position": "中场",
+      "age": 29,
+      "height": 173,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-06-19",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 82,
+      "stats": {
+        "速度": 87,
+        "射门": 81,
+        "传球": 57,
+        "盘带": 84,
+        "防守": 75,
+        "力量": 73
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦瓦多什 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "利雅得新月 vs 红黑永恒",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "沙特精英 vs 利雅得新月",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "地表队 vs 利雅得新月",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "利雅得新月 vs 达马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠联赛 vs 萨德",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "利雅得新月 vs 奥萨苏维",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "吉达国民 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "利雅得新月 vs 地方队",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "利雅得青年 vs 利雅得新月",
+          "score": "3-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/24",
+          "match": "本都代合作 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "利雅得新月 vs 吉达联合",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50126740"
+    },
+    {
+      "name": "阿卜杜拉·哈姆丹",
+      "number": 9,
+      "position": "前锋",
+      "age": 26,
+      "height": 186,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-09-12",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 64,
+      "stats": {
+        "速度": 73,
+        "力量": 69,
+        "防守": 41,
+        "盘带": 62,
+        "传球": 65,
+        "射门": 62,
+        " aerial_ability": 55,
+        "defensive_awareness": 41,
+        "composure": 58,
+        "work_rate": 60
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "沙特联",
+          "score": "4-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "亚冠二级",
+          "score": "0-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "05/12",
+          "match": "沙特联",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "05/07",
+          "match": "沙特联",
+          "score": "2-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "沙特联",
+          "score": "3-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "沙特联",
+          "score": "2-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "亚冠二级",
+          "score": "5-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "亚冠二级",
+          "score": "0-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "沙特联",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "沙特联",
+          "score": "0-2",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "沙特联",
+          "score": "5-2",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0-5",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50433514"
+    },
+    {
+      "name": "苏丹·马达什",
+      "number": 23,
+      "position": "前锋",
+      "age": 31,
+      "height": 172,
+      "weight": 71,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1994-10-17",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 62,
+        "力量": 61,
+        "防守": 25,
+        "盘带": 72,
+        "传球": 61,
+        "射门": 56
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "厄瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得新月 vs 新未来城体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "沙模联 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "利雅得新月 vs 阿斯永坦",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "蒙塔哈海牙 vs 利雅得新月",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "哈森姆 vs 利雅得新月",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "利雅得新月 vs 达马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英 vs 萨德",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "利雅得新月 vs 瓦斯尔维",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "利雅得新月 vs 布赖代合作",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "吉达国民 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "利雅得新月 vs 梅卡瓦",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50221519"
+    },
+    {
+      "name": "哈立德·加纳姆",
+      "number": 17,
+      "position": "前锋",
+      "age": 23,
+      "height": "171cm",
+      "weight": "64kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-11-07",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 61,
+      "stats": {
+        "速度": 71,
+        "力量": 41,
+        "防守": 29,
+        "盘带": 71,
+        "传球": 54,
+        "射门": 54
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓜达多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "新未来城体育 vs 达曼协作",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/14",
+          "match": "达曼协作 vs 吉达联合",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "赛哈特海湾 vs 达曼协作",
+          "score": "0-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/04",
+          "match": "达曼协作 vs 地杰马",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/30",
+          "match": "阿科多 vs 达曼协作",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "利雅得胜利 vs 达曼协作",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/09",
+          "match": "达曼协作 vs 利雅得体育",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/05",
+          "match": "达曼协作 vs 胡拜尔库迪西亚",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "塞加维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "费哈 vs 达曼协作",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "达曼协作 vs 利雅得青年",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/27",
+          "match": "地森姆 vs 达曼协作",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/23",
+          "match": "胡拜尔库迪西亚 vs 达曼协作",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50489821"
+    },
+    {
+      "name": "穆萨·卜·朱维尔",
+      "number": 10,
+      "position": "中场",
+      "age": 22,
+      "height": 178,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2003-06-20",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 76,
+      "stats": {
+        "速度": 68,
+        "力量": 69,
+        "防守": 56,
+        "盘带": 75,
+        "传球": 80,
+        "射门": 67,
+        "国际声望": 3,
+        "受欢迎度": 4,
+        "受欢迎度评分": 4
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "厄瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "胡拜尔库迪西亚 vs 哈森姆",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "费哈 vs 胡拜尔库迪西亚",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "胡拜尔库迪西亚 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得体育 vs 胡拜尔库迪西亚",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "胡拜尔库迪西亚 vs 利雅得青年",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/09",
+          "match": "达马克 vs 胡拜尔库迪西亚",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "达曼协作 vs 胡拜尔库迪西亚",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "麦加统一 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "胡拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "胡拜尔库迪西亚 vs 布赖代合作",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/23",
+          "match": "胡拜尔库迪西亚 vs 达曼协作",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/20",
+          "match": "阿科多 vs 胡拜尔库迪西亚",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50665227"
+    },
+    {
+      "name": "穆罕默德·卡努",
+      "number": 28,
+      "position": "中场",
+      "age": 31,
+      "height": 192,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-09-22",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 72,
+        "力量": 78,
+        "防守": 69,
+        "盘带": 72,
+        "传球": 71,
+        "射门": 70
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "厄瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得新月 vs 新未来城体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "沙特国王杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "沙特联",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "地路迪 vs 利雅得新月",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "利雅得新月 vs 达马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "利雅得新月 vs 巴斯永须",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "沙特联",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "沙特国王杯",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50202275"
+    },
+    {
+      "name": "纳赛尔·达乌萨里",
+      "number": 16,
+      "position": "中场",
+      "age": 27,
+      "height": 178,
+      "weight": 68,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1996-12-19",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 68,
+        "力量": 71,
+        "防守": 62,
+        "盘带": 69,
+        "传球": 71,
+        "射门": 60
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦迪麦 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "沙特联 vs 新未来城体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "沙特国王杯 vs 拉斯永塔",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "沙特联 vs 赛哈特海湾",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "沙特联 vs 哈森姆",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "沙特联 vs 达马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英 vs 庐港",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/21",
+          "match": "沙特联 vs 吉达联合",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/16",
+          "match": "亚冠精英 vs 阿布扎比统一",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/13",
+          "match": "沙特联 vs 达曼协作",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/09",
+          "match": "亚冠精英 vs 利雅得新月",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/05",
+          "match": "沙特联 vs 阿科多",
+          "score": "0-6",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/02",
+          "match": "沙特联 vs 吉达国民",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50384322"
+    },
+    {
+      "name": "阿拉·赫吉",
+      "number": 18,
+      "position": "中场",
+      "age": 29,
+      "height": 176,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-12-03",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 66,
+        "力量": 65,
+        "防守": 58,
+        "盘带": 65,
+        "传球": 63,
+        "射门": 56
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦迪贾 vs 沙特阿拉伯",
+          "score": "2:1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "新未来城体育 vs 达曼协作",
+          "score": "1:1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得新月 vs 新未来城体育",
+          "score": "2:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/11",
+          "match": "新未来城体育 vs 利雅得青年",
+          "score": "2:1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "哈伊达斯 vs 新未来城体育",
+          "score": "2:2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/28",
+          "match": "新未来城体育 vs 哈森姆",
+          "score": "1:1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "纳杰马 vs 新未来城体育",
+          "score": "2:1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "吉达联合 vs 新未来城体育",
+          "score": "3:4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "新未来城体育 vs 费哈",
+          "score": "1:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/12",
+          "match": "新未来城体育 vs 布赖代合作",
+          "score": "2:2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "1:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "新未来城体育 vs 拉斯永恒",
+          "score": "1:2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/25",
+          "match": "费哈 vs 新未来城体育",
+          "score": "1:1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "赛哈特海湾 vs 新未来城体育",
+          "score": "0:1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/12",
+          "match": "胡拜尔库迪西亚 vs 新未来城体育",
+          "score": "1:0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50352872"
+    },
+    {
+      "name": "阿卜杜拉·海巴里",
+      "number": 17,
+      "position": "中场",
+      "age": 29,
+      "height": "175cm",
+      "weight": "73kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-08-16",
+      "nationality": "利雅得胜利",
+      "overall_rating": 70,
+      "stats": {
+        "速度": 73,
+        "力量": 73,
+        "防守": 66,
+        "盘带": 67,
+        "传球": 63,
+        "射门": 43
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦迪斯 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "4",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "利雅得胜利 vs 达马克",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/07",
+          "match": "利雅得青年 vs 利雅得胜利",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "胡拜尔库迪西亚 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 吉达国民",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "利雅得胜利 vs 多哈国民",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "迪拜祈祷 vs 利雅得胜利",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "利雅得胜利 vs 达曼协作",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "阿尔多哈 vs 利雅得胜利",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "利雅得胜利 vs 坦杰马",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "塞切维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "费哈特海湾 vs 利雅得胜利",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "费哈 vs 利雅得胜利",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/25",
+          "match": "坦杰马 vs 利雅得胜利",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50352834"
+    },
+    {
+      "name": "齐亚德·约哈尼",
+      "number": 30,
+      "position": "中场",
+      "age": 24,
+      "height": 178,
+      "weight": 61,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-11-11",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 67,
+        "力量": 63,
+        "防守": 63,
+        "盘带": 66,
+        "传球": 64,
+        "射门": 52
+      },
+      "recent_matches": [
+        {
+          "date": "05/20",
+          "match": "摩哈特海滩 vs 吉达国民",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "吉达国民 vs 拉斯永恒",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/11",
+          "match": "布赖代合作 vs 吉达国民",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "吉达国民 vs 哈萨征服",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 吉达国民",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "吉达国民 vs 町田泽维亚",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "神户胜利船 vs 吉达国民",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "吉达国民 vs 考弗斯山",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "吉达国民 vs 杜海勒",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "费哈 vs 吉达国民",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/04",
+          "match": "吉达国民 vs 达马克",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "塞伊迪亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "吉达国民 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "塔拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50565103"
+    },
+    {
+      "name": "哈桑·卡代什",
+      "number": "15",
+      "position": "后卫",
+      "age": 33,
+      "height": "178cm",
+      "weight": "71kg",
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1990-09-26",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 71,
+        "力量": 76,
+        "防守": 87,
+        "盘带": 63,
+        "传球": 63,
+        "射门": 49,
+        "国际声誉": 3,
+        "球场魅力": 3,
+        "花式技巧": 3
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "吉达联合 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "利雅得青年 vs 吉达联合",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "达曼协作 vs 吉达联合",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "吉达联合 vs 法马克",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/04",
+          "match": "吉达联合 vs 拉斯永恒",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/29",
+          "match": "布赖代合作 vs 吉达联合",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "利雅得新月 vs 吉达联合",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/14",
+          "match": "吉达联合 vs 阿布扎比统一",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "吉达联合 vs 新未来城体育",
+          "score": "3-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "吉达联合 vs 哈森姆",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "利雅得王杯 vs 吉达联合",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/13",
+          "match": "利雅得体育 vs 吉达联合",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/06",
+          "match": "吉达国民 vs 吉达联合",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50625677"
+    },
+    {
+      "name": "阿里·拉贾米",
+      "number": null,
+      "position": "后卫",
+      "age": 27,
+      "height": 178,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-04-24",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 76,
+        "力量": 76,
+        "防守": 67,
+        "盘带": 60,
+        "传球": 60,
+        "射门": 49
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "扎瓜本沙 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "沙特联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得新月 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "沙特国王杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "利雅得新月 vs 沙特阿拉伯",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "哈森姆 vs 利雅得新月",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "利雅得新月 vs 迈马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "利雅得新月 vs 拉斯永乐",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "利雅得新月 vs 布赖代合作",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "沙特国王杯",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "利雅得新月 vs 佩杰马",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50352863"
+    },
+    {
+      "name": "沙特·阿卜杜勒哈米德",
+      "number": "23",
+      "position": "后卫",
+      "age": 26,
+      "height": 175,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-07-18",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 80,
+        "力量": 70,
+        "防守": 69,
+        "盘带": 71,
+        "传球": 66,
+        "射门": 46
+      },
+      "recent_matches": [
+        {
+          "date": "05/22",
+          "match": "法国杯",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "里昂 vs 郎斯",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "法甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/24",
+          "match": "法甲",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/21",
+          "match": "法国杯",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "法甲",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "法甲",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/20",
+          "match": "法甲",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "法甲",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "法甲",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/05",
+          "match": "法国杯",
+          "score": "2-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "法甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "法甲",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50481369"
+    },
+    {
+      "name": "阿里-迈拉希",
+      "number": 27,
+      "position": "后卫",
+      "age": 26,
+      "height": 172,
+      "weight": 66,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-10-01",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 87,
+        "力量": 77,
+        "防守": 67,
+        "盘带": 65,
+        "传球": 52,
+        "射门": 44
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "利瓦多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/29",
+          "match": "塞哈特海湾 vs 吉达国民",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "吉达国民 vs 拉斯本哲",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/11",
+          "match": "布赖代合作 vs 吉达国民",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "吉达国民 vs 地卢证屋",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "吉达国民 vs 阿科多",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 吉达国民",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/17",
+          "match": "吉达国民 vs 奥德新山",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "吉达国民 vs 杜海勒",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "塞尔维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "吉达国民 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "胡拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/06",
+          "match": "吉达国民 vs 吉达联合",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/26",
+          "match": "利雅得体育 vs 吉达国民",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50433820"
+    },
+    {
+      "name": "哈桑-坦巴蒂",
+      "number": "47",
+      "position": "后卫",
+      "age": 27,
+      "height": 182,
+      "weight": 74,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-02-09",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 83,
+        "力量": 74,
+        "防守": 74,
+        "盘带": 66,
+        "传球": 58,
+        "射门": 35
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "沙特国王杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "利雅得新月 vs 利雅得新月",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "哈森姆 vs 利雅得新月",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "利雅得新月 vs 达马克",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英",
+          "score": "3-3",
+          "rating": "E",
+          "status": "D"
+        },
+        {
+          "date": "04/08",
+          "match": "利雅得新月 vs 拉斯永恒",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "利雅得新月 vs 布赖代合作",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/18",
+          "match": "沙特国王杯",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙伊征服 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "利雅得新月 vs 纳杰马",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "利雅得青年 vs 利雅得新月",
+          "score": "3-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50394231"
+    },
+    {
+      "name": "纳瓦夫·布歇尔",
+      "number": 12,
+      "position": "后卫",
+      "age": 26,
+      "height": 175,
+      "weight": 63,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-09-16",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 82,
+        "力量": 73,
+        "防守": 64,
+        "身体": 65,
+        "传球": 52,
+        "射门": 40
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "沙特联",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "亚冠二级",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/12",
+          "match": "沙特联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/07",
+          "match": "沙特联",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "沙特联",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "沙特联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "亚冠二级",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "亚冠二级",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "沙特联",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "沙特联",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "沙特联",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "沙特联",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50521043"
+    },
+    {
+      "name": "艾曼·叶海亚",
+      "number": 23,
+      "position": "后卫",
+      "age": 23,
+      "height": 171,
+      "weight": 60,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-05-14",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 84,
+        "力量": 67,
+        "防守": 64,
+        "盘带": 68,
+        "传球": 61,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "利雅得胜利 vs 达马克",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得胜利 vs 大阪钢巴",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/07",
+          "match": "利雅得青年 vs 利雅得胜利",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "胡拜尔库迪西亚 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 吉达国民",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "亚冠二轮 vs 多哈国民",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "迪拜祈祷 vs 利雅得胜利",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "利雅得胜利 vs 达曼协作",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "同科多 vs 利雅得胜利",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "利雅得胜利 vs 特马",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "塞内维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "赛哈特海湾 vs 利雅得胜利",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50528617"
+    },
+    {
+      "name": "阿卜杜拉·阿姆里",
+      "number": 5,
+      "position": "后卫",
+      "age": 29,
+      "height": 183,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-01-15",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 69,
+        "力量": 61,
+        "防守": 69,
+        "盘带": 47,
+        "传球": 51,
+        "射门": 29
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "利雅得胜利 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/21",
+          "match": "利雅得胜利 vs 达马克",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/07",
+          "match": "利雅得胜利 vs 利雅得胜利",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "利雅得胜利 vs 胡拜尔库迪西亚",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得胜利 vs 麦达因",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "利雅得胜利 vs 多哈国民",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "利雅得胜利 vs 迪拜祈祷",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "利雅得胜利 vs 达曼协作",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "利雅得胜利 vs 阿科多",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "利雅得胜利 vs 坎布马",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "利雅得胜利 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "利雅得胜利 vs 赛哈特海湾",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "利雅得胜利 vs 费哈",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50394229"
+    },
+    {
+      "name": "莫泰卜·哈尔比",
+      "number": 24,
+      "position": "后卫",
+      "age": 24,
+      "height": 177,
+      "weight": 60,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-02-20",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 93,
+        "力量": 60,
+        "防守": 56,
+        "盘带": 67,
+        "传球": 62,
+        "射门": 54
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "西迪奈 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "费哈 vs 利雅得新月",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "沙特联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 新未来城体育",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/08",
+          "match": "沙特国王杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "沙特联",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "沙特联",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "沙特联",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "亚冠精英",
+          "score": "3-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "沙特联",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "沙特联",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/18",
+          "match": "沙特国王杯",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "沙特联",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "沙特联",
+          "score": "3-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50555590"
+    },
+    {
+      "name": "吉哈德·塔克里",
+      "number": 4,
+      "position": "后卫",
+      "age": 24,
+      "height": 184,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-07-21",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 71,
+        "力量": 77,
+        "防守": 66,
+        "盘带": 55,
+        "传球": 48,
+        "射门": 31,
+        "国际声誉": 2,
+        "逆足能力": 3,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "巴延多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "胡拜尔库迪西亚 vs 哈森姆",
+          "score": "2-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "费哈 vs 胡拜尔库迪西亚",
+          "score": "1-2",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "胡拜尔库迪西亚 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得体育 vs 胡拜尔库迪西亚",
+          "score": "0-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "胡拜尔库迪西亚 vs 利雅得青年",
+          "score": "2-2",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "04/09",
+          "match": "达马克 vs 胡拜尔库迪西亚",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "03/13",
+          "match": "胡拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "拉斯永恒 vs 胡拜尔库迪西亚",
+          "score": "1-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "胡拜尔库迪西亚 vs 布赖代合作",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "02/23",
+          "match": "胡拜尔库迪西亚 vs 达曼协作",
+          "score": "4-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "02/20",
+          "match": "阿科多 vs 胡拜尔库迪西亚",
+          "score": "2-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "02/12",
+          "match": "胡拜尔库迪西亚 vs 新未来城体育",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "02/07",
+          "match": "胡拜尔库迪西亚 vs 哈萨征服",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50918243"
+    },
+    {
+      "name": "穆罕默德·阿布沙马特",
+      "number": 2,
+      "position": "后卫",
+      "age": 23,
+      "height": 170,
+      "weight": 62,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-08-11",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 76,
+        "力量": 61,
+        "防守": 63,
+        "盘带": 73,
+        "传球": 67,
+        "射门": 47
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦迪多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "胡拜尔库迪西亚 vs 哈森姆",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "费哈 vs 胡拜尔库迪西亚",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "沙特联 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "利雅得体育 vs 胡拜尔库迪西亚",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "胡拜尔库迪西亚 vs 利雅得青年",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/09",
+          "match": "达马克 vs 胡拜尔库迪西亚",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "达曼协作 vs 胡拜尔库迪西亚",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "胡拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "拉斯永恒 vs 胡拜尔库迪西亚",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "胡拜尔库迪西亚 vs 布赖代合作",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/23",
+          "match": "胡拜尔库迪西亚 vs 达曼协作",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/20",
+          "match": "阿科多 vs 胡拜尔库迪西亚",
+          "score": "2-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/12",
+          "match": "胡拜尔库迪西亚 vs 新未来城体育",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50920093"
+    },
+    {
+      "name": "纳瓦夫·阿奇迪",
+      "number": 1,
+      "position": "门将",
+      "age": 23,
+      "height": 188,
+      "weight": 83,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-05-10",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 72,
+      "stats": {
+        "扑救": 75,
+        "位置": 66,
+        "速度": 47,
+        "反应": 74,
+        "开球": 67,
+        "手控": 69
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "利雅得胜利 vs 达马克",
+          "score": "4:1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "利雅得胜利 vs 大阪钢巴",
+          "score": "0:1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/12",
+          "match": "利雅得胜利 vs 利雅得新月",
+          "score": "1:1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/22",
+          "match": "亚冠二级",
+          "score": "5:1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "亚冠二级",
+          "score": "0:4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "沙特联",
+          "score": "1:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "沙特联",
+          "score": "0:2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "沙特联",
+          "score": "5:2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "2:1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛",
+          "score": "0:4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联",
+          "score": "0:5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "沙特联",
+          "score": "1:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "沙特联",
+          "score": "1:3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/25",
+          "match": "沙特联",
+          "score": "0:5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "沙特联",
+          "score": "4:0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545718"
+    },
+    {
+      "name": "穆罕默德·奥韦斯",
+      "number": 33,
+      "position": "门将",
+      "age": 32,
+      "height": 185,
+      "weight": 75,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1991-10-10",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 67,
+      "stats": {
+        "扑救": 75,
+        "位置": 61,
+        "速度": 51,
+        "反应": 70,
+        "手抛": 58,
+        "手型": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛：厄瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/23",
+          "match": "友谊赛：迪亚曼蒂 vs 乌拉",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/18",
+          "match": "沙特甲：乌拉 vs 塞卡凯阿拉伯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "沙特甲：乌拉 vs 福尔萨",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "沙特甲：乌拉 vs 乌拉",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "沙特甲：乌拉 vs 布赖代先锋",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/27",
+          "match": "沙特甲：亚瓦尔SA vs 乌拉",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "沙特甲：乌拉 vs 查巴莱",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/14",
+          "match": "沙特甲：费达勒体育 vs 乌拉",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/09",
+          "match": "沙特甲：乌拉 vs 艾卜哈",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "沙特甲：乌拉 vs 哈萨正义",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛：塞尔维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "沙特甲：吉达体育 vs 乌拉",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/01",
+          "match": "沙特甲：乌拉 vs 塞卡凯阿拉伯",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/25",
+          "match": "沙特甲：武萨里 vs 乌拉",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50179263"
+    },
+    {
+      "name": "艾哈迈德·卡萨尔",
+      "number": 28,
+      "position": "门将",
+      "age": 35,
+      "height": 177,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1991-05-06",
+      "nationality": "沙特阿拉伯",
+      "overall_rating": 63,
+      "stats": {
+        "扑救": 62,
+        "位置": 62,
+        "速度": 60,
+        "反应": 65,
+        "开球": 55,
+        "手型": 63
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛: 西瓜多尔 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/21",
+          "match": "沙特联: 吉达联合 vs 胡拜尔库迪西亚",
+          "score": "1-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 哈森姆",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "沙特联: 费哈 vs 胡拜尔库迪西亚",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "沙特联: 利雅得体育 vs 胡拜尔库迪西亚",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 利雅得青年",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/09",
+          "match": "沙特联: 达马克 vs 胡拜尔库迪西亚",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "沙特联: 达曼协作 vs 胡拜尔库迪西亚",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛: 塞尔维亚 vs 沙特阿拉伯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛: 沙特阿拉伯 vs 埃及",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 吉达国民",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "沙特联: 拉斯永恒 vs 胡拜尔库迪西亚",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 布赖代合作",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/23",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 达曼协作",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50094231"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "3/28 01:30",
+      "competition": "友谊赛",
+      "home_team": "沙特阿拉伯",
+      "away_team": "埃及",
+      "score": "0 - 4"
+    },
+    {
+      "date": "4/1 00:00",
+      "competition": "友谊赛",
+      "home_team": "塞尔维亚",
+      "away_team": "沙特阿拉伯",
+      "score": "2 - 1"
+    },
+    {
+      "date": "5/31 08:00",
+      "competition": "友谊赛",
+      "home_team": "厄瓜多尔",
+      "away_team": "沙特阿拉伯",
+      "score": "2 - 1"
+    },
+    {
+      "date": "6/10 07:00",
+      "competition": "友谊赛",
+      "home_team": "沙特阿拉伯",
+      "away_team": "塞内加尔",
+      "score": null
+    },
+    {
+      "date": "6/16 06:00",
+      "competition": "世界杯",
+      "home_team": "沙特阿拉伯",
+      "away_team": "乌拉圭",
+      "score": null
+    }
+  ]
+}

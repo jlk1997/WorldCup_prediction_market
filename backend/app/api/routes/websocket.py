@@ -1,0 +1,140 @@
+"""WebSocket live score broadcast."""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+import threading
+
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from sqlalchemy.orm import Session
+from starlette.websockets import WebSocketState
+
+from app.core.cache import cache_get
+from app.core.exceptions import BadRequestError
+from app.core.rate_limit import check_rate_limit
+from app.db.repositories.match_repository import MatchRepository
+from app.db.session import SessionLocal
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter(tags=["websocket"])
+
+_ws_connections = 0
+_ws_lock = threading.Lock()
+MAX_WS_CONNECTIONS = 100
+
+_CLIENT_GONE_ERRORS = (
+    WebSocketDisconnect,
+    ConnectionResetError,
+    BrokenPipeError,
+    RuntimeError,
+)
+
+
+def _ws_client_ip(websocket: WebSocket) -> str:
+    if websocket.client:
+        return websocket.client.host
+    return "unknown"
+
+
+def _client_gone(exc: BaseException) -> bool:
+    if isinstance(exc, _CLIENT_GONE_ERRORS):
+        if isinstance(exc, RuntimeError):
+            return "disconnect" in str(exc).lower() or "closed" in str(exc).lower()
+        return True
+    if isinstance(exc, OSError) and getattr(exc, "winerror", None) == 10054:
+        return True
+    return False
+
+
+async def _safe_send_json(websocket: WebSocket, payload: dict) -> None:
+    if websocket.client_state != WebSocketState.CONNECTED:
+        raise WebSocketDisconnect(code=1000)
+    try:
+        await websocket.send_json(payload)
+    except Exception as exc:
+        if _client_gone(exc):
+            raise WebSocketDisconnect(code=1000) from exc
+        raise
+
+
+async def _safe_close(websocket: WebSocket, code: int = 1000) -> None:
+    try:
+        if websocket.client_state == WebSocketState.CONNECTED:
+            await websocket.close(code=code)
+    except Exception as exc:
+        if not _client_gone(exc):
+            logger.debug("WebSocket close ignored: %s", exc)
+
+
+def _live_payload(db: Session) -> list[dict]:
+    cached = cache_get("live:matches:full")
+    if cached:
+        return cached
+
+    repo = MatchRepository(db)
+    payload = [
+        {
+            "id": m.id,
+            "group": m.group_name,
+            "date": m.match_date,
+            "time": m.match_time,
+            "team1": m.team1_name,
+            "team2": m.team2_name,
+            "stadium": m.stadium,
+            "status": m.status or "scheduled",
+            "home_score": m.home_score,
+            "away_score": m.away_score,
+            "minute": m.minute,
+            "period": m.period,
+            "is_live": m.status == "live",
+        }
+        for m in repo.list_schedule()
+    ]
+    return payload
+
+
+@router.websocket("/ws/live")
+async def websocket_live(websocket: WebSocket):
+    global _ws_connections
+    try:
+        check_rate_limit(f"rl:ws:connect:{_ws_client_ip(websocket)}", limit=10, window_sec=60)
+    except BadRequestError:
+        await websocket.close(code=1013)
+        return
+
+    with _ws_lock:
+        if _ws_connections >= MAX_WS_CONNECTIONS:
+            await websocket.close(code=1013)
+            return
+        _ws_connections += 1
+
+    await websocket.accept()
+    try:
+        while True:
+            payload = cache_get("live:matches:full")
+            if payload is None:
+                db = SessionLocal()
+                try:
+                    payload = _live_payload(db)
+                finally:
+                    db.close()
+            live_only = [m for m in payload if m.get("is_live") or m.get("home_score") is not None]
+            await _safe_send_json(websocket, {"type": "live_update", "matches": live_only})
+            try:
+                await asyncio.sleep(30)
+            except asyncio.CancelledError:
+                raise WebSocketDisconnect(code=1000) from None
+    except WebSocketDisconnect:
+        logger.info("WebSocket client disconnected")
+    except Exception as exc:
+        if _client_gone(exc):
+            logger.info("WebSocket client disconnected (%s)", type(exc).__name__)
+        else:
+            logger.warning("WebSocket error: %s", exc)
+            await _safe_close(websocket)
+    finally:
+        await _safe_close(websocket)
+        with _ws_lock:
+            _ws_connections = max(0, _ws_connections - 1)

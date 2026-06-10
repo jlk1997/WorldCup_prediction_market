@@ -1,0 +1,2476 @@
+{
+  "team_info": {
+    "英文名": "Iraq",
+    "城市": "Bagdad (Bagdad)",
+    "成立": 1948,
+    "主场": "",
+    "容量": "",
+    "市值": "€21.1M"
+  },
+  "squad": [
+    {
+      "name": "格雷厄姆-阿诺德",
+      "number": null,
+      "position": "主教练",
+      "age": 62,
+      "height": 179,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1963-08-03",
+      "nationality": "澳大利亚",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "transfers": [
+        {
+          "date": "2002-01-01",
+          "from": "北部精神",
+          "to": "退役"
+        },
+        {
+          "date": "1998-07-01",
+          "from": "广岛三箭",
+          "to": "北部精神"
+        },
+        {
+          "date": "1994-07-01",
+          "from": "RFC列日",
+          "to": "沙勒鲁瓦"
+        },
+        {
+          "date": "1992-07-01",
+          "from": "罗达JC",
+          "to": "RFC列日"
+        },
+        {
+          "date": "1990-07-01",
+          "from": "悉尼联",
+          "to": "罗达JC"
+        }
+      ],
+      "honors": [],
+      "injuries": [],
+      "source_url": "https://www.dongqiudi.com/player/50135545"
+    },
+    {
+      "name": "穆伦斯汀",
+      "number": null,
+      "position": "助理教练",
+      "age": 62,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1964-03-25",
+      "nationality": "荷兰",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "transfer_history": [
+        {
+          "date": "1993-07-01",
+          "from": "奈梅亨",
+          "to": "退役"
+        },
+        {
+          "date": "1988-07-01",
+          "from": "RKVV沃哈丁",
+          "to": "VIOS"
+        },
+        {
+          "date": "1983-07-01",
+          "from": "VIOS",
+          "to": "RKVV沃哈丁"
+        },
+        {
+          "date": "1982-07-01",
+          "from": "青年梯队",
+          "to": "VIOS"
+        }
+      ],
+      "honors": null,
+      "injuries": null,
+      "source_url": "https://www.dongqiudi.com/player/50193955"
+    },
+    {
+      "name": "斯坦顿",
+      "number": null,
+      "position": "助理教练",
+      "age": 54,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1972-04-15",
+      "nationality": "澳大利亚",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [
+        {
+          "date": "1997-07-01",
+          "match": "马可尼神驹 → 伍伦贡狼",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1995-07-01",
+          "match": "悉尼联 → 马可尼神驹",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1990-01-01",
+          "match": "未知球队 → 悉尼联",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50432042"
+    },
+    {
+      "name": "卡拉奇",
+      "number": null,
+      "position": "守门员教练",
+      "age": 53,
+      "height": 202,
+      "weight": 95,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1972-12-16",
+      "nationality": "澳大利亚",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "欧洲足球冠军联赛冠军 × 1",
+        "欧洲超级杯冠军 × 1",
+        "荷兰杯冠军 × 1",
+        "澳大利亚新南威尔士州超级联赛冠军 × 1"
+      ],
+      "transfers": [
+        {
+          "date": "2010-07-01",
+          "from": "卡瓦拉",
+          "to": "退役"
+        },
+        {
+          "date": "2009-09-01",
+          "from": "AC米兰",
+          "to": "卡瓦拉"
+        },
+        {
+          "date": "1998-07-01",
+          "from": "悉尼联",
+          "to": "罗达JC"
+        },
+        {
+          "date": "1996-07-01",
+          "from": "莱斯特城",
+          "to": "悉尼联"
+        },
+        {
+          "date": "1995-12-01",
+          "from": "悉尼联",
+          "to": "莱斯特城"
+        }
+      ],
+      "injuries": [],
+      "source_url": "https://www.dongqiudi.com/player/50000656"
+    },
+    {
+      "name": "穆哈纳德·阿里",
+      "number": 9,
+      "position": "前锋",
+      "age": 25,
+      "height": 182,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-06-20",
+      "nationality": "伊拉克",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 73,
+        "力量": 63,
+        "防守": 17,
+        "盘带": 66,
+        "传球": 51,
+        "射门": 61,
+        "国际声誉": 1,
+        "进攻能力": 4,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "2025-08-04",
+          "match": "巴格达警察 → 富查伊拉迪巴",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2023-09-26",
+          "match": "杜海勒 → 巴格达警察",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2023-06-30",
+          "match": "塞利亚 → 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2022-07-03",
+          "match": "杜海勒 → 塞利亚",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2022-06-30",
+          "match": "阿里斯 → 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2021-08-31",
+          "match": "杜海勒 → 阿里斯",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2021-06-30",
+          "match": "塞利亚 → 杜海勒",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2020-08-29",
+          "match": "杜海勒 → 塞利亚",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50433673"
+    },
+    {
+      "name": "艾曼·侯赛因",
+      "number": 9,
+      "position": "前锋",
+      "age": 29,
+      "height": 188,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-03-22",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024/2025",
+          "match": "沃克拉",
+          "score": "10-10",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2024/2025",
+          "match": "豪尔",
+          "score": "11-8",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "卡萨布兰卡拉贾",
+          "score": "5-2",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "阿布扎比半岛",
+          "score": "13-0",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "马希亚",
+          "score": "9-9",
+          "rating": 5,
+          "status": "D"
+        },
+        {
+          "date": "2021/2022",
+          "match": "乌姆沙拉尔",
+          "score": "24-22",
+          "rating": 11,
+          "status": "W"
+        },
+        {
+          "date": "2021",
+          "match": "巴格达空军",
+          "score": "1-1",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2018/2019",
+          "match": "斯法克西恩",
+          "score": "11-4",
+          "rating": 0,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50228317"
+    },
+    {
+      "name": "阿里·哈马迪",
+      "number": "12",
+      "position": "前锋",
+      "age": 24,
+      "height": 187,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-03-01",
+      "nationality": "伊拉克",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 79,
+        "力量": 73,
+        "防守": 18,
+        "盘带": 64,
+        "传球": 47,
+        "射门": 63
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "安道尔 vs 伊拉克",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "博尔顿流浪者 vs 伊拉克",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "伊拉克 vs 巴拉圭",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/21",
+          "match": "罗斯汉姆 vs 伊拉克",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "曼斯菲尔德 vs 伊拉克",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/15",
+          "match": "伊拉克 vs 北爱联",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "斯托克波特郡 vs 伊拉克",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "ACF温布尔登 vs 伊拉克",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/01",
+          "match": "伊拉克 vs 福利维亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/21",
+          "match": "伊拉克 vs 斯托克波特郡",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/17",
+          "match": "伊拉克 vs 埃克塞特城",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "韦康比流浪者 vs 伊拉克",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/10",
+          "match": "唐卡斯特 vs 伊拉克",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "伊拉克 vs 雷丁",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "维尔港 vs 伊拉克",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50538635"
+    },
+    {
+      "name": "阿里·贾西姆",
+      "number": "14",
+      "position": "前锋",
+      "age": 22,
+      "height": "178cm",
+      "weight": "75kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2004-01-20",
+      "nationality": "伊拉克",
+      "overall_rating": 62,
+      "stats": {
+        "速度": 67,
+        "力量": 59,
+        "防守": 22,
+        "盘带": 63,
+        "传球": 57,
+        "射门": 62
+      },
+      "recent_matches": [
+        {
+          "date": "05/20",
+          "match": "纳杰马 vs 利雅得青年",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "纳杰马 vs 纳杰马",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "沙特联 vs 哈森姆",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/04",
+          "match": "沙特联 vs 纳杰马",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/01",
+          "match": "世界杯洲际附加赛 vs 伊拉克",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/12",
+          "match": "沙特联 vs 达马克",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/06",
+          "match": "沙特联 vs 利雅得新月",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "沙特联 vs 阿科多",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/25",
+          "match": "沙特联 vs 利雅得胜利",
+          "score": "0-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/19",
+          "match": "沙特联 vs 吉达国民",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/14",
+          "match": "沙特联 vs 纳杰马",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/05",
+          "match": "沙特联 vs 费哈",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/31",
+          "match": "沙特联 vs 吉达联合",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/28",
+          "match": "沙特联 vs 利雅得体育",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/25",
+          "match": "沙特联 vs 胡拜尔库迪西亚",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50779967"
+    },
+    {
+      "name": "优素福·阿明",
+      "number": 20,
+      "position": "前锋",
+      "age": 21,
+      "height": 175,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2003-08-21",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "04/01",
+          "match": "伊拉克 vs 塞科维亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/22",
+          "match": "AEK拉纳卡 vs 希腊人竞技",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/16",
+          "match": "伊斯坦布尔 vs AEK拉纳卡",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "AEK拉纳卡 vs 阿克塞塔斯",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/01",
+          "match": "AEK拉纳卡 vs 尼科西亚奥林匹克",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/22",
+          "match": "阿拉多集团联 vs AEK拉纳卡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/14",
+          "match": "AEK拉纳卡 vs 阿波罗利马索尔",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/08",
+          "match": "希腊人竞技 vs AEK拉纳卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/31",
+          "match": "AEK拉纳卡 vs 伊诺西斯",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/25",
+          "match": "帕福斯 vs AEK拉纳卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/18",
+          "match": "AEK拉纳卡 vs 伊普索纳斯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/14",
+          "match": "尼科西亚团结 vs AEK拉纳卡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/04",
+          "match": "AEK拉纳卡 vs 阿诺索西斯",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/22",
+          "match": "AEK利马索尔 vs AEK拉纳卡",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/15",
+          "match": "AEK拉纳卡 vs 尼科西亚团结",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50610320"
+    },
+    {
+      "name": "马尔科·法尔吉",
+      "number": 11,
+      "position": "前锋",
+      "age": 22,
+      "height": 184,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": "1100",
+      "birth_date": "2004-03-16",
+      "nationality": "伊拉克",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 81,
+        "力量": 66,
+        "防守": 31,
+        "盘带": 67,
+        "传球": 60,
+        "射门": 60,
+        "预判声望": 2,
+        "造足能力": 3,
+        "花式技巧": 4
+      },
+      "recent_matches": [
+        {
+          "date": "2026-01-08",
+          "match": "斯托姆加斯特 → 威尼斯",
+          "score": "转会 (130万欧)",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-01-04",
+          "match": "斯托姆加斯特二队 → 斯托姆加斯特",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-08-13",
+          "match": "谢夫 → 斯托姆加斯特二队",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50559181"
+    },
+    {
+      "name": "阿里-哈希姆",
+      "number": 7,
+      "position": "前锋",
+      "age": 30,
+      "height": 192,
+      "weight": 12.54,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-01-19",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-08-03",
+          "match": "祖拉 → 纳夫特",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2022-07-16",
+          "match": "巴格达警察 → 祖拉",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2019-08-01",
+          "match": "巴格达空军 → 巴格达警察",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50432477"
+    },
+    {
+      "name": "卡西姆",
+      "number": 37,
+      "position": "前锋",
+      "age": 22,
+      "height": 178,
+      "weight": 72,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2003-01-10",
+      "nationality": "伊拉克",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 72,
+        "力量": 58,
+        "防守": 39,
+        "盘带": 67,
+        "传球": 62,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "安道尔 vs 伊拉克",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "纳什维尔 vs 纽约城",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/18",
+          "match": "纳什维尔 vs 洛杉矶",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "新英格兰革命 vs 纳什维尔",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "纳什维尔 vs 华盛顿特区联",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/06",
+          "match": "墨西哥老虎 vs 纳什维尔",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "费城联合 vs 纳什维尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/29",
+          "match": "纳什维尔 vs 墨西哥老虎",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "纳什维尔 vs 夏洛特",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "亚特兰大联 vs 纳什维尔",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "美洲 vs 纳什维尔",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "克洛特 vs 纳什维尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "纳什维尔 vs 美洲",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/06",
+          "match": "瓦尔迈恩 vs 尼斯特松德",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "芝加哥火焰 vs 纳什维尔",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50539972"
+    },
+    {
+      "name": "阿米尔-阿马里",
+      "number": 6,
+      "position": "中场",
+      "age": 28,
+      "height": 184,
+      "weight": 71,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1997-07-27",
+      "nationality": "伊拉克",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 68,
+        "力量": 71,
+        "防守": 61,
+        "盘带": 64,
+        "传球": 66,
+        "射门": 58
+      },
+      "recent_matches": [
+        {
+          "date": "2025/03/01",
+          "match": "哈尔姆斯塔德 vs 克拉科维亚",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/08/01",
+          "match": "哥德堡 vs 哈尔姆斯塔德",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/07/31",
+          "match": "哈尔姆斯塔德 vs 哥德堡",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/02/13",
+          "match": "哥德堡 vs 哈尔姆斯塔德",
+          "score": "租借",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/11/30",
+          "match": "米亚尔比 vs 哥德堡",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/07/16",
+          "match": "哥德堡 vs 米亚尔比",
+          "score": "租借",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/01/14",
+          "match": "哈尔姆斯塔德 vs 哥德堡",
+          "score": "转会 (5万欧)",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50193297"
+    },
+    {
+      "name": "易卜拉欣·巴耶什",
+      "number": 29,
+      "position": "中场",
+      "age": 26,
+      "height": 177,
+      "weight": 74,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-05-01",
+      "nationality": "伊拉克",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 78,
+        "力量": 75,
+        "防守": 58,
+        "盘带": 67,
+        "传球": 58,
+        "射门": 65
+      },
+      "recent_matches": [
+        {
+          "date": "05/16",
+          "match": "阿联酋联 达弗拉 vs 阿布扎比统一",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "阿联酋联 艾因 vs 达弗拉",
+          "score": "5-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/05",
+          "match": "阿联酋联 延尼亚斯 vs 达弗拉",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/24",
+          "match": "阿联酋联 达弗拉 vs 阿治曼",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/01",
+          "match": "世界杯预选赛附加赛 伊拉克 vs 澳利亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "阿联酋联 迪拜祈祷 vs 达弗拉",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "阿联酋联 达弗拉 vs 阿布扎比半岛",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/26",
+          "match": "阿联酋联 朱尔巴巴联合 vs 达弗拉",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/20",
+          "match": "阿联酋联 达弗拉 vs 迪拜青年国民",
+          "score": "0-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/13",
+          "match": "阿联酋联 巴塔 vs 达弗拉",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/02",
+          "match": "沙特联 利雅得体育 vs 利雅得胜利",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/28",
+          "match": "沙特联 纳杰马 vs 利雅得体育",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/25",
+          "match": "沙特联 利雅得体育 vs 利雅得新月",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/21",
+          "match": "沙特联 阿科多 vs 利雅得体育",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/18",
+          "match": "沙特联 利雅得体育 vs 布赖代合作",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50426387"
+    },
+    {
+      "name": "齐达内·伊克巴尔",
+      "number": null,
+      "position": "中场",
+      "age": 23,
+      "height": 181,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2003-04-27",
+      "nationality": "伊拉克",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 64,
+        "力量": 61,
+        "防守": 63,
+        "盘带": 72,
+        "传球": 64,
+        "射门": 60
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "安道尔 vs 伊拉克",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "阿伯什 vs 乌德勒支二队",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/17",
+          "match": "乌德勒支二队 vs FC埃因霍温",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/13",
+          "match": "乌德勒支二队 vs 维特斯",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/06",
+          "match": "鹿斯 vs 乌德勒支二队",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/01",
+          "match": "伊拉克 vs 玻利维亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/20",
+          "match": "乌德勒支二队 vs 多德雷赫特",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/17",
+          "match": "ADO海牙 vs 乌德勒支二队",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "乌德勒支二队 vs 赫尔蒙德",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "坎布尔 vs 乌德勒支二队",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/27",
+          "match": "乌德勒支二队 vs 阿尔梅勒城",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/20",
+          "match": "格拉夫夏普 vs 乌德勒支二队",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/16",
+          "match": "乌德勒支二队 vs 威廉二世",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/06",
+          "match": "埃蒙 vs 乌德勒支二队",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/02",
+          "match": "乌德勒支二队 vs 芬洛",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545354"
+    },
+    {
+      "name": "谢尔",
+      "number": 6,
+      "position": "中场",
+      "age": 23,
+      "height": 175,
+      "weight": 65,
+      "preferred_foot": "右脚",
+      "value": "140万欧",
+      "birth_date": "2002-12-20",
+      "nationality": "伊拉克",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 62,
+        "力量": 66,
+        "防守": 62,
+        "盘带": 69,
+        "传球": 61,
+        "射门": 47
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "伊普斯堡",
+          "score": "9-9",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2025/2026",
+          "match": "伊普斯堡",
+          "score": "1-1",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2025",
+          "match": "伊普斯堡",
+          "score": "19-18",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2024/2025",
+          "match": "伊普斯堡",
+          "score": "2-2",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2023/2024",
+          "match": "伊普斯堡",
+          "score": "2-2",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2024",
+          "match": "伊普斯堡",
+          "score": "27-25",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "格罗宁根",
+          "score": "6-0",
+          "rating": 1,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "斯佩齐亚",
+          "score": "1-0",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "斯佩齐亚",
+          "score": "2-1",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "哈马比",
+          "score": "2-1",
+          "rating": 0,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50499020"
+    },
+    {
+      "name": "凯文·雅各布",
+      "number": 17,
+      "position": "中场",
+      "age": 25,
+      "height": 184,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-10-30",
+      "nationality": "伊拉克",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 68,
+        "力量": 66,
+        "防守": 62,
+        "盘带": 68,
+        "传球": 68,
+        "射门": 62
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "安道尔 vs 伊拉克",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "布隆德比 vs 奥胡斯",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "奥胡斯 vs 乌德穆斯基",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "奥胡斯 vs 中日德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "北西兰 vs 奥胡斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/20",
+          "match": "中日德兰 vs 奥胡斯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/10",
+          "match": "奥胡斯 vs 北西兰",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/06",
+          "match": "维堡 vs 奥胡斯",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/01",
+          "match": "伊拉克 vs 摩利维亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/22",
+          "match": "奥胡斯 vs 布隆德比",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/15",
+          "match": "乌德穆斯基 vs 奥胡斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/08",
+          "match": "中日德兰 vs 奥胡斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "瓦埃勒 vs 奥胡斯",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "奥胡斯 vs 维堡",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/15",
+          "match": "腓特烈西亚 vs 奥胡斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50448833"
+    },
+    {
+      "name": "扎伊德-伊斯梅尔",
+      "number": 6,
+      "position": "中场",
+      "age": 24,
+      "height": "185cm",
+      "weight": "40kg",
+      "preferred_foot": null,
+      "value": "巴格达学生",
+      "birth_date": "2002-01-03",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2022-08-01",
+          "match": "迪亚拉体育 -- 纳吉肉孜体育",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2020-07-01",
+          "match": "石油体育 -- 迪亚拉体育",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2017-07-01",
+          "match": "未知球队 -- 石油体育",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50875589"
+    },
+    {
+      "name": "扎伊德·塔赫辛",
+      "number": 4,
+      "position": "后卫",
+      "age": 25,
+      "height": 193,
+      "weight": null,
+      "preferred_foot": null,
+      "value": "60K",
+      "birth_date": "2001-01-29",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-08-19",
+          "match": "巴格达学生 - 巴格达空军",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-02-13",
+          "match": "纳杰夫中央石油 - 巴格达学生",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019-07-01",
+          "match": "未知球队 - 纳杰夫中央石油",
+          "score": "?",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50772718"
+    },
+    {
+      "name": "侯赛因·阿里",
+      "number": 15,
+      "position": "后卫",
+      "age": 24,
+      "height": 182,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2002-03-01",
+      "nationality": "伊拉克",
+      "overall_rating": 62,
+      "stats": {
+        "速度": 71,
+        "力量": 62,
+        "防守": 58,
+        "盘带": 59,
+        "传球": 48,
+        "射门": 34
+      },
+      "recent_matches": [
+        {
+          "date": "05/23",
+          "match": "什切青波贡 vs GKS卡托维兹",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/15",
+          "match": "卢宾 vs 什切青波贡",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "维盖瑞 vs 什切青波贡",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "什切青波贡 vs 首尔京克维斯瓦",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "克拉科维亚 vs 什切青波贡",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/01",
+          "match": "伊拉克 vs 埃利维亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/21",
+          "match": "格但斯克莱希亚 vs 什切青波贡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/16",
+          "match": "什切青波贡 vs 凯尔采王冠",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "琴斯托霍瓦 vs 什切青波贡",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "什切青波贡 vs 罗兹维夫",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "扎布热矿工 vs 什切青波贡",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/15",
+          "match": "什切青波贡 vs 格丁尼亚",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/08",
+          "match": "什切青波贡 vs 波切奇",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/01",
+          "match": "卢布林瑟托 vs 什切青波贡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "12/06",
+          "match": "什切青波贡 vs 拉多米亚克",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50471085"
+    },
+    {
+      "name": "阿卡姆·哈希姆",
+      "number": 8,
+      "position": "后卫",
+      "age": 27,
+      "height": 184,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "60€",
+      "birth_date": "1998-08-16",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "祖拉",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024",
+          "match": "巴格达警察",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50771947"
+    },
+    {
+      "name": "雷吉-苏拉卡",
+      "number": "22",
+      "position": "后卫",
+      "age": 34,
+      "height": 192,
+      "weight": 86,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1992-04-12",
+      "nationality": "泰国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/24",
+          "match": "泰超",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "泰超",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "泰超",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "泰超",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/08",
+          "match": "泰超杯",
+          "score": "3-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/01",
+          "match": "世界杯预选赛",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/22",
+          "match": "泰超",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "泰超杯",
+          "score": "7-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "泰超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/06",
+          "match": "泰超",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/01",
+          "match": "泰超",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "泰超",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/14",
+          "match": "泰超",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/31",
+          "match": "泰超",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/28",
+          "match": "泰超杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50145735"
+    },
+    {
+      "name": "梅尔查斯·多斯基",
+      "number": 14,
+      "position": "后卫",
+      "age": 26,
+      "height": 173,
+      "weight": 65,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1999-12-07",
+      "nationality": "伊拉克",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 73,
+        "力量": 62,
+        "防守": 62,
+        "盘带": 71,
+        "传球": 65,
+        "射门": 54
+      },
+      "recent_matches": [
+        {
+          "date": "2025/01",
+          "match": "斯洛瓦茨科 -> 比尔森胜利",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/07/01",
+          "match": "自由球员 -> 斯洛瓦茨科",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/05/02",
+          "match": "瓦克尔因斯布鲁克 -> 自由球员",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50562263"
+    },
+    {
+      "name": "穆纳夫-尤尼斯",
+      "number": 4,
+      "position": "后卫",
+      "age": 29,
+      "height": 168,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-11-16",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2022-07-05",
+          "match": "卡尔赫 → 巴格达警察",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2020-06-30",
+          "match": "巴格达警察 → 卡尔赫",
+          "score": null,
+          "rating": "租借回归",
+          "status": null
+        },
+        {
+          "date": "2020-03-01",
+          "match": "卡尔赫 → 巴格达警察",
+          "score": null,
+          "rating": "租借",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50696226"
+    },
+    {
+      "name": "艾哈迈德-叶海亚",
+      "number": 15,
+      "position": "后卫",
+      "age": 30,
+      "height": "187cm",
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "50K",
+      "birth_date": "1995-07-01",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "巴格达警察",
+          "score": "7-6",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024",
+          "match": "巴格达警察",
+          "score": "8-8",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023/2024",
+          "match": "巴格达警察",
+          "score": "5-5",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50768906"
+    },
+    {
+      "name": "穆斯塔法·萨阿敦",
+      "number": 23,
+      "position": "后卫",
+      "age": 25,
+      "height": 182,
+      "weight": 30,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-05-25",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-08-02",
+          "match": "鲁萨法电力 - 巴格达空军",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-07-01",
+          "match": "未知球队 - 鲁萨法电力",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015-07-01",
+          "match": "未知球队 - 塔瓦拉工业",
+          "score": "?",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50771402"
+    },
+    {
+      "name": "弗兰斯-普特罗斯",
+      "number": 55,
+      "position": "后卫",
+      "age": 32,
+      "height": 181,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-07-14",
+      "nationality": "伊拉克",
+      "overall_rating": 64,
+      "stats": {
+        "速度": 66,
+        "力量": 70,
+        "防守": 61,
+        "盘带": 60,
+        "传球": 58,
+        "射门": 55
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "万隆",
+          "score": "36",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "泰港",
+          "score": "32",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "泰港",
+          "score": "28",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "泰港",
+          "score": "25",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "维堡",
+          "score": "27",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "维堡",
+          "score": "20",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "维堡",
+          "score": "8",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "霍布罗",
+          "score": "10",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "霍布罗",
+          "score": "19",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "霍布罗",
+          "score": "11",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "赫特列西亚",
+          "score": "1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "赫特列西亚",
+          "score": "29",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "锡尔克堡",
+          "score": "12",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2013/2014",
+          "match": "锡尔克堡",
+          "score": "16",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2013/2014",
+          "match": "奥胡斯",
+          "score": "1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2012/2013",
+          "match": "奥胡斯",
+          "score": "2",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50157917"
+    },
+    {
+      "name": "贾拉勒-哈桑",
+      "number": 12,
+      "position": "门将",
+      "age": 35,
+      "height": 184,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1991-05-18",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "祖拉",
+          "score": "8-8",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023",
+          "match": "祖拉",
+          "score": "5-5",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2022",
+          "match": "祖拉",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020",
+          "match": "祖拉",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2019",
+          "match": "祖拉",
+          "score": "6-6",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2018",
+          "match": "祖拉",
+          "score": "6-6",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2016/2017",
+          "match": "纳杰夫中央石油",
+          "score": "3-3",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2014",
+          "match": "埃尔比勒",
+          "score": "11-11",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2013",
+          "match": "埃尔比勒",
+          "score": "5-5",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2012",
+          "match": "埃尔比勒",
+          "score": "2-2",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50126306"
+    },
+    {
+      "name": "艾哈迈德·巴西勒",
+      "number": 1,
+      "position": "门将",
+      "age": 29,
+      "height": 184,
+      "weight": null,
+      "preferred_foot": "左右脚",
+      "value": "45€",
+      "birth_date": "1996-08-19",
+      "nationality": "伊拉克",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2024",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023/2024",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2019/2020",
+          "match": "巴格达警察",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50228306"
+    },
+    {
+      "name": "法赫德·塔利布",
+      "number": 98,
+      "position": "门将",
+      "age": 31,
+      "height": 193,
+      "weight": 40,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1994-10-21",
+      "nationality": "伊拉克",
+      "overall_rating": 98,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-07-30",
+          "match": "巴格达空军 vs 纳夫特",
+          "score": "免签",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-07-01",
+          "match": "祖拉 vs 巴格达空军",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019-07-01",
+          "match": "巴格达空军 vs 祖拉",
+          "score": "?",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50192077"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "2026-06-01 17:00",
+      "competition": "世界杯洲际附加赛",
+      "home_team": "伊拉克",
+      "away_team": "玻利维亚",
+      "score": "2 - 1"
+    },
+    {
+      "date": "2026-05-30 00:00",
+      "competition": "友谊赛",
+      "home_team": "安道尔",
+      "away_team": "伊拉克",
+      "score": "0 - 1"
+    },
+    {
+      "date": "2026-05-05 03:00",
+      "competition": "友谊赛",
+      "home_team": "西班牙",
+      "away_team": "伊拉克",
+      "score": null
+    },
+    {
+      "date": "2026-05-10 09:00",
+      "competition": "友谊赛",
+      "home_team": "伊拉克",
+      "away_team": "委内瑞拉",
+      "score": null
+    },
+    {
+      "date": "2026-05-12 06:00",
+      "competition": "世界杯",
+      "home_team": "伊拉克",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "2026-05-27 03:00",
+      "competition": "世界杯",
+      "home_team": "委内瑞拉",
+      "away_team": "伊拉克",
+      "score": null
+    }
+  ]
+}

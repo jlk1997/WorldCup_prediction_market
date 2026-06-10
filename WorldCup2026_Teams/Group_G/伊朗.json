@@ -1,0 +1,48 @@
+{
+  "team_info": {
+    "英文名": "Iran",
+    "城市": "Tehran (Teheran)",
+    "成立": 1920,
+    "主场": "Azadi Stadium",
+    "容量": "95225 座",
+    "市值": "€36.0M"
+  },
+  "squad": [],
+  "schedule": [
+    {
+      "date": "3/27 20:30",
+      "competition": "友谊赛",
+      "home_team": "伊朗",
+      "away_team": "尼日利亚",
+      "score": "1 - 2"
+    },
+    {
+      "date": "3/31 21:00",
+      "competition": "友谊赛",
+      "home_team": "哥斯达黎加",
+      "away_team": "伊朗",
+      "score": "0 - 5"
+    },
+    {
+      "date": "5/29 23:30",
+      "competition": "友谊赛",
+      "home_team": "伊朗",
+      "away_team": "冈比亚",
+      "score": "3 - 1"
+    },
+    {
+      "date": "6/16 09:00",
+      "competition": "世界杯",
+      "home_team": "伊朗",
+      "away_team": "新西兰",
+      "score": null
+    },
+    {
+      "date": "6/22 03:00",
+      "competition": "世界杯",
+      "home_team": "比利时",
+      "away_team": "伊朗",
+      "score": null
+    }
+  ]
+}

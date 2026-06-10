@@ -1,0 +1,3079 @@
+{
+  "team_info": {
+    "english_name": "Cape Verde",
+    "city": "Praia",
+    "founded": 1982,
+    "stadium": null,
+    "capacity": null,
+    "market_value": "€56.2M"
+  },
+  "squad": [
+    {
+      "name": "布比斯塔",
+      "number": null,
+      "position": "教练",
+      "age": 56,
+      "height": "180cm",
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1970-01-06",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2002-07-01",
+          "match": "阿维亚高 → 埃斯托里尔",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1996-07-01",
+          "match": "巴达霍斯 → 阿维亚高",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "1996-01-01",
+          "match": "未知球队 → 巴达霍斯",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50574797"
+    },
+    {
+      "name": "贝拉",
+      "number": null,
+      "position": "助理教练",
+      "age": null,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": null,
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": null,
+      "recent_matches": [],
+      "english_name": "Bera",
+      "club": "佛得角",
+      "role": "助理教练",
+      "source_url": "https://www.dongqiudi.com/player/50703668"
+    },
+    {
+      "name": "贝当古",
+      "number": null,
+      "position": "助理教练",
+      "age": 51,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1975-04-24",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50741051"
+    },
+    {
+      "name": "戴龙·利夫拉门托",
+      "number": "10",
+      "position": "前锋",
+      "age": 25,
+      "height": 185,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-05-04",
+      "nationality": "佛得角",
+      "overall_rating": 70,
+      "stats": {
+        "速度": 82,
+        "力量": 64,
+        "防守": 34,
+        "盘带": 68,
+        "传球": 56,
+        "射门": 71
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "埃塔鲁 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/28",
+          "match": "葡甲",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/20",
+          "match": "托里什人联合 vs 卡萨皮亚",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/16",
+          "match": "卡萨皮亚 vs 阿维河",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/11",
+          "match": "吉马良斯 vs 卡萨皮亚",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "卡萨皮亚 vs 桑德拉",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/27",
+          "match": "吉尔维森特 vs 卡萨皮亚",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/23",
+          "match": "卡萨皮亚 vs 布拉加",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "卡萨皮亚 vs 莱克拉拉",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/12",
+          "match": "阿维卡 vs 卡萨皮亚",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "FHA系列赛",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FHA系列赛",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/20",
+          "match": "阿马多拉之星 vs 卡萨皮亚",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "埃斯托里尔 vs 卡萨皮亚",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "卡萨皮亚 vs 莫雷拉人",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50788168"
+    },
+    {
+      "name": "威利·塞梅多",
+      "number": 7,
+      "position": "前锋",
+      "age": 32,
+      "height": 185,
+      "weight": 100,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-04-27",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/03/06",
+          "match": "尼科西亚团结",
+          "score": "42-39",
+          "rating": 22,
+          "status": "W"
+        },
+        {
+          "date": "2024/11/11",
+          "match": "尼科西亚团结",
+          "score": "44-39",
+          "rating": 13,
+          "status": "W"
+        },
+        {
+          "date": "2023/11/11",
+          "match": "尼科西亚团结",
+          "score": "34-33",
+          "rating": 11,
+          "status": "W"
+        },
+        {
+          "date": "2022/11/11",
+          "match": "费萨里",
+          "score": "1-1",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2022/11/11",
+          "match": "帕福斯",
+          "score": "18-17",
+          "rating": 4,
+          "status": "W"
+        },
+        {
+          "date": "2021/11/11",
+          "match": "帕福斯",
+          "score": "25-24",
+          "rating": 4,
+          "status": "W"
+        },
+        {
+          "date": "2020/11/11",
+          "match": "格勒诺布尔",
+          "score": "39-30",
+          "rating": 7,
+          "status": "W"
+        },
+        {
+          "date": "2019/11/11",
+          "match": "格勒诺布尔",
+          "score": "21-11",
+          "rating": 4,
+          "status": "W"
+        },
+        {
+          "date": "2018/11/11",
+          "match": "雅西理工",
+          "score": "10-4",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2016/11/11",
+          "match": "KSV罗斯勒",
+          "score": "11-6",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2017/11/11",
+          "match": "沙勒鲁瓦",
+          "score": "2-0",
+          "rating": 0,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50411404"
+    },
+    {
+      "name": "瑞安·门德斯",
+      "number": null,
+      "position": "前锋",
+      "age": 26,
+      "height": 178,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": "20",
+      "birth_date": "1990-01-08",
+      "nationality": "德国",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 74,
+        "力量": 54,
+        "防守": 28,
+        "盘带": 74,
+        "传球": 69,
+        "射门": 87
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "奥胡斯 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "伊格洛尔FK vs 通厄拉基",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/26",
+          "match": "维达斯体育 vs 伊格洛尔FK",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "伊格洛尔FK vs 皮迪卡体育",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/12",
+          "match": "代米尔体育 vs 伊格洛尔FK",
+          "score": "1-6",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "伊格洛尔FK vs 安卡拉拉齐体育",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "埃尔吉斯鲁姆体育 vs 伊格洛尔FK",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "FSV圣劳滕 vs 拉比",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FSV圣劳滕 vs 奥胡斯",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/22",
+          "match": "伊格洛尔FK vs 乔鲁姆",
+          "score": "5-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/16",
+          "match": "诺维奇乌体育 vs 伊格洛尔FK",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/12",
+          "match": "伊格洛尔FK vs 塔德鲁姆体育",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "博卢体育 vs 伊格洛尔FK",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/05",
+          "match": "塔德鲁姆体育 vs 伊格洛尔FK",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/27",
+          "match": "伊斯坦布尔体育 vs 伊格洛尔FK",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50055352"
+    },
+    {
+      "name": "若瓦内·卡布拉尔",
+      "number": 11,
+      "position": "前锋",
+      "age": 27,
+      "height": 174,
+      "weight": 81,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-06-14",
+      "nationality": "西班牙",
+      "overall_rating": 70,
+      "stats": {
+        "速度": 77,
+        "力量": 68,
+        "防守": 38,
+        "盘带": 72,
+        "传球": 68,
+        "射门": 71
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "友谊赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "葡超",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/11",
+          "match": "葡超",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "葡超",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "葡超",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "葡超",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "葡超",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "葡超",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/20",
+          "match": "葡超",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "葡超",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "葡超",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/28",
+          "match": "葡超",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/20",
+          "match": "葡超",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/14",
+          "match": "葡超",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50268447"
+    },
+    {
+      "name": "阿尔坎若",
+      "number": 18,
+      "position": "前锋",
+      "age": 24,
+      "height": 180,
+      "weight": 79,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-06-21",
+      "nationality": "佛得角",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 74,
+        "力量": 60,
+        "防守": 38,
+        "盘带": 71,
+        "传球": 68,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "埃弗顿 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "马德拉国民 vs 吉马良斯",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/11",
+          "match": "吉马良斯 vs 丰沙尔宾",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/04",
+          "match": "葡萄牙体育 vs 吉马良斯",
+          "score": "5-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "吉马良斯 vs 阿维河",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "吉尔维森特 vs 吉马良斯",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "阿维什镇 vs 吉马良斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "吉马良斯 vs 通德拉",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "佛得角 vs 芬兰",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "智利 vs 吉马良斯",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "本菲卡 vs 吉马良斯",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "吉马良斯 vs 法马利康",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "圣克拉拉 vs 吉马良斯",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "吉马良斯 vs 阿维卡",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "布拉加 vs 吉马良斯",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50560722"
+    },
+    {
+      "name": "吉尔松·塔瓦雷斯",
+      "number": 11,
+      "position": "前锋",
+      "age": 24,
+      "height": 177,
+      "weight": 70,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-12-29",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/23",
+          "match": "俄超",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/20",
+          "match": "俄超",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "俄超",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/11",
+          "match": "俄超",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "俄超",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/27",
+          "match": "俄超",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/23",
+          "match": "俄超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/18",
+          "match": "俄超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/13",
+          "match": "俄超",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/15",
+          "match": "俄超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/09",
+          "match": "俄超",
+          "score": "4-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "俄超",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/28",
+          "match": "友谊赛",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/22",
+          "match": "友谊赛",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50622327"
+    },
+    {
+      "name": "埃利奥-瓦雷拉",
+      "number": 29,
+      "position": "前锋",
+      "age": 24,
+      "height": 176,
+      "weight": 69,
+      "preferred_foot": "右脚",
+      "value": "170万欧元",
+      "birth_date": "2000-05-03",
+      "nationality": "佛得角",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 84,
+        "力量": 65,
+        "防守": 27,
+        "盘带": 69,
+        "传球": 61,
+        "射门": 67
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "佛得角 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/26",
+          "match": "贝尔谢巴工人 vs 特拉维夫马卡比",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/19",
+          "match": "特拉维夫马卡比 vs 特拉维夫马卡比",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/16",
+          "match": "特拉维夫马卡比 vs 耶路撒冷贝塔",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "特拉维夫马卡比 vs 海法马卡比",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "特拉维夫工人 vs 特拉维夫马卡比",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/05",
+          "match": "特拉维夫马卡比 vs 佩塔提克瓦工人",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "耶路撒冷贝塔 vs 特拉维夫马卡比",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/28",
+          "match": "特拉维夫马卡比 vs 贝尔谢巴工人",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "海法马卡比 vs 特拉维夫马卡比",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "特拉维夫马卡比 vs 特拉维夫工人",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "特拉维夫马卡比 vs 海法马卡比",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "特拉维夫马卡比 vs 贝尔谢巴工人",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/05",
+          "match": "海法工人 vs 特拉维夫马卡比",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/21",
+          "match": "特拉维夫马卡比 vs 阿什杜德",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50582465"
+    },
+    {
+      "name": "加里·罗德里格斯",
+      "number": null,
+      "position": "前锋",
+      "age": 35,
+      "height": 173,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": "20万欧元",
+      "birth_date": "1990-11-27",
+      "nationality": "西班牙",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 80,
+        "力量": 44,
+        "防守": 43,
+        "盘带": 72,
+        "传球": 67,
+        "射门": 87
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "吉安纳 vs 塞内加尔",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/29",
+          "match": "塞浦路斯 vs 希腊",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/22",
+          "match": "尼日利亚 vs 比利时",
+          "score": "5-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/16",
+          "match": "阿塞拜疆 vs 葡萄牙",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/15",
+          "match": "摩洛哥 vs 阿根廷",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "埃及 vs 乌拉圭",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "塞浦路斯 vs 阿塞拜疆",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "塞浦路斯 vs 摩洛哥",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/22",
+          "match": "塞浦路斯 vs 罗马尼亚",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "塞浦路斯 vs 摩洛哥",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/14",
+          "match": "塞浦路斯 vs 摩洛哥",
+          "score": "2-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "塞浦路斯 vs 以色列",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA友谊赛 vs 乌拉圭",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA友谊赛 vs 摩洛哥",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "塞浦路斯 vs 阿塞拜疆",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50158011"
+    },
+    {
+      "name": "努诺·达科斯塔",
+      "number": "10",
+      "position": "中场",
+      "age": 35,
+      "height": 164,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1991-02-10",
+      "nationality": "佛得角",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 81,
+        "力量": 69,
+        "防守": 30,
+        "盘带": 72,
+        "传球": 82,
+        "射门": 72
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瓦诺斯 - 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "加丹安普里 - RAMS巴萨克雷尔",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "土超 - 阿根廷体育",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "土超 - 萨马拉体育",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/24",
+          "match": "土超 - RAMS巴萨克雷尔",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "土超 - RAMS巴萨克雷尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "土超 - 特拉布宗体育",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "土超 - 科尼亚体育",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 - 南特 - 开云",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 - 智利 - 奥得海",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "土超 - RAMS巴萨克雷尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "土超 - 加拉塔萨雷",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "土超 - RAMS巴萨克雷尔",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/03",
+          "match": "土耳其杯 - RAMS巴萨克雷尔",
+          "score": "2-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/27",
+          "match": "土超 - RAMS巴萨克雷尔",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50158960"
+    },
+    {
+      "name": "雅米罗",
+      "number": 35,
+      "position": "中场",
+      "age": 32,
+      "height": 172,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-11-23",
+      "nationality": "佛得角",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 72,
+        "力量": 68,
+        "防守": 54,
+        "盘带": 72,
+        "传球": 70,
+        "射门": 59
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "南特鲁 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "纽卡斯尔 vs 西部诺德",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "锡塔德幸运 vs 纽沃勒",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "纽沃勒 vs 阿尔梅罗大力神",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/31",
+          "match": "纽沃勒 vs 特尔斯坦",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/24",
+          "match": "奈梅亨 vs 纽沃勒",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/17",
+          "match": "纽沃勒 vs 阿尔克马尔",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/10",
+          "match": "格温特 vs 纽沃勒",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "12/13",
+          "match": "纽沃勒 vs 锡塔德幸运",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "12/06",
+          "match": "费耶诺德 vs 纽沃勒",
+          "score": "6-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "12/03",
+          "match": "纽沃勒 vs 阿尔克马尔",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "11/28",
+          "match": "纽沃勒 vs 海伦芬",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "11/23",
+          "match": "格罗宁根 vs 纽沃勒",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "11/17",
+          "match": "埃及 vs 佛得角",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "11/13",
+          "match": "伊朗 vs 佛得角",
+          "score": "0-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50248985"
+    },
+    {
+      "name": "凯文-皮纳",
+      "number": "6",
+      "position": "中场",
+      "age": 29,
+      "height": 190,
+      "weight": 78,
+      "preferred_foot": "左右脚",
+      "value": "500€",
+      "birth_date": "1997-01-27",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/06",
+          "match": "克拉纳斯达尔",
+          "score": "40",
+          "rating": "22",
+          "status": "W"
+        },
+        {
+          "date": "2024/02/05",
+          "match": "弗拉人",
+          "score": "1",
+          "rating": "0",
+          "status": "D"
+        },
+        {
+          "date": "2024/02/05",
+          "match": "克拉纳斯达尔",
+          "score": "34",
+          "rating": "28",
+          "status": "W"
+        },
+        {
+          "date": "2023/02/04",
+          "match": "克拉纳斯达尔",
+          "score": "20",
+          "rating": "8",
+          "status": "W"
+        },
+        {
+          "date": "2022/02/03",
+          "match": "沙维斯",
+          "score": "5",
+          "rating": "5",
+          "status": "L"
+        },
+        {
+          "date": "2022/02/03",
+          "match": "克拉纳斯达尔",
+          "score": "24",
+          "rating": "21",
+          "status": "W"
+        },
+        {
+          "date": "2021/02/02",
+          "match": "沙维斯",
+          "score": "28",
+          "rating": "13",
+          "status": "W"
+        },
+        {
+          "date": "2020/02/01",
+          "match": "沙维斯",
+          "score": "6",
+          "rating": "3",
+          "status": "L"
+        },
+        {
+          "date": "2019/02/00",
+          "match": "沙维斯二队",
+          "score": "25",
+          "rating": "25",
+          "status": "W"
+        },
+        {
+          "date": "2018/02/19",
+          "match": "塞尔唐人",
+          "score": "31",
+          "rating": "31",
+          "status": "W"
+        },
+        {
+          "date": "2017/02/18",
+          "match": "阿纳迪亚",
+          "score": "6",
+          "rating": "3",
+          "status": "L"
+        },
+        {
+          "date": "2017/02/18",
+          "match": "奥利韦拉人体育联盟",
+          "score": "2",
+          "rating": "2",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50427128"
+    },
+    {
+      "name": "拉罗斯·杜阿尔特",
+      "number": null,
+      "position": "中场",
+      "age": 29,
+      "height": 180,
+      "weight": 67,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-02-28",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/01",
+          "match": "沙勒斯坦基 vs 普斯卡什学院",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "匈甲",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "匈甲",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/14",
+          "match": "匈甲",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/10",
+          "match": "匈甲",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/05",
+          "match": "匈甲",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "匈甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/06",
+          "match": "匈甲",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/01",
+          "match": "匈甲",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/21",
+          "match": "匈甲",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/14",
+          "match": "匈甲",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/08",
+          "match": "匈甲",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50240870"
+    },
+    {
+      "name": "扬尼克-塞梅多",
+      "number": 20,
+      "position": "中场",
+      "age": 30,
+      "height": 171,
+      "weight": 58,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-12-29",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛: 摩纳哥 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/30",
+          "match": "葡甲: 贝伦人 vs 法鲁人",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/23",
+          "match": "葡甲: 法鲁人 vs 法伦人",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "葡甲: 波尔蒂芒人 vs 法鲁人",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "葡甲: 莱里亚 vs 法鲁人",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "葡甲: 法鲁人 vs 维塞乌学院",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "葡甲: 樟济拉 vs 法鲁人",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "葡甲: 法鲁人 vs 葡萄牙体育二队",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "葡甲: 法鲁人 vs 奥拉人",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛: 塞内加尔 vs 牙买加",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛: 智利 vs 希腊",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "葡甲: 本菲卡B队 vs 法鲁人",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "葡甲: 法鲁人 vs 阿尔基拉什",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "葡甲: 贝纳菲耶尔 vs 法鲁人",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "葡甲: 法鲁人 vs 洛罗萨卢西塔尼亚",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50253645"
+    },
+    {
+      "name": "杜阿尔特",
+      "number": 23,
+      "position": "中场",
+      "age": 26,
+      "height": 178,
+      "weight": 68,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-07-04",
+      "nationality": "佛得角",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 79,
+        "力量": 74,
+        "防守": 63,
+        "盘带": 70,
+        "传球": 66,
+        "射门": 63,
+        "国际声誉": 1,
+        "球探能力": 1,
+        "花式技巧": 1
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "卢多戈雷茨 vs 萨罗尼迪夫火龙头",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/25",
+          "match": "卢多戈雷茨 vs 塞尼亚中央陆军",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "塞尼亚中央陆军1948 vs 卢多戈雷茨",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "卢多戈雷茨 vs 塞尼亚列夫斯基",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/09",
+          "match": "塞尼亚列夫斯基 vs 卢多戈雷茨",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "塞尼亚中央陆军 vs 卢多戈雷茨",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "塞尼亚中央陆军 vs 卢多戈雷茨",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "卢多戈雷茨 vs 塞尼亚中央陆军1948",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/21",
+          "match": "卢多戈雷茨 vs 塞尼亚中央陆军",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/15",
+          "match": "阿列达 vs 卢多戈雷茨",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/09",
+          "match": "卢多戈雷茨 vs 瓦尔纳黑海",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "卢多戈雷茨 vs 塞尼亚中央陆军1948",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "埃利斯 vs 牙兰",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "亚利 vs 桑塔鲁",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/19",
+          "match": "瓦尔纳新巴达 vs 卢多戈雷茨",
+          "score": "1-5",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50266567"
+    },
+    {
+      "name": "若昂·保罗",
+      "number": null,
+      "position": "中场",
+      "age": 28,
+      "height": 176,
+      "weight": 70,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1998-05-26",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/23",
+          "match": "布加勒斯特星 vs 加拉茨钢铁",
+          "score": "17:14",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "加拉茨钢铁 vs 布加勒斯特星",
+          "score": "22:19",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "奥达巴斯 vs 奥达巴斯",
+          "score": "1:1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "基希讷乌野牛 vs 基希讷乌野牛",
+          "score": "14:13",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "布拉索夫警长 vs 布拉索夫警长",
+          "score": "16:14",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "布拉索夫警长 vs 加拉茨钢铁",
+          "score": "30:28",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "费拉人 vs 费拉人",
+          "score": "25:22",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025/02/23",
+          "match": "马里亚达丰特 vs 马里亚达丰特",
+          "score": "24:11",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50465768"
+    },
+    {
+      "name": "洛佩斯-卡布拉尔",
+      "number": 15,
+      "position": "后卫",
+      "age": 21,
+      "height": 176,
+      "weight": 69,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2002-09-18",
+      "nationality": "佛得角",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 82,
+        "力量": 64,
+        "防守": 60,
+        "盘带": 69,
+        "传球": 68,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "佛得角 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "葡萄牙体育 vs 本菲卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "卡萨皮亚 vs 本菲卡",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "佛得角 vs 芬兰",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "智利 vs 佛得角",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "本菲卡 vs 吉马良斯",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "阿罗卡 vs 本菲卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "本菲卡 vs 波尔图",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/02",
+          "match": "吉尔维森特 vs 本菲卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/25",
+          "match": "皇家马德里 vs 本菲卡",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/21",
+          "match": "本菲卡 vs 阿维什镇",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/17",
+          "match": "本菲卡 vs 皇家马德里",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/13",
+          "match": "波瓦拉以 vs 本菲卡",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/08",
+          "match": "本菲卡 vs 阿维卡",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/01",
+          "match": "通德拉 vs 本菲卡",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50658975"
+    },
+    {
+      "name": "迪尼伊",
+      "number": 23,
+      "position": "后卫",
+      "age": 31,
+      "height": 185,
+      "weight": 79,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-01-17",
+      "nationality": "佛得角",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 44,
+        "力量": 74,
+        "防守": 63,
+        "盘带": 43,
+        "传球": 37,
+        "射门": 33,
+        "国际声望": 1,
+        "进攻能力": 1,
+        "花式技巧": 1
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/26",
+          "match": "巴塔",
+          "score": "2-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024/02/25",
+          "match": "巴塔",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023/02/20",
+          "match": "巴塔",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2022/02/29",
+          "match": "拉巴特皇家武装",
+          "score": "11-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021/02/01",
+          "match": "拉巴特皇家武装",
+          "score": "3-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020/02/17",
+          "match": "拉巴特皇家武装",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2019/02/22",
+          "match": "拉巴特皇家武装",
+          "score": "21-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2018/02/16",
+          "match": "埃斯托里尔",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2017/02/21",
+          "match": "马德拉航海",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2017/02/01",
+          "match": "马德拉航海二队",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50227697"
+    },
+    {
+      "name": "斯托皮拉",
+      "number": 2,
+      "position": "后卫",
+      "age": 38,
+      "height": 180,
+      "weight": 74,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1988-05-20",
+      "nationality": "佛得角",
+      "overall_rating": 61,
+      "stats": {
+        "速度": 78,
+        "力量": 73,
+        "防守": 59,
+        "盘带": 55,
+        "传球": 50,
+        "射门": 33
+      },
+      "recent_matches": [
+        {
+          "date": "2023/07/01",
+          "match": "白堡 -- 自由球员",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2012/07/10",
+          "match": "费拉人 -- 白堡",
+          "score": null,
+          "rating": 7,
+          "status": null
+        },
+        {
+          "date": "2011/08/01",
+          "match": "拉科鲁尼亚B队 -- 费拉人",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2010/07/01",
+          "match": "圣克拉拉 -- 拉科鲁尼亚B队",
+          "score": null,
+          "rating": 7,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50100317"
+    },
+    {
+      "name": "凯尔文-皮雷斯",
+      "number": 4,
+      "position": "后卫",
+      "age": 25,
+      "height": 193,
+      "weight": 87,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-06-05",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-12-31",
+          "match": "塞伊奈约基 vs 特伦钦",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024-02-06",
+          "match": "特伦钦 vs 塞伊奈约基",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020-07-18",
+          "match": "Batuque vs 特伦钦",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50563694"
+    },
+    {
+      "name": "瓦格纳-皮纳",
+      "number": 20,
+      "position": "后卫",
+      "age": 23,
+      "height": 180,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": "300万欧",
+      "birth_date": "2002-11-03",
+      "nationality": "巴西",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 81,
+        "力量": 66,
+        "防守": 65,
+        "盘带": 71,
+        "传球": 66,
+        "射门": 57
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/22",
+          "match": "土耳其杯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "土超",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "土耳其杯",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "土超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/27",
+          "match": "土超",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/23",
+          "match": "土耳其杯",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "土超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "土超",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/04",
+          "match": "土超",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "土超",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "土超",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/09",
+          "match": "土超",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50820272"
+    },
+    {
+      "name": "罗伯托·洛佩斯",
+      "number": "4",
+      "position": "后卫",
+      "age": 33,
+      "height": "186cm",
+      "weight": "83kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1990-06-17",
+      "nationality": "佛得角",
+      "overall_rating": 67,
+      "stats": {
+        "速度": 45,
+        "力量": 77,
+        "防守": 66,
+        "盘带": 52,
+        "传球": 46,
+        "射门": 30
+      },
+      "recent_matches": [],
+      "achievements": [
+        "赛季最佳球员 × 2",
+        "Leinster Senior Cup × 1",
+        "爱尔兰足球超级联赛冠军 × 5"
+      ],
+      "transfers": [
+        {
+          "date": "2017-01-01",
+          "from": "波希米亚人",
+          "to": "沙姆洛克流浪",
+          "fee": "免签"
+        }
+      ],
+      "injuries": [
+        {
+          "club": "沙姆洛克流浪",
+          "injury": "腘绳肌拉伤",
+          "period": "2020.05.02 - 2020.05.18"
+        },
+        {
+          "club": "沙姆洛克流浪",
+          "injury": "膝盖受伤",
+          "period": "2022.07.17 - 2022.09.28"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50102858"
+    },
+    {
+      "name": "莫雷拉",
+      "number": 31,
+      "position": "后卫",
+      "age": 31,
+      "height": 179,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-06-13",
+      "nationality": "巴西",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 73,
+        "力量": 74,
+        "防守": 71,
+        "盘带": 71,
+        "传球": 67,
+        "射门": 39
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "美职联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/20",
+          "match": "美公开杯",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "美职联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/13",
+          "match": "美职联",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "美职联",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "美职联",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/29",
+          "match": "美公开杯",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "美职联",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/23",
+          "match": "美职联",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "美职联",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "美职联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/04",
+          "match": "美职联",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50122608"
+    },
+    {
+      "name": "洛甘·科斯塔",
+      "number": 2,
+      "position": "后卫",
+      "age": 23,
+      "height": 190,
+      "weight": 83,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-04-01",
+      "nationality": "法国",
+      "overall_rating": 77,
+      "stats": {
+        "速度": 60,
+        "力量": 78,
+        "防守": 77,
+        "盘带": 67,
+        "传球": 59,
+        "射门": 40
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "佛得角 vs 塞尔维亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "比利时皇家足协 vs 马德里竞技",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "巴什卡诺 vs 比利时皇家足协",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "比利时皇家足协 vs 塞维利亚",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "马略卡 vs 比利时皇家足协",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "比利时皇家足协 vs 莱万特",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "比利时皇家足协 vs 塞尔塔",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/25",
+          "match": "比利时皇家足协 vs 塞维利亚",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/18",
+          "match": "巴塞罗那 vs 比利时皇家足协",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/14",
+          "match": "比利时皇家足协 vs 第加内斯",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "赫罗纳 vs 比利时皇家足协",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "比利时皇家足协 vs 奥萨苏纳",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/27",
+          "match": "西班牙人 vs 比利时皇家足协",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/23",
+          "match": "塞尔塔 vs 比利时皇家足协",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/20",
+          "match": "比利时皇家足协 vs 皇家社会",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50427979"
+    },
+    {
+      "name": "沃齐尼亚",
+      "number": 1,
+      "position": "门将",
+      "age": 39,
+      "height": 194,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1986-06-03",
+      "nationality": "塞浦路斯",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "沙维斯 vs 波尔迪亚",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/15",
+          "match": "马德拉航海 vs 沙维斯",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "沙维斯 vs 希腊伊什",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "波尔蒂芒人 vs 沙维斯",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/27",
+          "match": "沙维斯 vs 维利韦拉人体育联盟",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "帕斯托雷雷达 vs 沙维斯",
+          "score": "4-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "沙维斯 vs 托里什人联合",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "波尔图B队 vs 沙维斯",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "佛得角 vs 芬兰",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "智利 vs 佛得角",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/20",
+          "match": "沙维斯 vs 莫里亚",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "葡萄牙体育二队 vs 沙维斯",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "沙维斯 vs 维塞乌学院",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "格洛拉 vs 沙维斯",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/22",
+          "match": "沙维斯 vs 法鲁人",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50117609"
+    },
+    {
+      "name": "马尔西奥·罗萨",
+      "number": 1,
+      "position": "门将",
+      "age": 29,
+      "height": 186,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": "35€",
+      "birth_date": "1997-02-23",
+      "nationality": "佛得角",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-09",
+          "match": "赫巴尔 → 摩塔纳",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2024-07-04",
+          "match": "自由球员 → 赫巴尔",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-01-31",
+          "match": "阿纳迪亚 → 自由球员",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-07-12",
+          "match": "自由转入 → 阿纳迪亚",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2022-07-01",
+          "match": "摩塔勒格雷 → 皇家体育",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2021-07-01",
+          "match": "科瓦彼达迪 → 摩塔勒格雷",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2018-08-09",
+          "match": "摩塔勒格雷 → 科瓦彼达迪",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2014-07-01",
+          "match": "未知球队 → 皇家体育",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50243821"
+    },
+    {
+      "name": "卡洛斯-多斯桑托斯",
+      "number": 1,
+      "position": "门将",
+      "age": 25,
+      "height": 194,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-08-24",
+      "nationality": "巴西",
+      "overall_rating": 64,
+      "stats": {
+        "守门": 63,
+        "位置": 63,
+        "速度": 27,
+        "反应": 66,
+        "扑球": 62,
+        "手型": 64
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "美冠联",
+          "score": "3:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "美职联",
+          "score": "2:4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "美职联",
+          "score": "3:3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/03",
+          "match": "美职联",
+          "score": "2:2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/26",
+          "match": "美职联",
+          "score": "1:2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/23",
+          "match": "美职联",
+          "score": "1:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "美职联",
+          "score": "4:2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "美职联",
+          "score": "1:2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/05",
+          "match": "美职联",
+          "score": "3:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/19",
+          "match": "美冠杯",
+          "score": "4:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/12",
+          "match": "美冠杯",
+          "score": "3:2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/02",
+          "match": "美职联",
+          "score": "2:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "美职联",
+          "score": "5:0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/11",
+          "match": "美冠杯",
+          "score": "1:0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/04",
+          "match": "美冠杯",
+          "score": "4:1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50403227"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "3/27 11:00",
+      "competition": "FIFA系列赛",
+      "home_team": "智利",
+      "away_team": "佛得角",
+      "score": "4 - 2"
+    },
+    {
+      "date": "3/30 11:00",
+      "competition": "FIFA系列赛",
+      "home_team": "佛得角",
+      "away_team": "芬兰",
+      "score": "1 - 1"
+    },
+    {
+      "date": "5/31 23:00",
+      "competition": "友谊赛",
+      "home_team": "佛得角",
+      "away_team": "塞尔维亚",
+      "score": "3 - 0"
+    },
+    {
+      "date": "6/7 04:00",
+      "competition": "友谊赛",
+      "home_team": "佛得角",
+      "away_team": "百慕大群岛",
+      "score": null
+    },
+    {
+      "date": "6/16 00:00",
+      "competition": "世界杯",
+      "home_team": "西班牙",
+      "away_team": "佛得角",
+      "score": null
+    },
+    {
+      "date": "6/27 08:00",
+      "competition": "世界杯",
+      "home_team": "佛得角",
+      "away_team": "沙特阿拉伯",
+      "score": null
+    }
+  ]
+}

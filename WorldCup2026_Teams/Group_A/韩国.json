@@ -1,0 +1,3741 @@
+{
+  "team_info": {
+    "english_name": "South Korea",
+    "city": "首尔",
+    "founded": 1933,
+    "stadium": "Seoul World Cup Stadium",
+    "capacity": 68476,
+    "market_value": "€142.3M"
+  },
+  "squad": [
+    {
+      "name": "洪明甫",
+      "number": null,
+      "position": "教练",
+      "age": 57,
+      "height": 182,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1969-02-12",
+      "nationality": "韩国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "日本联赛杯冠军 × 1"
+      ],
+      "transfers": [
+        {
+          "date": "2004-10-08",
+          "from": "洛杉矶银河",
+          "to": "退役"
+        },
+        {
+          "date": "2003-01-01",
+          "from": "浦项铁人",
+          "to": "洛杉矶银河"
+        },
+        {
+          "date": "1997-05-24",
+          "from": "浦项铁人",
+          "to": "湖南比马"
+        },
+        {
+          "date": "1992-01-01",
+          "from": "金泉尚武",
+          "to": "浦项铁人"
+        },
+        {
+          "date": "1991-01-01",
+          "from": "高丽大学",
+          "to": "金泉尚武"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50056253"
+    },
+    {
+      "name": "金东进",
+      "number": null,
+      "position": "助理教练",
+      "age": 44,
+      "height": 184,
+      "weight": 78,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1982-01-29",
+      "nationality": "韩国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "荣誉": [
+        "欧足联欧洲联赛冠军",
+        "俄罗斯足球超级联赛冠军",
+        "韩国足球顶级联赛冠军",
+        "香港足球超级联赛冠军",
+        "俄罗斯杯冠军",
+        "香港高级组银牌赛冠军",
+        "香港联赛杯冠军",
+        "香港社区盾杯冠军",
+        "Hong Kong Cup Winner"
+      ],
+      "转会": [
+        {
+          "date": "2019-02-15",
+          "from": "自由球员",
+          "to": "退役"
+        },
+        {
+          "date": "2019-01-01",
+          "from": "杰志",
+          "to": "自由球员"
+        },
+        {
+          "date": "2018-12-31",
+          "from": "凯景",
+          "to": "杰志"
+        },
+        {
+          "date": "2018-09-28",
+          "from": "杰志",
+          "to": "凯景"
+        },
+        {
+          "date": "2017-01-03",
+          "from": "首尔衣恋",
+          "to": "杰志"
+        },
+        {
+          "date": "2016-01-01",
+          "from": "蒙通联",
+          "to": "首尔衣恋"
+        },
+        {
+          "date": "2014-02-06",
+          "from": "杭州绿城",
+          "to": "蒙通联"
+        }
+      ],
+      "伤病": "暂无伤病数据",
+      "source_url": "https://www.dongqiudi.com/player/50034744"
+    },
+    {
+      "name": "若昂-菲利佩",
+      "number": null,
+      "position": "助理教练",
+      "age": 53,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1972-10-29",
+      "nationality": "葡萄牙",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50403467"
+    },
+    {
+      "name": "佩德罗·罗马",
+      "number": null,
+      "position": "守门员教练",
+      "age": 55,
+      "height": "185cm",
+      "weight": "83kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1970-08-13",
+      "nationality": "韩国",
+      "overall_rating": 70,
+      "stats": {
+        "扑救": 70,
+        "位置": 66,
+        "速度": 27,
+        "反应": 71,
+        "开球": 66,
+        "手型": 69
+      },
+      "recent_matches": [],
+      "transfers": [
+        {
+          "date": "2010-07-01",
+          "from": "科英布拉大学",
+          "to": "退役"
+        },
+        {
+          "date": "2002-06-30",
+          "from": "布拉加",
+          "to": "科英布拉大学"
+        },
+        {
+          "date": "2002-01-14",
+          "from": "科英布拉大学",
+          "to": "布拉加"
+        },
+        {
+          "date": "1996-09-01",
+          "from": "本菲卡",
+          "to": "科英布拉大学"
+        },
+        {
+          "date": "1996-06-30",
+          "from": "法马利康",
+          "to": "本菲卡"
+        },
+        {
+          "date": "1996-02-01",
+          "from": "本菲卡",
+          "to": "法马利康"
+        },
+        {
+          "date": "1995-06-30",
+          "from": "科英布拉大学",
+          "to": "本菲卡"
+        },
+        {
+          "date": "1994-07-01",
+          "from": "本菲卡",
+          "to": "科英布拉大学"
+        },
+        {
+          "date": "1994-06-30",
+          "from": "吉尔维森特",
+          "to": "本菲卡"
+        },
+        {
+          "date": "1990-06-30",
+          "from": "纳瓦尔",
+          "to": "科英布拉大学"
+        },
+        {
+          "date": "1989-06-01",
+          "from": "科英布拉大学",
+          "to": "纳瓦尔"
+        },
+        {
+          "date": "1989-07-01",
+          "from": "科英布拉大学U19",
+          "to": "科英布拉大学"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50013132"
+    },
+    {
+      "name": "梁永民",
+      "number": null,
+      "position": "守门员教练",
+      "age": 51,
+      "height": 193,
+      "weight": 80,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1974-07-19",
+      "nationality": "韩国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "韩国足球顶级联赛冠军"
+      ],
+      "transfers": [
+        {
+          "date": "2007-01-01",
+          "from": "城南",
+          "to": "退役"
+        },
+        {
+          "date": "1999-01-01",
+          "from": "金泉尚武",
+          "to": "城南",
+          "note": "试训"
+        },
+        {
+          "date": "1997-01-01",
+          "from": "明知大学",
+          "to": "金泉尚武"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/51122125"
+    },
+    {
+      "name": "李在弘",
+      "number": null,
+      "position": "体能教练",
+      "age": 43,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1983-03-23",
+      "nationality": "韩国",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51126514"
+    },
+    {
+      "name": "努诺·马蒂亚斯",
+      "number": null,
+      "position": "体能教练",
+      "age": 42,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1983-11-25",
+      "nationality": "葡萄牙",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51137204"
+    },
+    {
+      "name": "孙兴慜",
+      "number": "7",
+      "position": "前锋",
+      "age": 31,
+      "height": 180,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1992-07-08",
+      "nationality": "韩国",
+      "overall_rating": 84,
+      "stats": {
+        "速度": 84,
+        "力量": 73,
+        "防守": 42,
+        "盘带": 83,
+        "传球": 81,
+        "射门": 84
+      },
+      "recent_matches": [
+        {
+          "date": "05/27",
+          "match": "英超",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/25",
+          "match": "英联杯",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/18",
+          "match": "英联杯",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "英联杯",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/11",
+          "match": "英联杯",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/07",
+          "match": "英联杯",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/05",
+          "match": "英联杯",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/28",
+          "match": "英联杯",
+          "score": "2-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/22",
+          "match": "英联杯",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "英联杯",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/15",
+          "match": "英联杯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "英联杯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "英联杯",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "英联杯",
+          "score": "6-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "英联杯",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50069741"
+    },
+    {
+      "name": "黄喜灿",
+      "number": "11",
+      "position": "前锋",
+      "age": 27,
+      "height": "177cm",
+      "weight": "77kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-01-08",
+      "nationality": "韩国",
+      "overall_rating": 74,
+      "stats": {
+        "速度": 80,
+        "力量": 68,
+        "防守": 39,
+        "盘带": 75,
+        "传球": 70,
+        "射门": 75,
+        "团队协作": 60,
+        "意志力": 60,
+        "花式技巧": 50
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "勒沃库森 vs 沙尔克04",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "勒沃库森 vs 多特蒙德",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/17",
+          "match": "勒沃库森 vs 拜仁慕尼黑",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/09",
+          "match": "勒沃库森 vs 门兴格拉德巴赫",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "勒沃库森 vs 弗赖堡",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "勒沃库森 vs 科隆",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "勒沃库森 vs 美因茨",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/10",
+          "match": "勒沃库森 vs 法兰克福",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "勒沃库森 vs 柏林联合",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "勒沃库森 vs 斯图加特",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/16",
+          "match": "勒沃库森 vs 霍芬海姆",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/06",
+          "match": "勒沃库森 vs 莱比锡",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/03",
+          "match": "勒沃库森 vs 奥格斯堡",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "勒沃库森 vs 沃尔夫斯堡",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "勒沃库森 vs 拜仁慕尼黑",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50228207"
+    },
+    {
+      "name": "吴贤揆",
+      "number": null,
+      "position": "前锋",
+      "age": 25,
+      "height": 185,
+      "weight": 83,
+      "preferred_foot": "右脚",
+      "value": "83kg",
+      "birth_date": "2001-04-12",
+      "nationality": "韩国",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 78,
+        "力量": 81,
+        "防守": 45,
+        "盘带": 68,
+        "传球": 54,
+        "射门": 72
+      },
+      "recent_matches": [
+        {
+          "date": "05/09",
+          "match": "贝西克塔斯 vs 特拉布宗体育",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/05",
+          "match": "贝西克塔斯 vs 科尼亚体育",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/01",
+          "match": "加济安泰普 vs 贝西克塔斯",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/27",
+          "match": "贝西克塔斯 vs 卡拉古姆吕克",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "贝西克塔斯 vs 阿拉尼亚体育",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "伊斯坦布尔 vs 贝西克塔斯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/10",
+          "match": "贝西克塔斯 vs 安塔利亚体育",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "费内巴切 vs 贝西克塔斯",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "安塔利亚 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/19",
+          "match": "贝西克塔斯 vs 卡斯帕萨",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "青年联合 vs 贝西克塔斯",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "贝西克塔斯 vs 加拉塔萨雷",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/04",
+          "match": "贝西克塔斯 vs 奎瑞体育",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "科贾埃利体育 vs 贝西克塔斯",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50485626"
+    },
+    {
+      "name": "曹圭成",
+      "number": 10,
+      "position": "前锋",
+      "age": 25,
+      "height": 188,
+      "weight": 82,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1998-01-25",
+      "nationality": "韩国",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 72,
+        "力量": 75,
+        "防守": 80,
+        "盘带": 85,
+        "传球": 52,
+        "射门": 68
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "韩职 中日德兰 vs 乌隆维拉",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "丹麦哈维 中日德兰 vs 中日德兰",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "韩职 北西兰 vs 中日德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/04",
+          "match": "丹超 中日德兰 vs 维堡",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/26",
+          "match": "丹超 奥胡斯 vs 中日德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "丹超 桑德捷斯基 vs 中日德兰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "丹超 中日德兰 vs 高威斯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "丹超 布鲁赫兰 vs 中日德兰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "丹超 中日德兰 vs 桑德捷斯基",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 美洲杯 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "韩职 维堡 vs 中日德兰",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/19",
+          "match": "欧联 中日德兰 vs 诺丁汉森林",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/15",
+          "match": "丹超 中日德兰 vs 北西兰",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50490928"
+    },
+    {
+      "name": "杨贤俊",
+      "number": 13,
+      "position": "前锋",
+      "age": 24,
+      "height": 176,
+      "weight": 69,
+      "preferred_foot": "右脚",
+      "value": "500万",
+      "birth_date": "2002-05-25",
+      "nationality": "韩国",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 82,
+        "力量": 69,
+        "防守": 39,
+        "盘带": 74,
+        "传球": 69,
+        "射门": 68
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛: 韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/23",
+          "match": "苏格兰杯: 凯尔特人 vs 利弗姆林竞技",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "苏超: 凯尔特人 vs 地底",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "苏超: 马瑟韦尔 vs 凯尔特人",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "苏超: 凯尔特人 vs 格拉斯哥流浪者",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "苏超: 希伯尼安 vs 凯尔特人",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "苏超: 凯尔特人 vs 福尔柯克",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "苏格兰杯: 凯尔特人 vs 圣米伦",
+          "score": "6-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "苏超: 凯尔特人 vs 圣米伦",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "苏超: 邓迪FC vs 凯尔特人",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛: 奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛: 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "友谊赛: 阿迪联 vs 凯尔特人",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "苏超: 凯尔特人 vs 马瑟韦尔",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "苏格兰杯: 格拉斯哥流浪者 vs 凯尔特人",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50602544"
+    },
+    {
+      "name": "严智星",
+      "number": 10,
+      "position": "前锋",
+      "age": 24,
+      "height": 174,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": "110万欧",
+      "birth_date": "2000-05-09",
+      "nationality": "韩国",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 85,
+        "力量": 65,
+        "防守": 36,
+        "盘带": 73,
+        "传球": 63,
+        "射门": 64
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "浦项铁人 vs 新庆西",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/21",
+          "match": "女王公园巡游者 vs 新庆西",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "新庆西 vs 首尔FC",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "莱斯特城 vs 新庆西",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "新庆西 vs 米德尔斯堡",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "谢菲尔德联 vs 新庆西",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "新庆西 vs 孝文显",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/13",
+          "match": "查克苏姆 vs 新庆西",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "朴茨茅斯 vs 新庆西",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "新庆西 vs 斯托克城",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "伊普斯维奇 vs 新庆西",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/24",
+          "match": "新庆西 vs 普雷斯顿",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50537580"
+    },
+    {
+      "name": "李刚仁",
+      "number": "19",
+      "position": "中场",
+      "age": 25,
+      "height": 173,
+      "weight": 68,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-02-19",
+      "nationality": "韩国",
+      "overall_rating": 80,
+      "stats": {
+        "速度": 72,
+        "力量": 64,
+        "防守": 52,
+        "盘带": 83,
+        "传球": 81,
+        "射门": 76
+      },
+      "recent_matches": [
+        {
+          "date": "05/30",
+          "match": "巴黎圣日耳曼 vs 阿森纳",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "巴黎FC vs 巴黎圣日耳曼",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "巴黎圣日耳曼 vs 布雷斯特",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "拜仁慕尼黑 vs 巴黎圣日耳曼",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "巴黎圣日耳曼 vs 洛里昂",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/28",
+          "match": "巴黎圣日耳曼 vs 拜仁慕尼黑",
+          "score": "5-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "热刺 vs 巴黎圣日耳曼",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "巴黎圣日耳曼 vs 奥林匹克马赛",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "巴黎圣日耳曼 vs 里昂",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/14",
+          "match": "利物浦 vs 巴黎圣日耳曼",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/08",
+          "match": "巴黎圣日耳曼 vs 利物浦",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/03",
+          "match": "巴黎圣日耳曼 vs 雷恩",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛 vs 韩国",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "尼斯 vs 巴黎圣日耳曼",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50433561"
+    },
+    {
+      "name": "李在城",
+      "number": 7,
+      "position": "中场",
+      "age": 31,
+      "height": 181,
+      "weight": 74,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1992-08-10",
+      "nationality": "韩国",
+      "overall_rating": 76,
+      "stats": {
+        "速度": 71,
+        "力量": 66,
+        "防守": 66,
+        "盘带": 78,
+        "传球": 73,
+        "射门": 71,
+        "控球": 78,
+        "进攻能力": 75,
+        "花式技巧": 70
+      },
+      "recent_matches": [
+        {
+          "date": "05/11",
+          "match": "友谊赛",
+          "score": "韩国 vs 特立尼达和多巴哥",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "世预",
+          "score": "海南海观 vs 美国茨",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "世预",
+          "score": "美国茨 vs 柏林联合",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "世预",
+          "score": "门兴格拉德巴赫 vs 美国茨",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/16",
+          "match": "欧协联",
+          "score": "斯特拉斯堡 vs 美国茨",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "世预",
+          "score": "美国茨 vs 鲁能",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/09",
+          "match": "欧协联",
+          "score": "美国茨 vs 斯特拉斯堡",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "世预",
+          "score": "霍芬海姆 vs 美国茨",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "奥地利 vs 韩国",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛",
+          "score": "韩国 vs 科特迪瓦",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "世预",
+          "score": "美国茨 vs 法兰克福",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/19",
+          "match": "欧协联",
+          "score": "美国茨 vs 高洛莱茨",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "世预",
+          "score": "云达不莱梅 vs 美国茨",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/12",
+          "match": "欧协联",
+          "score": "高洛莱茨 vs 美国茨",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "世预",
+          "score": "美国茨 vs 布雷加特",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50211268"
+    },
+    {
+      "name": "裴峻浩",
+      "number": "10",
+      "position": "中场",
+      "age": 22,
+      "height": 178,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": "400万",
+      "birth_date": "2003-08-21",
+      "nationality": "韩国",
+      "overall_rating": 71,
+      "stats": {
+        "速度": 74,
+        "力量": 55,
+        "防守": 36,
+        "盘带": 73,
+        "传球": 69,
+        "射门": 62,
+        "国际声望": 2,
+        "进攻能力": 3,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "布里斯托尔城 vs 斯托克城",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "斯托克城 vs 朴茨茅斯",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/21",
+          "match": "斯托克城 vs 米尔沃尔",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "雷克瑟姆 vs 斯托克城",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "斯托克城 vs 布莱克本流浪者",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/06",
+          "match": "德比郡 vs 斯托克城",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "斯托克城 vs 谢周三",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 韩国 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/20",
+          "match": "普雷斯顿 vs 斯托克城",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "斯托克城 vs 达特福德",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/10",
+          "match": "斯托克城 vs 伊普斯维奇",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "斯旺西 vs 斯托克城",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "考文垂 vs 斯托克城",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50770218"
+    },
+    {
+      "name": "朴硕燮",
+      "number": null,
+      "position": "中场",
+      "age": 30,
+      "height": 164,
+      "weight": 80,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-10-23",
+      "nationality": "韩国",
+      "overall_rating": 74,
+      "stats": {
+        "速度": 70,
+        "力量": 84,
+        "防守": 73,
+        "盘带": 63,
+        "传球": 62,
+        "射门": 54
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/24",
+          "match": "浙江 vs 辽宁铁人",
+          "score": "0-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/20",
+          "match": "浙江 vs 山东泰山",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "浙江 vs 天津津门虎",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/06",
+          "match": "云南玉昆 vs 浙江",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "浙江 vs 深圳新鹏城",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "成都蓉城 vs 浙江",
+          "score": "4-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/21",
+          "match": "武汉三镇 vs 浙江",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/17",
+          "match": "浙江 vs 北京国安",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/10",
+          "match": "大连英博 vs 浙江",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/05",
+          "match": "浙江 vs 重庆铜梁龙",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/20",
+          "match": "青岛海牛 vs 浙江",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "浙江 vs 上海申花",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50418852"
+    },
+    {
+      "name": "金镇圭",
+      "number": null,
+      "position": "中场",
+      "age": 29,
+      "height": 177,
+      "weight": 68,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-02-24",
+      "nationality": "韩国",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 79,
+        "力量": 70,
+        "防守": 52,
+        "盘带": 72,
+        "传球": 75,
+        "射门": 68
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "全北现代汽车 vs 姜泰民",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "蔚山1995 vs 全北现代汽车",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/10",
+          "match": "安养 vs 全北现代汽车",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/05",
+          "match": "全北现代汽车 vs 光州",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "济州SK vs 全北现代汽车",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "全北现代汽车 vs 浦项铁人",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/21",
+          "match": "全北现代汽车 vs 仁川联",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "江原 vs 全北现代汽车",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "首尔 vs 全北现代汽车",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "全北现代汽车 vs 韩国U20",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友邻丽 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "大田韩亚市民 vs 全北现代汽车",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "全北现代汽车 vs 安养",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "全北现代汽车 vs 安养",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50237289"
+    },
+    {
+      "name": "黄仁范",
+      "number": null,
+      "position": "中场",
+      "age": 29,
+      "height": 178,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-09-20",
+      "nationality": "韩国",
+      "overall_rating": 76,
+      "stats": {
+        "速度": 62,
+        "力量": 64,
+        "防守": 63,
+        "盘带": 77,
+        "传球": 78,
+        "射门": 70
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "特立尼达和多巴哥 vs 韩国",
+          "score": "5-0",
+          "rating": "80",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "费耶诺德 vs 洛杉矶银河",
+          "score": "2-1",
+          "rating": "74",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "南墨沃 vs 费耶诺德",
+          "score": "3-3",
+          "rating": "82",
+          "status": "D"
+        },
+        {
+          "date": "03/01",
+          "match": "特温特 vs 费耶诺德",
+          "score": "2-0",
+          "rating": "74",
+          "status": "L"
+        },
+        {
+          "date": "02/22",
+          "match": "费耶诺德 vs 特尔斯达",
+          "score": "2-1",
+          "rating": "80",
+          "status": "W"
+        },
+        {
+          "date": "02/15",
+          "match": "费耶诺德 vs 希腊之鹰",
+          "score": "1-0",
+          "rating": "78",
+          "status": "W"
+        },
+        {
+          "date": "02/08",
+          "match": "乌迪勒支 vs 费耶诺德",
+          "score": "0-1",
+          "rating": "80",
+          "status": "W"
+        },
+        {
+          "date": "02/01",
+          "match": "PSV埃因霍温 vs 费耶诺德",
+          "score": "3-0",
+          "rating": "74",
+          "status": "L"
+        },
+        {
+          "date": "01/29",
+          "match": "皇家马略卡 vs 费耶诺德",
+          "score": "2-1",
+          "rating": "74",
+          "status": "L"
+        },
+        {
+          "date": "01/23",
+          "match": "费耶诺德 vs 阿尔梅罗大力神",
+          "score": "4-2",
+          "rating": "78",
+          "status": "W"
+        },
+        {
+          "date": "01/22",
+          "match": "费耶诺德 vs 帕拉茨克赫",
+          "score": "3-0",
+          "rating": "80",
+          "status": "W"
+        },
+        {
+          "date": "01/18",
+          "match": "费耶诺德 vs 查特菲尔德比",
+          "score": "3-4",
+          "rating": "74",
+          "status": "L"
+        },
+        {
+          "date": "01/11",
+          "match": "海伦芬 vs 费耶诺德",
+          "score": "2-2",
+          "rating": "82",
+          "status": "D"
+        },
+        {
+          "date": "12/21",
+          "match": "费耶诺德 vs 拜洛特",
+          "score": "1-1",
+          "rating": "82",
+          "status": "D"
+        },
+        {
+          "date": "12/17",
+          "match": "费耶诺德 vs 海伦芬",
+          "score": "2-3",
+          "rating": "74",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50236057"
+    },
+    {
+      "name": "李东炅",
+      "number": 10,
+      "position": "中场",
+      "age": 28,
+      "height": 176,
+      "weight": 72,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1997-09-20",
+      "nationality": "韩国",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 77,
+        "力量": 73,
+        "防守": 59,
+        "盘带": 75,
+        "传球": 73,
+        "射门": 75
+      },
+      "recent_matches": [
+        {
+          "date": "05/17",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "江苏 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "蔚山HD vs 沛州SK",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "蔚山HD vs 富川1995",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "全南浦项 vs 蔚山HD",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "蔚山HD vs 大邱韩医人",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "蔚山HD vs 大邱韩医寿辰",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/22",
+          "match": "安养 vs 蔚山HD",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "蔚山HD vs 光州",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "仁川联 vs 蔚山HD",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "全北现代汽车 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "蔚山HD vs 全南浦项",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/18",
+          "match": "济州SK vs 蔚山HD",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "富川1995 vs 蔚山HD",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "蔚山HD vs 江原",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50440063"
+    },
+    {
+      "name": "白昇浩",
+      "number": null,
+      "position": "中场",
+      "age": 26,
+      "height": 180,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-03-17",
+      "nationality": "韩国",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 67,
+        "力量": 75,
+        "防守": 66,
+        "盘带": 74,
+        "传球": 70,
+        "射门": 67
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛: 韩国 vs 特立尼达和多巴哥",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "英冠: 布莱茅斯 vs 伯明翰",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "英冠: 伯明翰 vs 布里斯托尔城",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "英冠: 伯明翰 vs 普雷斯顿",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "英冠: 赫尔城 vs 伯明翰",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/12",
+          "match": "英冠: 伯明翰 vs 雷克斯姆",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "英冠: 伊普斯维奇 vs 伯明翰",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/03",
+          "match": "英冠: 伯明翰 vs 布莱克本流浪者",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛: 金纳特 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛: 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "英冠: 伯伦德 vs 谢菲尔德联",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "英冠: 伯明翰 vs 罗瑟汉姆联",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/11",
+          "match": "英冠: 伯明翰 vs 天主教巡游者",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "英冠: 皮尔斯 vs 伯明翰",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/02",
+          "match": "英冠: 伯明翰 vs 米德尔斯堡",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50228205"
+    },
+    {
+      "name": "卡斯特罗普",
+      "number": 17,
+      "position": "中场",
+      "age": 22,
+      "height": 177,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-07-29",
+      "nationality": "德国",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 80,
+        "力量": 71,
+        "防守": 64,
+        "盘带": 77,
+        "传球": 69,
+        "射门": 63
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "德甲",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "德甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "德甲",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "德甲",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "德甲",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/13",
+          "match": "德甲",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "德甲",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "德甲",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "德甲",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/14",
+          "match": "德甲",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/07",
+          "match": "德甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/31",
+          "match": "德甲",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/25",
+          "match": "德甲",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50564362"
+    },
+    {
+      "name": "薛英佑",
+      "number": 66,
+      "position": "后卫",
+      "age": 27,
+      "height": 180,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1998-12-05",
+      "nationality": "韩国",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 81,
+        "力量": 73,
+        "防守": 65,
+        "盘带": 48,
+        "传球": 65,
+        "射门": 51
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "塞尔杯 莫尔德 vs 埃伊纳丁斯",
+          "score": "2-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "塞尔超 莫尔德 vs 新帕扎尔",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/30",
+          "match": "塞尔杯 乌布德丁斯托夫 vs 贝尔格莱德红星",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "塞尔超 贝尔格莱德红星 vs 贝尔格莱德游击队",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "塞尔超 潘切沃铁路工人 vs 贝尔格莱德红星",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/18",
+          "match": "塞尔超 贝尔格莱德红星 vs 埃伊纳丁斯",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/09",
+          "match": "塞尔超 贝尔格莱德红星 vs 苏博蒂察辛尼达克",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "塞尔超 苏杜利察 vs 贝尔格莱德红星",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "塞尔超 莫尔德 vs 尼什工人",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "塞尔超 MAT新贝尔格莱德 vs 贝尔格莱德红星",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "塞尔超 贝尔格莱德红星 vs 纳普里达克",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/05",
+          "match": "塞尔超 新帕扎尔 vs 贝尔格莱德红星",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50551357"
+    },
+    {
+      "name": "金玟哉",
+      "number": "1",
+      "position": "后卫",
+      "age": 29,
+      "height": 190,
+      "weight": 85,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-11-15",
+      "nationality": "韩国",
+      "overall_rating": 82,
+      "stats": {
+        "速度": 73,
+        "力量": 84,
+        "防守": 83,
+        "盘带": 63,
+        "传球": 58,
+        "射门": 32
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 - 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/23",
+          "match": "德国杯 - 拜仁慕尼黑 vs 新加坡",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "德甲 - 沃尔夫斯堡 vs 拜仁慕尼黑",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "欧冠 - 拜仁慕尼黑 vs 巴黎圣日耳曼",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "德甲 - 拜仁慕尼黑 vs 海登海姆",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/28",
+          "match": "欧冠 - 巴黎圣日耳曼 vs 拜仁慕尼黑",
+          "score": "5-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "德甲 - 奥格茨 vs 拜仁慕尼黑",
+          "score": "3-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "德国杯 - 帕拉茨克 vs 拜仁慕尼黑",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "德甲 - 拜仁慕尼黑 vs 斯图加特",
+          "score": "4-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "欧冠 - 拜仁慕尼黑 vs 皇家马德里",
+          "score": "4-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "德甲 - 圣保利 vs 拜仁慕尼黑",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/07",
+          "match": "欧冠 - 皇家马德里 vs 拜仁慕尼黑",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "德甲 - 弗赖堡 vs 拜仁慕尼黑",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 - 澳大利亚 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛 - 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50280322"
+    },
+    {
+      "name": "曹侑珉",
+      "number": 20,
+      "position": "后卫",
+      "age": 29,
+      "height": 184,
+      "weight": 79,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-11-17",
+      "nationality": "韩国",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 72,
+        "力量": 74,
+        "防守": 65,
+        "盘带": 60,
+        "传球": 59,
+        "射门": 49
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "利雅得胜利 vs 沙迦",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/15",
+          "match": "沙迦 vs 蒂拉斯波尔",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "巴塔 vs 沙迦",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/06",
+          "match": "沙迦 vs 艾因",
+          "score": "6-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/10",
+          "match": "胡拉克 vs 沙迦",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "沙迦 vs 迪拜祈祷",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "法蒂赫 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/17",
+          "match": "卡尔巴赫 vs 沙迦",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/11",
+          "match": "沙迦 vs 迪拜胜利",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "沙迦 vs 亚塞伊拉迪巴",
+          "score": "4-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/26",
+          "match": "阿布扎比半岛 vs 沙迦",
+          "score": "5-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/20",
+          "match": "阿治曼 vs 沙迦",
+          "score": "3-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/16",
+          "match": "沙迦 vs 纳萨夫",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/09",
+          "match": "杜海勒 vs 沙迦",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50434411"
+    },
+    {
+      "name": "金纹奂",
+      "number": 33,
+      "position": "后卫",
+      "age": 25,
+      "height": 173,
+      "weight": 64,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-08-01",
+      "nationality": "韩国",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 83,
+        "力量": 66,
+        "防守": 62,
+        "盘带": 60,
+        "传球": 60,
+        "射门": 53,
+        "国际声望": "★★★☆☆",
+        "进攻能力": "★★☆☆☆",
+        "花式技巧": "★★☆☆☆"
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "K联赛",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/12",
+          "match": "K联赛",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "K联赛",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/05",
+          "match": "K联赛",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "K联赛",
+          "score": "0-5",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "K联赛",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "K联赛",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "K联赛",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "K联赛",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "K联赛",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "K联赛",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/18",
+          "match": "K联赛",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50418266"
+    },
+    {
+      "name": "李太锡",
+      "number": 17,
+      "position": "后卫",
+      "age": 23,
+      "height": 174,
+      "weight": 70,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-07-28",
+      "nationality": "韩国",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 79,
+        "力量": 71,
+        "防守": 62,
+        "盘带": 68,
+        "传球": 60,
+        "射门": 40,
+        "国际声誉": 3,
+        "进攻能力": 2,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "奥地利维也纳 vs 林茨",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "维也纳快速 vs 奥地利维也纳",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "奥地利维也纳 vs 哈特贝格",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "格拉茨风暴 vs 奥地利维也纳",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/22",
+          "match": "萨尔茨堡红牛 vs 奥地利维也纳",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "奥地利维也纳 vs 萨尔茨堡红牛",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "奥地利维也纳 vs 维也纳快速",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "林茨 vs 奥地利维也纳",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 台湾",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "哈特贝格 vs 奥地利维也纳",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/08",
+          "match": "圣珀 vs 奥地利维也纳",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/01",
+          "match": "奥地利维也纳 vs 林茨",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/21",
+          "match": "阿尔特阿赫 vs 奥地利维也纳",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50535781"
+    },
+    {
+      "name": "李韩汛",
+      "number": "3",
+      "position": "后卫",
+      "age": 23,
+      "height": 190,
+      "weight": 84,
+      "preferred_foot": "右脚",
+      "value": "30万欧元",
+      "birth_date": "2001-06-17",
+      "nationality": "韩国",
+      "overall_rating": 70,
+      "stats": {
+        "速度": 65,
+        "力量": 72,
+        "防守": 71,
+        "盘带": 61,
+        "传球": 53,
+        "射门": 29
+      },
+      "recent_matches": [
+        {
+          "date": "05/21",
+          "match": "友谊赛: 韩国 vs 埃及尼达和桑巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "丹超: 中日德兰 vs 布隆德比",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/14",
+          "match": "丹超: 哥本哈根 vs 中日德兰",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "丹超: 北西兰 vs 中日德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/04",
+          "match": "丹超: 中日德兰 vs 维堡",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/26",
+          "match": "丹超: 桑纳科斯 vs 中日德兰",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "丹超: 桑德捷斯基 vs 中日德兰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/20",
+          "match": "丹超: 中日德兰 vs 奥胡斯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "丹超: 布隆德比 vs 中日德兰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "丹超: 中日德兰 vs 桑德捷斯基",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛: 英格利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛: 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "丹超: 维堡 vs 中日德兰",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/19",
+          "match": "欧联: 中日德兰 vs 波丁汉森林",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/15",
+          "match": "丹超: 中日德兰 vs 北西兰",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50535780"
+    },
+    {
+      "name": "金太炫",
+      "number": "3",
+      "position": "后卫",
+      "age": 25,
+      "height": 187,
+      "weight": 82,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-09-17",
+      "nationality": "韩国",
+      "overall_rating": 55,
+      "stats": {
+        "速度": 64,
+        "力量": 66,
+        "射门": 33,
+        "盘带": 39,
+        "传球": 38,
+        "防守": 27
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "日职联 千叶市原 vs 鹿岛鹿角",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "日职联 横滨水手 vs 鹿岛鹿角",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "日职联 鹿岛鹿角 vs 水户蜀葵",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "日职联 德岛漩涡 vs 町田泽维亚",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "日职联 东京绿茵 vs 鹿岛鹿角",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/24",
+          "match": "日职联 柏太阳神 vs 鹿岛鹿角",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "日职联 鹿岛鹿角 vs 浦和红钻",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "日职联 川崎前锋 vs 鹿岛鹿角",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "日职联 水户蜀葵 vs 鹿岛鹿角",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友谊赛 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "日职联 鹿岛鹿角 vs 千叶市原",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "日职联 町田泽维亚 vs 鹿岛鹿角",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "日职联 鹿岛鹿角 vs 川崎前锋",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50485657"
+    },
+    {
+      "name": "李期奕",
+      "number": 13,
+      "position": "中场",
+      "age": 25,
+      "height": 184,
+      "weight": 72,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2000-07-07",
+      "nationality": "韩国",
+      "overall_rating": 69,
+      "stats": {
+        "速度": 82,
+        "力量": 77,
+        "防守": 66,
+        "盘带": 67,
+        "传球": 59,
+        "射门": 55
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩援 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "江苏 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/12",
+          "match": "江苏 vs 大田韩亚市民",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "光州 vs 江原",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/05",
+          "match": "江原 vs 浦项铁人",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "仁川联 vs 江原",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/25",
+          "match": "江原 vs 首尔",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/21",
+          "match": "金泉尚武 vs 江原",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "江原 vs 全北现代汽车",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/12",
+          "match": "大田韩亚市民 vs 江原",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "江原 vs 光州",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/28",
+          "match": "浦项铁人 vs 江原",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "江原 vs 济州SK",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/18",
+          "match": "富川1995 vs 江原",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/15",
+          "match": "江原 vs 安养",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50603276"
+    },
+    {
+      "name": "赵贤祐",
+      "number": 21,
+      "position": "门将",
+      "age": 34,
+      "height": 186,
+      "weight": 73,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1991-09-25",
+      "nationality": "韩国",
+      "overall_rating": 74,
+      "stats": {
+        "扑救": 77,
+        "位置": 73,
+        "速度": 51,
+        "反应": 77,
+        "控球": 62,
+        "手型": 71
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "K联赛 江原 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/13",
+          "match": "K联赛 蔚山HD vs 洪州FC",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/10",
+          "match": "K联赛 蔚山HD vs 富川1995",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "K联赛 金泉尚武 vs 蔚山HD",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "K联赛 蔚山HD vs 浦项铁人",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "K联赛 蔚山HD vs 大邱韩亚市民",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/22",
+          "match": "K联赛 全罗 vs 蔚山HD",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/19",
+          "match": "K联赛 蔚山HD vs 光州",
+          "score": "5-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/15",
+          "match": "K联赛 蔚山HD vs 首尔",
+          "score": "1-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "K联赛 仁川联 vs 蔚山HD",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "K联赛 全北现代汽车 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 塞地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/09",
+          "match": "友谊赛 韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "K联赛 蔚山HD vs 金泉尚武",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50183413"
+    },
+    {
+      "name": "金承奎",
+      "number": "31",
+      "position": "门将",
+      "age": 30,
+      "height": 187,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-09-30",
+      "nationality": "韩国",
+      "overall_rating": 72,
+      "stats": {
+        "扑救": 74,
+        "位置": 71,
+        "速度": 36,
+        "反应": 75,
+        "弹跳": 70,
+        "手型": 65
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 地主立法机关巴萨",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "浦项铁柱 vs KC东京",
+          "score": "0-0",
+          "rating": "W",
+          "status": "D"
+        },
+        {
+          "date": "05/10",
+          "match": "KC东京 vs 东京绿茵",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/06",
+          "match": "KC东京 vs 千叶市原",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "KC东京 vs 小鸣前锋",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "柏太阳神 vs KC东京",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/24",
+          "match": "KC东京 vs 水户蜀葵",
+          "score": "5-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "横滨水手 vs KC东京",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "KC东京 vs 岩田泽维亚",
+          "score": "0-0",
+          "rating": "L",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "高城利 vs 科超",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "友道联 vs 科超",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/22",
+          "match": "东京绿茵 vs KC东京",
+          "score": "0-0",
+          "rating": "L",
+          "status": "D"
+        },
+        {
+          "date": "03/18",
+          "match": "千叶市原 vs KC东京",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/14",
+          "match": "水户蜀葵 vs KC东京",
+          "score": "1-1",
+          "rating": "W",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "KC东京 vs 横滨水手",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50019938"
+    },
+    {
+      "name": "宋范根",
+      "number": 31,
+      "position": "门将",
+      "age": 28,
+      "height": 194,
+      "weight": 88,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-10-15",
+      "nationality": "韩国",
+      "overall_rating": 74,
+      "stats": {
+        "扑救": 76,
+        "位置": 72,
+        "速度": 25,
+        "反应": 76,
+        "开球": 67,
+        "手型": 69
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "韩国 vs 特立尼达和多巴哥",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/17",
+          "match": "全北现代汽车 vs 金泉尚武",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "富川1995 vs 全北现代汽车",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/10",
+          "match": "安养 vs 全北现代汽车",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/05",
+          "match": "全北现代汽车 vs 光州",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "济州SC vs 全北现代汽车",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/26",
+          "match": "全北现代汽车 vs 浦项铁人",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/21",
+          "match": "全北现代汽车 vs 江原",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/18",
+          "match": "江原 vs 全北现代汽车",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "首尔 vs 全北现代汽车",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/04",
+          "match": "全北现代汽车 vs 蔚山HD",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "奥地利 vs 韩国",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/28",
+          "match": "韩国 vs 科特迪瓦",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "大邱韩亚市民 vs 全北现代汽车",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "全北现代汽车 vs 安养",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50393544"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "3/28 22:00",
+      "competition": "友谊赛",
+      "home_team": "韩国",
+      "away_team": "科特迪瓦",
+      "score": "0 - 4"
+    },
+    {
+      "date": "4/1 02:45",
+      "competition": "友谊赛",
+      "home_team": "奥地利",
+      "away_team": "韩国",
+      "score": "1 - 0"
+    },
+    {
+      "date": "5/31 09:00",
+      "competition": "友谊赛",
+      "home_team": "韩国",
+      "away_team": "特立尼达和多巴哥",
+      "score": "5 - 0"
+    },
+    {
+      "date": "6/4 09:00",
+      "competition": "友谊赛",
+      "home_team": "韩国",
+      "away_team": "萨尔瓦多",
+      "score": null
+    },
+    {
+      "date": "6/12 10:00",
+      "competition": "世界杯",
+      "home_team": "韩国",
+      "away_team": "捷克",
+      "score": null
+    }
+  ]
+}

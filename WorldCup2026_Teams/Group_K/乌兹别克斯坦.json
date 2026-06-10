@@ -1,0 +1,2502 @@
+{
+  "team_info": {
+    "英文名": "Uzbekistan",
+    "城市": "Toshkent (Tashkent)",
+    "成立": 1946,
+    "主场": null,
+    "容量": null,
+    "市值": "€78.7M"
+  },
+  "squad": [
+    {
+      "name": "保罗·卡纳瓦罗",
+      "number": null,
+      "position": "助理教练",
+      "age": 44,
+      "height": 185,
+      "weight": 83,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1981-06-26",
+      "nationality": "意大利",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 32,
+        "力量": 67,
+        "防守": 76,
+        "盘带": 52,
+        "传球": 52,
+        "射门": 44
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50013603",
+      "honors": [
+        "意大利杯冠军 × 2"
+      ],
+      "transfers": [
+        {
+          "date": "2018-01-01",
+          "from": "萨索洛",
+          "to": "退役",
+          "type": "退役"
+        },
+        {
+          "date": "2014-07-01",
+          "from": "那不勒斯",
+          "to": "萨索洛",
+          "type": "转会 (100万欧元)"
+        },
+        {
+          "date": "2014-06-30",
+          "from": "萨索洛",
+          "to": "那不勒斯",
+          "type": "租借回归"
+        },
+        {
+          "date": "2014-01-31",
+          "from": "那不勒斯",
+          "to": "萨索洛",
+          "type": "租借"
+        },
+        {
+          "date": "2001-08-01",
+          "from": "帕尔马",
+          "to": "维罗纳",
+          "type": "租借"
+        },
+        {
+          "date": "1999-09-01",
+          "from": "那不勒斯",
+          "to": "帕尔马",
+          "type": "转会 (100万欧)"
+        },
+        {
+          "date": "1998-07-01",
+          "from": "那不勒斯U19",
+          "to": "那不勒斯",
+          "type": "晋升"
+        }
+      ],
+      "injuries": []
+    },
+    {
+      "name": "特罗伊塞",
+      "number": null,
+      "position": "助理教练",
+      "age": 54,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1972-02-05",
+      "nationality": "意大利",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51069692"
+    },
+    {
+      "name": "奇门蒂",
+      "number": null,
+      "position": "守门员教练",
+      "age": 55,
+      "height": "184cm",
+      "weight": "83kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1970-06-30",
+      "nationality": "意大利",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "意大利足球甲级联赛冠军 × 1",
+        "意大利超级杯冠军 × 2"
+      ],
+      "transfers": [
+        {
+          "date": "2010-07-01",
+          "from": "尤文图斯",
+          "to": "退役",
+          "type": "退役"
+        },
+        {
+          "date": "2008-07-19",
+          "from": "乌迪内斯",
+          "to": "尤文图斯",
+          "type": "免签"
+        },
+        {
+          "date": "2007-07-01",
+          "from": "卡利亚里",
+          "to": "乌迪内斯",
+          "type": "免签"
+        },
+        {
+          "date": "2006-01-01",
+          "from": "尤文图斯",
+          "to": "卡利亚里",
+          "type": "免签"
+        },
+        {
+          "date": "2002-07-01",
+          "from": "莱切",
+          "to": "尤文图斯",
+          "type": "?"
+        },
+        {
+          "date": "1993-08-01",
+          "from": "桑贝内代塞塞",
+          "to": "萨勒尼塔纳",
+          "type": "?"
+        },
+        {
+          "date": "1993-06-30",
+          "from": "蒙扎",
+          "to": "桑贝内代塞塞",
+          "type": "租借回归"
+        },
+        {
+          "date": "1992-07-01",
+          "from": "桑贝内代塞塞",
+          "to": "蒙扎",
+          "type": "租借"
+        }
+      ],
+      "injuries": [],
+      "source_url": "https://www.dongqiudi.com/player/50003360"
+    },
+    {
+      "name": "肖穆罗多夫",
+      "number": 14,
+      "position": "前锋",
+      "age": 30,
+      "height": 185,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": "800万欧元",
+      "birth_date": "1995-06-29",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 74,
+      "stats": {
+        "速度": 79,
+        "力量": 66,
+        "防守": 40,
+        "盘带": 75,
+        "传球": 64,
+        "射门": 71
+      },
+      "recent_matches": [
+        {
+          "date": "05/16",
+          "match": "加济安泰普 vs RAMS巴伊克塞尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "RAMS巴伊克塞尔 vs 伊斯坦体",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "费内巴切 vs RAMS巴伊克塞尔",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/24",
+          "match": "RAMS巴伊克塞尔 vs 卡斯帕萨",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "特拉布宗体育 vs RAMS巴伊克塞尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "RAMS巴伊克塞尔 vs 青年联合",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/06",
+          "match": "科贾埃利体育 vs RAMS巴伊克塞尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/30",
+          "match": "FR队系列赛",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FR队系列赛",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "RAMS巴伊克塞尔 vs 安塔利亚体育",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "加拉塔萨雷 vs RAMS巴伊克塞尔",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "RAMS巴伊克塞尔 vs 哥兹塔比",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/03",
+          "match": "土耳其杯",
+          "score": "2-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/27",
+          "match": "RAMS巴伊克塞尔 vs 利尼耶体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "阿拉尼亚体育 vs RAMS巴伊克塞尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50213371"
+    },
+    {
+      "name": "谢尔盖耶夫",
+      "number": 19,
+      "position": "前锋",
+      "age": 31,
+      "height": 187,
+      "weight": 106,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1993-04-30",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/26",
+          "match": "波斯波利斯",
+          "score": "6-4",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2025",
+          "match": "塔什干棉农",
+          "score": "29-26",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024",
+          "match": "塔什干棉农",
+          "score": "3-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "巴吾顿",
+          "score": "22-17",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023",
+          "match": "托博尔",
+          "score": "11-9",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "托博尔",
+          "score": "2-1",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "托博尔",
+          "score": "26-20",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021",
+          "match": "托博尔",
+          "score": "7-6",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021",
+          "match": "阿克托比",
+          "score": "18-15",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020",
+          "match": "塔什干棉农",
+          "score": "32-21",
+          "rating": null,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50115541"
+    },
+    {
+      "name": "法伊祖拉耶夫",
+      "number": 11,
+      "position": "前锋",
+      "age": 22,
+      "height": 170,
+      "weight": 66,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2003-10-03",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 65,
+        "力量": 53,
+        "防守": 48,
+        "盘带": 66,
+        "传球": 68,
+        "射门": 62
+      },
+      "recent_matches": [
+        {
+          "date": "05/16",
+          "match": "加济安泰普 vs RAMS巴伊克赛尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "RAMS巴伊克赛尔 vs 伊姆比尔体育",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/02",
+          "match": "费内巴切 vs RAMS巴伊克赛尔",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "特拉布宗体育 vs RAMS巴伊克赛尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/07",
+          "match": "RAMS巴伊克赛尔 vs 穆拉特比",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/03",
+          "match": "RAMS巴伊克赛尔 vs 特拉布宗体育",
+          "score": "2-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/27",
+          "match": "RAMS巴伊克赛尔 vs 科尼亚体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/21",
+          "match": "阿拉尼亚体育 vs RAMS巴伊克赛尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/15",
+          "match": "RAMS巴伊克赛尔 vs 贝西克塔斯",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/08",
+          "match": "埃于普体育 vs RAMS巴伊克赛尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/04",
+          "match": "卡拉德尼兹艾 vs RAMS巴伊克赛尔",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/31",
+          "match": "RAMS巴伊克赛尔 vs 亚体体育",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "01/24",
+          "match": "开塞利体育 vs RAMS巴伊克赛尔",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/17",
+          "match": "RAMS巴伊克赛尔 vs 卡拉居姆吕克",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/13",
+          "match": "RAMS巴伊克赛尔 vs 博卢体育",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50558552"
+    },
+    {
+      "name": "乌鲁诺夫",
+      "number": 70,
+      "position": "前锋",
+      "age": 23,
+      "height": "181cm",
+      "weight": "82kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-12-19",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 79,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024/02/06",
+          "match": "波斯波利斯",
+          "score": "20-12",
+          "rating": "3",
+          "status": "W"
+        },
+        {
+          "date": "2024/02/05",
+          "match": "波斯波利斯",
+          "score": "25-16",
+          "rating": "5",
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "波斯波利斯",
+          "score": "10-10",
+          "rating": "6",
+          "status": "D"
+        },
+        {
+          "date": "2023",
+          "match": "纳曼干新春",
+          "score": "29-22",
+          "rating": "9",
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "马拉尔",
+          "score": "3-0",
+          "rating": "0",
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "乌法",
+          "score": "17-9",
+          "rating": "0",
+          "status": "W"
+        },
+        {
+          "date": "2020/2021",
+          "match": "乌法",
+          "score": "10-6",
+          "rating": "0",
+          "status": "W"
+        },
+        {
+          "date": "2020/2021",
+          "match": "莫斯科斯巴达",
+          "score": "9-2",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2019/2020",
+          "match": "乌法",
+          "score": "10-9",
+          "rating": "0",
+          "status": "D"
+        },
+        {
+          "date": "2019",
+          "match": "塔什干火车头",
+          "score": "13-12",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2019",
+          "match": "纳曼干新春",
+          "score": "12-12",
+          "rating": "2",
+          "status": "D"
+        },
+        {
+          "date": "2018",
+          "match": "纳曼干新春",
+          "score": "30-29",
+          "rating": "0",
+          "status": "W"
+        },
+        {
+          "date": "2017",
+          "match": "纳曼干新春",
+          "score": "9-8",
+          "rating": "1",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50385988"
+    },
+    {
+      "name": "马沙里波夫",
+      "number": "77",
+      "position": "前锋",
+      "age": 32,
+      "height": "172cm",
+      "weight": "70kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-09-01",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 77,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/08/02",
+          "match": "德黑兰独立 vs 德黑兰独立",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024/09/27",
+          "match": "利雅得胜利 vs 涅塞莱科斯",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023/06/30",
+          "match": "迪拜青年国民 vs 利雅得胜利",
+          "score": "3-1",
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2021/01/29",
+          "match": "利雅得胜利 vs 迪拜青年国民",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2021/01/10",
+          "match": "塔什干棉农 vs 利雅得胜利",
+          "score": "1-0",
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50183181"
+    },
+    {
+      "name": "吉亚诺夫",
+      "number": 7,
+      "position": "前锋",
+      "age": 24,
+      "height": 170,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "60万",
+      "birth_date": "2001-06-05",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-02-11",
+          "match": "下诺夫哥罗德 vs 塔什干奥林匹克",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023-02-10",
+          "match": "塔什干奥林匹克 vs 下诺夫哥罗德",
+          "score": "1-1",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2021-01-01",
+          "match": "塔什干棉农U21 vs 塔什干奥林匹克",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50759060"
+    },
+    {
+      "name": "阿莫诺夫",
+      "number": 8,
+      "position": "前锋",
+      "age": 26,
+      "height": 174,
+      "weight": 70,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1997-10-30",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-22",
+          "match": "绿茵者 - 布哈拉",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025-01-09",
+          "match": "费尔干纳石油工人 - 绿茵者",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-07-20",
+          "match": "费尔费坎 - 费尔干纳石油工人",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-01-09",
+          "match": "纳萨夫 - 蒂尔费坎",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50281202"
+    },
+    {
+      "name": "哈姆达莫夫",
+      "number": 17,
+      "position": "前锋",
+      "age": 23,
+      "height": 180,
+      "weight": 68,
+      "preferred_foot": "左右脚",
+      "value": null,
+      "birth_date": "1996-07-24",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025",
+          "match": "塔什干棉农",
+          "score": "11/6/6/2/0/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024",
+          "match": "塔什干棉农",
+          "score": "27/11/4/0/1/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023",
+          "match": "塔什干棉农",
+          "score": "33/31/5/3/3/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022",
+          "match": "塔什干棉农",
+          "score": "27/22/0/0/1/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "赛利亚",
+          "score": "9/6/2/1/2/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021",
+          "match": "塔什干棉农",
+          "score": "3/3/0/2/0/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "哈塔",
+          "score": "10/8/1/0/1/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "迪拜胜利",
+          "score": "4/4/0/0/0/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020",
+          "match": "塔什干棉农",
+          "score": "34/30/9/3/3/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019",
+          "match": "塔什干棉农",
+          "score": "29/21/7/2/3/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "安郅",
+          "score": "7/2/0/0/4/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "安郅",
+          "score": "4/3/0/0/0/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017",
+          "match": "纳吉亚",
+          "score": "37/36/15/2/3/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016",
+          "match": "纳吉亚",
+          "score": "36/34/11/2/8/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015",
+          "match": "纳吉亚",
+          "score": "6/3/0/0/0/0",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014",
+          "match": "纳吉亚",
+          "score": "8/6/4/0/2/0",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50204287"
+    },
+    {
+      "name": "特米罗夫",
+      "number": 9,
+      "position": "前锋",
+      "age": 27,
+      "height": 180,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": "600",
+      "birth_date": "1998-10-27",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-08-11",
+          "match": "杰志 vs 埃尔比勒",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-11-17",
+          "match": "自由球员 vs 杰志",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-07-01",
+          "match": "培坎 vs 自由球员",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-01-01",
+          "match": "穆巴拉克火炬 vs 塔什干棉农",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-02-27",
+          "match": "古佐尔警察 vs 穆巴拉克火炬",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019-07-01",
+          "match": "纳萨夫U21 vs 古佐尔警察",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50446671"
+    },
+    {
+      "name": "舒库罗夫",
+      "number": null,
+      "position": "中场",
+      "age": 29,
+      "height": 183,
+      "weight": 74,
+      "preferred_foot": "右脚",
+      "value": "63",
+      "birth_date": "1996-06-22",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 63,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/16",
+          "match": "阿联酋联 - 阿布扎比半岛 vs 塔尼亚斯",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "阿联酋联 - 塔尼亚斯 vs 迪拜青年国民",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "阿联酋联 - 卡尔巴联合 vs 塔尼亚斯",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/10",
+          "match": "阿联酋联 - 塔尼亚斯 vs 沙迦",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "阿联酋联 - 谢尔贾坎 vs 塔尼亚斯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/30",
+          "match": "FIFA系列赛 - 乌兹别克斯坦 vs 塞内加尔",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "FIFA系列赛 - 乌兹别克斯坦 vs 加蓬",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "阿联酋联 - 阿治曼 vs 塔尼亚斯",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/12",
+          "match": "阿联酋联 - 塔尼亚斯 vs 阿布扎比统一",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "阿联酋联 - 塔尼亚斯 vs 迪拜祈祷",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/27",
+          "match": "阿联酋联 - 巴塔 vs 塔尼亚斯",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "阿联酋联 - 塔尼亚斯 vs 艾因",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/07",
+          "match": "阿联酋联 - 富查伊拉巴巴 vs 塔尼亚斯",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/02",
+          "match": "阿联酋总统杯 - 塔尼亚斯 vs 阿布扎比半岛",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/29",
+          "match": "阿联酋联 - 迪拜胜利 vs 塔尼亚斯",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50190395"
+    },
+    {
+      "name": "莫兹戈沃伊",
+      "number": 10,
+      "position": "中场",
+      "age": 27,
+      "height": 180,
+      "weight": 74,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-04-02",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-02-03",
+          "match": "塔尼亚斯 vs 塔什干棉农",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2023-07-10",
+          "match": "纳萨夫 vs 塔尼亚斯",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2018-01-01",
+          "match": "纳萨夫U21 vs 纳萨夫",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50437027"
+    },
+    {
+      "name": "伊斯坎德罗夫",
+      "number": "10",
+      "position": "中场",
+      "age": 32,
+      "height": 171,
+      "weight": 65,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1993-10-16",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 62,
+      "stats": {
+        "速度": 66,
+        "力量": 62,
+        "防守": 51,
+        "盘带": 61,
+        "传球": 62,
+        "射门": 59
+      },
+      "recent_matches": [
+        {
+          "date": "2020-01-20",
+          "match": "塔什干火车头 -- 城南",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019-01-14",
+          "match": "塔什干棉农 -- 塔什干火车头",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2012-08-01",
+          "match": "塔什干棉农U18 -- 塔什干棉农",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50122620"
+    },
+    {
+      "name": "哈姆罗别科夫",
+      "number": 21,
+      "position": "中场",
+      "age": 28,
+      "height": 180,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "507万欧",
+      "birth_date": "1996-02-13",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-18",
+          "match": "缔造者 vs 大不里士拖拉机",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025-07-01",
+          "match": "纳曼干新春 vs 缔造者",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-03-05",
+          "match": "塔什干棉农 vs 迪拜青年国民",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2019-02-03",
+          "match": "纳萨夫 vs 塔什干棉农",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2013-01-01",
+          "match": "纳萨夫U21 vs 纳萨夫",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50185173"
+    },
+    {
+      "name": "加涅夫",
+      "number": 6,
+      "position": "中场",
+      "age": 28,
+      "height": 175,
+      "weight": 66,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1996-02-22",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-10",
+          "match": "迪拜青年国民 → 巴塔",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2020-02-03",
+          "match": "纳萨夫 → 迪拜青年国民",
+          "score": null,
+          "rating": "替补 (6-3万欧)",
+          "status": null
+        },
+        {
+          "date": "2016-01-01",
+          "match": "纳萨夫U21 → 纳萨夫",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50217919"
+    },
+    {
+      "name": "阿卜杜拉耶夫",
+      "number": 8,
+      "position": "中场",
+      "age": 26,
+      "height": 178,
+      "weight": 68,
+      "preferred_foot": "右脚",
+      "value": "500",
+      "birth_date": "1997-09-01",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-15",
+          "match": "泰尔费坎 -- 塔什干棉农",
+          "score": null,
+          "rating": "先发",
+          "status": null
+        },
+        {
+          "date": "2023-08-08",
+          "match": "阿尔马雷克 -- 泰尔费坎",
+          "score": null,
+          "rating": "转会（20万欧）",
+          "status": null
+        },
+        {
+          "date": "2022-01-07",
+          "match": "缔造者 -- 阿尔马雷克",
+          "score": null,
+          "rating": "先发",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50450632"
+    },
+    {
+      "name": "叶萨诺夫",
+      "number": 25,
+      "position": "中场",
+      "age": 23,
+      "height": 190,
+      "weight": null,
+      "preferred_foot": null,
+      "value": "45€",
+      "birth_date": "2003-02-01",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-08",
+          "match": "布列斯特迪纳摩 → 布哈拉",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2023-09-17",
+          "match": "自由球员 → 布列斯特迪纳摩",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-12-31",
+          "match": "塔什干奥林匹克 → 安集延",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2023-07-11",
+          "match": "安集延 → 塔什干奥林匹克",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2022-01-12",
+          "match": "FX联合台 → 安集延",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50779324"
+    },
+    {
+      "name": "拉赫莫纳利耶夫",
+      "number": 7,
+      "position": "中场",
+      "age": 22,
+      "height": 170,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "2003-08-18",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-01-28",
+          "match": "喀山红宝石 - 沙巴巴库",
+          "score": null,
+          "rating": "租借",
+          "status": null
+        },
+        {
+          "date": "2023-01-01",
+          "match": "缔造者 - 喀山红宝石",
+          "score": null,
+          "rating": "免签",
+          "status": null
+        },
+        {
+          "date": "2022-01-01",
+          "match": "缔造者U18 - 缔造者",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50772660"
+    },
+    {
+      "name": "贾诺利迪诺夫",
+      "number": null,
+      "position": "中场",
+      "age": 24,
+      "height": "171cm",
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2002-05-15",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 70,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "吉扎克粟特",
+          "score": "10-6",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2025",
+          "match": "吉扎克粟特",
+          "score": "15-12",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2024/2025",
+          "match": "萨姆加耶特",
+          "score": "14-5",
+          "rating": "0",
+          "status": "D"
+        },
+        {
+          "date": "2024",
+          "match": "费尔干纳石油工人",
+          "score": "10-7",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2023",
+          "match": "塔什干奥林匹克",
+          "score": "20-19",
+          "rating": "2",
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "塔什干火车头",
+          "score": "8-6",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "阿拉木图凯拉特",
+          "score": "7-5",
+          "rating": "0",
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "塔什干火车头",
+          "score": "7-4",
+          "rating": "1",
+          "status": "W"
+        },
+        {
+          "date": "2024",
+          "match": "安集延",
+          "score": "4-0",
+          "rating": "3",
+          "status": "W"
+        },
+        {
+          "date": "2021",
+          "match": "安集延",
+          "score": "8-8",
+          "rating": "1",
+          "status": "D"
+        },
+        {
+          "date": "2020/2021",
+          "match": "坦波夫",
+          "score": "1-0",
+          "rating": "0",
+          "status": "L"
+        },
+        {
+          "date": "2020",
+          "match": "坦波夫",
+          "score": "10-10",
+          "rating": "1",
+          "status": "D"
+        },
+        {
+          "date": "2019",
+          "match": "缔造者",
+          "score": "20-14",
+          "rating": "2",
+          "status": "W"
+        },
+        {
+          "date": "2021",
+          "match": "乌兹别克斯坦U21",
+          "score": "1-1",
+          "rating": "2",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50516935"
+    },
+    {
+      "name": "阿里若诺夫",
+      "number": 7,
+      "position": "后卫",
+      "age": 29,
+      "height": 177,
+      "weight": 71,
+      "preferred_foot": "右脚",
+      "value": "130€",
+      "birth_date": "1997-04-19",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "club": "塔什干棉农",
+      "source_url": "https://www.dongqiudi.com/player/50240664"
+    },
+    {
+      "name": "纳斯鲁拉耶夫",
+      "number": 34,
+      "position": "后卫",
+      "age": 27,
+      "height": 180,
+      "weight": 70,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1998-07-23",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "塔什干棉农",
+          "score": "10-10",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2025",
+          "match": "纳萨夫",
+          "score": "6-6",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2025",
+          "match": "纳萨夫",
+          "score": "21-17",
+          "rating": 3,
+          "status": "W"
+        },
+        {
+          "date": "2024",
+          "match": "纳萨夫",
+          "score": "27-26",
+          "rating": 2,
+          "status": "W"
+        },
+        {
+          "date": "2023",
+          "match": "纳萨夫",
+          "score": "30-28",
+          "rating": 2,
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "纳萨夫",
+          "score": "4-4",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "纳萨夫",
+          "score": "15-15",
+          "rating": 4,
+          "status": "D"
+        },
+        {
+          "date": "2020",
+          "match": "纳萨夫",
+          "score": "22-19",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2019",
+          "match": "纳萨夫",
+          "score": "12-7",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2018",
+          "match": "纳萨夫",
+          "score": "1-0",
+          "rating": 0,
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50458698"
+    },
+    {
+      "name": "阿舒尔马托夫",
+      "number": 5,
+      "position": "后卫",
+      "age": 29,
+      "height": 185,
+      "weight": 74,
+      "preferred_foot": "右脚",
+      "value": "75€",
+      "birth_date": "1996-07-07",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 71,
+        "力量": 74,
+        "防守": 65,
+        "盘带": 60,
+        "传球": 54,
+        "射门": 43
+      },
+      "recent_matches": [
+        {
+          "date": "2025/07/08",
+          "match": "喀山红宝石 vs 德黑兰独立",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/07/05",
+          "match": "德黑兰独立 vs 喀山红宝石",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/07/04",
+          "match": "喀山红宝石 vs 喀山红宝石",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50204275"
+    },
+    {
+      "name": "贝赫鲁兹·卡里莫夫",
+      "number": 2,
+      "position": "后卫",
+      "age": 18,
+      "height": 172,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2007-08-07",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024",
+          "match": "塔什干奥林匹克",
+          "score": "1-0",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023",
+          "match": "铁尔米兹苏尔汉",
+          "score": "15-11",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2026",
+          "match": "铁尔米兹苏尔汉",
+          "score": "7-6",
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50936178"
+    },
+    {
+      "name": "乌罗佐夫",
+      "number": 6,
+      "position": "后卫",
+      "age": 22,
+      "height": 190,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2004-01-18",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/02",
+          "match": "撒马尔罕迪纳摩 vs 帕巴拉克火炮",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/28",
+          "match": "安集延 vs 撒马尔罕迪纳摩",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/23",
+          "match": "撒马尔罕迪纳摩 vs 阿尔马雷克",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/18",
+          "match": "塔什干棉农 vs 撒马尔罕迪纳摩",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/12",
+          "match": "撒马尔罕迪纳摩 vs 塔什干火车头",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/08",
+          "match": "撒马尔罕迪纳摩 vs 吉扎克粟特",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "乌兹别克斯坦 vs 墨西哥",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/27",
+          "match": "乌兹别克斯坦 vs 加蓬",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/19",
+          "match": "布哈拉 vs 撒马尔罕迪纳摩",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/12",
+          "match": "撒马尔罕迪纳摩 vs 纳萨夫",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/06",
+          "match": "纳造者 vs 撒马尔罕迪纳摩",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "撒马尔罕迪纳摩 vs 纳曼干新春",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/14",
+          "match": "撒马尔罕迪纳摩 vs 莫斯科火车头",
+          "score": "0-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/09",
+          "match": "泽尼特 vs 撒马尔罕迪纳摩",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "01/26",
+          "match": "乌兹别克斯坦 vs 中国",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50769447"
+    },
+    {
+      "name": "胡桑诺夫",
+      "number": 45,
+      "position": "后卫",
+      "age": 22,
+      "height": 186,
+      "weight": 84,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2004-02-29",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 80,
+      "stats": {
+        "速度": 90,
+        "力量": 79,
+        "防守": 80,
+        "盘带": 65,
+        "传球": 61,
+        "射门": 39
+      },
+      "recent_matches": [
+        {
+          "date": "05/19",
+          "match": "哈德斯菲尔德 vs 曼城",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "切尔西 vs 曼城",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "曼城 vs 水晶宫",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/04",
+          "match": "埃弗顿 vs 曼城",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "曼城 vs 南安普顿",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/22",
+          "match": "伯恩利 vs 曼城",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "曼城 vs 阿森纳",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "切尔西 vs 曼城",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "曼城 vs 利物浦",
+          "score": "4-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/30",
+          "match": "乌兹别克斯坦 vs 委内瑞拉",
+          "score": "0-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/22",
+          "match": "阿森纳 vs 曼城",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/17",
+          "match": "曼城 vs 皇家马德里",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "西汉姆联 vs 曼城",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/11",
+          "match": "皇家马德里 vs 曼城",
+          "score": "3-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "纽卡斯尔联 vs 曼城",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50761937"
+    },
+    {
+      "name": "赛义菲耶夫",
+      "number": 34,
+      "position": "后卫",
+      "age": 33,
+      "height": 183,
+      "weight": null,
+      "preferred_foot": "左右脚",
+      "value": "22.54",
+      "birth_date": "1991-01-17",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-30",
+          "match": "塔什干棉农 - 纳曼干新春",
+          "score": null,
+          "rating": 7,
+          "status": null
+        },
+        {
+          "date": "2018-01-01",
+          "match": "纳萨夫 - 塔什干棉农",
+          "score": null,
+          "rating": 7,
+          "status": null
+        },
+        {
+          "date": "2011-01-01",
+          "match": "穆巴拉克火炬 - 纳萨夫",
+          "score": null,
+          "rating": 7,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50178098"
+    },
+    {
+      "name": "叶什穆罗多夫",
+      "number": "92",
+      "position": "后卫",
+      "age": 33,
+      "height": 185,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1992-11-30",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": 79,
+      "stats": {
+        "速度": 75,
+        "射门": 60,
+        "传球": 70,
+        "盘带": 65,
+        "防守": 80,
+        "力量": 78
+      },
+      "recent_matches": [
+        {
+          "date": "2025",
+          "match": "纳萨夫",
+          "score": "16-16",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2025",
+          "match": "纳萨夫",
+          "score": "27-25",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "雪兰莪",
+          "score": "1-1",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2024/2025",
+          "match": "森美兰",
+          "score": "1-1",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2024/2025",
+          "match": "雪兰莪",
+          "score": "16-16",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2023",
+          "match": "纳萨夫",
+          "score": "27-26",
+          "rating": 0,
+          "status": "W"
+        },
+        {
+          "date": "2022",
+          "match": "纳萨夫",
+          "score": "23-23",
+          "rating": 2,
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "纳萨夫",
+          "score": "23-23",
+          "rating": 1,
+          "status": "D"
+        },
+        {
+          "date": "2020",
+          "match": "纳萨夫",
+          "score": "24-24",
+          "rating": 0,
+          "status": "D"
+        },
+        {
+          "date": "2019",
+          "match": "纳萨夫",
+          "score": "26-26",
+          "rating": 0,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50190382"
+    },
+    {
+      "name": "乌尔马萨利耶夫",
+      "number": 6,
+      "position": "后卫",
+      "age": 26,
+      "height": 187,
+      "weight": null,
+      "preferred_foot": null,
+      "value": "50万",
+      "birth_date": "2000-03-27",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-09",
+          "match": "缔造者 → 阿尔马雷克",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2021-12-31",
+          "match": "缔造者 → 塔什干火车头",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2021-03-07",
+          "match": "塔什干火车头 → 缔造者",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2019-01-01",
+          "match": "费尔干纳石油工人 → 塔什干火车头",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50424436"
+    },
+    {
+      "name": "乌特基尔-尤苏波夫",
+      "number": 1,
+      "position": "门将",
+      "age": 35,
+      "height": 185,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1991-01-04",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026-01-01",
+          "match": "胡齐斯坦钢铁 vs 纳曼干新春",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2018-01-23",
+          "match": "费尔干纳石油工人 vs 浩罕1912",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2016-01-01",
+          "match": "纳萨夫 vs 费尔干纳石油工人",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        },
+        {
+          "date": "2014-01-01",
+          "match": "穆巴拉克火炮 vs 纳萨夫",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50156932"
+    },
+    {
+      "name": "内马托夫",
+      "number": 1,
+      "position": "门将",
+      "age": 25,
+      "height": "182cm",
+      "weight": "79kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-03-20",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "纳萨夫",
+          "score": "16-16",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2025",
+          "match": "纳萨夫",
+          "score": "28-28",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2024",
+          "match": "纳萨夫",
+          "score": "31-31",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023",
+          "match": "纳萨夫",
+          "score": "25-25",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2022",
+          "match": "纳萨夫",
+          "score": "21-21",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "纳萨夫",
+          "score": "7-6",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2020",
+          "match": "纳萨夫",
+          "score": "17-16",
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2019",
+          "match": "纳萨夫",
+          "score": "17-17",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50427659"
+    },
+    {
+      "name": "叶尔加舍夫",
+      "number": 1,
+      "position": "门将",
+      "age": 30,
+      "height": 189,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-06-23",
+      "nationality": "乌兹别克斯坦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-10",
+          "match": "阿尔马雷克 → 费尔干纳石化工人",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2021-01-22",
+          "match": "撒马尔罕迪纳摩 → 阿尔马雷克",
+          "score": null,
+          "rating": null,
+          "status": "负"
+        },
+        {
+          "date": "2020-12-31",
+          "match": "浩罕1912 → 撒马尔罕迪纳摩",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2020-01-18",
+          "match": "撒马尔罕迪纳摩 → 浩罕1912",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50228281"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "1/26 20:30",
+      "competition": "友谊赛",
+      "home_team": "乌兹别克斯坦",
+      "away_team": "中国",
+      "score": "2 - 2"
+    },
+    {
+      "date": "1/30 21:00",
+      "competition": "友谊赛",
+      "home_team": "乌兹别克斯坦",
+      "away_team": "乌拉尔图",
+      "score": "4 - 2"
+    },
+    {
+      "date": "3/27 22:00",
+      "competition": "FIFA系列赛",
+      "home_team": "乌兹别克斯坦",
+      "away_team": "加蓬",
+      "score": "3 - 1"
+    },
+    {
+      "date": "3/30 22:00",
+      "competition": "FIFA系列赛",
+      "home_team": "乌兹别克斯坦",
+      "away_team": "委内瑞拉",
+      "score": "0 - 0"
+    },
+    {
+      "date": "6/2 09:00",
+      "competition": "友谊赛",
+      "home_team": "加拿大",
+      "away_team": "乌兹别克斯坦",
+      "score": null
+    },
+    {
+      "date": "6/18 10:00",
+      "competition": "世界杯",
+      "home_team": "乌兹别克斯坦",
+      "away_team": "哥伦比亚",
+      "score": null
+    },
+    {
+      "date": "6/24 01:00",
+      "competition": "世界杯",
+      "home_team": "葡萄牙",
+      "away_team": "乌兹别克斯坦",
+      "score": null
+    },
+    {
+      "date": "6/28 07:30",
+      "competition": "世界杯",
+      "home_team": "刚果民主共和国",
+      "away_team": "乌兹别克斯坦",
+      "score": null
+    }
+  ]
+}

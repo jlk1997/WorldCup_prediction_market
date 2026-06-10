@@ -1,0 +1,1728 @@
+{
+  "team_info": {
+    "英文名": "Jordan",
+    "城市": "Amman (Amman)",
+    "成立": 1949,
+    "市值": "€18.1M"
+  },
+  "squad": [
+    {
+      "name": "塞拉米",
+      "number": null,
+      "position": "主教练",
+      "age": 55,
+      "height": 183,
+      "weight": 76,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1970-10-06",
+      "nationality": "摩洛哥",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "club": "贝西克塔斯",
+      "source_url": "https://www.dongqiudi.com/player/50071184"
+    },
+    {
+      "name": "穆斯塔法·哈勒菲",
+      "number": null,
+      "position": "助理教练",
+      "age": 58,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1967-06-14",
+      "nationality": "摩洛哥",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/50760167"
+    },
+    {
+      "name": "阿里-乌勒万",
+      "number": 18,
+      "position": "前锋",
+      "age": 25,
+      "height": 184,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": "60万欧",
+      "birth_date": "2000-03-26",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-06-30",
+          "match": "泰尔 vs 北部区体育",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024-02-14",
+          "match": "北部区体育 vs 泰尔",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2022-01-01",
+          "match": "安曼半岛 vs 北部区体育",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50490156"
+    },
+    {
+      "name": "穆萨·塔马里",
+      "number": "11",
+      "position": "前锋",
+      "age": 26,
+      "height": "178cm",
+      "weight": "75kg",
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1997-06-10",
+      "nationality": "约旦",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 89,
+        "力量": 66,
+        "防守": 56,
+        "盘带": 80,
+        "传球": 67,
+        "射门": 69,
+        "国际声誉": 3,
+        "进攻能力": 4,
+        "花式技巧": 3
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛 - 瑞士 vs 约旦",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "法甲 - 马赛 vs 雷恩",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/10",
+          "match": "法甲 - 雷恩 vs 巴黎FC",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "法甲 - 雷恩 vs 雷恩",
+          "score": "4-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "法甲 - 雷恩 vs 南特",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/19",
+          "match": "法甲 - 斯特拉斯堡 vs 雷恩",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "法甲 - 雷恩 vs 赫斯",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "法甲 - 布雷斯特 vs 雷恩",
+          "score": "3-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛 - 约旦 vs 尼日利亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛 - 约旦 vs 哥斯达黎加",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/22",
+          "match": "法甲 - 雷恩 vs 梅斯",
+          "score": "6-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/15",
+          "match": "法甲 - 雷恩 vs 里尔",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/08",
+          "match": "法甲 - 尼斯 vs 雷恩",
+          "score": "0-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "法甲 - 雷恩 vs 图卢兹",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/22",
+          "match": "法甲 - 欧塞尔 vs 雷恩",
+          "score": "0-3",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50267761"
+    },
+    {
+      "name": "沙拉拉",
+      "number": 27,
+      "position": "前锋",
+      "age": 28,
+      "height": 169,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "37.5€",
+      "birth_date": "1997-12-30",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-01-05",
+          "match": "拉姆塔 → 卡萨布兰卡拉贾",
+          "score": null,
+          "rating": null,
+          "status": "转会 (4万欧)"
+        },
+        {
+          "date": "2023-07-20",
+          "match": "伊尔比德侯赛因 → 拉姆塔",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2023-01-30",
+          "match": "巴格达警察 → 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2024-01-31",
+          "match": "安曼团结 → 巴格达警察",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2024-02-19",
+          "match": "自由球员 → 安曼团结",
+          "score": null,
+          "rating": null,
+          "status": "转会"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50504487"
+    },
+    {
+      "name": "穆罕默德·马尔迪",
+      "number": 13,
+      "position": "前锋",
+      "age": 32,
+      "height": 179,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "40K",
+      "birth_date": "1993-10-06",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/02/06",
+          "match": "富查伊拉迪巴 vs 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024",
+          "match": "伊尔比德侯赛因 vs 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022",
+          "match": "吉打达鲁阿曼 vs 卡迪斯亚",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021",
+          "match": "艾沙尔特 vs 艾沙尔特",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020",
+          "match": "安曼半岛 vs 安曼半岛",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019",
+          "match": "安曼半岛 vs 安曼半岛",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018",
+          "match": "费萨里体育 vs 费萨里体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50226060"
+    },
+    {
+      "name": "乌达·法胡里",
+      "number": 25,
+      "position": "前锋",
+      "age": 20,
+      "height": "180cm",
+      "weight": "396",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2005-11-20",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "金宇塔",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2026",
+          "match": "伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50976097"
+    },
+    {
+      "name": "易卜拉欣·萨卜拉",
+      "number": 9,
+      "position": "前锋",
+      "age": 20,
+      "height": 184,
+      "weight": 77,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2006-02-01",
+      "nationality": "约旦",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 91,
+        "力量": 56,
+        "防守": 23,
+        "盘带": 61,
+        "传球": 41,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瑞士 vs 约旦",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/16",
+          "match": "伊格勒布火车头 vs 哈伊杜克",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/09",
+          "match": "NK瓦拉日丁 vs 伊格勒布火车头",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/03",
+          "match": "伊格勒布火车头 vs 里耶卡",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "奥西耶克 vs 伊格勒布火车头",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/21",
+          "match": "伊格勒布火车头 vs 斯拉文贝鲁波",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/17",
+          "match": "HNK戈贾雷 vs 伊格勒布火车头",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "伊格勒布火车头 vs 伊斯特拉1961",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/07",
+          "match": "武科瓦尔1919 vs 伊格勒布火车头",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "约旦 vs 尼日利亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "约旦 vs 南斯达黎加",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/21",
+          "match": "伊格勒布火车头 vs 伊格勒布迪纳摩",
+          "score": "0-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/15",
+          "match": "哈伊杜克 vs 伊格勒布火车头",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "斯拉文贝鲁波 vs 伊格勒布火车头",
+          "score": "1-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/07",
+          "match": "伊格勒布火车头 vs NK瓦拉日丁",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50881826"
+    },
+    {
+      "name": "阿里-阿赛扎",
+      "number": 99,
+      "position": "前锋",
+      "age": 22,
+      "height": 179,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "20K",
+      "birth_date": "2004-04-13",
+      "nationality": "约旦",
+      "overall_rating": 89,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "友谊赛: 瑞士 vs 约旦",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/20",
+          "match": "沙特联: 纳杰马 vs 利雅得青年",
+          "score": "1-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/17",
+          "match": "沙特联: 利雅得青年 vs 吉达联合",
+          "score": "3-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/11",
+          "match": "沙特联: 新未来城体育 vs 利雅得青年",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/07",
+          "match": "沙特联: 利雅得青年 vs 利雅得胜利",
+          "score": "2-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "沙特联: 利雅得青年 vs 布赖代合作",
+          "score": "1-5",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/28",
+          "match": "沙特联: 利雅得青年 vs 哈伊迈德",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/23",
+          "match": "海湾锦标: 利雅得青年 vs 赖扬",
+          "score": "0-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "海湾锦标: 扎胡体育 vs 利雅得青年",
+          "score": "1-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/14",
+          "match": "沙特联: 胡拜尔库迪西亚 vs 利雅得青年",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/05",
+          "match": "沙特联: 利雅得体育 vs 利雅得青年",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "友谊赛: 约旦 vs 尼日利亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "友谊赛: 约旦 vs 墨西哥",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "沙特联: 利雅得青年 vs 阿科多",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/07",
+          "match": "沙特联: 达曼协作 vs 利雅得青年",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50860792"
+    },
+    {
+      "name": "努尔-拉瓦比德",
+      "number": 8,
+      "position": "中场",
+      "age": 29,
+      "height": 179,
+      "weight": 45,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-02-24",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2022-07-24",
+          "match": "穆哈拉格 vs 费萨里体育",
+          "score": null,
+          "rating": "免签",
+          "status": null
+        },
+        {
+          "date": "2021-08-01",
+          "match": "安曼半岛 vs 穆哈拉格",
+          "score": null,
+          "rating": "?",
+          "status": null
+        },
+        {
+          "date": "2017-07-01",
+          "match": "未知球队 vs 安曼半岛",
+          "score": null,
+          "rating": "?",
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50421482"
+    },
+    {
+      "name": "阿布·塔哈",
+      "number": 6,
+      "position": "中场",
+      "age": 23,
+      "height": 176,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2003-02-02",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瑞士 vs 约旦",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "约旦 vs 尼日利亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "约旦 vs 哥斯达黎加",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/26",
+          "match": "巴格达空军 vs 卡尔赫",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/17",
+          "match": "巴格达空军 vs 巴格达希拉",
+          "score": "3-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/13",
+          "match": "迪亚拉体育 vs 巴格达空军",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/06",
+          "match": "阿尔加拉夫 vs 巴格达空军",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/28",
+          "match": "巴格达空军 vs 纳杰夫",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/20",
+          "match": "巴格达学生 vs 巴格达空军",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/13",
+          "match": "巴格达空军 vs 纳希内次体育",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/06",
+          "match": "巴格达空军 vs 米桑石油",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/01",
+          "match": "摩苏尔 vs 巴格达空军",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/28",
+          "match": "鲁萨法电力 vs 巴格达空军",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/22",
+          "match": "巴格达空军 vs 卡西姆体育",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "01/17",
+          "match": "巴格达空军 vs 巴格达警察",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50631760"
+    },
+    {
+      "name": "易卜拉欣·萨米",
+      "number": 15,
+      "position": "中场",
+      "age": 26,
+      "height": "178cm",
+      "weight": "77kg",
+      "preferred_foot": "右脚",
+      "value": "40K",
+      "birth_date": "2000-04-27",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-01-12",
+          "match": "伊尔比德侯赛因 → 祖拉",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-01-17",
+          "match": "安曼半岛 → 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018-07-01",
+          "match": "未知球队 → 安曼半岛",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50529618"
+    },
+    {
+      "name": "尼扎尔-拉什丹",
+      "number": 6,
+      "position": "中场",
+      "age": 27,
+      "height": 178,
+      "weight": 76,
+      "preferred_foot": "右脚",
+      "value": "600",
+      "birth_date": "1999-03-23",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-01-08",
+          "match": "祖拉 vs 卡塔尔体育",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2025-07-28",
+          "match": "永恒体育 vs 祖拉",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        },
+        {
+          "date": "2024-07-16",
+          "match": "费萨里体育 vs 永恒体育",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        },
+        {
+          "date": "2024-06-30",
+          "match": "酋长 vs 费萨里体育",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2023-11-11",
+          "match": "费萨里体育 vs 纳吾肉孜体育",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2023-03-31",
+          "match": "伊尔比德侯赛因 vs 费萨里体育",
+          "score": null,
+          "rating": null,
+          "status": "转会（3万欧）"
+        },
+        {
+          "date": "2019-07-01",
+          "match": "未知球队 vs 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": "7"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545165"
+    },
+    {
+      "name": "穆罕默德·达乌德",
+      "number": 76,
+      "position": "中场",
+      "age": 33,
+      "height": 177,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "15€",
+      "birth_date": "1992-12-04",
+      "nationality": "约旦",
+      "overall_rating": 76,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-08-21",
+          "match": "拉姆塔 → 哈德",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017-06-18",
+          "match": "哈德 → 拉姆塔",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014-01-12",
+          "match": "拉姆塔 → 哈德",
+          "score": "租借（12月歇）",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50210119"
+    },
+    {
+      "name": "阿米尔·贾穆斯",
+      "number": 71,
+      "position": "中场",
+      "age": 23,
+      "height": 177,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "45€",
+      "birth_date": "2002-07-03",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-09-02",
+          "match": "安曼半岛 → 安曼团结",
+          "score": "?",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-06-30",
+          "match": "安曼团结 → 安曼半岛",
+          "score": "租借回归",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-04-26",
+          "match": "安曼半岛 → 安曼团结",
+          "score": "租借",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50778307"
+    },
+    {
+      "name": "优素福·卡希",
+      "number": 29,
+      "position": "中场",
+      "age": 21,
+      "height": 183,
+      "weight": 56,
+      "preferred_foot": "左右脚",
+      "value": null,
+      "birth_date": "2005-04-15",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024/2025",
+          "match": "伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "伍珀塔尔",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "拜仁慕尼黑二队",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "阿尔特格林尼克",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2023",
+          "match": "拜仁慕尼黑U19",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50783259"
+    },
+    {
+      "name": "赛义德·罗桑",
+      "number": 15,
+      "position": "后卫",
+      "age": 29,
+      "height": "181cm",
+      "weight": "79kg",
+      "preferred_foot": "右脚",
+      "value": "40€",
+      "birth_date": "1997-02-01",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "伊尔比德侯赛因",
+          "score": "7-7",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2024",
+          "match": "伊尔比德侯赛因",
+          "score": "8-8",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545164"
+    },
+    {
+      "name": "阿卜杜拉-纳西卜",
+      "number": 3,
+      "position": "后卫",
+      "age": 33,
+      "height": 185,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-02-25",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-06-07",
+          "match": "亚历山大港联合 - 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2022-01-06",
+          "match": "安曼团结 - 亚历山大港联合",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        },
+        {
+          "date": "2019-12-29",
+          "match": "拉姆塔 - 安曼团结",
+          "score": null,
+          "rating": null,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50629288"
+    },
+    {
+      "name": "亚赞-阿拉伯",
+      "number": 5,
+      "position": "后卫",
+      "age": 30,
+      "height": 188,
+      "weight": 87,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "1996-01-31",
+      "nationality": "约旦",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 79,
+        "力量": 83,
+        "防守": 73,
+        "盘带": 52,
+        "传球": 46,
+        "射门": 29
+      },
+      "recent_matches": [
+        {
+          "date": "05/31",
+          "match": "瑞士 vs 约旦",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/16",
+          "match": "大邱韩亚市民 vs 首尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/05",
+          "match": "首尔 vs 安养",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/02",
+          "match": "首尔 vs 金泉尚武",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/25",
+          "match": "江原 vs 首尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/21",
+          "match": "首尔 vs 潮川1995",
+          "score": "3-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "首尔 vs 大田韩亚市民",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/15",
+          "match": "蔚山HD vs 首尔",
+          "score": "1-4",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/11",
+          "match": "首尔 vs 全北现代汽车",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "安养 vs 首尔",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/31",
+          "match": "约旦 vs 尼日利亚",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/27",
+          "match": "约旦 vs 哥斯达黎加",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/22",
+          "match": "首尔 vs 光州",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/18",
+          "match": "浦项铁人 vs 首尔",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/15",
+          "match": "济州DK vs 首尔",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50421480"
+    },
+    {
+      "name": "穆罕默德·哈谢什",
+      "number": 2,
+      "position": "后卫",
+      "age": 28,
+      "height": 178,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "45€",
+      "birth_date": "1995-05-09",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-07-22",
+          "match": "祖拉 vs 贝鲁特联盟",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023-01-12",
+          "match": "安曼团结 vs 祖拉",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2022-01-02",
+          "match": "艾沙尔特 vs 安曼团结",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50662551"
+    },
+    {
+      "name": "伊赫桑-哈达德",
+      "number": 23,
+      "position": "后卫",
+      "age": 32,
+      "height": 180,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "30€",
+      "birth_date": "1994-02-05",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-06-01",
+          "match": "伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": "未知伤病"
+        },
+        {
+          "date": "2021-04-25",
+          "match": "巴格达空军",
+          "score": null,
+          "rating": null,
+          "status": "未知伤病"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50208961"
+    },
+    {
+      "name": "胡萨姆-达哈卜",
+      "number": 15,
+      "position": "后卫",
+      "age": 26,
+      "height": 186,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "35€",
+      "birth_date": "2000-05-13",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023",
+          "match": "费萨里体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50636887"
+    },
+    {
+      "name": "穆罕默德·阿布阿尔纳迪",
+      "number": 3,
+      "position": "后卫",
+      "age": 25,
+      "height": 185,
+      "weight": 2256,
+      "preferred_foot": "左脚",
+      "value": null,
+      "birth_date": "2001-02-08",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-09-25",
+          "match": "自由球员 vs 雪兰莪",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-07-01",
+          "match": "伊尔比德侯赛因 vs 自由球员",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-07-13",
+          "match": "塔萨斯城体育二队 vs 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50492244"
+    },
+    {
+      "name": "萨利姆·奥贝德",
+      "number": 21,
+      "position": "后卫",
+      "age": 34,
+      "height": 179,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "10K",
+      "birth_date": "1992-01-17",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026",
+          "match": "伊尔比德侯赛因",
+          "score": "6-6",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024",
+          "match": "伊尔比德侯赛因",
+          "score": "5-3",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "阿洛顿",
+          "score": "1-1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019",
+          "match": "安曼团结",
+          "score": "5-5",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50487220"
+    },
+    {
+      "name": "阿纳斯·巴达维",
+      "number": 21,
+      "position": "后卫",
+      "age": 28,
+      "height": "174cm",
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1997-09-13",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51089566"
+    },
+    {
+      "name": "亚齐德-阿布-莱拉",
+      "number": 1,
+      "position": "门将",
+      "age": 33,
+      "height": 189,
+      "weight": 300,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-01-08",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-07-14",
+          "match": "查巴莱 vs 伊尔比德侯赛因",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2023-01-23",
+          "match": "费萨里体育 vs 查巴莱",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-12-25",
+          "match": "阿洛顿 vs 费萨里体育",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2014-01-01",
+          "match": "未知球队 vs 阿洛顿",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50210054"
+    },
+    {
+      "name": "阿卜杜拉·法霍里",
+      "number": 99,
+      "position": "门将",
+      "age": 26,
+      "height": 187,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-01-22",
+      "nationality": "约旦",
+      "overall_rating": 99,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024",
+          "match": "安曼团结",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2023",
+          "match": "卡萨团结",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2021",
+          "match": "安曼团结",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2019",
+          "match": "安曼团结",
+          "score": "0-0",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50487277"
+    },
+    {
+      "name": "努尔丁·扎伊德",
+      "number": 1,
+      "position": "门将",
+      "age": 33,
+      "height": 177,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1993-01-25",
+      "nationality": "约旦",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023",
+          "match": "费萨里体育",
+          "score": "4-4",
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020",
+          "match": "安曼半岛",
+          "score": "2-2",
+          "rating": null,
+          "status": "D"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50254674"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "3/28 01:30",
+      "competition": "友谊赛",
+      "home_team": "约旦",
+      "away_team": "哥斯达黎加",
+      "score": "2 - 2"
+    },
+    {
+      "date": "4/1 01:30",
+      "competition": "友谊赛",
+      "home_team": "约旦",
+      "away_team": "尼日利亚",
+      "score": "2 - 2"
+    },
+    {
+      "date": "5/31 21:00",
+      "competition": "友谊赛",
+      "home_team": "瑞士",
+      "away_team": "约旦",
+      "score": "4 - 1"
+    },
+    {
+      "date": "6/8 07:00",
+      "competition": "友谊赛",
+      "home_team": "哥伦比亚",
+      "away_team": "约旦",
+      "score": null
+    },
+    {
+      "date": "6/17 12:00",
+      "competition": "世界杯",
+      "home_team": "奥地利",
+      "away_team": "约旦",
+      "score": null
+    }
+  ]
+}

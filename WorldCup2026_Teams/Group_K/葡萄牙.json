@@ -1,0 +1,90 @@
+{
+  "team_info": {
+    "english_name": "Portugal",
+    "city": "Lisboa",
+    "founded_year": 1914,
+    "stadium": "Estádio Nacional",
+    "capacity": 37593,
+    "market_value": "€957.0M"
+  },
+  "squad": [],
+  "schedule": [
+    {
+      "date": "3/29 09:00",
+      "competition": "友谊赛",
+      "home_team": "墨西哥",
+      "away_team": "葡萄牙",
+      "score": "0 - 0"
+    },
+    {
+      "date": "4/1 07:00",
+      "competition": "友谊赛",
+      "home_team": "美国",
+      "away_team": "葡萄牙",
+      "score": "0 - 2"
+    },
+    {
+      "date": "6/7 01:45",
+      "competition": "友谊赛",
+      "home_team": "葡萄牙",
+      "away_team": "智利",
+      "score": null
+    },
+    {
+      "date": "6/11 03:45",
+      "competition": "友谊赛",
+      "home_team": "葡萄牙",
+      "away_team": "尼日利亚",
+      "score": null
+    },
+    {
+      "date": "6/18 01:00",
+      "competition": "世界杯",
+      "home_team": "葡萄牙",
+      "away_team": "刚果民主共和国",
+      "score": null
+    },
+    {
+      "date": "9/25 02:45",
+      "competition": "欧国联",
+      "home_team": "葡萄牙",
+      "away_team": "威尔士",
+      "score": null
+    },
+    {
+      "date": "9/28 02:45",
+      "competition": "欧国联",
+      "home_team": "挪威",
+      "away_team": "葡萄牙",
+      "score": null
+    },
+    {
+      "date": "10/2 02:45",
+      "competition": "欧国联",
+      "home_team": "丹麦",
+      "away_team": "葡萄牙",
+      "score": null
+    },
+    {
+      "date": "10/5 02:45",
+      "competition": "欧国联",
+      "home_team": "葡萄牙",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "11/15 03:45",
+      "competition": "欧国联",
+      "home_team": "葡萄牙",
+      "away_team": "丹麦",
+      "score": null
+    },
+    {
+      "date": "11/18 03:45",
+      "competition": "欧国联",
+      "home_team": "威尔士",
+      "away_team": "葡萄牙",
+      "score": null
+    }
+  ]
+}

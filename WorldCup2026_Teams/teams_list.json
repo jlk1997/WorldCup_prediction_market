@@ -1,0 +1,290 @@
+[
+  {
+    "group": "Group_A",
+    "name": "墨西哥",
+    "url": "https://www.dongqiudi.com/team/1278",
+    "folder": "WorldCup2026_Teams\\Group_A"
+  },
+  {
+    "group": "Group_A",
+    "name": "韩国",
+    "url": "https://www.dongqiudi.com/team/1181",
+    "folder": "WorldCup2026_Teams\\Group_A"
+  },
+  {
+    "group": "Group_A",
+    "name": "南非",
+    "url": "https://www.dongqiudi.com/team/1753",
+    "folder": "WorldCup2026_Teams\\Group_A"
+  },
+  {
+    "group": "Group_A",
+    "name": "捷克",
+    "url": "https://www.dongqiudi.com/team/453",
+    "folder": "WorldCup2026_Teams\\Group_A"
+  },
+  {
+    "group": "Group_B",
+    "name": "加拿大",
+    "url": "https://www.dongqiudi.com/team/303",
+    "folder": "WorldCup2026_Teams\\Group_B"
+  },
+  {
+    "group": "Group_B",
+    "name": "瑞士",
+    "url": "https://www.dongqiudi.com/team/1931",
+    "folder": "WorldCup2026_Teams\\Group_B"
+  },
+  {
+    "group": "Group_B",
+    "name": "卡塔尔",
+    "url": "https://www.dongqiudi.com/team/1542",
+    "folder": "WorldCup2026_Teams\\Group_B"
+  },
+  {
+    "group": "Group_B",
+    "name": "波黑",
+    "url": "https://www.dongqiudi.com/team/219",
+    "folder": "WorldCup2026_Teams\\Group_B"
+  },
+  {
+    "group": "Group_C",
+    "name": "巴西",
+    "url": "https://www.dongqiudi.com/team/269",
+    "folder": "WorldCup2026_Teams\\Group_C"
+  },
+  {
+    "group": "Group_C",
+    "name": "摩洛哥",
+    "url": "https://www.dongqiudi.com/team/1289",
+    "folder": "WorldCup2026_Teams\\Group_C"
+  },
+  {
+    "group": "Group_C",
+    "name": "苏格兰",
+    "url": "https://www.dongqiudi.com/team/1683",
+    "folder": "WorldCup2026_Teams\\Group_C"
+  },
+  {
+    "group": "Group_C",
+    "name": "海地",
+    "url": "https://www.dongqiudi.com/team/916",
+    "folder": "WorldCup2026_Teams\\Group_C"
+  },
+  {
+    "group": "Group_D",
+    "name": "美国",
+    "url": "https://www.dongqiudi.com/team/2008",
+    "folder": "WorldCup2026_Teams\\Group_D"
+  },
+  {
+    "group": "Group_D",
+    "name": "澳大利亚",
+    "url": "https://www.dongqiudi.com/team/87",
+    "folder": "WorldCup2026_Teams\\Group_D"
+  },
+  {
+    "group": "Group_D",
+    "name": "巴拉圭",
+    "url": "https://www.dongqiudi.com/team/1405",
+    "folder": "WorldCup2026_Teams\\Group_D"
+  },
+  {
+    "group": "Group_D",
+    "name": "土耳其",
+    "url": "https://www.dongqiudi.com/team/1977",
+    "folder": "WorldCup2026_Teams\\Group_D"
+  },
+  {
+    "group": "Group_E",
+    "name": "德国",
+    "url": "https://www.dongqiudi.com/team/868",
+    "folder": "WorldCup2026_Teams\\Group_E"
+  },
+  {
+    "group": "Group_E",
+    "name": "厄瓜多尔",
+    "url": "https://www.dongqiudi.com/team/510",
+    "folder": "WorldCup2026_Teams\\Group_E"
+  },
+  {
+    "group": "Group_E",
+    "name": "科特迪瓦",
+    "url": "https://www.dongqiudi.com/team/454",
+    "folder": "WorldCup2026_Teams\\Group_E"
+  },
+  {
+    "group": "Group_E",
+    "name": "库拉索",
+    "url": "https://www.dongqiudi.com/team/1332",
+    "folder": "WorldCup2026_Teams\\Group_E"
+  },
+  {
+    "group": "Group_F",
+    "name": "荷兰",
+    "url": "https://www.dongqiudi.com/team/1331",
+    "folder": "WorldCup2026_Teams\\Group_F"
+  },
+  {
+    "group": "Group_F",
+    "name": "日本",
+    "url": "https://www.dongqiudi.com/team/1146",
+    "folder": "WorldCup2026_Teams\\Group_F"
+  },
+  {
+    "group": "Group_F",
+    "name": "突尼斯",
+    "url": "https://www.dongqiudi.com/team/1941",
+    "folder": "WorldCup2026_Teams\\Group_F"
+  },
+  {
+    "group": "Group_F",
+    "name": "瑞典",
+    "url": "https://www.dongqiudi.com/team/1904",
+    "folder": "WorldCup2026_Teams\\Group_F"
+  },
+  {
+    "group": "Group_G",
+    "name": "比利时",
+    "url": "https://www.dongqiudi.com/team/203",
+    "folder": "WorldCup2026_Teams\\Group_G"
+  },
+  {
+    "group": "Group_G",
+    "name": "伊朗",
+    "url": "https://www.dongqiudi.com/team/986",
+    "folder": "WorldCup2026_Teams\\Group_G"
+  },
+  {
+    "group": "Group_G",
+    "name": "埃及",
+    "url": "https://www.dongqiudi.com/team/511",
+    "folder": "WorldCup2026_Teams\\Group_G"
+  },
+  {
+    "group": "Group_G",
+    "name": "新西兰",
+    "url": "https://www.dongqiudi.com/team/1341",
+    "folder": "WorldCup2026_Teams\\Group_G"
+  },
+  {
+    "group": "Group_H",
+    "name": "西班牙",
+    "url": "https://www.dongqiudi.com/team/1869",
+    "folder": "WorldCup2026_Teams\\Group_H"
+  },
+  {
+    "group": "Group_H",
+    "name": "乌拉圭",
+    "url": "https://www.dongqiudi.com/team/2026",
+    "folder": "WorldCup2026_Teams\\Group_H"
+  },
+  {
+    "group": "Group_H",
+    "name": "沙特阿拉伯",
+    "url": "https://www.dongqiudi.com/team/1640",
+    "folder": "WorldCup2026_Teams\\Group_H"
+  },
+  {
+    "group": "Group_H",
+    "name": "佛得角",
+    "url": "https://www.dongqiudi.com/team/304",
+    "folder": "WorldCup2026_Teams\\Group_H"
+  },
+  {
+    "group": "Group_I",
+    "name": "法国",
+    "url": "https://www.dongqiudi.com/team/789",
+    "folder": "WorldCup2026_Teams\\Group_I"
+  },
+  {
+    "group": "Group_I",
+    "name": "塞内加尔",
+    "url": "https://www.dongqiudi.com/team/1684",
+    "folder": "WorldCup2026_Teams\\Group_I"
+  },
+  {
+    "group": "Group_I",
+    "name": "挪威",
+    "url": "https://www.dongqiudi.com/team/1389",
+    "folder": "WorldCup2026_Teams\\Group_I"
+  },
+  {
+    "group": "Group_I",
+    "name": "伊拉克",
+    "url": "https://www.dongqiudi.com/team/987",
+    "folder": "WorldCup2026_Teams\\Group_I"
+  },
+  {
+    "group": "Group_J",
+    "name": "阿根廷",
+    "url": "https://www.dongqiudi.com/team/67",
+    "folder": "WorldCup2026_Teams\\Group_J"
+  },
+  {
+    "group": "Group_J",
+    "name": "奥地利",
+    "url": "https://www.dongqiudi.com/team/108",
+    "folder": "WorldCup2026_Teams\\Group_J"
+  },
+  {
+    "group": "Group_J",
+    "name": "阿尔及利亚",
+    "url": "https://www.dongqiudi.com/team/13",
+    "folder": "WorldCup2026_Teams\\Group_J"
+  },
+  {
+    "group": "Group_J",
+    "name": "约旦",
+    "url": "https://www.dongqiudi.com/team/1147",
+    "folder": "WorldCup2026_Teams\\Group_J"
+  },
+  {
+    "group": "Group_K",
+    "name": "葡萄牙",
+    "url": "https://www.dongqiudi.com/team/1540",
+    "folder": "WorldCup2026_Teams\\Group_K"
+  },
+  {
+    "group": "Group_K",
+    "name": "哥伦比亚",
+    "url": "https://www.dongqiudi.com/team/364",
+    "folder": "WorldCup2026_Teams\\Group_K"
+  },
+  {
+    "group": "Group_K",
+    "name": "乌兹别克斯坦",
+    "url": "https://www.dongqiudi.com/team/2027",
+    "folder": "WorldCup2026_Teams\\Group_K"
+  },
+  {
+    "group": "Group_K",
+    "name": "刚果民主共和国",
+    "url": "https://www.dongqiudi.com/team/366",
+    "folder": "WorldCup2026_Teams\\Group_K"
+  },
+  {
+    "group": "Group_L",
+    "name": "英格兰",
+    "url": "https://www.dongqiudi.com/team/627",
+    "folder": "WorldCup2026_Teams\\Group_L"
+  },
+  {
+    "group": "Group_L",
+    "name": "克罗地亚",
+    "url": "https://www.dongqiudi.com/team/396",
+    "folder": "WorldCup2026_Teams\\Group_L"
+  },
+  {
+    "group": "Group_L",
+    "name": "巴拿马",
+    "url": "https://www.dongqiudi.com/team/1393",
+    "folder": "WorldCup2026_Teams\\Group_L"
+  },
+  {
+    "group": "Group_L",
+    "name": "加纳",
+    "url": "https://www.dongqiudi.com/team/869",
+    "folder": "WorldCup2026_Teams\\Group_L"
+  }
+]

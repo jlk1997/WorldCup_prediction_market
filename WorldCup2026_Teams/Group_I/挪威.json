@@ -1,0 +1,90 @@
+{
+  "team_info": {
+    "english_name": "Norway",
+    "city": "Oslo",
+    "founded": 1902,
+    "stadium": null,
+    "capacity": null,
+    "market_value": "€601.0M"
+  },
+  "squad": [],
+  "schedule": [
+    {
+      "date": "3/28 03:45",
+      "competition": "友谊赛",
+      "home_team": "荷兰",
+      "away_team": "挪威",
+      "score": "2 - 1"
+    },
+    {
+      "date": "4/1 00:00",
+      "competition": "友谊赛",
+      "home_team": "挪威",
+      "away_team": "瑞士",
+      "score": "0 - 0"
+    },
+    {
+      "date": "6/2 01:00",
+      "competition": "友谊赛",
+      "home_team": "挪威",
+      "away_team": "瑞典",
+      "score": "3 - 1"
+    },
+    {
+      "date": "6/6 03:00",
+      "competition": "友谊赛",
+      "home_team": "摩洛哥",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "6/17 06:00",
+      "competition": "世界杯",
+      "home_team": "伊拉克",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "9/25 02:45",
+      "competition": "欧国联",
+      "home_team": "挪威",
+      "away_team": "丹麦",
+      "score": null
+    },
+    {
+      "date": "9/28 02:45",
+      "competition": "欧国联",
+      "home_team": "挪威",
+      "away_team": "葡萄牙",
+      "score": null
+    },
+    {
+      "date": "10/2 02:45",
+      "competition": "欧国联",
+      "home_team": "威尔士",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "10/5 02:45",
+      "competition": "欧国联",
+      "home_team": "葡萄牙",
+      "away_team": "挪威",
+      "score": null
+    },
+    {
+      "date": "11/15 01:00",
+      "competition": "欧国联",
+      "home_team": "挪威",
+      "away_team": "威尔士",
+      "score": null
+    },
+    {
+      "date": "11/18 03:45",
+      "competition": "欧国联",
+      "home_team": "丹麦",
+      "away_team": "挪威",
+      "score": null
+    }
+  ]
+}

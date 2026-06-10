@@ -1,0 +1,90 @@
+{
+  "team_info": {
+    "english_name": "Scotland",
+    "city": "Glasgow",
+    "founded_year": 1873,
+    "stadium": "Hampden Park",
+    "capacity": 52000,
+    "market_value": "€196.2M"
+  },
+  "squad": [],
+  "schedule": [
+    {
+      "date": "2026-03-29 01:00",
+      "competition": "友谊赛",
+      "home_team": "苏格兰",
+      "away_team": "日本",
+      "score": "0 - 1"
+    },
+    {
+      "date": "2026-04-01 02:30",
+      "competition": "友谊赛",
+      "home_team": "苏格兰",
+      "away_team": "科特迪瓦",
+      "score": "0 - 1"
+    },
+    {
+      "date": "2026-05-30 20:00",
+      "competition": "友谊赛",
+      "home_team": "苏格兰",
+      "away_team": "库拉索",
+      "score": "4 - 1"
+    },
+    {
+      "date": "2026-06-07 04:00",
+      "competition": "友谊赛",
+      "home_team": "玻利维亚",
+      "away_team": "苏格兰",
+      "score": null
+    },
+    {
+      "date": "2026-06-14 09:00",
+      "competition": "世界杯",
+      "home_team": "海地",
+      "away_team": "苏格兰",
+      "score": null
+    },
+    {
+      "date": "2026-09-06 21:00",
+      "competition": "欧国联",
+      "home_team": "斯洛文尼亚",
+      "away_team": "苏格兰",
+      "score": null
+    },
+    {
+      "date": "2026-09-30 02:45",
+      "competition": "欧国联",
+      "home_team": "苏格兰",
+      "away_team": "瑞士",
+      "score": null
+    },
+    {
+      "date": "2026-10-14 02:45",
+      "competition": "欧国联",
+      "home_team": "北马其顿",
+      "away_team": "苏格兰",
+      "score": null
+    },
+    {
+      "date": "2026-10-17 02:45",
+      "competition": "欧国联",
+      "home_team": "苏格兰",
+      "away_team": "斯洛文尼亚",
+      "score": null
+    },
+    {
+      "date": "2026-11-14 03:45",
+      "competition": "欧国联",
+      "home_team": "苏格兰",
+      "away_team": "北马其顿",
+      "score": null
+    },
+    {
+      "date": "2026-11-17 03:45",
+      "competition": "欧国联",
+      "home_team": "瑞士",
+      "away_team": "苏格兰",
+      "score": null
+    }
+  ]
+}

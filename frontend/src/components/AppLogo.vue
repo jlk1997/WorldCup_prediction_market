@@ -1,0 +1,61 @@
+<template>
+  <svg
+    class="app-logo"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 64 64"
+    role="img"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="wc-logo-gold" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#f0d9b5" />
+        <stop offset="45%" stop-color="#d4a574" />
+        <stop offset="100%" stop-color="#a8556d" />
+      </linearGradient>
+      <linearGradient id="wc-logo-shine" x1="20" y1="12" x2="44" y2="36" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55" />
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="29" fill="none" stroke="url(#wc-logo-gold)" stroke-width="2.5" />
+    <circle cx="32" cy="32" r="24" fill="#0f1220" stroke="rgba(212,165,116,0.25)" stroke-width="1" />
+    <g transform="translate(32 32)">
+      <circle r="17" fill="url(#wc-logo-gold)" opacity="0.95" />
+      <path
+        d="M0-17 L4.5-5.5 17-3.5 L7 4.5 9.5 17 0 10.5 -9.5 17 -7 4.5 -17-3.5 -4.5-5.5Z"
+        fill="#1a1410"
+        opacity="0.88"
+      />
+      <path
+        d="M0-17 L4.5-5.5 17-3.5 M0-17 L-4.5-5.5 -17-3.5 M17-3.5 L7 4.5 9.5 17 M-17-3.5 L-7 4.5 -9.5 17 M9.5 17 L0 10.5 -9.5 17"
+        fill="none"
+        stroke="#2a2218"
+        stroke-width="0.6"
+        opacity="0.5"
+      />
+      <ellipse cx="-5" cy="-8" rx="8" ry="5" fill="url(#wc-logo-shine)" transform="rotate(-25)" />
+    </g>
+    <rect x="41" y="41" width="18" height="14" rx="4" fill="#0a0c14" stroke="url(#wc-logo-gold)" stroke-width="1.2" />
+    <text
+      x="50"
+      y="51.5"
+      text-anchor="middle"
+      font-family="system-ui, Segoe UI, sans-serif"
+      font-size="9"
+      font-weight="800"
+      fill="#f0d9b5"
+    >
+      26
+    </text>
+  </svg>
+</template>
+
+<style scoped>
+.app-logo {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px rgba(212, 165, 116, 0.45));
+}
+</style>

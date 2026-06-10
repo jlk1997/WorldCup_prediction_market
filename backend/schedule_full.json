@@ -1,0 +1,1548 @@
+[
+  {
+    "group": "A组",
+    "date": "2026年06月12日",
+    "time": "03:00",
+    "team1": "墨西哥",
+    "team2": "韩国",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月12日",
+    "time": "07:00",
+    "team1": "墨西哥",
+    "team2": "南非",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月12日",
+    "time": "10:00",
+    "team1": "墨西哥",
+    "team2": "捷克",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月13日",
+    "time": "14:00",
+    "team1": "韩国",
+    "team2": "南非",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月13日",
+    "time": "18:00",
+    "team1": "韩国",
+    "team2": "捷克",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "A组",
+    "date": "2026年06月13日",
+    "time": "22:00",
+    "team1": "南非",
+    "team2": "捷克",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月14日",
+    "time": "03:00",
+    "team1": "加拿大",
+    "team2": "瑞士",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月14日",
+    "time": "07:00",
+    "team1": "加拿大",
+    "team2": "卡塔尔",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月14日",
+    "time": "10:00",
+    "team1": "加拿大",
+    "team2": "波黑",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月15日",
+    "time": "14:00",
+    "team1": "瑞士",
+    "team2": "卡塔尔",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月15日",
+    "time": "18:00",
+    "team1": "瑞士",
+    "team2": "波黑",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "B组",
+    "date": "2026年06月15日",
+    "time": "22:00",
+    "team1": "卡塔尔",
+    "team2": "波黑",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月16日",
+    "time": "03:00",
+    "team1": "巴西",
+    "team2": "摩洛哥",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月16日",
+    "time": "07:00",
+    "team1": "巴西",
+    "team2": "苏格兰",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月16日",
+    "time": "10:00",
+    "team1": "巴西",
+    "team2": "海地",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月17日",
+    "time": "14:00",
+    "team1": "摩洛哥",
+    "team2": "苏格兰",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月17日",
+    "time": "18:00",
+    "team1": "摩洛哥",
+    "team2": "海地",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "C组",
+    "date": "2026年06月17日",
+    "time": "22:00",
+    "team1": "苏格兰",
+    "team2": "海地",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月18日",
+    "time": "03:00",
+    "team1": "美国",
+    "team2": "澳大利亚",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月18日",
+    "time": "07:00",
+    "team1": "美国",
+    "team2": "巴拉圭",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月18日",
+    "time": "10:00",
+    "team1": "美国",
+    "team2": "土耳其",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月19日",
+    "time": "14:00",
+    "team1": "澳大利亚",
+    "team2": "巴拉圭",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月19日",
+    "time": "18:00",
+    "team1": "澳大利亚",
+    "team2": "土耳其",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "D组",
+    "date": "2026年06月19日",
+    "time": "22:00",
+    "team1": "巴拉圭",
+    "team2": "土耳其",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月20日",
+    "time": "03:00",
+    "team1": "德国",
+    "team2": "厄瓜多尔",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月20日",
+    "time": "07:00",
+    "team1": "德国",
+    "team2": "科特迪瓦",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月20日",
+    "time": "10:00",
+    "team1": "德国",
+    "team2": "库拉索",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月21日",
+    "time": "14:00",
+    "team1": "厄瓜多尔",
+    "team2": "科特迪瓦",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月21日",
+    "time": "18:00",
+    "team1": "厄瓜多尔",
+    "team2": "库拉索",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "E组",
+    "date": "2026年06月21日",
+    "time": "22:00",
+    "team1": "科特迪瓦",
+    "team2": "库拉索",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月22日",
+    "time": "03:00",
+    "team1": "荷兰",
+    "team2": "日本",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月22日",
+    "time": "07:00",
+    "team1": "荷兰",
+    "team2": "突尼斯",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月22日",
+    "time": "10:00",
+    "team1": "荷兰",
+    "team2": "瑞典",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月23日",
+    "time": "14:00",
+    "team1": "日本",
+    "team2": "突尼斯",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月23日",
+    "time": "18:00",
+    "team1": "日本",
+    "team2": "瑞典",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "F组",
+    "date": "2026年06月23日",
+    "time": "22:00",
+    "team1": "突尼斯",
+    "team2": "瑞典",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月24日",
+    "time": "03:00",
+    "team1": "比利时",
+    "team2": "伊朗",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月24日",
+    "time": "07:00",
+    "team1": "比利时",
+    "team2": "埃及",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月24日",
+    "time": "10:00",
+    "team1": "比利时",
+    "team2": "新西兰",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月25日",
+    "time": "14:00",
+    "team1": "伊朗",
+    "team2": "埃及",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月25日",
+    "time": "18:00",
+    "team1": "伊朗",
+    "team2": "新西兰",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "G组",
+    "date": "2026年06月25日",
+    "time": "22:00",
+    "team1": "埃及",
+    "team2": "新西兰",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月26日",
+    "time": "03:00",
+    "team1": "西班牙",
+    "team2": "乌拉圭",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月26日",
+    "time": "07:00",
+    "team1": "西班牙",
+    "team2": "沙特阿拉伯",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月26日",
+    "time": "10:00",
+    "team1": "西班牙",
+    "team2": "佛得角",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月27日",
+    "time": "14:00",
+    "team1": "乌拉圭",
+    "team2": "沙特阿拉伯",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月27日",
+    "time": "18:00",
+    "team1": "乌拉圭",
+    "team2": "佛得角",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "H组",
+    "date": "2026年06月27日",
+    "time": "22:00",
+    "team1": "沙特阿拉伯",
+    "team2": "佛得角",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月28日",
+    "time": "03:00",
+    "team1": "法国",
+    "team2": "塞内加尔",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月28日",
+    "time": "07:00",
+    "team1": "法国",
+    "team2": "挪威",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月28日",
+    "time": "10:00",
+    "team1": "法国",
+    "team2": "伊拉克",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月29日",
+    "time": "14:00",
+    "team1": "塞内加尔",
+    "team2": "挪威",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月29日",
+    "time": "18:00",
+    "team1": "塞内加尔",
+    "team2": "伊拉克",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "I组",
+    "date": "2026年06月29日",
+    "time": "22:00",
+    "team1": "挪威",
+    "team2": "伊拉克",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年06月30日",
+    "time": "03:00",
+    "team1": "阿根廷",
+    "team2": "奥地利",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年06月30日",
+    "time": "07:00",
+    "team1": "阿根廷",
+    "team2": "阿尔及利亚",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年06月30日",
+    "time": "10:00",
+    "team1": "阿根廷",
+    "team2": "约旦",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年07月01日",
+    "time": "14:00",
+    "team1": "奥地利",
+    "team2": "阿尔及利亚",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年07月01日",
+    "time": "18:00",
+    "team1": "奥地利",
+    "team2": "约旦",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "J组",
+    "date": "2026年07月01日",
+    "time": "22:00",
+    "team1": "阿尔及利亚",
+    "team2": "约旦",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月02日",
+    "time": "03:00",
+    "team1": "葡萄牙",
+    "team2": "哥伦比亚",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月02日",
+    "time": "07:00",
+    "team1": "葡萄牙",
+    "team2": "乌兹别克斯坦",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月02日",
+    "time": "10:00",
+    "team1": "葡萄牙",
+    "team2": "刚果（金）",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月03日",
+    "time": "14:00",
+    "team1": "哥伦比亚",
+    "team2": "乌兹别克斯坦",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月03日",
+    "time": "18:00",
+    "team1": "哥伦比亚",
+    "team2": "刚果（金）",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "K组",
+    "date": "2026年07月03日",
+    "time": "22:00",
+    "team1": "乌兹别克斯坦",
+    "team2": "刚果（金）",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月04日",
+    "time": "03:00",
+    "team1": "英格兰",
+    "team2": "克罗地亚",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月04日",
+    "time": "07:00",
+    "team1": "英格兰",
+    "team2": "巴拿马",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月04日",
+    "time": "10:00",
+    "team1": "英格兰",
+    "team2": "加纳",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月05日",
+    "time": "14:00",
+    "team1": "克罗地亚",
+    "team2": "巴拿马",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月05日",
+    "time": "18:00",
+    "team1": "克罗地亚",
+    "team2": "加纳",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "L组",
+    "date": "2026年07月05日",
+    "time": "22:00",
+    "team1": "巴拿马",
+    "team2": "加纳",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "group",
+    "bracket_round": null,
+    "bracket_order": null,
+    "bracket_meta": null
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月06日",
+    "time": "03:00",
+    "team1": "待定·三十二强 第1场A",
+    "team2": "待定·三十二强 第1场B",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "pair_index": 0,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月06日",
+    "time": "07:00",
+    "team1": "待定·三十二强 第2场A",
+    "team2": "待定·三十二强 第2场B",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 2,
+    "bracket_meta": {
+      "pair_index": 1,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月06日",
+    "time": "10:00",
+    "team1": "待定·三十二强 第3场A",
+    "team2": "待定·三十二强 第3场B",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 3,
+    "bracket_meta": {
+      "pair_index": 2,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月07日",
+    "time": "14:00",
+    "team1": "待定·三十二强 第4场A",
+    "team2": "待定·三十二强 第4场B",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 4,
+    "bracket_meta": {
+      "pair_index": 3,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月07日",
+    "time": "18:00",
+    "team1": "待定·三十二强 第5场A",
+    "team2": "待定·三十二强 第5场B",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 5,
+    "bracket_meta": {
+      "pair_index": 4,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月07日",
+    "time": "22:00",
+    "team1": "待定·三十二强 第6场A",
+    "team2": "待定·三十二强 第6场B",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 6,
+    "bracket_meta": {
+      "pair_index": 5,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月08日",
+    "time": "03:00",
+    "team1": "待定·三十二强 第7场A",
+    "team2": "待定·三十二强 第7场B",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 7,
+    "bracket_meta": {
+      "pair_index": 6,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月08日",
+    "time": "07:00",
+    "team1": "待定·三十二强 第8场A",
+    "team2": "待定·三十二强 第8场B",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 8,
+    "bracket_meta": {
+      "pair_index": 7,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月08日",
+    "time": "10:00",
+    "team1": "待定·三十二强 第9场A",
+    "team2": "待定·三十二强 第9场B",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 9,
+    "bracket_meta": {
+      "pair_index": 8,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月09日",
+    "time": "14:00",
+    "team1": "待定·三十二强 第10场A",
+    "team2": "待定·三十二强 第10场B",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 10,
+    "bracket_meta": {
+      "pair_index": 9,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月09日",
+    "time": "18:00",
+    "team1": "待定·三十二强 第11场A",
+    "team2": "待定·三十二强 第11场B",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 11,
+    "bracket_meta": {
+      "pair_index": 10,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月09日",
+    "time": "22:00",
+    "team1": "待定·三十二强 第12场A",
+    "team2": "待定·三十二强 第12场B",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 12,
+    "bracket_meta": {
+      "pair_index": 11,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月10日",
+    "time": "03:00",
+    "team1": "待定·三十二强 第13场A",
+    "team2": "待定·三十二强 第13场B",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 13,
+    "bracket_meta": {
+      "pair_index": 12,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月10日",
+    "time": "07:00",
+    "team1": "待定·三十二强 第14场A",
+    "team2": "待定·三十二强 第14场B",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 14,
+    "bracket_meta": {
+      "pair_index": 13,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月10日",
+    "time": "10:00",
+    "team1": "待定·三十二强 第15场A",
+    "team2": "待定·三十二强 第15场B",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 15,
+    "bracket_meta": {
+      "pair_index": 14,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 三十二强",
+    "date": "2026年07月11日",
+    "time": "14:00",
+    "team1": "待定·三十二强 第16场A",
+    "team2": "待定·三十二强 第16场B",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r32",
+    "bracket_order": 16,
+    "bracket_meta": {
+      "pair_index": 15,
+      "source": "group_standings"
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月11日",
+    "time": "18:00",
+    "team1": "待定·十六强 第1场A",
+    "team2": "待定·十六强 第1场B",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 1
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 2
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月11日",
+    "time": "22:00",
+    "team1": "待定·十六强 第2场A",
+    "team2": "待定·十六强 第2场B",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 2,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 3
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 4
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月12日",
+    "time": "03:00",
+    "team1": "待定·十六强 第3场A",
+    "team2": "待定·十六强 第3场B",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 3,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 5
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 6
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月12日",
+    "time": "07:00",
+    "team1": "待定·十六强 第4场A",
+    "team2": "待定·十六强 第4场B",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 4,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 7
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 8
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月12日",
+    "time": "10:00",
+    "team1": "待定·十六强 第5场A",
+    "team2": "待定·十六强 第5场B",
+    "stadium": "费城 · 林肯金融球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 5,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 9
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 10
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月13日",
+    "time": "14:00",
+    "team1": "待定·十六强 第6场A",
+    "team2": "待定·十六强 第6场B",
+    "stadium": "西雅图 · Lumen Field",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 6,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 11
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 12
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月13日",
+    "time": "18:00",
+    "team1": "待定·十六强 第7场A",
+    "team2": "待定·十六强 第7场B",
+    "stadium": "旧金山 · Levi's体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 7,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 13
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 14
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 十六强",
+    "date": "2026年07月13日",
+    "time": "22:00",
+    "team1": "待定·十六强 第8场A",
+    "team2": "待定·十六强 第8场B",
+    "stadium": "堪萨斯城 · Arrowhead体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "r16",
+    "bracket_order": 8,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r32",
+        "order": 15
+      },
+      "away_feed": {
+        "round": "r32",
+        "order": 16
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 四分之一决赛",
+    "date": "2026年07月14日",
+    "time": "03:00",
+    "team1": "待定·四分之一决赛 第1场A",
+    "team2": "待定·四分之一决赛 第1场B",
+    "stadium": "墨西哥城 · 阿兹特克体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "qf",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r16",
+        "order": 1
+      },
+      "away_feed": {
+        "round": "r16",
+        "order": 2
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 四分之一决赛",
+    "date": "2026年07月14日",
+    "time": "07:00",
+    "team1": "待定·四分之一决赛 第2场A",
+    "team2": "待定·四分之一决赛 第2场B",
+    "stadium": "瓜达拉哈拉 · 阿克伦体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "qf",
+    "bracket_order": 2,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r16",
+        "order": 3
+      },
+      "away_feed": {
+        "round": "r16",
+        "order": 4
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 四分之一决赛",
+    "date": "2026年07月14日",
+    "time": "10:00",
+    "team1": "待定·四分之一决赛 第3场A",
+    "team2": "待定·四分之一决赛 第3场B",
+    "stadium": "多伦多 · BMO球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "qf",
+    "bracket_order": 3,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r16",
+        "order": 5
+      },
+      "away_feed": {
+        "round": "r16",
+        "order": 6
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 四分之一决赛",
+    "date": "2026年07月15日",
+    "time": "14:00",
+    "team1": "待定·四分之一决赛 第4场A",
+    "team2": "待定·四分之一决赛 第4场B",
+    "stadium": "洛杉矶 · SoFi体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "qf",
+    "bracket_order": 4,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "r16",
+        "order": 7
+      },
+      "away_feed": {
+        "round": "r16",
+        "order": 8
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 半决赛",
+    "date": "2026年07月15日",
+    "time": "18:00",
+    "team1": "待定·半决赛 第1场A",
+    "team2": "待定·半决赛 第1场B",
+    "stadium": "亚特兰大 · 梅赛德斯奔驰球场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "sf",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "qf",
+        "order": 1
+      },
+      "away_feed": {
+        "round": "qf",
+        "order": 2
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 半决赛",
+    "date": "2026年07月15日",
+    "time": "22:00",
+    "team1": "待定·半决赛 第2场A",
+    "team2": "待定·半决赛 第2场B",
+    "stadium": "达拉斯 · AT&T体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "sf",
+    "bracket_order": 2,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "qf",
+        "order": 3
+      },
+      "away_feed": {
+        "round": "qf",
+        "order": 4
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 三四名决赛",
+    "date": "2026年07月16日",
+    "time": "03:00",
+    "team1": "待定·三四名决赛A",
+    "team2": "待定·三四名决赛B",
+    "stadium": "迈阿密 · Hard Rock体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "third",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "sf",
+        "order": 1,
+        "loser": true
+      },
+      "away_feed": {
+        "round": "sf",
+        "order": 2,
+        "loser": true
+      }
+    }
+  },
+  {
+    "group": "淘汰赛 · 决赛",
+    "date": "2026年07月16日",
+    "time": "07:00",
+    "team1": "待定·决赛A",
+    "team2": "待定·决赛B",
+    "stadium": "休斯顿 · NRG体育场",
+    "status": "scheduled",
+    "round_type": "knockout",
+    "bracket_round": "final",
+    "bracket_order": 1,
+    "bracket_meta": {
+      "home_feed": {
+        "round": "sf",
+        "order": 1
+      },
+      "away_feed": {
+        "round": "sf",
+        "order": 2
+      }
+    }
+  }
+]

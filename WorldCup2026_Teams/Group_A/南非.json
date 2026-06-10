@@ -1,0 +1,2245 @@
+{
+  "team_info": {
+    "english_name": "South Africa",
+    "city": "Johannesburg",
+    "founded_year": 1991,
+    "stadium": null,
+    "capacity": null,
+    "market_value": "€45.8M"
+  },
+  "squad": [
+    {
+      "name": "布罗斯",
+      "number": null,
+      "position": "主教练",
+      "age": 74,
+      "height": 180,
+      "weight": 78,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1952-04-10",
+      "nationality": "比利时",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "1988-07-01",
+          "match": "布鲁日 -- 退役",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "1983-07-01",
+          "match": "安德莱赫特 -- 布鲁日",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "1970-07-01",
+          "match": "未知球队 -- 安德莱赫特",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50106161"
+    },
+    {
+      "name": "姆哈莱勒",
+      "number": null,
+      "position": "助理教练",
+      "age": 54,
+      "height": 180,
+      "weight": 65,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1969-10-20",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "honors": [
+        "非洲国家杯冠军",
+        "非洲超级杯冠军"
+      ],
+      "transfers": [
+        {
+          "date": "2008-07-01",
+          "from": "科斯莫斯",
+          "to": "退役"
+        },
+        {
+          "date": "2005-07-01",
+          "from": "马拉蒂亚体育",
+          "to": "科斯莫斯",
+          "fee": "免签"
+        },
+        {
+          "date": "2003-07-07",
+          "from": "哥兹塔比",
+          "to": "马拉蒂亚体育",
+          "fee": "免签"
+        },
+        {
+          "date": "1998-07-03",
+          "from": "阿辛耶斯堡",
+          "to": "安卡拉力量",
+          "fee": "?"
+        },
+        {
+          "date": "1997-07-09",
+          "from": "奥兰多海盗",
+          "to": "阿辛耶斯堡",
+          "fee": "?"
+        },
+        {
+          "date": "1993-07-01",
+          "from": "科斯莫斯",
+          "to": "奥兰多海盗",
+          "fee": "?"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50070618"
+    },
+    {
+      "name": "格兰特·约翰逊",
+      "number": null,
+      "position": "守门员教练",
+      "age": 59,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1967-05-19",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [],
+      "source_url": "https://www.dongqiudi.com/player/51122946"
+    },
+    {
+      "name": "阿波利斯",
+      "number": 12,
+      "position": "前锋",
+      "age": 24,
+      "height": 171,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": "200€",
+      "birth_date": "2001-08-25",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-02",
+          "match": "贝联 → 奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-06-30",
+          "match": "图克斯FC → 超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021-02-15",
+          "match": "超体联盟 → 图克斯FC",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50502357"
+    },
+    {
+      "name": "福斯特",
+      "number": 9,
+      "position": "前锋",
+      "age": 25,
+      "height": 185,
+      "weight": 70,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-09-03",
+      "nationality": "英国",
+      "overall_rating": 73,
+      "stats": {
+        "速度": 81,
+        "力量": 74,
+        "防守": 36,
+        "盘带": 70,
+        "传球": 41,
+        "射门": 72
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "吉马良斯 vs 拉纳加",
+          "score": "0-0",
+          "rating": "B",
+          "status": "D"
+        },
+        {
+          "date": "05/10",
+          "match": "伯恩利 vs 阿斯顿维拉",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/22",
+          "match": "伯恩利 vs 曼城",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "诺丁汉森林 vs 伯恩利",
+          "score": "4-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/11",
+          "match": "伯恩利 vs 布莱顿",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "南安普顿 vs 巴黎马",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "南安普顿 vs 巴黎马",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/21",
+          "match": "莱斯特 vs 伯恩利",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/14",
+          "match": "伯恩利 vs 皇家联赛",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/03",
+          "match": "埃弗顿 vs 伯恩利",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/28",
+          "match": "伯恩利 vs 布伦特福德",
+          "score": "3-4",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/21",
+          "match": "切尔西 vs 伯恩利",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/14",
+          "match": "纽卡斯尔 vs 莱斯特",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "02/11",
+          "match": "水晶宫 vs 伯恩利",
+          "score": "2-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "02/07",
+          "match": "伯恩利 vs 西汉姆联",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50422208"
+    },
+    {
+      "name": "马克戈帕",
+      "number": 17,
+      "position": "前锋",
+      "age": 25,
+      "height": 188,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "120€",
+      "birth_date": "2000-06-05",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "奥兰多海盗",
+          "score": "27",
+          "rating": "13",
+          "status": "W"
+        },
+        {
+          "date": "2024/2025",
+          "match": "奥兰多海盗",
+          "score": "34",
+          "rating": "21",
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "奥兰多海盗",
+          "score": "21",
+          "rating": "13",
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "理查兹湾FC",
+          "score": "11",
+          "rating": "0",
+          "status": "D"
+        },
+        {
+          "date": "2021/2022",
+          "match": "巴罗卡",
+          "score": "28",
+          "rating": "21",
+          "status": "W"
+        },
+        {
+          "date": "2020/2021",
+          "match": "巴罗卡",
+          "score": "25",
+          "rating": "24",
+          "status": "W"
+        },
+        {
+          "date": "2019/2020",
+          "match": "巴罗卡",
+          "score": "10",
+          "rating": "10",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50554368"
+    },
+    {
+      "name": "雷内尔斯",
+      "number": 13,
+      "position": "前锋",
+      "age": 30,
+      "height": 176,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "300€",
+      "birth_date": "1995-12-19",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-01-31",
+          "match": "超体联盟 → 斯泰伦博斯",
+          "score": "7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-07-01",
+          "match": "斯泰伦博斯 → 超体联盟",
+          "score": "免签",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017-07-29",
+          "match": "桑托斯 → 斯泰伦博斯",
+          "score": "7",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50225338"
+    },
+    {
+      "name": "莫弗科恩",
+      "number": null,
+      "position": "前锋",
+      "age": 21,
+      "height": "165cm",
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2004-10-23",
+      "nationality": "南非",
+      "overall_rating": 38,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50873848"
+    },
+    {
+      "name": "莫雷米",
+      "number": 11,
+      "position": "前锋",
+      "age": 25,
+      "height": null,
+      "weight": null,
+      "preferred_foot": null,
+      "value": "100€",
+      "birth_date": "2000-10-02",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2023-07-01",
+          "match": "JDR星队 vs 阿玛祖鲁",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        },
+        {
+          "date": "2022-08-01",
+          "match": "阿玛祖鲁 vs JDR星队",
+          "score": null,
+          "rating": null,
+          "status": "租借"
+        },
+        {
+          "date": "2022-06-30",
+          "match": "JDR星队 vs 阿玛祖鲁",
+          "score": null,
+          "rating": null,
+          "status": "租借回归"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50595193"
+    },
+    {
+      "name": "马塞科",
+      "number": 40,
+      "position": "前锋",
+      "age": 22,
+      "height": 178,
+      "weight": null,
+      "preferred_foot": "左脚",
+      "value": "75€",
+      "birth_date": "2003-11-11",
+      "nationality": "南非",
+      "overall_rating": 75,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2026-06-30",
+          "match": "AEL利马索尔 → 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2026-01-20",
+          "match": "马梅洛迪日落 → AEL利马索尔",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023-07-18",
+          "match": "超体联盟 → 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50708201"
+    },
+    {
+      "name": "杰登-亚当斯",
+      "number": 8,
+      "position": "中场",
+      "age": 25,
+      "height": 175,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "140€",
+      "birth_date": "2001-05-05",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/01/18",
+          "match": "新泰伦博斯 - 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50564835"
+    },
+    {
+      "name": "兹瓦内",
+      "number": 18,
+      "position": "中场",
+      "age": 36,
+      "height": 176,
+      "weight": 69,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1989-08-03",
+      "nationality": "南非",
+      "overall_rating": 75,
+      "stats": {
+        "速度": 78,
+        "力量": 63,
+        "防守": 49,
+        "盘带": 76,
+        "传球": 71,
+        "射门": 69
+      },
+      "recent_matches": [],
+      "career_history": [
+        {
+          "season": "2025/2026",
+          "club": "马梅洛迪日落",
+          "appearances": 21,
+          "starts": 5,
+          "goals": 0,
+          "assists": 1,
+          "yellow_cards": 0,
+          "red_cards": 0
+        },
+        {
+          "season": "2024/2025",
+          "club": "马梅洛迪日落",
+          "appearances": 19,
+          "starts": 5,
+          "goals": 2,
+          "assists": 2,
+          "yellow_cards": 0,
+          "red_cards": 0
+        },
+        {
+          "season": "2023/2024",
+          "club": "马梅洛迪日落",
+          "appearances": 24,
+          "starts": 23,
+          "goals": 1,
+          "assists": 3,
+          "yellow_cards": 4,
+          "red_cards": 0
+        },
+        {
+          "season": "2022/2023",
+          "club": "马梅洛迪日落",
+          "appearances": 31,
+          "starts": 29,
+          "goals": 6,
+          "assists": 5,
+          "yellow_cards": 4,
+          "red_cards": 0
+        },
+        {
+          "season": "2021/2022",
+          "club": "马梅洛迪日落",
+          "appearances": 37,
+          "starts": 33,
+          "goals": 9,
+          "assists": 9,
+          "yellow_cards": 2,
+          "red_cards": 0
+        },
+        {
+          "season": "2020/2021",
+          "club": "马梅洛迪日落",
+          "appearances": 18,
+          "starts": 18,
+          "goals": 6,
+          "assists": 5,
+          "yellow_cards": 1,
+          "red_cards": 0
+        },
+        {
+          "season": "2019/2020",
+          "club": "马梅洛迪日落",
+          "appearances": 37,
+          "starts": 35,
+          "goals": 14,
+          "assists": 10,
+          "yellow_cards": 7,
+          "red_cards": 0
+        },
+        {
+          "season": "2018/2019",
+          "club": "马梅洛迪日落",
+          "appearances": 37,
+          "starts": 34,
+          "goals": 10,
+          "assists": 7,
+          "yellow_cards": 2,
+          "red_cards": 0
+        },
+        {
+          "season": "2017/2018",
+          "club": "马梅洛迪日落",
+          "appearances": 37,
+          "starts": 29,
+          "goals": 6,
+          "assists": 7,
+          "yellow_cards": 3,
+          "red_cards": 0
+        },
+        {
+          "season": "2016/2017",
+          "club": "马梅洛迪日落",
+          "appearances": 29,
+          "starts": 24,
+          "goals": 9,
+          "assists": 0,
+          "yellow_cards": 1,
+          "red_cards": 0
+        },
+        {
+          "season": "2015/2016",
+          "club": "马梅洛迪日落",
+          "appearances": 35,
+          "starts": 29,
+          "goals": 5,
+          "assists": 0,
+          "yellow_cards": 4,
+          "red_cards": 0
+        },
+        {
+          "season": "2014/2015",
+          "club": "马梅洛迪日落",
+          "appearances": 27,
+          "starts": 16,
+          "goals": 3,
+          "assists": 0,
+          "yellow_cards": 2,
+          "red_cards": 0
+        },
+        {
+          "season": "2013/2014",
+          "club": "开普敦城",
+          "appearances": 29,
+          "starts": 27,
+          "goals": 4,
+          "assists": 0,
+          "yellow_cards": 2,
+          "red_cards": 0
+        },
+        {
+          "season": "2012/2013",
+          "club": "马梅洛迪日落",
+          "appearances": 12,
+          "starts": 8,
+          "goals": 0,
+          "assists": 0,
+          "yellow_cards": 0,
+          "red_cards": 0
+        },
+        {
+          "season": "2011/2012",
+          "club": "马梅洛迪日落",
+          "appearances": 17,
+          "starts": 9,
+          "goals": 1,
+          "assists": 0,
+          "yellow_cards": 0,
+          "red_cards": 0
+        }
+      ],
+      "honors": [
+        "非洲足球冠军联赛冠军 × 2",
+        "南非杯冠军 × 2",
+        "南非足球超级联赛冠军 × 7",
+        "南非联赛杯冠军 × 2",
+        "非洲超级杯冠军 × 1",
+        "南非八强杯冠军 × 1"
+      ],
+      "transfers": [
+        {
+          "date": "2014-06-30",
+          "from": "开普敦城",
+          "to": "马梅洛迪日落",
+          "status": "租借回归"
+        },
+        {
+          "date": "2013-07-24",
+          "from": "马梅洛迪日落",
+          "to": "开普敦城",
+          "status": "租借"
+        }
+      ],
+      "injuries": "暂无伤病数据",
+      "source_url": "https://www.dongqiudi.com/player/50117076"
+    },
+    {
+      "name": "姆巴萨",
+      "number": 16,
+      "position": "中场",
+      "age": 26,
+      "height": 164,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2000-03-06",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-06-30",
+          "match": "奥兰多海盗 vs 超体联盟",
+          "score": null,
+          "rating": null,
+          "status": "W"
+        },
+        {
+          "date": "2024-01-25",
+          "match": "超体联盟 vs 奥兰多海盗",
+          "score": null,
+          "rating": null,
+          "status": "D"
+        },
+        {
+          "date": "2020-11-30",
+          "match": "海兰德斯公园 vs 超体联盟",
+          "score": null,
+          "rating": null,
+          "status": "?"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50545541"
+    },
+    {
+      "name": "亚亚-西索尔",
+      "number": 15,
+      "position": "中场",
+      "age": 27,
+      "height": 188,
+      "weight": 80,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1999-03-03",
+      "nationality": "南非",
+      "overall_rating": 66,
+      "stats": {
+        "速度": 64,
+        "力量": 75,
+        "防守": 64,
+        "盘带": 61,
+        "传球": 59,
+        "射门": 55
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "南非 vs 尼加拉瓜",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/16",
+          "match": "阿罗卡 vs 潘德拉",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/11",
+          "match": "潘德拉 vs 莫雷拉人",
+          "score": "2-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/03",
+          "match": "卡萨皮亚 vs 潘德拉",
+          "score": "0-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/29",
+          "match": "葡萄牙体育 vs 潘德拉",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "潘德拉 vs 马德拉国民",
+          "score": "0-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/19",
+          "match": "波尔图 vs 潘德拉",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/13",
+          "match": "潘德拉 vs 吉尔维森特",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/03",
+          "match": "吉马良斯 vs 潘德拉",
+          "score": "5-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/31",
+          "match": "南非 vs 巴拿马",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "南非 vs 巴拿马",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/21",
+          "match": "潘德拉 vs 阿维什镇",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/09",
+          "match": "潘德拉 vs 阿维河",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/01",
+          "match": "潘德拉 vs 麦克拉拉",
+          "score": "2-2",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "02/20",
+          "match": "阿马多拉之星 vs 潘德拉",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50250880"
+    },
+    {
+      "name": "泰博霍-莫科纳",
+      "number": 4,
+      "position": "中场",
+      "age": 29,
+      "height": "178cm",
+      "weight": "71kg",
+      "preferred_foot": "右脚",
+      "value": "250€",
+      "birth_date": "1997-01-24",
+      "nationality": "南非",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 73,
+        "力量": 51,
+        "防守": 50,
+        "盘带": 67,
+        "传球": 63,
+        "射门": 47
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50269283"
+    },
+    {
+      "name": "穆道",
+      "number": 25,
+      "position": "后卫",
+      "age": 31,
+      "height": 179,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": "120万欧元",
+      "birth_date": "1995-04-26",
+      "nationality": "南非",
+      "overall_rating": 70,
+      "stats": {
+        "速度": 81,
+        "力量": 70,
+        "防守": 64,
+        "盘带": 71,
+        "传球": 61,
+        "射门": 46
+      },
+      "recent_matches": [
+        {
+          "date": "2020-10-09",
+          "match": "黑豹 vs 马梅洛迪日落",
+          "score": null,
+          "rating": 7,
+          "status": null
+        },
+        {
+          "date": "2017-07-01",
+          "match": "马格西 vs 黑豹",
+          "score": null,
+          "rating": 7,
+          "status": null
+        },
+        {
+          "date": "2016-07-23",
+          "match": "JDR星队 vs 马格西",
+          "score": null,
+          "rating": 7,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50271120"
+    },
+    {
+      "name": "姆博卡齐",
+      "number": 4,
+      "position": "后卫",
+      "age": 20,
+      "height": 178,
+      "weight": 86,
+      "preferred_foot": "左脚",
+      "value": "250€",
+      "birth_date": "2005-09-19",
+      "nationality": "南非",
+      "overall_rating": 72,
+      "stats": {
+        "速度": 64,
+        "力量": 78,
+        "防守": 72,
+        "盘带": 53,
+        "传球": 51,
+        "射门": 61
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "南审 vs 尼加拉瓜",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/24",
+          "match": "芝加哥火焰 vs 多伦多",
+          "score": "2-1",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/16",
+          "match": "蒙特利尔 vs 芝加哥火焰",
+          "score": "0-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/13",
+          "match": "华盛顿特区联 vs 芝加哥火焰",
+          "score": "1-3",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "05/09",
+          "match": "芝加哥火焰 vs 纽约红牛",
+          "score": "1-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/03",
+          "match": "芝加哥火焰 vs 辛辛那提",
+          "score": "2-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/30",
+          "match": "芝加哥火焰 vs 圣路易斯城",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/26",
+          "match": "芝加哥火焰 vs 堪萨斯城体育",
+          "score": "5-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/18",
+          "match": "辛辛那提 vs 芝加哥火焰",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/14",
+          "match": "底特律城 vs 芝加哥火焰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/12",
+          "match": "芝加哥火焰 vs 亚特兰大联",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/05",
+          "match": "芝加哥火焰 vs 纳什维尔",
+          "score": "1-0",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "03/31",
+          "match": "南审 vs 巴拿马",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/27",
+          "match": "南审 vs 巴拿马",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/21",
+          "match": "费城联合 vs 芝加哥火焰",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/51093881"
+    },
+    {
+      "name": "莫迪巴",
+      "number": 6,
+      "position": "后卫",
+      "age": 30,
+      "height": 172,
+      "weight": 72,
+      "preferred_foot": "左脚",
+      "value": "100万",
+      "birth_date": "1995-07-22",
+      "nationality": "南非",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 82,
+        "力量": 49,
+        "防守": 61,
+        "身体": 72,
+        "传球": 66,
+        "射门": 56
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 36,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 28,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 23,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 28,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 24,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 15,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 20,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 32,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 29,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 27,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "开普敦城",
+          "score": null,
+          "rating": 1,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "开普敦城",
+          "score": null,
+          "rating": 29,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "开普敦城",
+          "score": null,
+          "rating": 2,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50233626"
+    },
+    {
+      "name": "西比斯",
+      "number": 5,
+      "position": "后卫",
+      "age": 30,
+      "height": 172,
+      "weight": 160,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1995-09-22",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "奥兰多海盗",
+          "score": "26 上场, 24 首发, 0 进球, 0 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "奥兰多海盗",
+          "score": "41 上场, 39 首发, 2 进球, 0 助攻, 9 黄牌, 1 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "奥兰多海盗",
+          "score": "15 上场, 9 首发, 0 进球, 0 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "理查兹湾FC",
+          "score": "8 上场, 0 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "奥兰多海盗",
+          "score": "31 上场, 31 首发, 1 进球, 2 助攻, 6 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2022",
+          "match": "金箭",
+          "score": "20 上场, 20 首发, 3 进球, 1 助攻, 4 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "金箭",
+          "score": "25 上场, 25 首发, 0 进球, 0 助攻, 7 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "金箭",
+          "score": "27 上场, 27 首发, 0 进球, 0 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "金箭",
+          "score": "31 上场, 31 首发, 1 进球, 0 助攻, 2 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "金箭",
+          "score": "1 上场, 1 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "金箭",
+          "score": "1 上场, 0 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "金箭",
+          "score": "1 上场, 1 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50259861"
+    },
+    {
+      "name": "塞贝勒贝莱",
+      "number": 36,
+      "position": "后卫",
+      "age": 23,
+      "height": 185,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "85€",
+      "birth_date": "2002-07-21",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "奥兰多海盗",
+          "score": "4进球",
+          "rating": 20,
+          "status": "W"
+        },
+        {
+          "date": "2024/2025",
+          "match": "TS银河",
+          "score": "4进球",
+          "rating": 24,
+          "status": "W"
+        },
+        {
+          "date": "2023/2024",
+          "match": "TS银河",
+          "score": "1进球",
+          "rating": 20,
+          "status": "W"
+        },
+        {
+          "date": "2022/2023",
+          "match": "TS银河",
+          "score": "3进球",
+          "rating": 16,
+          "status": "W"
+        },
+        {
+          "date": "2021/2022",
+          "match": "TS银河",
+          "score": "0进球",
+          "rating": 0,
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50714159"
+    },
+    {
+      "name": "卡比尼",
+      "number": 26,
+      "position": "后卫",
+      "age": 22,
+      "height": 181,
+      "weight": 72,
+      "preferred_foot": "左脚",
+      "value": "250€",
+      "birth_date": "2004-03-15",
+      "nationality": "南非",
+      "overall_rating": 65,
+      "stats": {
+        "速度": 71,
+        "力量": 62,
+        "防守": 62,
+        "盘带": 60,
+        "传球": 54,
+        "射门": 34
+      },
+      "recent_matches": [
+        {
+          "date": "2025",
+          "match": "莫尔德",
+          "score": "7-7",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025/2026",
+          "match": "莫尔德",
+          "score": "2-2",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025",
+          "match": "莫尔德",
+          "score": "18-16",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "莫尔德",
+          "score": "2-1",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "TS银河",
+          "score": "21-21",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "TS银河",
+          "score": "12-12",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50916125"
+    },
+    {
+      "name": "伊梅-奥孔",
+      "number": 20,
+      "position": "后卫",
+      "age": 22,
+      "height": "187cm",
+      "weight": "86kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2004-02-20",
+      "nationality": "南非",
+      "overall_rating": 68,
+      "stats": {
+        "速度": 77,
+        "力量": 71,
+        "防守": 68,
+        "盘带": 59,
+        "传球": 46,
+        "射门": 30,
+        "国际声望": 2,
+        "逆足能力": 2,
+        "花式技巧": 2
+      },
+      "recent_matches": [
+        {
+          "date": "2025-07-01",
+          "match": "超体联盟 → 汉诺威96",
+          "score": null,
+          "rating": null,
+          "status": "免签"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50897971"
+    },
+    {
+      "name": "恩达马内",
+      "number": 3,
+      "position": "后卫",
+      "age": 22,
+      "height": null,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "80K",
+      "birth_date": "2004-02-05",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "TS银河",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2025/2026",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "TS银河",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/51004031"
+    },
+    {
+      "name": "马图鲁迪",
+      "number": 2,
+      "position": "后卫",
+      "age": 27,
+      "height": null,
+      "weight": null,
+      "preferred_foot": "右脚",
+      "value": "90€",
+      "birth_date": "1999-01-14",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "贝联",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "贝联",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "贝联",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "贝联",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50852917"
+    },
+    {
+      "name": "布拉德利·克罗斯",
+      "number": 48,
+      "position": "后卫",
+      "age": 25,
+      "height": "183cm",
+      "weight": "77kg",
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2001-01-30",
+      "nationality": "南非",
+      "overall_rating": 48,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "凯萨酋长",
+          "score": "25 上场, 22 首发, 0 进球, 1 助攻, 2 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "凯萨酋长",
+          "score": "22 上场, 20 首发, 0 进球, 0 助攻, 2 黄牌, 1 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "金箭",
+          "score": "13 上场, 12 首发, 0 进球, 0 助攻, 3 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "德班城",
+          "score": "15 上场, 13 首发, 1 进球, 0 助攻, 0 黄牌, 1 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "纽卡斯尔联U23",
+          "score": "9 上场, 9 首发, 0 进球, 1 助攻, 1 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "纽卡斯尔联U23",
+          "score": "13 上场, 12 首发, 0 进球, 0 助攻, 1 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "沙尔克04U19",
+          "score": "18 上场, 18 首发, 0 进球, 0 助攻, 2 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "沙尔克04U19",
+          "score": "16 上场, 8 首发, 0 进球, 0 助攻, 0 黄牌, 0 红牌",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50468840"
+    },
+    {
+      "name": "马汉亚",
+      "number": 29,
+      "position": "后卫",
+      "age": 22,
+      "height": 185,
+      "weight": 72,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "2004-04-30",
+      "nationality": "南非",
+      "overall_rating": 63,
+      "stats": {
+        "速度": 74,
+        "力量": 65,
+        "防守": 64,
+        "盘带": 47,
+        "传球": 43,
+        "射门": 33,
+        "国际声望": "★★★☆☆",
+        "逆足能力": "★★☆☆☆",
+        "花式技巧": "★★☆☆☆"
+      },
+      "recent_matches": [
+        {
+          "date": "05/29",
+          "match": "南泰 vs 尼加拉瓜",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/16",
+          "match": "贵城联合 vs 哥伦布机员",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "05/13",
+          "match": "奥兰多城 vs 贵城联合",
+          "score": "4-3",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/09",
+          "match": "新英格兰革命 vs 贵城联合",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "05/02",
+          "match": "贵城联合 vs 纳什维尔",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/25",
+          "match": "哥伦布机员 vs 贵城联合",
+          "score": "2-0",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "04/22",
+          "match": "多伦多 vs 贵城联合",
+          "score": "3-3",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/18",
+          "match": "贵城联合 vs 华盛顿特区联",
+          "score": "0-0",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "04/11",
+          "match": "蒙特利尔 vs 贵城联合",
+          "score": "1-2",
+          "rating": "W",
+          "status": "W"
+        },
+        {
+          "date": "04/04",
+          "match": "夏洛特 vs 贵城联合",
+          "score": "2-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/21",
+          "match": "贵城联合 vs 芝加哥火焰",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/19",
+          "match": "美洲 vs 贵城联合",
+          "score": "1-1",
+          "rating": "D",
+          "status": "D"
+        },
+        {
+          "date": "03/14",
+          "match": "亚特兰大联 vs 贵城联合",
+          "score": "3-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/10",
+          "match": "贵城联合 vs 美洲",
+          "score": "0-1",
+          "rating": "L",
+          "status": "L"
+        },
+        {
+          "date": "03/01",
+          "match": "贵城联合 vs 纽约城",
+          "score": "1-2",
+          "rating": "L",
+          "status": "L"
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50861865"
+    },
+    {
+      "name": "隆文-威廉斯",
+      "number": 30,
+      "position": "门将",
+      "age": 34,
+      "height": 184,
+      "weight": 81,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1992-01-21",
+      "nationality": "南非",
+      "overall_rating": 73,
+      "stats": {
+        "扑救": 73,
+        "位置": 71,
+        "速度": 55,
+        "反应": 73,
+        "开球": 70,
+        "手抛": 70
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 40,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 34,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 32,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "马梅洛迪日落",
+          "score": null,
+          "rating": 35,
+          "status": null
+        },
+        {
+          "date": "2021/2022",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 26,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 22,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 33,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 33,
+          "status": null
+        },
+        {
+          "date": "2017/2018",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 14,
+          "status": null
+        },
+        {
+          "date": "2016/2017",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 30,
+          "status": null
+        },
+        {
+          "date": "2015/2016",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 38,
+          "status": null
+        },
+        {
+          "date": "2014/2015",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 37,
+          "status": null
+        },
+        {
+          "date": "2013/2014",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 32,
+          "status": null
+        },
+        {
+          "date": "2012/2013",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 36,
+          "status": null
+        },
+        {
+          "date": "2011/2012",
+          "match": "超体联盟",
+          "score": null,
+          "rating": 27,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50111527"
+    },
+    {
+      "name": "谢恩",
+      "number": 24,
+      "position": "门将",
+      "age": 29,
+      "height": 181,
+      "weight": 140,
+      "preferred_foot": null,
+      "value": null,
+      "birth_date": "1996-12-14",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2025/2026",
+          "match": "奥兰多海盗",
+          "score": "35-35",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024/2025",
+          "match": "奥兰多海盗",
+          "score": "44-44",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2023/2024",
+          "match": "奥兰多海盗",
+          "score": "19-19",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "奥兰多海盗",
+          "score": "17-17",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022/2023",
+          "match": "茨普帕",
+          "score": "2-2",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020/2021",
+          "match": "皇家AM",
+          "score": "7-6",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2019/2020",
+          "match": "皇家AM",
+          "score": "13-12",
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2018/2019",
+          "match": "皇家AM",
+          "score": "1-1",
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50267665"
+    },
+    {
+      "name": "高斯",
+      "number": 13,
+      "position": "门将",
+      "age": 32,
+      "height": 181,
+      "weight": 75,
+      "preferred_foot": "右脚",
+      "value": null,
+      "birth_date": "1994-04-02",
+      "nationality": "南非",
+      "overall_rating": null,
+      "stats": {
+        "速度": null,
+        "射门": null,
+        "传球": null,
+        "盘带": null,
+        "防守": null,
+        "力量": null
+      },
+      "recent_matches": [
+        {
+          "date": "2024-06-30",
+          "match": "超体联盟 → 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2024-06-30",
+          "match": "超体联盟 → 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2022-07-25",
+          "match": "马梅洛迪日落 → 超体联盟",
+          "score": null,
+          "rating": null,
+          "status": null
+        },
+        {
+          "date": "2020-09-26",
+          "match": "毕德威斯特大学 → 马梅洛迪日落",
+          "score": null,
+          "rating": null,
+          "status": null
+        }
+      ],
+      "source_url": "https://www.dongqiudi.com/player/50188984"
+    }
+  ],
+  "schedule": [
+    {
+      "date": "1/5 03:00",
+      "competition": "非洲杯",
+      "home_team": "南非",
+      "away_team": "喀麦隆",
+      "score": "1 - 2"
+    },
+    {
+      "date": "3/28 01:00",
+      "competition": "友谊赛",
+      "home_team": "南非",
+      "away_team": "巴拿马",
+      "score": "1 - 1"
+    },
+    {
+      "date": "4/1 01:30",
+      "competition": "友谊赛",
+      "home_team": "南非",
+      "away_team": "巴拿马",
+      "score": "1 - 2"
+    },
+    {
+      "date": "5/30 00:00",
+      "competition": "友谊赛",
+      "home_team": "南非",
+      "away_team": "尼加拉瓜",
+      "score": "0 - 0"
+    },
+    {
+      "date": "6/12 03:00",
+      "competition": "世界杯",
+      "home_team": "墨西哥",
+      "away_team": "南非",
+      "score": null
+    }
+  ]
+}
