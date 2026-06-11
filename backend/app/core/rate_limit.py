@@ -64,20 +64,56 @@ def check_rate_limit(
         raise RateLimitError(message or _MSG_DEFAULT, retry_after_sec=window_sec)
 
 
+def _ip_from_forwarded_headers(
+    forwarded: str | None,
+    real_ip: str | None,
+    trusted: int,
+    fallback: str,
+) -> str:
+    if trusted > 0:
+        if real_ip:
+            return real_ip.strip()
+        if forwarded:
+            parts = [p.strip() for p in forwarded.split(",") if p.strip()]
+            if parts:
+                return parts[0]
+    return fallback
+
+
 def client_ip(request: Request) -> str:
     from app.core.config import get_settings
 
     settings = get_settings()
-    trusted = max(0, settings.trusted_proxy_count)
-    if trusted > 0:
-        forwarded = request.headers.get("x-forwarded-for")
-        if forwarded:
-            parts = [p.strip() for p in forwarded.split(",") if p.strip()]
-            if len(parts) >= trusted:
-                return parts[-trusted]
-    if request.client:
-        return request.client.host
-    return "unknown"
+    return _ip_from_forwarded_headers(
+        request.headers.get("x-forwarded-for"),
+        request.headers.get("x-real-ip"),
+        max(0, settings.trusted_proxy_count),
+        request.client.host if request.client else "unknown",
+    )
+
+
+def client_ip_websocket(websocket) -> str:
+    """Real client IP for WebSocket (must read X-Forwarded-For from nginx)."""
+    from app.core.config import get_settings
+
+    settings = get_settings()
+    return _ip_from_forwarded_headers(
+        websocket.headers.get("x-forwarded-for"),
+        websocket.headers.get("x-real-ip"),
+        max(0, settings.trusted_proxy_count),
+        websocket.client.host if websocket.client else "unknown",
+    )
+
+
+def rate_limit_ws_connect(websocket) -> None:
+    """Limit WS handshake bursts per client IP (not per nginx worker)."""
+    ip = client_ip_websocket(websocket)
+    check_rate_limit(
+        f"rl:ws:connect:{ip}",
+        limit=40,
+        window_sec=60,
+        message="实时连接过于频繁，请稍后再试",
+    )
 
 
 def rate_limit_agent(request: Request, user_id: int | None) -> None:

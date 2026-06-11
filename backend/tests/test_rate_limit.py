@@ -64,3 +64,18 @@ def test_rate_limit_error_json_shape():
     assert body["code"] == "RATE_LIMIT"
     assert body["message"] == "访问有点快了，请稍等片刻再试"
     assert body["retry_after_sec"] == 45
+
+
+def test_client_ip_websocket_uses_forwarded_for(monkeypatch):
+    from unittest.mock import MagicMock
+
+    from app.core.config import get_settings
+    from app.core.rate_limit import client_ip_websocket
+
+    settings = get_settings()
+    monkeypatch.setattr(settings, "trusted_proxy_count", 1)
+
+    ws = MagicMock()
+    ws.headers = {"x-forwarded-for": "203.0.113.10, 127.0.0.1", "x-real-ip": "203.0.113.10"}
+    ws.client = MagicMock(host="127.0.0.1")
+    assert client_ip_websocket(ws) == "203.0.113.10"

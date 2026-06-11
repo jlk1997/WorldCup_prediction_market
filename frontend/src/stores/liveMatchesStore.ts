@@ -7,6 +7,8 @@ const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:10086/ws/live'
 const POLL_FAST_MS = 45_000
 const POLL_SLOW_MS = 120_000
 const POLL_BACKOFF_MS = 120_000
+const WS_RECONNECT_MIN_MS = 5_000
+const WS_RECONNECT_MAX_MS = 60_000
 
 export function mergeLiveMatches(prev: LiveMatch[], incoming: LiveMatch[]): LiveMatch[] {
   if (!incoming.length) return prev
@@ -32,7 +34,8 @@ let subscriberCount = 0
 let timer: ReturnType<typeof setInterval> | null = null
 let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
-let reconnectDelay = 3000
+let reconnectDelay = WS_RECONNECT_MIN_MS
+let wsFailStreak = 0
 let started = false
 let pollBackoffUntil = 0
 let tabVisible = typeof document !== 'undefined' ? !document.hidden : true
@@ -109,9 +112,11 @@ function connectWebSocket() {
   closeWebSocket(1000, 'reconnect')
   try {
     ws = new WebSocket(WS_URL)
+    const openedAt = Date.now()
     ws.onopen = () => {
       wsConnected.value = true
-      reconnectDelay = 3000
+      wsFailStreak = 0
+      reconnectDelay = WS_RECONNECT_MIN_MS
       resetPollTimer()
     }
     ws.onmessage = (ev) => {
@@ -125,8 +130,18 @@ function connectWebSocket() {
       ws = null
       resetPollTimer()
       if (!started || subscriberCount <= 0) return
+      const livedMs = Date.now() - openedAt
+      if (livedMs < 5000) {
+        wsFailStreak += 1
+        reconnectDelay = Math.min(
+          WS_RECONNECT_MAX_MS,
+          WS_RECONNECT_MIN_MS * 2 ** Math.min(wsFailStreak, 4),
+        )
+      } else {
+        wsFailStreak = 0
+        reconnectDelay = WS_RECONNECT_MIN_MS
+      }
       reconnectTimer = setTimeout(connectWebSocket, reconnectDelay)
-      reconnectDelay = Math.min(reconnectDelay * 1.5, 30_000)
     }
     ws.onerror = () => ws?.close()
   } catch {

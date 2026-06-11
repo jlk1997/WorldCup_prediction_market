@@ -11,8 +11,8 @@ from sqlalchemy.orm import Session
 from starlette.websockets import WebSocketState
 
 from app.core.cache import cache_get
-from app.core.exceptions import BadRequestError
-from app.core.rate_limit import check_rate_limit
+from app.core.exceptions import RateLimitError
+from app.core.rate_limit import rate_limit_ws_connect
 from app.db.repositories.match_repository import MatchRepository
 from app.db.session import SessionLocal
 
@@ -33,9 +33,16 @@ _CLIENT_GONE_ERRORS = (
 
 
 def _ws_client_ip(websocket: WebSocket) -> str:
-    if websocket.client:
-        return websocket.client.host
-    return "unknown"
+    from app.core.rate_limit import client_ip_websocket
+
+    return client_ip_websocket(websocket)
+
+
+async def _reject_ws(websocket: WebSocket, code: int = 1013) -> None:
+    try:
+        await websocket.close(code=code)
+    except Exception:
+        pass
 
 
 def _client_gone(exc: BaseException) -> bool:
@@ -99,9 +106,14 @@ def _live_payload(db: Session) -> list[dict]:
 async def websocket_live(websocket: WebSocket):
     global _ws_connections
     try:
-        check_rate_limit(f"rl:ws:connect:{_ws_client_ip(websocket)}", limit=10, window_sec=60)
-    except BadRequestError:
-        await websocket.close(code=1013)
+        rate_limit_ws_connect(websocket)
+    except RateLimitError as exc:
+        logger.warning(
+            "WebSocket connect rate limited ip=%s msg=%s",
+            _ws_client_ip(websocket),
+            exc.message,
+        )
+        await _reject_ws(websocket, code=1013)
         return
 
     with _ws_lock:
