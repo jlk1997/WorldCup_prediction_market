@@ -81,6 +81,8 @@ function go(item: { path: string; auth: boolean }) {
 
 .nav-item.active {
   color: var(--wc-accent-gold);
+  background: rgba(212, 165, 116, 0.08);
+  border-radius: 10px 10px 0 0;
 }
 
 .nav-item:active {

@@ -40,6 +40,7 @@
             <span class="coins">{{ authState.user?.fan_coins ?? 0 }} 币</span>
             <span class="redeem-pts">{{ authState.user?.redeem_points ?? 0 }} 可用分</span>
             <span class="nick">{{ authState.user?.nickname }}</span>
+            <span class="me-label">球迷中心</span>
           </div>
           <el-button v-else type="primary" plain size="small" class="hide-mobile" @click="router.push('/login')">登录</el-button>
 
@@ -49,13 +50,19 @@
               <button
                 v-if="isLoggedIn"
                 type="button"
-                class="mobile-avatar-chip touch-target"
+                class="mobile-me-chip touch-target"
                 :class="avatarFrameClass"
                 aria-label="进入球迷中心"
                 @click="router.push('/me')"
               >
-                <span class="mobile-avatar-letter">{{ mobileAvatarInitial }}</span>
-                <span v-if="passActive" class="pass-badge">通</span>
+                <span class="mobile-me-avatar">
+                  <span class="mobile-avatar-letter">{{ mobileAvatarInitial }}</span>
+                  <span v-if="passActive" class="pass-badge">通</span>
+                </span>
+                <span class="mobile-me-text">
+                  <span class="mobile-me-nick">{{ mobileDisplayNick }}</span>
+                  <span class="mobile-me-label">球迷中心 ›</span>
+                </span>
               </button>
               <button
                 v-if="isLoggedIn"
@@ -108,6 +115,7 @@
             <el-menu-item index="/teams">球队库</el-menu-item>
             <el-menu-item v-if="isLoggedIn" index="/invite">召友</el-menu-item>
             <el-menu-item index="/shop">商城</el-menu-item>
+            <el-menu-item v-if="isLoggedIn" index="/me">球迷中心</el-menu-item>
           </el-menu>
 
           <el-dropdown class="mobile-nav tablet-nav hide-mobile" trigger="click" @command="onNav">
@@ -222,6 +230,11 @@ const themeClass = computed(() => {
 const avatarFrameClass = computed(() => frameClassUtil(authState.user?.avatar_frame))
 
 const mobileAvatarInitial = computed(() => (authState.user?.nickname || '球').slice(0, 1))
+
+const mobileDisplayNick = computed(() => {
+  const n = authState.user?.nickname || '球迷'
+  return n.length > 4 ? `${n.slice(0, 4)}…` : n
+})
 
 const passActive = computed(() => hasActiveSeasonPass(authState.user))
 
@@ -487,6 +500,64 @@ function onNav(path: string) {
   font-size: 12px;
 }
 
+.mobile-me-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 4px 10px 4px 4px;
+  border-radius: 24px;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  background: rgba(212, 165, 116, 0.1);
+  cursor: pointer;
+  max-width: 130px;
+}
+
+.mobile-me-chip.frame-gold_wc {
+  border-color: #e8c88a;
+  box-shadow: 0 0 0 1px rgba(232, 200, 138, 0.35);
+}
+
+.mobile-me-chip.frame-silver_wc {
+  border-color: #c0c0c0;
+}
+
+.mobile-me-avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(212, 165, 116, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-me-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.mobile-me-nick {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f5f0e8;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-me-label {
+  font-size: 0.65rem;
+  color: var(--wc-accent-gold);
+  font-weight: 600;
+}
+
 .mobile-avatar-chip {
   position: relative;
   flex-shrink: 0;
@@ -629,6 +700,14 @@ function onNav(path: string) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.user-chip .me-label {
+  color: var(--wc-accent-gold);
+  font-size: 12px;
+  font-weight: 600;
+  padding-left: 4px;
+  border-left: 1px solid rgba(212, 165, 116, 0.35);
+  margin-left: 2px;
 }
 
 .team-chip {
