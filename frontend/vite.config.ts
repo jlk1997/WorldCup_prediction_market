@@ -1,48 +1,67 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { fileURLToPath, URL } from 'node:url'
 
+const SITE_META = {
+  title: '最后一舞：世界杯2026',
+  description: '2026 世界杯球迷互动平台 — 竞猜、AI 分析、擂台与排行榜，与传奇同框见证最后一舞。',
+}
+
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    AutoImport({
-      resolvers: [ElementPlusResolver({ importStyle: 'css' })],
-      dts: 'src/auto-imports.d.ts',
-    }),
-    Components({
-      resolvers: [ElementPlusResolver({ importStyle: 'css' })],
-      dts: 'src/components.d.ts',
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/element-plus')) {
-            return 'element-plus'
-          }
-          if (id.includes('node_modules/@element-plus/icons-vue')) {
-            return 'element-plus-icons'
-          }
-          if (id.includes('node_modules/vue-router') || id.includes('node_modules/vue/')) {
-            return 'vue-vendor'
-          }
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  const siteUrl = (env.VITE_SITE_URL || 'https://loveaibaby.cn').replace(/\/$/, '')
+
+  return {
+    plugins: [
+      vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver({ importStyle: 'css' })],
+        dts: command === 'serve' ? 'src/auto-imports.d.ts' : false,
+      }),
+      Components({
+        resolvers: [ElementPlusResolver({ importStyle: 'css' })],
+        dts: command === 'serve' ? 'src/components.d.ts' : false,
+      }),
+      {
+        name: 'html-site-meta',
+        transformIndexHtml(html) {
+          return html
+            .replaceAll('__SITE_URL__', siteUrl)
+            .replaceAll('__SITE_TITLE__', SITE_META.title)
+            .replaceAll('__SITE_DESCRIPTION__', SITE_META.description)
         },
       },
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-    chunkSizeWarningLimit: 600,
-  },
-  server: {
-    port: 10087,
-    host: '0.0.0.0',
-  },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/element-plus')) {
+              return 'element-plus'
+            }
+            if (id.includes('node_modules/@element-plus/icons-vue')) {
+              return 'element-plus-icons'
+            }
+            if (id.includes('node_modules/vue-router') || id.includes('node_modules/vue/')) {
+              return 'vue-vendor'
+            }
+          },
+        },
+      },
+      chunkSizeWarningLimit: 600,
+    },
+    server: {
+      port: 10087,
+      host: '0.0.0.0',
+    },
+  }
 })

@@ -2,13 +2,36 @@
 <html lang="zh-CN" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icons.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0f1224" />
+    <meta name="description" content="__SITE_DESCRIPTION__" />
+    <meta name="application-name" content="最后一舞" />
+
+    <!-- Favicon：勿用 icons.svg（仅为 sprite，浏览器无法当 tab 图标） -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph / 微信 / QQ 链接卡片（图片须为绝对 HTTPS + PNG/JPG） -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="最后一舞" />
+    <meta property="og:title" content="__SITE_TITLE__" />
+    <meta property="og:description" content="__SITE_DESCRIPTION__" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:image" content="__SITE_URL__/share-og.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+
+    <!-- 微信额外兼容 -->
+    <meta itemprop="name" content="__SITE_TITLE__" />
+    <meta itemprop="description" content="__SITE_DESCRIPTION__" />
+    <meta itemprop="image" content="__SITE_URL__/share-og.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
-    <title>最后一舞：世界杯2026</title>
+    <title>__SITE_TITLE__</title>
   </head>
   <body class="dark-mode">
     <div id="app"></div>

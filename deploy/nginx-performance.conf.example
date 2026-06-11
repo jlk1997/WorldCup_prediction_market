@@ -40,6 +40,14 @@ location ~* ^/legends/.+\.webp$ {
   try_files $uri =404;
 }
 
+# Brand favicon + WeChat share card image
+location ~* ^/(favicon-32\.png|favicon-192\.png|apple-touch-icon\.png|share-og\.png|logo\.svg)$ {
+  root /opt/wc2026/WorldCup/frontend/dist;
+  expires 30d;
+  add_header Cache-Control "public, immutable";
+  try_files $uri =404;
+}
+
 # API — no cache, proxy to uvicorn
 location /api/ {
   proxy_pass http://127.0.0.1:10086;

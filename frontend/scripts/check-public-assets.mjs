@@ -11,6 +11,11 @@ const root = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'public')
 const MAX_BACKDROP_BYTES = 400 * 1024
 
 const required = [
+  'logo.svg',
+  'favicon-32.png',
+  'favicon-192.png',
+  'apple-touch-icon.png',
+  'share-og.png',
   'legends/ronaldo-backdrop.webp',
   'legends/messi-backdrop.webp',
   'legends/neymar-backdrop.webp',
