@@ -1,4 +1,4 @@
-"""028: indexes for team name lookup and user prediction queries."""
+"""028: index for team name lookup (predictions user+status index already in 013)."""
 
 from typing import Sequence, Union
 
@@ -11,15 +11,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.create_index("ix_teams_name", "teams", ["name"], unique=False)
-    op.create_index(
-        "ix_game_predictions_user_status",
-        "game_predictions",
-        ["user_id", "status"],
-        unique=False,
-    )
+    # ix_game_predictions_user_status was added in 013_commerce_hardening — do not recreate.
+    op.execute("CREATE INDEX IF NOT EXISTS ix_teams_name ON teams (name)")
 
 
 def downgrade() -> None:
-    op.drop_index("ix_game_predictions_user_status", table_name="game_predictions")
-    op.drop_index("ix_teams_name", table_name="teams")
+    op.execute("DROP INDEX IF EXISTS ix_teams_name")
