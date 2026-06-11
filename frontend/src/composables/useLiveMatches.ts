@@ -1,18 +1,6 @@
-import { onMounted, onUnmounted } from 'vue'
-import { subscribeLiveMatches, useLiveMatchesStore } from '@/stores/liveMatchesStore'
+import { useLiveMatchesStore } from '@/stores/liveMatchesStore'
 
-/** Shared live matches singleton — one WebSocket + poll for all consumers. */
+/** Read-only access to app-level live matches subscription (see App.vue). */
 export function useLiveMatches(_pollMs = 30000) {
-  const store = useLiveMatchesStore()
-  let unsubscribe: (() => void) | null = null
-
-  onMounted(() => {
-    unsubscribe = subscribeLiveMatches()
-  })
-
-  onUnmounted(() => {
-    unsubscribe?.()
-  })
-
-  return store
+  return useLiveMatchesStore()
 }

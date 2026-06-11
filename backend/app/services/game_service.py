@@ -19,6 +19,8 @@ from app.services.notification_service import NotificationService
 
 logger = logging.getLogger(__name__)
 
+_TEAM_NAME_ID_CACHE: dict[str, int | None] = {}
+
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
@@ -930,8 +932,12 @@ class GameService:
     def _team_id_by_name(self, name: str | None) -> int | None:
         if not name:
             return None
+        if name in _TEAM_NAME_ID_CACHE:
+            return _TEAM_NAME_ID_CACHE[name]
         t = self.db.query(Team).filter(Team.name == name).first()
-        return t.id if t else None
+        team_id = t.id if t else None
+        _TEAM_NAME_ID_CACHE[name] = team_id
+        return team_id
 
     def _recalc_fan_level(self, user: User) -> None:
         score = (user.fan_cheers_total or 0) // 50 + (user.season_points or 0) // 100

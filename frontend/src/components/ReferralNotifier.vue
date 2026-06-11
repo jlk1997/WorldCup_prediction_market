@@ -21,44 +21,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import {
-  getNotifications,
-  getUnreadNotificationCount,
-  markNotificationsRead,
-  type UserNotification,
-} from '../api/notifications'
+  markReferralRead,
+  referralNotify,
+} from '../stores/headerNotificationsStore'
 import { isLoggedIn } from '../stores/authStore'
-import { useVisibilityPoll } from '../composables/useVisibilityPoll'
 
 const router = useRouter()
-const unread = ref(0)
-const latest = ref<UserNotification | null>(null)
-
-async function poll() {
-  if (!isLoggedIn.value) return
-  try {
-    unread.value = await getUnreadNotificationCount('referral_reward')
-    if (unread.value > 0) {
-      const rows = await getNotifications({ unread_only: true, category: 'referral_reward', limit: 1 })
-      latest.value = rows[0] ?? null
-    } else {
-      latest.value = null
-    }
-  } catch {
-    unread.value = 0
-  }
-}
-
-useVisibilityPoll(poll, 60000)
+const unread = computed(() => referralNotify.unread)
+const latest = computed(() => referralNotify.latest)
 
 async function markRead() {
-  if (!latest.value) return
-  await markNotificationsRead([latest.value.id])
-  unread.value = Math.max(0, unread.value - 1)
-  latest.value = null
-  await poll()
+  await markReferralRead()
 }
 
 function goAction() {

@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from datetime import date, datetime, timedelta, timezone
 
-from sqlalchemy import desc, func, or_
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -564,17 +564,29 @@ class ArenaService:
                 "arena_tier": user.arena_tier,
                 "tier_label": TIER_LABELS.get(user.arena_tier, user.arena_tier),
             }
-        members = (
-            self.db.query(User)
-            .filter(User.favorite_team_id == team_id, User.status == "active")
-            .order_by(desc(User.battalion_points_season))
-            .all()
-        )
-        rank = next((i + 1 for i, u in enumerate(members) if u.id == user.id), None)
+        pts = user.battalion_points_season or 0
+        member_filter = (User.favorite_team_id == team_id, User.status == "active")
+        total_members = self.db.scalar(
+            select(func.count()).select_from(User).where(*member_filter)
+        ) or 0
+        rank = (
+            self.db.scalar(
+                select(func.count()).select_from(User).where(
+                    *member_filter,
+                    User.battalion_points_season > pts,
+                )
+            )
+            or 0
+        ) + 1
         gap = 0
-        if rank and rank > 1:
-            prev_pts = members[rank - 2].battalion_points_season or 0
-            gap = max(0, prev_pts - (user.battalion_points_season or 0))
+        if rank > 1:
+            prev_pts = self.db.scalar(
+                select(func.min(User.battalion_points_season)).where(
+                    *member_filter,
+                    User.battalion_points_season > pts,
+                )
+            )
+            gap = max(0, (prev_pts or 0) - pts)
         star_contrib = (
             self.db.query(UserStarHeat, PlayerDetailed)
             .join(PlayerDetailed, UserStarHeat.player_id == PlayerDetailed.id)
@@ -584,8 +596,8 @@ class ArenaService:
         return {
             "team_id": team_id,
             "rank": rank,
-            "total_members": len(members),
-            "battalion_points": user.battalion_points_season or 0,
+            "total_members": total_members,
+            "battalion_points": pts,
             "gap_to_prev": gap,
             "arena_tier": user.arena_tier,
             "tier_label": TIER_LABELS.get(user.arena_tier, user.arena_tier),

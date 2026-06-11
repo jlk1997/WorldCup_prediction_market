@@ -6,8 +6,7 @@
     <!-- 巨型柔和暗金环境光晕 (Ethereal backlight) -->
     <div class="ethereal-glow"></div>
 
-    <!-- 球场之上、UI 之下的传奇球星背景层 -->
-    <DashboardLegendsBackdrop />
+    <!-- 球星背景由 App.vue 全站统一渲染 -->
     
     <!-- 顶部统计条（合并为一条，减少遮挡） -->
     <div class="stats-strip glass-panel">
@@ -261,7 +260,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiClient } from '../api/client'
 import { ElMessage } from 'element-plus'
@@ -274,9 +273,6 @@ import MatchEventsTimeline from '../components/MatchEventsTimeline.vue'
 import FocusInsightCard from '../components/FocusInsightCard.vue'
 import ScheduleInsightTag from '../components/ScheduleInsightTag.vue'
 
-const DashboardLegendsBackdrop = defineAsyncComponent(
-  () => import('../components/DashboardLegendsBackdrop.vue'),
-)
 import { mergeLiveMatches } from '../stores/liveMatchesStore'
 import { useAgentNavigate } from '../composables/useAgentNavigate'
 import { useScheduleInsights } from '../composables/useScheduleInsights'
@@ -578,7 +574,9 @@ onMounted(async () => {
   }
   if (authState.accessToken) {
     try {
-      await fetchRecommendations()
+      if (!profileState.recommendations) {
+        await fetchRecommendations()
+      }
       const mid = profileState.recommendations?.next_main_match?.id
       if (mid) {
         arenaMini.value = await getMatchArena(mid)

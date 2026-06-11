@@ -1,8 +1,5 @@
 <template>
   <div class="login-page">
-    <LegendsShowcase variant="hero" title="与传奇同框" class="login-legends hide-mobile" />
-    <LegendsShowcase variant="strip" :show-labels="false" class="login-legends-mobile hide-desktop" />
-
     <div class="login-card glass-panel">
       <h1>登录 · 最后一舞</h1>
       <p class="hint">邮箱验证码登录，新用户自动注册并赠送球迷币</p>
@@ -70,7 +67,6 @@ import { fetchProfileStatus } from '../stores/profileStore'
 import { showApiError } from '../utils/errorHandler'
 
 import { previewReferralCode, type ReferralPreview } from '../api/referral'
-import LegendsShowcase from '../components/LegendsShowcase.vue'
 
 const router = useRouter()
 const route = useRoute()

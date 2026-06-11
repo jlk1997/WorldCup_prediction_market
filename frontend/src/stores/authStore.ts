@@ -154,8 +154,15 @@ export async function refreshSession(): Promise<boolean> {
   }
 }
 
-export async function initAuth() {
-  if (authState.accessToken) {
-    await fetchMe()
+let initPromise: Promise<void> | null = null
+
+export async function initAuth(): Promise<void> {
+  if (!initPromise) {
+    initPromise = (async () => {
+      if (authState.accessToken) {
+        await fetchMe()
+      }
+    })()
   }
+  return initPromise
 }

@@ -1,5 +1,11 @@
 <template>
-  <div class="legends-backdrop" :class="{ paused: !visible || liteMode }" aria-hidden="true">
+  <div
+    class="legends-page-backdrop"
+    :class="[
+      { fixed, paused: paused || !visible, 'goal-active': goalFlash },
+    ]"
+    aria-hidden="true"
+  >
     <div class="legends-row">
       <div
         v-for="(legend, idx) in legends"
@@ -12,34 +18,46 @@
           <img
             :src="legend.imageBackdrop"
             alt=""
-            loading="lazy"
+            :loading="idx === 1 ? 'eager' : 'lazy'"
             decoding="async"
             draggable="false"
-            fetchpriority="low"
+            :fetchpriority="idx === 1 ? 'high' : 'low'"
           />
         </div>
       </div>
     </div>
     <div class="backdrop-vignette" />
+    <div v-if="goalFlash" class="goal-flash" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { LEGEND_CARDS } from '../data/legends'
-import { useDocumentVisible } from '../composables/useDocumentVisible'
-import { useStadiumStore } from '../stores/stadiumStore'
+import { LEGEND_CARDS } from '@/data/legends'
+import { useDocumentVisible } from '@/composables/useDocumentVisible'
+import { useStadiumStore } from '@/stores/stadiumStore'
+import { warmLegendBackdropImages } from '@/utils/legendsImageCache'
+
+withDefaults(
+  defineProps<{
+    /** fixed = App 全站底层；embedded = 首页 Dashboard 内嵌 */
+    fixed?: boolean
+  }>(),
+  { fixed: true },
+)
 
 const legends = LEGEND_CARDS
 const spotlightIdx = ref(1)
 const visible = useDocumentVisible()
-const { effectiveMode } = useStadiumStore()
-const liteMode = computed(() => effectiveMode.value !== 'high')
+const { effectiveMode, goalFlash, uiOverlayOpen } = useStadiumStore()
+
+const animateBg = computed(() => effectiveMode.value === 'high' || effectiveMode.value === 'auto')
+const paused = computed(() => !animateBg.value || uiOverlayOpen.value)
 
 let timer: ReturnType<typeof setInterval> | null = null
 
 function startSpotlight() {
-  if (timer || liteMode.value) return
+  if (timer || paused.value) return
   timer = setInterval(() => {
     spotlightIdx.value = (spotlightIdx.value + 1) % legends.length
   }, 7000)
@@ -51,26 +69,32 @@ function stopSpotlight() {
   timer = null
 }
 
-watch([visible, liteMode], ([vis, lite]) => {
-  if (vis && !lite) startSpotlight()
+watch([visible, paused], ([vis, p]) => {
+  if (vis && !p) startSpotlight()
   else stopSpotlight()
 })
 
 onMounted(() => {
-  if (visible.value && !liteMode.value) startSpotlight()
+  void warmLegendBackdropImages()
+  if (visible.value && !paused.value) startSpotlight()
 })
 
 onBeforeUnmount(stopSpotlight)
 </script>
 
 <style scoped>
-.legends-backdrop {
+.legends-page-backdrop {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
   contain: strict;
+}
+
+.legends-page-backdrop.fixed {
+  position: fixed;
+  z-index: 0;
 }
 
 .legends-row {
@@ -126,6 +150,14 @@ onBeforeUnmount(stopSpotlight)
   pointer-events: none;
 }
 
+.goal-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(210, 167, 109, 0.35), transparent 65%);
+  animation: goal-pulse 2s ease-out forwards;
+  pointer-events: none;
+}
+
 .paused .legend-figure {
   animation-play-state: paused;
 }
@@ -137,6 +169,15 @@ onBeforeUnmount(stopSpotlight)
   }
   50% {
     transform: translateY(-8px);
+  }
+}
+
+@keyframes goal-pulse {
+  0% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
   }
 }
 

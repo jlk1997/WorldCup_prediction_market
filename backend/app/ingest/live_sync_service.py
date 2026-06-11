@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -72,6 +72,7 @@ class LiveMatchSyncService:
             return 0
 
         updated = 0
+        updated_external_ids: set[str] = set()
         matches = list(
             self.db.scalars(
                 select(Match).where(Match.external_fixture_id.isnot(None))
@@ -84,9 +85,26 @@ class LiveMatchSyncService:
             match = by_external_id.get(fixture.external_id)
             if match and _apply_internal_fixture(match, fixture, self.client):
                 updated += 1
+                if fixture.external_id:
+                    updated_external_ids.add(fixture.external_id)
+
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        near_start = now - timedelta(hours=6)
+        near_end = now + timedelta(hours=48)
 
         for match in matches:
-            if not match.external_fixture_id:
+            if not match.external_fixture_id or match.external_fixture_id in updated_external_ids:
+                continue
+            if match.status == "live":
+                continue
+            md = match.match_date
+            if match.status == "scheduled":
+                if md and (md < near_start or md > near_end):
+                    continue
+            elif match.status == "finished":
+                if md and md < now - timedelta(hours=24):
+                    continue
+            else:
                 continue
             event = self.client.get_event(match.external_fixture_id)
             if not event:
@@ -97,6 +115,15 @@ class LiveMatchSyncService:
 
         self.db.commit()
         invalidate_live_cache()
+        try:
+            from app.core.cache import cache_delete
+
+            cache_delete("stats:overview")
+            cache_delete("schedule:all")
+            cache_delete("schedule:bracket")
+            cache_delete("schedule:standings:local")
+        except Exception:
+            pass
         try:
             from app.services.knockout_resolver import KnockoutResolverService
 

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import sys
 import time
@@ -64,9 +65,9 @@ class GlobalRateLimitMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         if path.startswith("/api") and path not in _SKIP_GLOBAL_RL:
             try:
-                rate_limit_global_ip(request)
+                await asyncio.to_thread(rate_limit_global_ip, request)
             except RateLimitError as exc:
-                logger.warning(
+                logging.getLogger("wc2026.ratelimit").warning(
                     "global rate limit path=%s ip=%s msg=%s",
                     path,
                     client_ip(request),

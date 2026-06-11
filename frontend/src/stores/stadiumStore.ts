@@ -1,5 +1,6 @@
 import { ref, computed, reactive } from 'vue'
 
+/** 背景动效档位（已无 3D 球场） */
 export type PerformanceMode = 'auto' | 'high' | 'balanced' | 'lite'
 
 export interface MatchContext {
@@ -36,7 +37,7 @@ function detectAutoMode(): PerformanceMode {
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return 'lite'
   if (lowBatteryHint) return 'lite'
   const mobile = /Mobi|Android/i.test(navigator.userAgent)
-  if (mobile) return 'balanced'
+  if (mobile) return 'lite'
   return 'balanced'
 }
 
@@ -63,17 +64,6 @@ export function useStadiumStore() {
   })
 
   const uiOverlayOpen = computed(() => uiOverlayKeys.size > 0)
-
-  const useThreeJs = computed(() => effectiveMode.value !== 'lite' && !uiOverlayOpen.value)
-
-  /** 赛事大屏 + 高画质：全特效 3D；其余页面或非高画质：低画质 3D */
-  const useHighQuality3D = computed(
-    () => effectiveMode.value === 'high',
-  )
-
-  const useFullAnalyzePulse = computed(
-    () => effectiveMode.value === 'high' || effectiveMode.value === 'auto',
-  )
 
   function setPerformanceMode(mode: PerformanceMode) {
     performanceMode.value = mode
@@ -106,9 +96,6 @@ export function useStadiumStore() {
   return {
     performanceMode,
     effectiveMode,
-    useThreeJs,
-    useHighQuality3D,
-    useFullAnalyzePulse,
     matchContext,
     goalFlash,
     analyzing,

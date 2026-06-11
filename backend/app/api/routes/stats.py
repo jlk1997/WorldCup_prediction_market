@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, Query
 
 from app.api.deps import get_db
+from app.core.cache import cache_get, cache_set
 from app.core.exceptions import NotFoundError, ServiceUnavailableError
 from app.db.models import Match, NewsArticle, Team
 from app.db.repositories.team_repository import TeamRepository
@@ -14,6 +15,9 @@ router = APIRouter(prefix="/api", tags=["stats"])
 
 @router.get("/stats/overview")
 def stats_overview(db: Session = Depends(get_db)):
+    cached = cache_get("stats:overview")
+    if cached is not None:
+        return cached
     try:
         team_count = db.scalar(select(func.count()).select_from(Team)) or 0
         match_count = db.scalar(select(func.count()).select_from(Match)) or 0
@@ -24,7 +28,7 @@ def stats_overview(db: Session = Depends(get_db)):
             select(func.count()).select_from(Match).where(Match.status == "finished")
         ) or 0
         news_count = db.scalar(select(func.count()).select_from(NewsArticle)) or 0
-        return {
+        payload = {
             "status": "success",
             "data": {
                 "teams": team_count,
@@ -34,6 +38,8 @@ def stats_overview(db: Session = Depends(get_db)):
                 "news_articles": news_count,
             },
         }
+        cache_set("stats:overview", payload, ttl=60)
+        return payload
     except SQLAlchemyError as exc:
         raise ServiceUnavailableError(str(exc)) from exc
 

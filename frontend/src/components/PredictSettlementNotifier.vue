@@ -28,48 +28,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import {
-  getNotifications,
-  getUnreadNotificationCount,
-  markNotificationsRead,
-  type UserNotification,
-} from '../api/notifications'
+import { markPredictRead, predictNotify } from '../stores/headerNotificationsStore'
 import { isLoggedIn, fetchMe } from '../stores/authStore'
-import { useVisibilityPoll } from '../composables/useVisibilityPoll'
-
-const CATEGORY = 'predict_settled'
 
 const router = useRouter()
-const unread = ref(0)
-const latest = ref<UserNotification | null>(null)
-
-async function poll() {
-  if (!isLoggedIn.value) return
-  try {
-    unread.value = await getUnreadNotificationCount(CATEGORY)
-    if (unread.value > 0) {
-      const rows = await getNotifications({ unread_only: true, category: CATEGORY, limit: 1 })
-      latest.value = rows[0] ?? null
-    } else {
-      latest.value = null
-    }
-  } catch {
-    /* ignore */
-  }
-}
-
-useVisibilityPoll(poll, 60000)
+const unread = computed(() => predictNotify.unread)
+const latest = computed(() => predictNotify.latest)
 
 async function markRead() {
-  if (!latest.value) return
-  await markNotificationsRead([latest.value.id])
-  unread.value = Math.max(0, unread.value - 1)
-  latest.value = null
-  await fetchMe()
-  window.dispatchEvent(new CustomEvent('predict-records-refresh'))
-  await poll()
+  await markPredictRead(async () => {
+    await fetchMe()
+    window.dispatchEvent(new CustomEvent('predict-records-refresh'))
+  })
 }
 
 function goNext(matchId: number) {

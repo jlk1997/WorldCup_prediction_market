@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="[themeClass, { 'is-mobile': isMobile }]">
-    <StadiumBackground v-if="showStadiumBg" />
+    <LegendsPageBackdrop />
 
     <el-container class="layout-container">
       <el-header class="app-header safe-area-top">
@@ -162,11 +162,12 @@
 
     <MobileBottomNav v-if="isMobile && !isAuthFlow" />
     <MobileMoreDrawer v-model="moreOpen" :show-profile-chip="showProfileHeaderChip" />
+    <LeaderboardRewardDialog v-model="showRewardDialog" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Menu } from '@element-plus/icons-vue'
 import StadiumModeSelector from './components/StadiumModeSelector.vue'
@@ -178,7 +179,10 @@ import ReferralNotifier from './components/ReferralNotifier.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
 import MobileMoreDrawer from './components/MobileMoreDrawer.vue'
 import RateLimitBanner from './components/RateLimitBanner.vue'
+import LeaderboardRewardDialog from './components/LeaderboardRewardDialog.vue'
+import LegendsPageBackdrop from './components/LegendsPageBackdrop.vue'
 import { useBreakpoint } from './composables/useBreakpoint'
+import { useLeaderboardRewardPrompt } from './composables/useLeaderboardRewardPrompt'
 import { authState, isLoggedIn, initAuth, fetchMe } from './stores/authStore'
 import { fetchPaidPendingOrder } from './api/commerce'
 import { clearPendingOrder, PENDING_ORDER_KEY } from './utils/payEnv'
@@ -186,8 +190,9 @@ import { avatarFrameClass as frameClassUtil, hasActiveSeasonPass } from './utils
 import { fetchProfileStatus, fetchRecommendations, profileState } from './stores/profileStore'
 import { useGuideVisibility } from './composables/useGuideVisibility'
 import { useStadiumStore } from './stores/stadiumStore'
-
-const StadiumBackground = defineAsyncComponent(() => import('./components/StadiumBackground.vue'))
+import { subscribeLiveMatches } from './stores/liveMatchesStore'
+import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
+import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
 const router = useRouter()
 const route = useRoute()
@@ -196,17 +201,12 @@ const moreOpen = ref(false)
 const profileBannerHidden = ref(false)
 const { setUiOverlay } = useStadiumStore()
 const { isAuthFlow, showProfileBanner, showProfileHeaderChip, showFeatureTour } = useGuideVisibility()
+const { showRewardDialog } = useLeaderboardRewardPrompt({ blocked: showFeatureTour })
 
 const showProfileBannerVisible = computed(
   () => showProfileBanner.value && !profileBannerHidden.value,
 )
 
-const STADIUM_ROUTES = ['/', '/agent', '/live', '/login', '/onboarding', '/me', '/arena', '/cheer', '/predict', '/news', '/teams', '/invite', '/shop', '/leaderboard']
-const showStadiumBg = computed(
-  () =>
-    route.path !== '/' &&
-    STADIUM_ROUTES.some((p) => (p === '/' ? route.path === '/' : route.path.startsWith(p))),
-)
 const mainTeamName = computed(
   () =>
     profileState.recommendations?.fan_identity?.main_team?.name ??
@@ -225,7 +225,12 @@ const mobileAvatarInitial = computed(() => (authState.user?.nickname || '球').s
 
 const passActive = computed(() => hasActiveSeasonPass(authState.user))
 
+let unsubscribeLive: (() => void) | null = null
+
 onMounted(async () => {
+  void warmLegendBackdropImages()
+  unsubscribeLive = subscribeLiveMatches()
+  startHeaderNotificationPoll()
   await initAuth()
   if (authState.accessToken) {
     const pendingNo =
@@ -247,6 +252,10 @@ onMounted(async () => {
       /* ignore */
     }
   }
+})
+
+onUnmounted(() => {
+  unsubscribeLive?.()
 })
 
 watch(moreOpen, (open) => setUiOverlay('more-drawer', open))

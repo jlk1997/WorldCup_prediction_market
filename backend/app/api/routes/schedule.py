@@ -11,7 +11,7 @@ from app.api.deps import get_db, require_manual_sync
 from app.api.schemas.common import ScheduleItem
 
 from app.core.exceptions import ServiceUnavailableError
-from app.core.cache import cache_get, cache_set
+from app.core.cache import cache_delete, cache_get, cache_set
 from app.db.repositories.match_repository import MatchRepository
 
 
@@ -109,6 +109,9 @@ def get_knockout_bracket(db: Session = Depends(get_db)):
     """Knockout rounds grouped for bracket UI."""
 
     try:
+        cached = cache_get("schedule:bracket")
+        if cached is not None:
+            return cached
 
         repo = MatchRepository(db)
 
@@ -134,7 +137,9 @@ def get_knockout_bracket(db: Session = Depends(get_db)):
 
             })
 
-        return {"status": "success", "data": {"rounds": rounds, "total": sum(len(r["matches"]) for r in rounds)}}
+        payload = {"status": "success", "data": {"rounds": rounds, "total": sum(len(r["matches"]) for r in rounds)}}
+        cache_set("schedule:bracket", payload, ttl=60)
+        return payload
 
     except SQLAlchemyError as exc:
 
@@ -153,6 +158,10 @@ def resolve_knockout_bracket(db: Session = Depends(get_db)):
     try:
         result = KnockoutResolverService(db).resolve()
         invalidate_live_cache()
+        cache_delete("schedule:bracket")
+        cache_delete("schedule:standings:local")
+        cache_delete("schedule:all")
+        cache_delete("stats:overview")
         return {"status": "success", **result}
     except Exception as exc:
         raise ServiceUnavailableError(str(exc)) from exc
@@ -174,7 +183,12 @@ def get_group_standings(source: str = "local", db: Session = Depends(get_db)):
                 "data": KnockoutResolverService(db).get_standings_payload(),
                 "note": "积分榜缓存未就绪，已返回本地数据；后台将自动同步",
             }
-        return {"status": "success", "data": KnockoutResolverService(db).get_standings_payload()}
+        cached = cache_get("schedule:standings:local")
+        if cached is not None:
+            return cached
+        payload = {"status": "success", "data": KnockoutResolverService(db).get_standings_payload()}
+        cache_set("schedule:standings:local", payload, ttl=60)
+        return payload
     except SQLAlchemyError:
         raise ServiceUnavailableError("积分榜数据暂不可用") from None
 
@@ -196,6 +210,10 @@ def expand_local_schedule():
         finally:
             db.close()
         invalidate_live_cache()
+        cache_delete("schedule:bracket")
+        cache_delete("schedule:standings:local")
+        cache_delete("schedule:all")
+        cache_delete("stats:overview")
         return {"status": "success", "matches": count}
     except Exception as exc:
         raise ServiceUnavailableError(str(exc)) from exc

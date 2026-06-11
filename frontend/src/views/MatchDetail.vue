@@ -172,7 +172,7 @@
 
 
 
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 
 
@@ -192,7 +192,7 @@ import { useAgentNavigate } from '@/composables/useAgentNavigate'
 
 
 
-import { subscribeLiveMatches, useLiveMatchesStore } from '@/stores/liveMatchesStore'
+import { useLiveMatchesStore } from '@/stores/liveMatchesStore'
 
 
 
@@ -233,12 +233,6 @@ const loading = ref(false)
 const loadError = ref('')
 
 const match = ref<LiveMatch | null>(null)
-
-
-
-let unsubscribeLive: (() => void) | null = null
-
-
 
 const matchId = computed(() => Number(route.params.id) || null)
 
@@ -357,19 +351,7 @@ function goAgent(auto: boolean) {
 
 
 onMounted(() => {
-
-  unsubscribeLive = subscribeLiveMatches()
-
   load()
-
-})
-
-
-
-onUnmounted(() => {
-
-  unsubscribeLive?.()
-
 })
 
 

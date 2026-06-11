@@ -1,16 +1,16 @@
 <template>
   <el-dropdown trigger="click" @command="onSelect">
     <span class="mode-trigger">
-      <span class="mode-label-long">3D: {{ label }}</span>
-      <span class="mode-label-short">3D</span>
+      <span class="mode-label-long">背景: {{ label }}</span>
+      <span class="mode-label-short">背景</span>
       <el-icon><ArrowDown /></el-icon>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="auto">自动</el-dropdown-item>
-        <el-dropdown-item command="high">高画质</el-dropdown-item>
+        <el-dropdown-item command="high">动效增强</el-dropdown-item>
         <el-dropdown-item command="balanced">均衡</el-dropdown-item>
-        <el-dropdown-item command="lite">轻量（无3D）</el-dropdown-item>
+        <el-dropdown-item command="lite">静态轻量</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -25,7 +25,7 @@ const { performanceMode, effectiveMode, setPerformanceMode } = useStadiumStore()
 
 const labels: Record<PerformanceMode, string> = {
   auto: '自动',
-  high: '高',
+  high: '增强',
   balanced: '均衡',
   lite: '轻量',
 }

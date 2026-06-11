@@ -27,9 +27,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/three') || id.includes('three/examples')) {
-            return 'three'
-          }
           if (id.includes('node_modules/element-plus')) {
             return 'element-plus'
           }

@@ -24,11 +24,13 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 }
 
 import { initAuth } from './stores/authStore'
+import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
 const app = createApp(App)
 
 registerGlobalErrorHandlers(app)
 
 app.use(router)
+void warmLegendBackdropImages()
 initAuth()
 app.mount('#app')
