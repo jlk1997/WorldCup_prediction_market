@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 
 from app.data.bsd_team_names import normalize_group_label
 from app.db.models import Match
-from app.ingest.bsd_adapter import LOCAL_BRACKET_TO_BSD_ROUND, team_pair_key
+from app.core.match_kickoff import parse_kickoff, parse_match_kickoff
+from app.ingest.bsd_adapter import LOCAL_BRACKET_TO_BSD_ROUND, event_to_internal, team_pair_key
 from app.ingest.bsd_client import BsdClient
 
 logger = logging.getLogger(__name__)
@@ -29,21 +30,56 @@ def _group_events_by_round(events: list[dict]) -> dict[str, list[dict]]:
     return grouped
 
 
-def _match_group_stage(local: Match, bsd_events: list[dict]) -> dict | None:
+def _bsd_event_kickoff(event: dict):
+    raw = event.get("event_date") or ""
+    if not raw:
+        return None
+    date_part = raw[:10]
+    time_part = "00:00"
+    if "T" in raw and len(raw) >= 16:
+        time_part = raw[11:16]
+    return parse_match_kickoff(date_part, time_part)
+
+
+def list_group_event_candidates(local: Match, bsd_events: list[dict]) -> list[dict]:
     local_group = normalize_group_label(local.group_name)
     pair = team_pair_key(local.team1_name, local.team2_name)
     if not local_group or not pair:
-        return None
+        return []
+    out: list[dict] = []
     for event in bsd_events:
         if normalize_group_label(event.get("group_name")) != local_group:
             continue
-        from app.ingest.bsd_adapter import event_to_internal
-
         internal = event_to_internal(event)
         event_pair = team_pair_key(internal.home_name, internal.away_name)
         if event_pair and event_pair == pair:
-            return event
-    return None
+            out.append(event)
+    return out
+
+
+def pick_best_bsd_event(local: Match, candidates: list[dict]) -> dict | None:
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+    local_kick = parse_kickoff(local)
+
+    def rank(event: dict) -> tuple:
+        internal = event_to_internal(event)
+        status_rank = {"finished": 0, "live": 1, "scheduled": 2}.get(internal.status, 3)
+        kick = _bsd_event_kickoff(event)
+        if local_kick and kick:
+            delta = abs((kick - local_kick).total_seconds())
+        else:
+            delta = 999999.0
+        return (status_rank, delta, int(event.get("id") or 0))
+
+    return min(candidates, key=rank)
+
+
+def _match_group_stage(local: Match, bsd_events: list[dict]) -> dict | None:
+    candidates = list_group_event_candidates(local, bsd_events)
+    return pick_best_bsd_event(local, candidates)
 
 
 def _match_knockout(local: Match, round_events: dict[str, list[dict]]) -> dict | None:

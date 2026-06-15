@@ -76,6 +76,12 @@ export function matchStatusLabel(m: {
 }): string {
   if (m.status === 'finished') return '已结束'
   if (m.is_live || m.status === 'live') return `${m.minute ?? ''}' LIVE`.trim()
-  if (isMatchStaleScheduled(m)) return '比分同步中'
+  if (isMatchStaleScheduled(m)) {
+    const kick = parseMatchKickoff(m.date, m.time)
+    if (kick && Date.now() - kick.getTime() > 48 * 3_600_000) {
+      return '数据源暂无比分'
+    }
+    return '比分同步中'
+  }
   return [m.date, m.time].filter(Boolean).join(' ')
 }

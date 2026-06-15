@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Query, Request
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.api.auth_deps import get_current_user, get_optional_user
@@ -31,7 +32,7 @@ from app.api.schemas.commerce import (
     MyLeaderboardSummaryOut,
     LeaderboardBoardOut,
 )
-from app.core.exceptions import BadRequestError
+from app.core.exceptions import BadRequestError, ServiceUnavailableError
 from app.core.rate_limit import (
     client_ip,
     rate_limit_pay,
@@ -192,10 +193,13 @@ def list_notifications(
     category: str | None = Query(None),
     limit: int = Query(20, ge=1, le=50),
 ):
-    rows = NotificationService(db).list_for_user(
-        user.id, unread_only=unread_only, category=category, limit=limit
-    )
-    return [UserNotificationOut.model_validate(r) for r in rows]
+    try:
+        rows = NotificationService(db).list_for_user(
+            user.id, unread_only=unread_only, category=category, limit=limit
+        )
+        return [UserNotificationOut.model_validate(r) for r in rows]
+    except SQLAlchemyError:
+        raise ServiceUnavailableError("通知暂不可用，请确认已执行数据库迁移") from None
 
 
 @router_game.get("/notifications/unread-count")
@@ -204,8 +208,11 @@ def notifications_unread_count(
     db: Session = Depends(get_db),
     category: str | None = Query(None),
 ):
-    count = NotificationService(db).unread_count(user.id, category=category)
-    return {"count": count}
+    try:
+        count = NotificationService(db).unread_count(user.id, category=category)
+        return {"count": count}
+    except SQLAlchemyError:
+        return {"count": 0}
 
 
 @router_game.post("/notifications/read")

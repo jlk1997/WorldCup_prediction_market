@@ -14,7 +14,7 @@ from app.core.match_scores import scores_for_team1_team2
 from app.ingest.bsd_adapter import InternalFixture, event_to_internal
 from app.ingest.bsd_client import BsdClient
 from app.ingest.bsd_event_parser import normalize_bsd_incidents
-from app.ingest.bsd_link_service import link_matches_to_bsd
+from app.ingest.bsd_link_service import link_matches_to_bsd, list_group_event_candidates, pick_best_bsd_event
 from app.ingest.quota import invalidate_live_cache
 
 logger = logging.getLogger(__name__)
@@ -92,10 +92,11 @@ def _sync_events_batch(
     *,
     date_from: str,
     date_to: str,
-) -> int:
+) -> tuple[int, list[dict]]:
     """Bulk-update linked matches from league events list (fewer API calls than per-event GET)."""
+    events = client.list_league_events(date_from=date_from, date_to=date_to)
     updated = 0
-    for event in client.list_league_events(date_from=date_from, date_to=date_to):
+    for event in events:
         fixture = event_to_internal(event)
         eid = fixture.external_id
         if not eid or eid in updated_external_ids:
@@ -104,6 +105,49 @@ def _sync_events_batch(
         if match and _apply_internal_fixture(match, fixture, client):
             updated += 1
             updated_external_ids.add(eid)
+    return updated, events
+
+
+def _reconcile_stale_matches(
+    matches: list[Match],
+    group_events: list[dict],
+    now: datetime,
+    client: BsdClient,
+    updated_external_ids: set[int],
+) -> int:
+    """Re-link or refresh matches that should have started but are still scheduled locally."""
+    updated = 0
+    for match in matches:
+        if match.status != "scheduled" or not match.external_fixture_id:
+            continue
+        kick = parse_kickoff(match)
+        if not kick or kick > now:
+            continue
+        candidates = list_group_event_candidates(match, group_events)
+        best = pick_best_bsd_event(match, candidates)
+        if not best:
+            continue
+        best_id = int(best["id"])
+        fixture = event_to_internal(best)
+        if best_id != match.external_fixture_id:
+            if fixture.status not in ("finished", "live") and fixture.home_score is None:
+                continue
+            logger.info(
+                "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
+                match.id,
+                match.team1_name,
+                match.team2_name,
+                match.external_fixture_id,
+                best_id,
+                fixture.status,
+            )
+            match.external_fixture_id = best_id
+            match.external_provider = "bsd"
+        if best_id in updated_external_ids:
+            continue
+        if _apply_internal_fixture(match, fixture, client):
+            updated += 1
+            updated_external_ids.add(best_id)
     return updated
 
 
@@ -152,7 +196,7 @@ class LiveMatchSyncService:
         near_end = now + timedelta(hours=48)
         bulk_from = (now - timedelta(days=14)).strftime("%Y-%m-%d")
         bulk_to = (now + timedelta(days=2)).strftime("%Y-%m-%d")
-        bulk_updated = _sync_events_batch(
+        bulk_updated, league_events = _sync_events_batch(
             self.client,
             by_external_id,
             updated_external_ids,
@@ -160,6 +204,16 @@ class LiveMatchSyncService:
             date_to=bulk_to,
         )
         updated += bulk_updated
+
+        group_events = [e for e in league_events if e.get("group_name")]
+        reconciled = _reconcile_stale_matches(
+            matches,
+            group_events,
+            now,
+            self.client,
+            updated_external_ids,
+        )
+        updated += reconciled
 
         stale_scheduled = sum(
             1
@@ -186,11 +240,12 @@ class LiveMatchSyncService:
                 updated += 1
                 individual += 1
 
-        if live_feed or bulk_updated or individual:
+        if live_feed or bulk_updated or reconciled or individual:
             logger.info(
-                "BSD sync breakdown: live_feed=%s bulk=%s individual=%s total=%s",
+                "BSD sync breakdown: live_feed=%s bulk=%s reconcile=%s individual=%s total=%s",
                 live_feed,
                 bulk_updated,
+                reconciled,
                 individual,
                 updated,
             )

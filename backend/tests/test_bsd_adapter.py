@@ -10,6 +10,12 @@ def test_map_bsd_status():
     assert map_bsd_status("finished") == "finished"
 
 
+def test_resolve_event_status_infers_finished():
+    from app.ingest.bsd_adapter import resolve_event_status
+
+    assert resolve_event_status({"status": "notstarted", "current_minute": 90, "home_score": 1, "away_score": 0}) == "finished"
+
+
 def test_event_to_internal_group_match():
     event = {
         "id": 8287,

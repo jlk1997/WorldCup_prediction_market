@@ -47,6 +47,24 @@ def map_bsd_status(raw: str | None) -> str:
     return BSD_STATUS_MAP.get((raw or "notstarted").lower(), "scheduled")
 
 
+def resolve_event_status(event: dict) -> str:
+    """Map BSD status, inferring finished/live when provider lags on status field."""
+    mapped = map_bsd_status(event.get("status"))
+    if mapped in ("live", "finished", "postponed"):
+        return mapped
+    minute = event.get("current_minute")
+    period = (event.get("period") or "").lower()
+    if minute is not None and int(minute) >= 90:
+        return "finished"
+    if any(token in period for token in ("finished", "fulltime", "full time", "ft", "ended")):
+        return "finished"
+    home = event.get("home_score")
+    away = event.get("away_score")
+    if home is not None and away is not None and minute is not None and int(minute) > 0:
+        return "live"
+    return mapped
+
+
 def event_to_internal(event: dict, *, venue_name: str | None = None) -> InternalFixture:
     home_raw = event.get("home_team")
     away_raw = event.get("away_team")
@@ -58,7 +76,7 @@ def event_to_internal(event: dict, *, venue_name: str | None = None) -> Internal
         provider="bsd",
         home_name=home,
         away_name=away,
-        status=map_bsd_status(event.get("status")),
+        status=resolve_event_status(event),
         home_score=event.get("home_score"),
         away_score=event.get("away_score"),
         minute=event.get("current_minute"),
