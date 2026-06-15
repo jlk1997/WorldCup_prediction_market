@@ -15,6 +15,16 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '用户服务协议 — 最后一舞',
+  description: '最后一舞平台用户服务协议、虚拟球迷币规则与竞猜免责声明。',
+  path: '/legal/terms',
+})
+</script>
+
 <style scoped>
 .legal-page {
   padding: 24px;
@@ -27,9 +37,5 @@
 }
 .content h1 {
   margin-top: 0;
-}
-.content h2 {
-  margin-top: 24px;
-  font-size: 1rem;
 }
 </style>

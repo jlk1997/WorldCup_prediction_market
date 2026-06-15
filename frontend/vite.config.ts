@@ -14,6 +14,18 @@ const SITE_META = {
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const siteUrl = (env.VITE_SITE_URL || 'https://loveaibaby.cn').replace(/\/$/, '')
+  const verificationTags: string[] = []
+  if (env.VITE_GOOGLE_SITE_VERIFICATION) {
+    verificationTags.push(
+      `<meta name="google-site-verification" content="${env.VITE_GOOGLE_SITE_VERIFICATION}" />`,
+    )
+  }
+  if (env.VITE_BAIDU_SITE_VERIFICATION) {
+    verificationTags.push(
+      `<meta name="baidu-site-verification" content="${env.VITE_BAIDU_SITE_VERIFICATION}" />`,
+    )
+  }
+  const verificationHtml = verificationTags.length ? verificationTags.join('\n    ') : ''
 
   return {
     plugins: [
@@ -33,6 +45,7 @@ export default defineConfig(({ command, mode }) => {
             .replaceAll('__SITE_URL__', siteUrl)
             .replaceAll('__SITE_TITLE__', SITE_META.title)
             .replaceAll('__SITE_DESCRIPTION__', SITE_META.description)
+            .replaceAll('__SITE_VERIFICATION_TAGS__', verificationHtml)
         },
       },
     ],

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
 from app.core.config import get_settings
-from app.services.referral_service import ReferralService
+from app.services.share_page_service import SharePageService
 
 router = APIRouter(tags=["share"])
 
@@ -52,36 +52,58 @@ def _share_html(
 </html>"""
 
 
+def _render_page(svc: SharePageService, meta: dict | None) -> HTMLResponse:
+    settings = svc.settings
+    base = settings.frontend_base_url.rstrip("/")
+    image = f"{base}/share-og.png"
+    if not meta:
+        meta = {
+            "title": "最后一舞：世界杯2026",
+            "description": "2026 世界杯球迷互动 — 竞猜、AI 分析、擂台与排行榜",
+            "url": f"{base}/",
+            "redirect_path": f"{base}/login",
+        }
+    return HTMLResponse(
+        _share_html(
+            title=meta["title"],
+            description=meta["description"],
+            url=meta["url"],
+            image=image,
+            redirect_path=meta["redirect_path"],
+        )
+    )
+
+
 @router.get("/share/invite", response_class=HTMLResponse)
 def invite_share_page(
     ref: str = Query("", min_length=0, max_length=32),
     db: Session = Depends(get_db),
 ):
     settings = get_settings()
-    base = settings.frontend_base_url.rstrip("/")
     code = (ref or "").strip().upper()
-    redirect_path = f"{base}/login?ref={code}" if code else f"{base}/login"
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.invite_share_page(code))
 
-    preview = ReferralService(db, settings).preview_invite_code(code) if code else {"valid": False}
-    image = f"{base}/share-og.png"
 
-    if preview.get("valid"):
-        nick = preview.get("inviter_nickname") or "好友"
-        bonus = preview.get("register_invitee_bonus") or 0
-        title = f"{nick} 邀请你加入最后一舞"
-        description = f"2026 世界杯球迷互动 · 新用户注册得球迷币（含邀请奖励 +{bonus}）"
-        url = f"{base}/share/invite?ref={code}"
-    else:
-        title = "最后一舞：世界杯2026"
-        description = "2026 世界杯球迷互动 — 竞猜、AI 分析、擂台与排行榜"
-        url = f"{base}/share/invite"
+@router.get("/share/predict/{prediction_id}", response_class=HTMLResponse)
+def predict_share_page(prediction_id: int, db: Session = Depends(get_db)):
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.predict_share_page(prediction_id))
 
-    return HTMLResponse(
-        _share_html(
-            title=title,
-            description=description,
-            url=url,
-            image=image,
-            redirect_path=redirect_path,
-        )
-    )
+
+@router.get("/share/card/{token}", response_class=HTMLResponse)
+def card_share_page(token: str, db: Session = Depends(get_db)):
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.card_share_page(token))
+
+
+@router.get("/share/rank", response_class=HTMLResponse)
+def rank_share_page(
+    period: str = Query("season", max_length=20),
+    db: Session = Depends(get_db),
+):
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.rank_share_page(period))

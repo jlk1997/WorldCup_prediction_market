@@ -53,7 +53,7 @@
 
 
 
-    <InvitePromptBar v-if="authState.user" scene="predict" />
+    <InvitePromptBar v-if="authState.user" scene="predict" :match-day="!!dailyStatus?.match_day" />
 
     <FanRecommendationsBar :daily-status="dailyStatus" />
 
@@ -367,7 +367,14 @@ import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
 import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
 import { syncQqGroupClaimed } from '../composables/useOfficialQqGroup'
+import { usePageMeta } from '../composables/usePageMeta'
 
+usePageMeta({
+  title: '竞猜大厅 — 最后一舞',
+  description: '2026 世界杯娱乐竞猜，使用虚拟球迷币，不可提现。',
+  path: '/predict',
+  noIndex: true,
+})
 
 
 const route = useRoute()

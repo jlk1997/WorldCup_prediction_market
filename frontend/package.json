@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build && node scripts/generate-sitemap.mjs && node scripts/prerender-routes.mjs",
+    "build": "vue-tsc -b && vite build && node scripts/generate-seo-pages.mjs && node scripts/generate-sitemap.mjs && node scripts/prerender-routes.mjs",
     "check:assets": "node scripts/check-public-assets.mjs",
     "icons:brand": "node scripts/generate-brand-icons.mjs",
     "preview": "vite preview"

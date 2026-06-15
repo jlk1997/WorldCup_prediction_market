@@ -347,7 +347,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 
 import { apiClient, getErrorMessage, isRateLimitError } from '@/api/client'
 import { showApiError } from '@/utils/errorHandler'
-
+import { usePageMeta } from '@/composables/usePageMeta'
 import {
   streamAgentAnalyze,
   getAiBillingStatus,
@@ -358,6 +358,13 @@ import {
 } from '@/api/agentStream'
 
 import type { AgentReport, LiveMatch, TeamBrief } from '@/types/api'
+
+usePageMeta({
+  title: '世界杯 AI 分析 — 赛前 / 赛中解读 | 最后一舞',
+  description:
+    'AI 多步分析世界杯对阵：战术、伤病、历史交锋与赛果参考。虚拟球迷币消费，仅供娱乐。',
+  path: '/agent',
+})
 
 import {
   isAnalyzeLockedByOtherTab,

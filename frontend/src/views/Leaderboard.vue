@@ -4,6 +4,8 @@
       <h1>球迷排行榜</h1>
       <p>竞猜积分 · 军团贡献 · 猜中率 — 纯娱乐数值排行</p>
 
+      <InvitePromptBar v-if="authState.accessToken" scene="leaderboard" />
+
       <div v-if="mySummary" class="my-summary glass-inner">
         <div class="my-title">我的排名</div>
         <div class="my-grid">
@@ -188,6 +190,7 @@ import { authState, fetchMe, isLoggedIn } from '../stores/authStore'
 import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
 import { useInviteShare } from '../composables/useInviteShare'
+import InvitePromptBar from '../components/InvitePromptBar.vue'
 import { usePageMeta } from '../composables/usePageMeta'
 
 usePageMeta({

@@ -131,6 +131,10 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({ title: '召友中心 — 最后一舞', path: '/invite', noIndex: true })
+
 import {
   getReferralInvites,
   getReferralMe,

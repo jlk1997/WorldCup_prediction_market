@@ -142,6 +142,14 @@ import {
   type RedeemShopRules,
 } from '../api/commerce'
 import { showApiError } from '../utils/errorHandler'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '球迷商城 — 虚拟道具 | 最后一舞',
+  description: '购买球迷币、赛季通行证与虚拟装扮。虚拟物品不可提现。',
+  path: '/shop',
+})
+
 import PurchaseConfirmDialog from '../components/PurchaseConfirmDialog.vue'
 import PayProcessingOverlay from '../components/PayProcessingOverlay.vue'
 import EntitlementPreview from '../components/EntitlementPreview.vue'

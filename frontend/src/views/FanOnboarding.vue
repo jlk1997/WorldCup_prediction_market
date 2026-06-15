@@ -97,6 +97,10 @@ import { ElMessage } from 'element-plus'
 import { ArrowRight, CircleCheckFilled } from '@element-plus/icons-vue'
 import TeamPickerGrid from '../components/TeamPickerGrid.vue'
 import PlayerPickerChips from '../components/PlayerPickerChips.vue'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({ title: '完善球迷档案 — 最后一舞', path: '/onboarding', noIndex: true })
+
 import { getTeams, getPlayersForTeams, setupProfile, getRecommendations, type TeamBrief, type PlayerBrief } from '../api/profile'
 import { getReferralMe, type InviteeJourney } from '../api/referral'
 import { fetchMe } from '../stores/authStore'

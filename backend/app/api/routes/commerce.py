@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -406,6 +406,36 @@ def quiz_answer(body: QuizAnswerRequest, user: User = Depends(get_current_user),
 @router_game.get("/fan-card")
 def fan_card(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return GameService(db).get_fan_card(user)
+
+
+@router_game.get("/share/card-url")
+def fan_card_share_url(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.core.config import get_settings
+    from app.services.share_page_service import SharePageService
+
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return {"share_url": svc.build_card_share_url(user)}
+
+
+@router_game.get("/share/predict/{prediction_id}")
+def predict_share_url(
+    prediction_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    from app.core.config import get_settings
+    from app.db.models.commerce import GamePrediction
+    from app.services.share_page_service import SharePageService
+
+    pred = db.get(GamePrediction, prediction_id)
+    if not pred or pred.user_id != user.id:
+        raise HTTPException(status_code=404, detail="prediction_not_found")
+    if pred.status != "won":
+        raise HTTPException(status_code=400, detail="prediction_not_won")
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return {"share_url": svc.build_predict_share_url(prediction_id)}
 
 
 @router_shop.get("/products", response_model=list[ProductOut])

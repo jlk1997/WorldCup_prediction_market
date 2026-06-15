@@ -545,3 +545,15 @@ export async function getWalletLedger(limit = 50) {
   )
   return data.data
 }
+
+export async function getFanCardShareUrl() {
+  const { data } = await apiClient.get<{ share_url: string }>('/api/game/share/card-url')
+  return data.share_url
+}
+
+export async function getPredictShareUrl(predictionId: number) {
+  const { data } = await apiClient.get<{ share_url: string }>(
+    `/api/game/share/predict/${predictionId}`,
+  )
+  return data.share_url
+}

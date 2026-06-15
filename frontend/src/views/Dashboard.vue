@@ -290,6 +290,7 @@ import MobileScheduleDrawer from '../components/MobileScheduleDrawer.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { usePageMeta } from '../composables/usePageMeta'
+import { injectJsonLd } from '../utils/jsonLd'
 
 usePageMeta({
   title: '最后一舞：世界杯2026',
@@ -579,6 +580,24 @@ function goDailyNext() {
 }
 
 onMounted(async () => {
+  injectJsonLd({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        name: '最后一舞',
+        url: 'https://loveaibaby.cn/',
+        description:
+          '2026 世界杯球迷互动平台 — 竞猜、AI 分析、擂台与排行榜，与传奇同框见证最后一舞。',
+      },
+      {
+        '@type': 'Organization',
+        name: '最后一舞',
+        url: 'https://loveaibaby.cn/',
+        logo: 'https://loveaibaby.cn/share-og.png',
+      },
+    ],
+  })
   try {
     const res = await apiClient.get<{ data: StatsOverview }>('/api/stats/overview')
     stats.value = res.data.data

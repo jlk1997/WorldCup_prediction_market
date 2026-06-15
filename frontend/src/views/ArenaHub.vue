@@ -152,6 +152,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({ title: '球迷擂台 — 最后一舞', path: '/arena', noIndex: true })
+
 import CheerProgressBar from '../components/CheerProgressBar.vue'
 import {
   boostStar,

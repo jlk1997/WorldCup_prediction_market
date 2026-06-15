@@ -15,6 +15,16 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '隐私政策 — 最后一舞',
+  description: '最后一舞隐私政策：数据收集、AI 处理与账号注销说明。',
+  path: '/legal/privacy',
+})
+</script>
+
 <style scoped>
 .legal-page {
   padding: 24px;
@@ -24,8 +34,5 @@
 .content {
   padding: 28px;
   line-height: 1.7;
-}
-.content h1 {
-  margin-top: 0;
 }
 </style>

@@ -61,6 +61,9 @@
         <el-button v-if="resolved.nextMatchId" type="primary" @click="goNext">
           {{ btnNext }}
         </el-button>
+        <el-button v-if="resolved.status === 'won'" type="primary" plain @click="shareWin">
+          分享战绩
+        </el-button>
         <el-button v-if="resolved.status === 'won'" plain @click="goFanCard">{{ btnShare }}</el-button>
         <el-button v-if="resolved.status === 'lost'" plain @click="goRecords">{{ btnRecords }}</el-button>
         <el-button plain @click="close">{{ btnDismiss }}</el-button>
@@ -74,6 +77,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import {
   currentPredictNotification,
   goPredictReveal,
@@ -83,6 +87,8 @@ import {
 import { predictRevealConfig, ensurePredictRevealConfig } from '@/stores/predictRevealConfigStore'
 import { fetchMe } from '@/stores/authStore'
 import { formatTemplate, resolvePredictPayload } from '@/utils/predictRevealPayload'
+import { getPredictShareUrl } from '@/api/commerce'
+import { copyToClipboard } from '@/utils/copyToClipboard'
 
 const router = useRouter()
 const confettiActive = ref(false)
@@ -241,7 +247,26 @@ function goNext() {
 
 function goFanCard() {
   close()
-  router.push('/me?tab=card')
+  router.push('/me/card')
+}
+
+async function shareWin() {
+  const r = resolved.value
+  const predId = Number(note.value?.payload?.prediction_id)
+  if (!r || !predId) {
+    ElMessage.warning('暂时无法分享，请稍后在球迷名片中分享')
+    goFanCard()
+    return
+  }
+  try {
+    const url = await getPredictShareUrl(predId)
+    const text = `我在「最后一舞」猜中了 ${r.team1} vs ${r.team2}${r.finalScore ? `（${r.finalScore}）` : ''} · +${r.pointsAwarded || 0} 分\n${url}`
+    const ok = await copyToClipboard(text)
+    if (ok) ElMessage.success('战绩链接已复制，去微信粘贴分享吧')
+    else ElMessage.info(text)
+  } catch {
+    ElMessage.warning('分享链接获取失败，请稍后再试')
+  }
 }
 
 function goRecords() {

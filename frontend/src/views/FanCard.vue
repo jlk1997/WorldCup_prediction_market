@@ -46,7 +46,8 @@
         已与 {{ card.same_team_recruits }} 位好友同队扩编 🤝
       </p>
       <div class="actions">
-        <el-button type="primary" plain @click="copyText">复制分享文案</el-button>
+        <el-button type="primary" plain @click="shareCardLink">分享名片链接</el-button>
+        <el-button plain @click="copyText">复制分享文案</el-button>
         <el-button plain @click="shareResult" :disabled="!card?.predictions_total">晒结果</el-button>
         <el-button plain @click="downloadPoster">生成分享海报</el-button>
         <el-button plain @click="$router.push('/me')">返回球迷中心</el-button>
@@ -60,13 +61,23 @@ import { onMounted, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getFanCard } from '../api/profile'
 import { getReferralMe } from '../api/referral'
+import { getFanCardShareUrl } from '../api/commerce'
 import { downloadSharePoster } from '../utils/sharePoster'
+import { copyToClipboard } from '../utils/copyToClipboard'
 import { authState } from '../stores/authStore'
 import { avatarFrameClass, formatPassUntil, hasActiveSeasonPass } from '../utils/entitlements'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '球迷名片 — 最后一舞',
+  path: '/me/card',
+  noIndex: true,
+})
 
 const loading = ref(false)
 const card = ref<any>(null)
 const inviteLink = ref('')
+const cardShareUrl = ref('')
 
 const cardClasses = computed(() => ({
   pioneer: card.value?.arena_tier === 'pioneer',
@@ -91,21 +102,33 @@ function tierLabel(code: string) {
 
 async function copyText() {
   if (!card.value) return
-  const linkPart = inviteLink.value ? `\n${inviteLink.value}` : ''
-  const text = `${card.value.nickname} · ${card.value.tagline}\n军团贡献 ${card.value.battalion_points ?? 0} · 累计积分 ${card.value.season_points} · 可用积分 ${card.value.redeem_points ?? 0} · 助威 ${card.value.fan_cheers_total}${linkPart}\n一起来「最后一舞」猜世界杯！（虚拟奖励不可提现）`
+  const linkPart = cardShareUrl.value || inviteLink.value
+  const linkLine = linkPart ? `\n${linkPart}` : ''
+  const text = `${card.value.nickname} · ${card.value.tagline}\n军团贡献 ${card.value.battalion_points ?? 0} · 累计积分 ${card.value.season_points} · 可用积分 ${card.value.redeem_points ?? 0} · 助威 ${card.value.fan_cheers_total}${linkLine}\n一起来「最后一舞」猜世界杯！（虚拟奖励不可提现）`
   try {
-    await navigator.clipboard.writeText(text)
+    await copyToClipboard(text)
     ElMessage.success('分享文案已复制')
   } catch {
     ElMessage.info(text)
   }
 }
 
+async function shareCardLink() {
+  if (!cardShareUrl.value) {
+    ElMessage.warning('暂时无法获取分享链接')
+    return
+  }
+  const ok = await copyToClipboard(cardShareUrl.value)
+  if (ok) ElMessage.success('名片链接已复制，微信分享可显示预览卡片')
+  else ElMessage.info(cardShareUrl.value)
+}
+
 async function shareResult() {
   if (!card.value) return
-  const text = `我在「最后一舞」竞猜胜率 ${card.value.win_rate}%（${card.value.predictions_total} 场）· 累计 ${card.value.season_points} 分\n${card.value.tagline}${inviteLink.value ? '\n' + inviteLink.value : ''}`
+  const link = cardShareUrl.value || inviteLink.value
+  const text = `我在「最后一舞」竞猜胜率 ${card.value.win_rate}%（${card.value.predictions_total} 场）· 累计 ${card.value.season_points} 分\n${card.value.tagline}${link ? '\n' + link : ''}`
   try {
-    await navigator.clipboard.writeText(text)
+    await copyToClipboard(text)
     ElMessage.success('晒结果文案已复制')
   } catch {
     ElMessage.info(text)
@@ -120,7 +143,7 @@ async function downloadPoster() {
       subtitle: card.value.tagline,
       statsLine: `累计 ${card.value.season_points} 分 · 胜率 ${card.value.win_rate}% · 军团 ${card.value.battalion_points ?? 0}`,
       footer: '虚拟奖励不可提现 · 一起来猜世界杯',
-      qrUrl: inviteLink.value || undefined,
+      qrUrl: cardShareUrl.value || inviteLink.value || undefined,
     })
     ElMessage.success('海报已保存')
   } catch {
@@ -131,9 +154,14 @@ async function downloadPoster() {
 onMounted(async () => {
   loading.value = true
   try {
-    const [c, refMe] = await Promise.all([getFanCard(), getReferralMe().catch(() => null)])
+    const [c, refMe, shareUrl] = await Promise.all([
+      getFanCard(),
+      getReferralMe().catch(() => null),
+      getFanCardShareUrl().catch(() => ''),
+    ])
     card.value = c
     if (refMe?.invite_link) inviteLink.value = refMe.invite_link
+    if (shareUrl) cardShareUrl.value = shareUrl
   } finally {
     loading.value = false
   }

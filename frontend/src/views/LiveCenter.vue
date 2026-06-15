@@ -118,6 +118,7 @@ import MatchTable from '@/components/MatchTable.vue'
 import MatchMobileList from '@/components/MatchMobileList.vue'
 import KnockoutBracket, { type BracketRound } from '@/components/KnockoutBracket.vue'
 import { useBreakpoint } from '@/composables/useBreakpoint'
+import { usePageMeta } from '@/composables/usePageMeta'
 import {
   formatMatchScore,
   isMatchPredictable,
@@ -125,6 +126,13 @@ import {
   matchStatusLabel,
   parseMatchKickoff,
 } from '@/utils/matchKickoff'
+
+usePageMeta({
+  title: '2026 世界杯赛程与 Live 比分 — 赛事中心 | 最后一舞',
+  description:
+    '2026 美加墨世界杯完整赛程、实时比分、淘汰赛对阵与 AI 赛前分析入口。免费查看 104 场比赛安排。',
+  path: '/live',
+})
 
 const { isMobile } = useBreakpoint()
 

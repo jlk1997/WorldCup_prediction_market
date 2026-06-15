@@ -30,6 +30,16 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: 'AI 使用说明 — 最后一舞',
+  description: 'AI 分析功能的数据处理方式、计费规则与第三方模型说明。',
+  path: '/legal/ai',
+})
+</script>
+
 <style scoped>
 .legal-page {
   padding: 24px;

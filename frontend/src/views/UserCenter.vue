@@ -89,6 +89,15 @@ import {
   type DailyStatus,
 } from '../api/commerce'
 import { getQuizToday, answerQuiz as submitQuizAnswer } from '../api/profile'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '球迷中心 — 最后一舞',
+  description: '个人档案、签到、竞猜记录与球迷币流水。',
+  path: '/me',
+  noIndex: true,
+})
+
 import { getUnreadNotificationCount } from '../api/notifications'
 import { getReferralMe, type ReferralMe } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'

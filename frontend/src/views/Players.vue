@@ -100,8 +100,13 @@ import { ElMessage } from 'element-plus'
 import { apiClient } from '@/api/client'
 
 import type { PlayerBrief } from '@/types/api'
+import { usePageMeta } from '@/composables/usePageMeta'
 
-
+usePageMeta({
+  title: '2026 世界杯球员库 — 球星资料 | 最后一舞',
+  description: '2026 世界杯参赛球员名单、俱乐部与国家队资料，支持搜索浏览。',
+  path: '/players',
+})
 
 const loading = ref(false)
 

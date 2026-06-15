@@ -45,6 +45,7 @@
         <label class="dismiss-row" :class="{ checked: skipToday }">
           <el-checkbox v-model="skipToday">今日不再显示</el-checkbox>
         </label>
+        <el-button plain class="share-btn" @click="shareRank">晒排名链接</el-button>
         <el-button type="primary" class="confirm-btn" @click="confirm">
           我知道了，冲榜去
         </el-button>
@@ -55,8 +56,10 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { dismissLeaderboardRewardForToday } from '../utils/leaderboardRewardPrompt'
+import { copyToClipboard } from '../utils/copyToClipboard'
 
 const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
@@ -88,6 +91,15 @@ function confirm() {
     dismissLeaderboardRewardForToday()
   }
   visible.value = false
+}
+
+function shareRank() {
+  const site = (import.meta.env.VITE_SITE_URL || 'https://loveaibaby.cn').replace(/\/$/, '')
+  const url = `${site}/share/rank?period=season`
+  void copyToClipboard(url).then((ok) => {
+    if (ok) ElMessage.success('排行榜分享链接已复制')
+    else ElMessage.info(url)
+  })
 }
 
 function onClosed() {
@@ -247,6 +259,11 @@ function onClosed() {
   border: none;
   background: linear-gradient(135deg, #f0d9b5 0%, var(--wc-accent-gold) 50%, #c9788a 100%);
   color: #1a1208;
+}
+
+.share-btn {
+  width: 100%;
+  min-height: 40px;
 }
 
 .confirm-btn:hover {

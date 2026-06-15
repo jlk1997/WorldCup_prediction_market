@@ -1,3 +1,4 @@
+# 开发环境默认副本；生产构建会在 dist/robots.txt 按 VITE_SITE_URL 重新生成
 User-agent: *
 Allow: /
 Disallow: /me
