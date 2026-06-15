@@ -1,0 +1,121 @@
+# WC2026 完整 Nginx 示例（含微信防缓存）
+# 路径：/etc/nginx/sites-available/wc2026
+#
+# 现象：微信里打开 loveaibaby.cn 偶尔是「别的产品」，系统浏览器正常
+# 根因：微信 X5 内核会长期缓存 index.html；旧站点 HTML 未过期时会继续显示旧产品
+#
+# 部署：
+#   sudo nginx -t && sudo systemctl reload nginx
+
+# ── 1. HTTP 强制跳 HTTPS（微信分享链接有时是 http://）──
+server {
+    listen 80;
+    listen [::]:80;
+    server_name loveaibaby.cn www.loveaibaby.cn;
+    return 301 https://loveaibaby.cn$request_uri;
+}
+
+# ── 2. HTTPS 主站 ──
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name loveaibaby.cn www.loveaibaby.cn;
+
+    ssl_certificate     /opt/wc2026/certs/loveaibaby.cn_bundle.pem;
+    ssl_certificate_key /opt/wc2026/certs/loveaibaby.cn.key;
+
+    # 建议：www 统一到裸域（可选）
+    if ($host = www.loveaibaby.cn) {
+        return 301 https://loveaibaby.cn$request_uri;
+    }
+
+    root /opt/wc2026/WorldCup/frontend/dist/;
+    index index.html;
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 256;
+    gzip_comp_level 5;
+    gzip_types text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml;
+
+    # 带 hash 的前端资源 — 长期缓存（仅 /assets/ 下带 hash 的文件）
+    location ~* ^/assets/.+\.(js|css|woff2?|png|jpg|jpeg|webp|svg|ico)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~* ^/legends/.+\.webp$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location ~* ^/(favicon-32\.png|favicon-192\.png|apple-touch-icon\.png|share-og\.png|logo\.svg)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location = /stadium.glb {
+        return 404;
+    }
+
+    # 召友分享链接 OG 页 — 必须走后端（你当前配置缺这段，分享卡片可能异常）
+    location /share/ {
+        proxy_pass http://127.0.0.1:10086;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:10086;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+        add_header Cache-Control "no-store" always;
+    }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:10086;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 3600s;
+    }
+
+    location = /health {
+        proxy_pass http://127.0.0.1:10086;
+        proxy_set_header Host $host;
+    }
+
+    # ★★★ 关键：禁止微信/QQ 缓存 HTML ★★★
+    location = /index.html {
+        add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0" always;
+        add_header Pragma "no-cache" always;
+        add_header Expires "0" always;
+        try_files $uri =404;
+    }
+
+    # 预渲染子目录的 index.html（build 后会有 /login/index.html 等）
+    location ~ ^/.+/index\.html$ {
+        add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0" always;
+        try_files $uri =404;
+    }
+
+    # Vue SPA — HTML 不缓存；静态文件仍走上面更具体的 location
+    location / {
+        add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0" always;
+        try_files $uri $uri/ /index.html;
+    }
+}

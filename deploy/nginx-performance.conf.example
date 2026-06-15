@@ -48,6 +48,21 @@ location ~* ^/(favicon-32\.png|favicon-192\.png|apple-touch-icon\.png|share-og\.
   try_files $uri =404;
 }
 
+# ★ Prevent WeChat X5 from caching stale index.html (wrong product on same domain)
+location = /index.html {
+  root /opt/wc2026/WorldCup/frontend/dist;
+  add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0" always;
+  add_header Pragma "no-cache" always;
+  add_header Expires "0" always;
+  try_files $uri =404;
+}
+
+location ~ ^/.+/index\.html$ {
+  root /opt/wc2026/WorldCup/frontend/dist;
+  add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0" always;
+  try_files $uri =404;
+}
+
 # WeChat / crawler OG HTML for invite links (backend serves /share/invite)
 location /share/ {
   proxy_pass http://127.0.0.1:10086;
