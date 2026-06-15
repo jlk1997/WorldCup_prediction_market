@@ -2,6 +2,14 @@
   <div class="onboarding">
     <div class="panel glass-panel">
       <el-alert
+        v-if="fromReferral && !inviteeJourney"
+        type="success"
+        :closable="false"
+        show-icon
+        class="invitee-banner"
+        title="你通过好友邀请加入 · 完成下面步骤，你和邀请人都能得奖励"
+      />
+      <el-alert
         v-if="inviteeJourney"
         type="success"
         :closable="false"
@@ -84,7 +92,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowRight, CircleCheckFilled } from '@element-plus/icons-vue'
 import TeamPickerGrid from '../components/TeamPickerGrid.vue'
@@ -96,6 +104,8 @@ import { fetchProfileStatus } from '../stores/profileStore'
 import { showApiError } from '../utils/errorHandler'
 
 const router = useRouter()
+const route = useRoute()
+const fromReferral = computed(() => route.query.from === 'referral')
 const step = ref(0)
 const teams = ref<TeamBrief[]>([])
 const players = ref<PlayerBrief[]>([])

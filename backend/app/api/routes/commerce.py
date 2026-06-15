@@ -73,12 +73,15 @@ def send_code(body: SendCodeRequest, request: Request, db: Session = Depends(get
 
 @router_auth.post("/verify", response_model=AuthTokenResponse)
 def verify_code(body: VerifyCodeRequest, request: Request, db: Session = Depends(get_db)):
-    user, access, refresh, is_new = AuthService(db).verify_and_login(
+    user, access, refresh, is_new, bind_failure = AuthService(db).verify_and_login(
         body.email, body.code, body.age_confirmed, client_ip(request), body.invite_code
     )
     db.refresh(user)
     referral = ReferralService(db).login_referral_info(
-        user, is_new=is_new, invite_code_attempted=body.invite_code
+        user,
+        is_new=is_new,
+        invite_code_attempted=body.invite_code,
+        bind_failure=bind_failure,
     )
     return AuthTokenResponse(
         access_token=access,

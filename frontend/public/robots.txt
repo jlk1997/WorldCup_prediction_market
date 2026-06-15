@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /me
+Disallow: /onboarding
+Disallow: /invite
+Disallow: /shop/result
+Disallow: /api/
+
+Sitemap: https://loveaibaby.cn/sitemap.xml

@@ -119,6 +119,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/worldcup2026',
+      name: 'WorldCup2026Guide',
+      component: () => import('../views/WorldCup2026Guide.vue'),
+    },
+    {
       path: '/legal/terms',
       name: 'LegalTerms',
       component: () => import('../views/LegalTerms.vue'),

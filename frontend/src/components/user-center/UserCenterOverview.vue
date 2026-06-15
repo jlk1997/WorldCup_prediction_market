@@ -62,14 +62,14 @@
         <span class="quick-icon">🛒</span>
         <span>球迷商城</span>
       </button>
-      <button type="button" class="quick-btn" @click="$router.push('/invite')">
+      <button type="button" class="quick-btn" @click="openInviteShare">
         <span class="quick-icon">👥</span>
         <span>召友中心</span>
         <el-badge v-if="referralUnread" :value="referralUnread" class="invite-badge" />
       </button>
     </div>
 
-    <div v-if="inviteSummary" class="invite-strip glass-inner" @click="$router.push('/invite')">
+    <div v-if="inviteSummary" class="invite-strip glass-inner" @click="openInviteShare">
       <span v-if="inviteSummary.next_tier">
         再邀 {{ inviteSummary.next_tier.remaining }} 人解锁「{{ inviteSummary.next_tier.title }}」
       </span>
@@ -100,6 +100,13 @@ import type { ProfileStatus } from '../../api/profile'
 import type { DailyStatus } from '../../api/commerce'
 import type { ReferralMe } from '../../api/referral'
 import { avatarFrameClass } from '../../utils/entitlements'
+import { useInviteShare } from '../../composables/useInviteShare'
+
+const { openShareSheet } = useInviteShare()
+
+function openInviteShare() {
+  openShareSheet()
+}
 
 const props = defineProps<{
   user: AuthUser | null

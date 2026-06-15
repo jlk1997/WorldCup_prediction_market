@@ -67,6 +67,13 @@ import { ElMessage } from 'element-plus'
 import { apiClient } from '../api/client'
 import type { TeamBrief } from '../types/api'
 import { useBreakpoint } from '../composables/useBreakpoint'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '2026 世界杯球队库 — 最后一舞',
+  description: '48 支世界杯参赛球队资料、FIFA 排名、小组与教练信息，点击查看完整档案。',
+  path: '/teams',
+})
 
 const { isMobile } = useBreakpoint()
 const loading = ref(false)

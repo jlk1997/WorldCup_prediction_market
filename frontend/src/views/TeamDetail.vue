@@ -147,6 +147,7 @@ import { apiClient } from '@/api/client'
 import type { ScheduleItem, TeamBrief, TeamDetail, NewsArticle } from '@/types/api'
 import { useAgentNavigate, type AgentMode } from '@/composables/useAgentNavigate'
 import { useBreakpoint } from '@/composables/useBreakpoint'
+import { usePageMeta } from '@/composables/usePageMeta'
 
 const route = useRoute()
 const { goAgent: navigateToAgent } = useAgentNavigate()
@@ -159,6 +160,17 @@ const allTeams = ref<TeamBrief[]>([])
 const recentMatches = ref<ScheduleItem[]>([])
 const opponent = ref('')
 const agentMode = ref<AgentMode>('pre_match')
+
+const routeTeamName = computed(() => decodeURIComponent(String(route.params.name || '')))
+
+usePageMeta(() => {
+  const name = team.value?.name || routeTeamName.value
+  return {
+    title: `${name} — 2026 世界杯球队档案 | 最后一舞`,
+    description: `查看 ${name} 的 2026 世界杯阵容、赛程、伤病名单与相关资讯。`,
+    path: `/teams/${encodeURIComponent(name)}`,
+  }
+})
 
 const injured = computed(() =>
   (team.value?.players || []).filter((p) => p.injury_status || p.injuries),

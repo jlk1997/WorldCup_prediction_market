@@ -32,6 +32,7 @@ export interface ReferralLoginInfo {
   inviter_nickname?: string | null
   invite_code_attempted?: string | null
   invite_accepted?: boolean | null
+  bind_failure?: string | null
   message?: string | null
 }
 

@@ -94,6 +94,13 @@ import { getNews, getNewsStats, type NewsArticle } from '@/api/news'
 import { authState } from '@/stores/authStore'
 import { profileState } from '@/stores/profileStore'
 import { newsSummaryDisplay } from '@/utils/newsText'
+import { usePageMeta } from '@/composables/usePageMeta'
+
+usePageMeta({
+  title: '世界杯资讯 — 最后一舞',
+  description: '2026 世界杯相关新闻 RSS 聚合，支持中英文资讯与按球队筛选。',
+  path: '/news',
+})
 
 const filterTeam = ref('')
 const activeLang = ref<'zh' | 'en' | 'all'>('zh')

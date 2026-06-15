@@ -64,6 +64,7 @@
                   <span class="mobile-me-label">球迷中心 ›</span>
                 </span>
               </button>
+              <ReferralNotifier v-if="isLoggedIn" />
               <button
                 v-if="isLoggedIn"
                 type="button"
@@ -171,6 +172,7 @@
     <MobileBottomNav v-if="isMobile && !isAuthFlow" />
     <MobileMoreDrawer v-model="moreOpen" :show-profile-chip="showProfileHeaderChip" />
     <LeaderboardRewardDialog v-model="showRewardDialog" />
+    <InviteShareSheet />
   </div>
 </template>
 
@@ -184,6 +186,7 @@ import OnboardingTour from './components/OnboardingTour.vue'
 import ProfileIncompleteBanner from './components/ProfileIncompleteBanner.vue'
 import PredictSettlementNotifier from './components/PredictSettlementNotifier.vue'
 import ReferralNotifier from './components/ReferralNotifier.vue'
+import InviteShareSheet from './components/InviteShareSheet.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
 import MobileMoreDrawer from './components/MobileMoreDrawer.vue'
 import RateLimitBanner from './components/RateLimitBanner.vue'
@@ -434,6 +437,16 @@ function onNav(path: string) {
 
 .mobile-header-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.mobile-header-scroll .ref-badge {
+  flex-shrink: 0;
+}
+
+.mobile-header-scroll .ref-badge .el-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
 }
 
 .mobile-login-btn {

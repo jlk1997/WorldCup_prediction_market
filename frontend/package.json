@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && vite build && node scripts/generate-sitemap.mjs && node scripts/prerender-routes.mjs",
     "check:assets": "node scripts/check-public-assets.mjs",
     "icons:brand": "node scripts/generate-brand-icons.mjs",
     "preview": "vite preview"
@@ -14,11 +14,14 @@
     "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.16.1",
     "element-plus": "^2.14.0",
+    "qrcode": "^1.5.4",
     "vue": "^3.5.34",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "@unhead/vue": "^2.0.19"
   },
   "devDependencies": {
     "@types/node": "^24.12.4",
+    "@types/qrcode": "^1.5.6",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/tsconfig": "^0.9.1",
     "typescript": "~6.0.2",

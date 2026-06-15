@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.db.models import DataSyncLog, Match
@@ -70,6 +70,18 @@ class LiveMatchSyncService:
         if not self.client.configured:
             self._log("bsd", "skipped", 0, "BSD_API_KEY not configured")
             return 0
+
+        unlinked = self.db.scalar(
+            select(func.count()).select_from(Match).where(Match.external_fixture_id.is_(None))
+        ) or 0
+        if unlinked:
+            linked = self.link_fixtures()
+            logger.info(
+                "Auto BSD link: %s/%s matches linked (%s still unmapped)",
+                linked,
+                unlinked,
+                max(0, unlinked - linked),
+            )
 
         updated = 0
         updated_external_ids: set[str] = set()

@@ -39,6 +39,10 @@
       </div>
     </div>
 
+    <div v-if="authState.accessToken" class="dashboard-invite-wrap">
+      <InvitePromptBar scene="dashboard" />
+    </div>
+
     <!-- 核心聚焦区 -->
     <div class="focus-section" v-if="focusMatch" :class="{ 'lineup-open': showSideDetails && !isMobile, 'schedule-open': scheduleExpanded && !isMobile }">
       <div class="focus-title">
@@ -283,7 +287,16 @@ import { getDailyStatus, getWinFeed, type DailyStatus, type WinFeedItem } from '
 import TeamLineupColumn from '../components/TeamLineupColumn.vue'
 import MobileLineupDrawer from '../components/MobileLineupDrawer.vue'
 import MobileScheduleDrawer from '../components/MobileScheduleDrawer.vue'
+import InvitePromptBar from '../components/InvitePromptBar.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '最后一舞：世界杯2026',
+  description:
+    '2026 世界杯球迷互动平台 — 竞猜、AI 分析、擂台与排行榜，与传奇同框见证最后一舞。',
+  path: '/',
+})
 import { useStadiumStore } from '../stores/stadiumStore'
 import {
   computeTopPlayer,
@@ -671,6 +684,16 @@ onMounted(async () => {
   background: rgba(10, 12, 20, 0.72);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(212, 165, 116, 0.12);
+}
+
+.dashboard-invite-wrap {
+  position: absolute;
+  top: 58px;
+  left: 20px;
+  right: 20px;
+  z-index: 24;
+  pointer-events: auto;
+  max-width: 480px;
 }
 
 .stats-group {

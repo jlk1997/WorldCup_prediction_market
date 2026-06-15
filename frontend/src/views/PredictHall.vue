@@ -48,6 +48,8 @@
 
 
 
+    <InvitePromptBar v-if="authState.user" scene="predict" />
+
     <FanRecommendationsBar :daily-status="dailyStatus" />
 
     <div
@@ -311,7 +313,7 @@
           <p class="empty-hint">可以先去赛事中心看看赛程，或完成今日签到问答</p>
         </template>
         <el-button type="primary" @click="$router.push('/')">去赛事中心</el-button>
-        <el-button plain @click="$router.push('/me')">个人中心</el-button>
+        <el-button type="primary" @click="$router.push('/me')">球迷中心</el-button>
       </el-empty>
 
     </div>
@@ -351,14 +353,37 @@ import { showApiError } from '../utils/errorHandler'
 
 import FanRecommendationsBar from '../components/FanRecommendationsBar.vue'
 import DailyRitualPanel from '../components/DailyRitualPanel.vue'
+import InvitePromptBar from '../components/InvitePromptBar.vue'
 import VirtualList from '../components/VirtualList.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
+import { useInviteShare } from '../composables/useInviteShare'
 
 
 
 const route = useRoute()
 const router = useRouter()
 const { isMobile } = useBreakpoint()
+const { openShareSheet } = useInviteShare()
+
+const PREDICT_SHARE_NUDGE_KEY = 'wc2026_predict_share_nudge'
+
+function shouldShowPredictShareNudge() {
+  try {
+    const raw = sessionStorage.getItem(PREDICT_SHARE_NUDGE_KEY)
+    if (!raw) return true
+    return Date.now() - Number(raw) > 86400_000
+  } catch {
+    return true
+  }
+}
+
+function markPredictShareNudge() {
+  try {
+    sessionStorage.setItem(PREDICT_SHARE_NUDGE_KEY, String(Date.now()))
+  } catch {
+    /* ignore */
+  }
+}
 
 const matches = ref<GameMatch[]>([])
 
@@ -685,6 +710,16 @@ async function submit(matchId: number) {
     await fetchMe()
     const msg = free ? '免费竞猜已提交，猜中得积分！' : `已质押 ${stakes[matchId]} 币，祝你好运！`
     ElMessage.success(msg)
+    if (authState.user && shouldShowPredictShareNudge()) {
+      markPredictShareNudge()
+      ElNotification({
+        title: '竞猜已提交',
+        message: '点此通知 · 邀球友一起猜，双方都能得球迷币',
+        type: 'success',
+        duration: 6000,
+        onClick: () => openShareSheet(),
+      })
+    }
     delete submitErrors[matchId]
     dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
     await load({ silent: true })

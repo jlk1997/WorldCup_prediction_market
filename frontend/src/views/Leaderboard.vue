@@ -81,6 +81,11 @@
         你本周召友榜排名第 {{ referralMyRank }} 名 · 有效邀请 {{ referralMyScore }} 人
       </el-alert>
 
+      <div v-if="board === 'referral' && isLoggedIn" class="referral-cta-row">
+        <el-button type="primary" @click="openShareSheet">邀请好友冲榜</el-button>
+        <el-button plain @click="$router.push('/invite')">召友中心</el-button>
+      </div>
+
       <el-alert v-if="boardDescription" :title="boardDescription" type="info" show-icon :closable="false" class="rule-hint" />
     </div>
 
@@ -179,9 +184,19 @@ import {
 } from '../api/commerce'
 import { getStarAccuracy, getStarHeat, type StarHeatRow } from '../api/arena'
 import { getTeamContribution } from '../api/profile'
-import { authState, fetchMe } from '../stores/authStore'
+import { authState, fetchMe, isLoggedIn } from '../stores/authStore'
 import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
+import { useInviteShare } from '../composables/useInviteShare'
+import { usePageMeta } from '../composables/usePageMeta'
+
+usePageMeta({
+  title: '球迷排行榜 — 最后一舞',
+  description: '2026 世界杯球迷娱乐排行榜：竞猜积分、军团贡献、猜中率与召友榜。',
+  path: '/leaderboard',
+})
+
+const { openShareSheet } = useInviteShare()
 
 const route = useRoute()
 const board = ref('points')
@@ -374,6 +389,17 @@ onUnmounted(() => {
   margin-top: 12px;
 }
 .my-ref-hint {
+  margin-bottom: 10px;
+}
+
+.referral-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ref-countdown {
   margin-top: 12px;
 }
 .boards {

@@ -113,6 +113,7 @@ def main():
     print("  python -m scripts.sync_teams --source all")
     print("  python -m scripts.update_starters")
     print("  python -m scripts.build_team_api_mapping")
+    print("  （BSD 场次关联会在 ingest 首次同步时自动完成，无需手动 link）")
 
 
 if __name__ == "__main__":

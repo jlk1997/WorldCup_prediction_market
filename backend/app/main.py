@@ -192,6 +192,10 @@ def create_app() -> FastAPI:
     app.include_router(referral.router)
     app.include_router(legal.router)
 
+    from app.api.routes import share as share_routes
+
+    app.include_router(share_routes.router)
+
     return app
 
 

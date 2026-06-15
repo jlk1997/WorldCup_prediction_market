@@ -21,11 +21,17 @@
 
     <div v-if="me" class="invite-card glass-panel">
       <h2>我的邀请</h2>
-      <div class="code-row">
-        <span class="code">{{ me.invite_code }}</span>
-        <el-button type="primary" @click="copyLink">复制邀请链接</el-button>
-        <el-button plain @click="copyCode">复制邀请码</el-button>
-        <el-button plain @click="downloadPoster">生成分享海报</el-button>
+      <div class="hero-share">
+        <p v-if="me.next_tier" class="hero-hint">
+          再邀 <strong>{{ me.next_tier.remaining }}</strong> 位有效好友解锁「{{ me.next_tier.title }}」
+        </p>
+        <p v-else class="hero-hint">
+          有效邀请 {{ me.effective_invites }} 人 · 本季已赚 {{ me.season_coins_earned }} 币
+        </p>
+        <el-button type="primary" size="large" class="hero-cta" @click="openShareSheet">
+          分享给好友
+        </el-button>
+        <span class="code-inline">邀请码 {{ me.invite_code }}</span>
       </div>
       <div class="stats-grid">
         <div class="stat"><span>有效邀请</span><strong>{{ me.effective_invites }}</strong></div>
@@ -68,7 +74,7 @@
     <div v-else-if="me && !loading" class="empty-friends glass-panel">
       <el-empty description="还没有好友通过你的链接加入">
         <p class="empty-tip">复制链接发给球友，对方注册并完成档案或首次竞猜后，才算有效邀请</p>
-        <el-button type="primary" @click="copyLink">复制邀请链接</el-button>
+        <el-button type="primary" @click="openShareSheet">分享给好友</el-button>
       </el-empty>
     </div>
 
@@ -135,8 +141,10 @@ import {
   type InviteeJourneyStep,
 } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
-import { downloadSharePoster } from '../utils/sharePoster'
 import { formatMilestoneReward, milestoneLabel } from '../utils/referralRules'
+import { useInviteShare } from '../composables/useInviteShare'
+
+const { openShareSheet } = useInviteShare()
 
 const RANK_STORAGE_KEY = 'wc_referral_last_rank'
 
@@ -197,16 +205,6 @@ async function copyText(text: string, msg: string) {
   }
 }
 
-function copyLink() {
-  if (!me.value?.invite_link) return
-  copyText(me.value.invite_link, '邀请链接已复制')
-}
-
-function copyCode() {
-  if (!me.value?.invite_code) return
-  copyText(me.value.invite_code, '邀请码已复制')
-}
-
 function copyNudge(text: string) {
   const link = me.value?.invite_link ? `\n${me.value.invite_link}` : ''
   copyText(text + link, '提醒文案已复制')
@@ -215,22 +213,6 @@ function copyNudge(text: string) {
 function goStep(step: InviteeJourneyStep) {
   if (step.done || !step.action) return
   router.push(step.action)
-}
-
-async function downloadPoster() {
-  if (!me.value) return
-  try {
-    await downloadSharePoster({
-      title: '邀你一起猜世界杯',
-      subtitle: `我在「最后一舞」已有效邀请 ${me.value.effective_invites} 位好友`,
-      statsLine: `本季已赚 ${me.value.season_coins_earned} 球迷币 · 邀请码 ${me.value.invite_code}`,
-      footer: '扫码或复制链接注册 · 虚拟奖励不可提现',
-      qrUrl: me.value.invite_link,
-    })
-    ElMessage.success('海报已保存到本地')
-  } catch {
-    ElMessage.error('海报生成失败')
-  }
 }
 
 onMounted(load)
@@ -248,6 +230,31 @@ onMounted(load)
 .invite-card, .friends, .journey, .rules, .empty-friends {
   padding: 20px;
   margin-top: 16px;
+}
+.hero-share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  text-align: center;
+}
+.hero-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+.hero-cta {
+  width: 100%;
+  max-width: 280px;
+  min-height: 48px;
+  font-weight: 700;
+}
+.code-inline {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--wc-text-muted);
+  letter-spacing: 1px;
 }
 .code-row {
   display: flex;

@@ -25,6 +25,22 @@
         title="邀请码无效或已失效，仍可正常注册获得新手礼包"
       />
 
+      <div class="manual-ref">
+        <button type="button" class="manual-ref-toggle" @click="showManualRef = !showManualRef">
+          {{ showManualRef ? '收起邀请码' : '有邀请码？点此填写' }}
+        </button>
+        <div v-if="showManualRef" class="manual-ref-form">
+          <el-input
+            v-model="manualCode"
+            maxlength="12"
+            placeholder="输入 6–8 位邀请码"
+            @blur="previewManualCode"
+            @keyup.enter="previewManualCode"
+          />
+          <el-button plain size="small" :loading="previewLoading" @click="previewManualCode">验证</el-button>
+        </div>
+      </div>
+
       <el-form label-position="top" @submit.prevent>
         <el-form-item label="邮箱">
           <el-input v-model="email" type="email" placeholder="your@email.com" :disabled="step === 'code'" />
@@ -67,6 +83,14 @@ import { fetchProfileStatus } from '../stores/profileStore'
 import { showApiError } from '../utils/errorHandler'
 
 import { previewReferralCode, type ReferralPreview } from '../api/referral'
+import { usePageMeta } from '../composables/usePageMeta'
+import { trackEvent } from '../utils/analytics'
+
+usePageMeta({
+  title: '登录 / 注册 — 最后一舞 · 世界杯2026',
+  description: '邮箱验证码登录，新用户自动注册并赠送球迷币。邀请链接注册可获额外奖励。',
+  path: '/login',
+})
 
 const router = useRouter()
 const route = useRoute()
@@ -80,6 +104,9 @@ const ageAgreed = ref(false)
 const ageHintVisible = ref(false)
 const refPreview = ref<ReferralPreview | null>(null)
 const refInvalid = ref(false)
+const showManualRef = ref(false)
+const manualCode = ref('')
+const previewLoading = ref(false)
 
 const REF_STORAGE_KEY = 'wc2026_ref'
 
@@ -109,22 +136,43 @@ onMounted(async () => {
   const refCode = route.query.ref ?? route.query.invite
   if (typeof refCode === 'string' && refCode.trim()) {
     const normalized = refCode.trim().toUpperCase()
+    manualCode.value = normalized
     sessionStorage.setItem(REF_STORAGE_KEY, normalized)
-    try {
-      const preview = await previewReferralCode(normalized)
-      if (preview.valid) {
-        refPreview.value = preview
-        refInvalid.value = false
-      } else {
-        refInvalid.value = true
-      }
-    } catch {
-      refInvalid.value = false
-    }
+    await applyRefPreview(normalized)
   }
 })
 
+async function applyRefPreview(normalized: string) {
+  try {
+    const preview = await previewReferralCode(normalized)
+    if (preview.valid) {
+      refPreview.value = preview
+      refInvalid.value = false
+    } else {
+      refPreview.value = null
+      refInvalid.value = true
+    }
+  } catch {
+    refInvalid.value = false
+  }
+}
+
+async function previewManualCode() {
+  const normalized = manualCode.value.trim().toUpperCase()
+  if (!normalized || normalized.length < 4) return
+  manualCode.value = normalized
+  previewLoading.value = true
+  try {
+    sessionStorage.setItem(REF_STORAGE_KEY, normalized)
+    await applyRefPreview(normalized)
+  } finally {
+    previewLoading.value = false
+  }
+}
+
 function consumeInviteCode(): string | undefined {
+  const manual = manualCode.value.trim().toUpperCase()
+  if (manual.length >= 4) return manual
   const stored = sessionStorage.getItem(REF_STORAGE_KEY)
   if (stored) return stored
   const q = route.query.ref ?? route.query.invite
@@ -176,12 +224,22 @@ async function onVerify() {
   verifying.value = true
   loading.value = true
   try {
-    const data = await verifyCode(addr, code.value.trim(), ageAgreed.value, consumeInviteCode())
+    const inviteUsed = consumeInviteCode()
+    const data = await verifyCode(addr, code.value.trim(), ageAgreed.value, inviteUsed)
     sessionStorage.removeItem(REF_STORAGE_KEY)
     if (data.is_new) {
+      trackEvent('register_success', { has_invite: String(!!inviteUsed) })
+      if (data.referral?.bound) {
+        trackEvent('invite_bound', { inviter: data.referral.inviter_nickname || '' })
+      }
+      const attempted = !!inviteUsed || !!data.referral?.invite_code_attempted
       if (data.referral?.bound && data.referral.inviter_nickname) {
         ElMessage.success(
-          `注册成功！${data.referral.inviter_nickname} 邀请你加入，已到账新手礼包（含邀请奖励）`
+          `注册成功！${data.referral.inviter_nickname} 邀请你加入，已到账新手礼包（含邀请奖励）`,
+        )
+      } else if (attempted && !data.referral?.bound) {
+        ElMessage.warning(
+          data.referral?.message || '邀请码未生效（可能无效、已达上限或你已绑定过），你仍已获得新手球迷币',
         )
       } else if (data.referral?.message) {
         ElMessage.success(data.referral.message)
@@ -239,6 +297,28 @@ async function onVerify() {
 }
 .ref-banner {
   margin-bottom: 16px;
+}
+.manual-ref {
+  margin-bottom: 16px;
+}
+.manual-ref-toggle {
+  border: none;
+  background: none;
+  color: var(--wc-accent-gold);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0;
+}
+.manual-ref-toggle:hover {
+  text-decoration: underline;
+}
+.manual-ref-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.manual-ref-form .el-input {
+  flex: 1;
 }
 .actions {
   display: flex;

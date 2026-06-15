@@ -1,3 +1,5 @@
+import QRCode from 'qrcode'
+
 export interface SharePosterOptions {
   title: string
   subtitle: string
@@ -45,9 +47,12 @@ export async function generateSharePosterBlob(opts: SharePosterOptions): Promise
 
   if (opts.qrUrl) {
     try {
-      const qrImg = await loadImage(
-        `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(opts.qrUrl)}`
-      )
+      const qrDataUrl = await QRCode.toDataURL(opts.qrUrl, {
+        width: 160,
+        margin: 1,
+        color: { dark: '#1a1224', light: '#ffffff' },
+      })
+      const qrImg = await loadImage(qrDataUrl)
       ctx.drawImage(qrImg, 220, 500, 160, 160)
     } catch {
       ctx.fillStyle = '#9a94a8'
@@ -63,6 +68,12 @@ export async function generateSharePosterBlob(opts: SharePosterOptions): Promise
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob), 'image/png')
   })
+}
+
+export async function generateSharePosterObjectUrl(opts: SharePosterOptions): Promise<string | null> {
+  const blob = await generateSharePosterBlob(opts)
+  if (!blob) return null
+  return URL.createObjectURL(blob)
 }
 
 export async function downloadSharePoster(opts: SharePosterOptions, filename = 'wc2026-share.png') {
@@ -82,7 +93,7 @@ function wrapText(
   x: number,
   y: number,
   maxWidth: number,
-  lineHeight: number
+  lineHeight: number,
 ) {
   const words = text.split('')
   let line = ''
@@ -103,7 +114,6 @@ function wrapText(
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
-    img.crossOrigin = 'anonymous'
     img.onload = () => resolve(img)
     img.onerror = reject
     img.src = src

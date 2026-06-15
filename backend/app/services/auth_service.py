@@ -160,7 +160,7 @@ class AuthService:
         age_confirmed: bool = False,
         client_ip: str | None = None,
         invite_code: str | None = None,
-    ) -> tuple[User, str, str, bool]:
+    ) -> tuple[User, str, str, bool, str | None]:
         email = email.strip().lower()
         if not age_confirmed:
             raise BadRequestError("请先确认已满 18 周岁并同意用户协议")
@@ -182,7 +182,8 @@ class AuthService:
         if not row or row.code_hash != code_hash:
             replay = self._try_replay_used_code(email, code_hash)
             if replay:
-                return replay
+                user, access, refresh, is_new = replay
+                return user, access, refresh, is_new, None
             if row and row.code_hash != code_hash:
                 raise BadRequestError("验证码错误，请使用最新一封邮件中的验证码")
             raise BadRequestError("验证码错误或已失效，请重新获取")
@@ -192,6 +193,7 @@ class AuthService:
 
         row.used_at = _utcnow()
         is_new = False
+        bind_failure: str | None = None
         user = self.users.get_by_email(email)
         if not user:
             is_new = True
@@ -202,13 +204,15 @@ class AuthService:
             try:
                 from app.services.referral_service import ReferralService
 
-                ReferralService(self.db, self.settings).bind_on_register(
+                bind_failure = ReferralService(self.db, self.settings).bind_on_register(
                     user, invite_code, client_ip, is_new=True
                 )
             except Exception:
                 logger.exception("Referral bind failed for new user %s", email)
+                bind_failure = "error"
 
-        return self._issue_tokens(user, is_new)
+        user, access, refresh, is_new_flag = self._issue_tokens(user, is_new)
+        return user, access, refresh, is_new_flag, bind_failure
 
     def refresh_tokens(self, refresh_token: str) -> tuple[str, str, int]:
         token_hash = _hash_token(refresh_token)

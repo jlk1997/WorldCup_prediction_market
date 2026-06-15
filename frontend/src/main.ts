@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createHead } from '@unhead/vue/client'
 import App from './App.vue'
 import './styles/theme.css'
 import './styles/responsive.css'
@@ -25,12 +26,21 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 
 import { initAuth } from './stores/authStore'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
+import { initAnalytics, trackEvent } from './utils/analytics'
 
 const app = createApp(App)
+const head = createHead()
 
 registerGlobalErrorHandlers(app)
 
+app.use(head)
 app.use(router)
 void warmLegendBackdropImages()
+initAnalytics()
 initAuth()
+
+router.afterEach((to) => {
+  trackEvent('page_view', { path: to.path })
+})
+
 app.mount('#app')

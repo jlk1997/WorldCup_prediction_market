@@ -105,6 +105,7 @@ class ReferralService:
         *,
         is_new: bool,
         invite_code_attempted: str | None,
+        bind_failure: str | None = None,
     ) -> dict:
         code = self.ensure_invite_code(user)
         binding = (
@@ -122,7 +123,16 @@ class ReferralService:
         if is_new and bound and inviter_nickname:
             message = f"{inviter_nickname} 邀请你加入，新手礼包与邀请奖励已到账"
         elif is_new and attempted and not bound:
-            message = "邀请码未生效，你仍已获得新手球迷币"
+            failure_messages = {
+                "invalid_code": "邀请码无效或不存在，你仍已获得新手球迷币",
+                "already_bound": "你已绑定过邀请关系，邀请码无法重复使用",
+                "ip_limit": "该邀请今日绑定人数已达上限，请明日再试或联系邀请人",
+                "error": "邀请码绑定失败，你仍已获得新手球迷币",
+            }
+            message = failure_messages.get(
+                bind_failure or "",
+                "邀请码未生效，你仍已获得新手球迷币",
+            )
         return {
             "invite_code": code,
             "is_new": is_new,
@@ -131,6 +141,7 @@ class ReferralService:
             "inviter_nickname": inviter_nickname,
             "invite_code_attempted": attempted,
             "invite_accepted": bound if attempted else None,
+            "bind_failure": bind_failure if attempted and not bound else None,
             "message": message,
         }
 
@@ -153,7 +164,7 @@ class ReferralService:
         }
 
     def build_invite_link(self, code: str) -> str:
-        return f"{self.settings.frontend_base_url.rstrip('/')}/login?ref={code}"
+        return f"{self.settings.frontend_base_url.rstrip('/')}/share/invite?ref={code}"
 
     def bind_on_register(
         self,
@@ -162,25 +173,33 @@ class ReferralService:
         client_ip: str | None,
         *,
         is_new: bool,
-    ) -> None:
+    ) -> str | None:
+        """Bind invitee to inviter on registration. Returns failure reason key or None."""
         if not is_new or not invite_code:
-            return
+            return None
         code = invite_code.strip().upper()
         if not code:
-            return
+            return None
         inviter = self.db.query(User).filter(User.invite_code == code).first()
         if not inviter or inviter.id == invitee.id:
-            return
+            return "invalid_code"
         existing = (
             self.db.query(ReferralBinding)
             .filter(ReferralBinding.invitee_id == invitee.id)
             .first()
         )
         if existing:
-            return
-        rate_limit_referral_register(
-            inviter.id, client_ip, limit=self.settings.referral_ip_daily_limit
-        )
+            return "already_bound"
+        try:
+            rate_limit_referral_register(
+                inviter.id, client_ip, limit=self.settings.referral_ip_daily_limit
+            )
+        except Exception as exc:
+            from app.core.exceptions import RateLimitError
+
+            if isinstance(exc, RateLimitError):
+                return "ip_limit"
+            raise
         binding = ReferralBinding(
             inviter_id=inviter.id,
             invitee_id=invitee.id,
@@ -194,6 +213,7 @@ class ReferralService:
         self._grant_milestone(binding, "register", inviter, invitee)
         cache_delete_prefix("referral:weekly:")
         self.db.commit()
+        return None
 
     def on_profile_completed(self, user: User) -> None:
         binding = self._binding_for_invitee(user.id)
@@ -412,6 +432,7 @@ class ReferralService:
         return {
             "summary": (
                 "分享邀请链接，好友注册并完成档案、首玩等里程碑后双方获得球迷币与军团贡献；"
+                "成功绑定邀请关系后，被邀人额外获得 1 张助威券。"
                 "有效邀请计入扩编档位与召友周榜，每周一结算上周榜发放积分与球迷币。"
                 "邀请人本季通过召友获得的球迷币有上限，超出后里程碑不再发币但榜与军团仍累计。"
             ),

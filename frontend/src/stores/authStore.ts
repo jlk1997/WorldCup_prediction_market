@@ -87,6 +87,7 @@ export function logout() {
   authState.user = null
   localStorage.removeItem(STORAGE_KEY)
   import('./profileStore').then((m) => m.clearProfileCache())
+  import('../composables/useInviteShare').then((m) => m.resetInviteShareState())
 }
 
 export function patchUserFields(fields: Partial<AuthUser>) {
