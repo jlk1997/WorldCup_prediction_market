@@ -9,7 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import agent, arena, commerce, health, legal, live, news, players, predictions, profile, referral, schedule, stats, sync, teams, websocket
+from app.api.routes import agent, arena, commerce, health, legal, live, news, players, predictions, profile, referral, schedule, stats, sync, teams, ui_config, websocket
 from app.core.config import get_settings
 from app.core.exceptions import AppError, RateLimitError, rate_limit_error_body
 from app.core.middleware import GlobalRateLimitMiddleware, RequestLoggingMiddleware, SecurityHeadersMiddleware, setup_logging
@@ -191,6 +191,7 @@ def create_app() -> FastAPI:
     app.include_router(arena.router)
     app.include_router(referral.router)
     app.include_router(legal.router)
+    app.include_router(ui_config.router)
 
     from app.api.routes import share as share_routes
 

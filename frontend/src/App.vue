@@ -175,6 +175,7 @@
     <LeaderboardRewardDialog v-model="showRewardDialog" />
     <InviteShareSheet />
     <PredictSettlementReveal />
+    <GuideModal />
   </div>
 </template>
 
@@ -185,6 +186,7 @@ import { Menu } from '@element-plus/icons-vue'
 import StadiumModeSelector from './components/StadiumModeSelector.vue'
 import AppLogo from './components/AppLogo.vue'
 import OnboardingTour from './components/OnboardingTour.vue'
+import GuideModal from './components/GuideModal.vue'
 import ProfileIncompleteBanner from './components/ProfileIncompleteBanner.vue'
 import PredictSettlementNotifier from './components/PredictSettlementNotifier.vue'
 import PredictSettlementReveal from './components/PredictSettlementReveal.vue'
@@ -207,6 +209,7 @@ import { useStadiumStore } from './stores/stadiumStore'
 import { subscribeLiveMatches } from './stores/liveMatchesStore'
 import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
 import { ensurePredictRevealConfig } from './stores/predictRevealConfigStore'
+import { tryAutoOpenGuide } from './composables/useGuideModal'
 import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
@@ -284,6 +287,14 @@ onUnmounted(() => {
 
 watch(moreOpen, (open) => setUiOverlay('more-drawer', open))
 watch(showFeatureTour, (open) => setUiOverlay('onboarding-tour', open))
+
+watch(
+  () => [route.path, route.query.guide, isLoggedIn.value, authState.user?.profile_completed] as const,
+  () => {
+    if (isAuthFlow.value) return
+    void tryAutoOpenGuide('site_intro', route.path, route.query as Record<string, unknown>)
+  },
+)
 
 function onNav(path: string) {
   router.push(path)

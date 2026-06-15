@@ -5,8 +5,13 @@
     <div class="header glass-panel">
 
       <header class="page-head">
-        <h1>竞猜大厅</h1>
-        <p class="subtitle">猜中得累计积分冲榜 · 同时获得可用积分去兑换装扮 · 质押用球迷币</p>
+        <div class="head-row">
+          <div>
+            <h1>竞猜大厅</h1>
+            <p class="subtitle">猜中得累计积分冲榜 · 同时获得可用积分去兑换装扮 · 质押用球迷币</p>
+          </div>
+          <el-button class="guide-btn" plain size="small" @click="openGameplayGuide">玩法说明</el-button>
+        </div>
       </header>
 
       <div v-if="authState.user" class="balance-grid">
@@ -360,6 +365,7 @@ import InvitePromptBar from '../components/InvitePromptBar.vue'
 import VirtualList from '../components/VirtualList.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
+import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
 
 
 
@@ -367,6 +373,14 @@ const route = useRoute()
 const router = useRouter()
 const { isMobile } = useBreakpoint()
 const { openShareSheet } = useInviteShare()
+
+function openGameplayGuide() {
+  void openGuideModalByKey('gameplay_guide')
+}
+
+function maybeOpenGameplayGuide() {
+  void tryAutoOpenGuide('gameplay_guide', route.path, route.query as Record<string, unknown>)
+}
 
 const PREDICT_SHARE_NUDGE_KEY = 'wc2026_predict_share_nudge'
 
@@ -748,7 +762,17 @@ async function submit(matchId: number) {
 
 
 
-onMounted(load)
+onMounted(() => {
+  void load()
+  maybeOpenGameplayGuide()
+})
+
+watch(
+  () => [route.path, route.query.guide] as const,
+  () => {
+    maybeOpenGameplayGuide()
+  },
+)
 
 </script>
 
@@ -787,6 +811,18 @@ onMounted(load)
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.guide-btn {
+  flex-shrink: 0;
+  margin-top: 4px;
 }
 
 .subtitle {
