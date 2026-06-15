@@ -14,10 +14,27 @@ from app.core.match_scores import scores_for_team1_team2
 from app.ingest.bsd_adapter import InternalFixture, event_to_internal
 from app.ingest.bsd_client import BsdClient
 from app.ingest.bsd_event_parser import normalize_bsd_incidents
-from app.ingest.bsd_link_service import link_matches_to_bsd, list_group_event_candidates, pick_best_bsd_event
+from app.ingest.bsd_link_service import link_matches_to_bsd, list_group_event_candidates, pick_best_bsd_event, apply_bsd_schedule_to_match
 from app.ingest.quota import invalidate_live_cache
 
 logger = logging.getLogger(__name__)
+
+
+def _sync_schedules_from_bsd(
+    matches: list[Match],
+    bsd_events: list[dict],
+) -> int:
+    """Overwrite placeholder seed dates with authoritative BSD kickoff times."""
+    by_id = {int(e["id"]): e for e in bsd_events if e.get("id")}
+    updated = 0
+    for match in matches:
+        eid = match.external_fixture_id
+        if not eid:
+            continue
+        event = by_id.get(int(eid))
+        if event and apply_bsd_schedule_to_match(match, event):
+            updated += 1
+    return updated
 
 
 def _apply_internal_fixture(
@@ -49,9 +66,13 @@ def _apply_internal_fixture(
     match.external_provider = fixture.provider
     match.live_updated_at = datetime.now(timezone.utc)
 
-    if fixture.event_date and not match.match_date:
+    if fixture.local_date:
+        match.match_date = fixture.local_date
+    elif fixture.event_date and not match.match_date:
         match.match_date = fixture.event_date
-    if fixture.venue and not match.stadium:
+    if fixture.local_time:
+        match.match_time = fixture.local_time
+    if fixture.venue:
         match.stadium = fixture.venue
 
     if client and fixture.external_id and match.status in ("live", "finished"):
@@ -108,6 +129,23 @@ def _sync_events_batch(
     return updated, events
 
 
+def _refresh_bsd_candidates(candidates: list[dict], client: BsdClient) -> list[dict]:
+    """Fetch full event detail — list endpoint summaries can lag behind single-event GET."""
+    refreshed: list[dict] = []
+    seen: set[int] = set()
+    for ev in candidates:
+        eid = ev.get("id")
+        if not eid:
+            continue
+        eid = int(eid)
+        if eid in seen:
+            continue
+        seen.add(eid)
+        full = client.get_event(eid) or ev
+        refreshed.append(full)
+    return refreshed
+
+
 def _reconcile_stale_matches(
     matches: list[Match],
     group_events: list[dict],
@@ -116,6 +154,8 @@ def _reconcile_stale_matches(
     updated_external_ids: set[int],
 ) -> int:
     """Re-link or refresh matches that should have started but are still scheduled locally."""
+    from app.ingest.bsd_adapter import resolve_event_status
+
     updated = 0
     for match in matches:
         if match.status != "scheduled" or not match.external_fixture_id:
@@ -124,30 +164,51 @@ def _reconcile_stale_matches(
         if not kick or kick > now:
             continue
         candidates = list_group_event_candidates(match, group_events)
+        if not any(int(c.get("id") or 0) == match.external_fixture_id for c in candidates):
+            candidates.append({"id": match.external_fixture_id})
+        candidates = _refresh_bsd_candidates(candidates, client)
         best = pick_best_bsd_event(match, candidates)
         if not best:
             continue
         best_id = int(best["id"])
         fixture = event_to_internal(best)
         if best_id != match.external_fixture_id:
-            if fixture.status not in ("finished", "live") and fixture.home_score is None:
-                continue
-            logger.info(
-                "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
-                match.id,
-                match.team1_name,
-                match.team2_name,
-                match.external_fixture_id,
-                best_id,
-                fixture.status,
-            )
-            match.external_fixture_id = best_id
-            match.external_provider = "bsd"
+            if fixture.status in ("finished", "live") or fixture.home_score is not None:
+                logger.info(
+                    "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
+                    match.id,
+                    match.team1_name,
+                    match.team2_name,
+                    match.external_fixture_id,
+                    best_id,
+                    fixture.status,
+                )
+                match.external_fixture_id = best_id
+                match.external_provider = "bsd"
+            else:
+                logger.debug(
+                    "Stale match #%s keep link %s (best alt %s also %s)",
+                    match.id,
+                    match.external_fixture_id,
+                    best_id,
+                    fixture.status,
+                )
         if best_id in updated_external_ids:
             continue
         if _apply_internal_fixture(match, fixture, client):
             updated += 1
             updated_external_ids.add(best_id)
+        elif kick <= now - timedelta(hours=6):
+            statuses = [resolve_event_status(c) for c in candidates]
+            logger.warning(
+                "BSD no result for match #%s %s vs %s ext=%s kick=%s statuses=%s",
+                match.id,
+                match.team1_name,
+                match.team2_name,
+                match.external_fixture_id,
+                kick.isoformat(),
+                statuses,
+            )
     return updated
 
 
@@ -182,6 +243,11 @@ class LiveMatchSyncService:
             ).all()
         )
         by_external_id = {m.external_fixture_id: m for m in matches if m.external_fixture_id}
+
+        bsd_catalog = self.client.get_all_worldcup_events()
+        schedule_fixed = _sync_schedules_from_bsd(matches, bsd_catalog)
+        if schedule_fixed:
+            logger.info("BSD schedule sync: corrected %s match date/time fields", schedule_fixed)
 
         for event in self.client.get_live_events():
             fixture = event_to_internal(event)

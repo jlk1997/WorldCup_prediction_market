@@ -1,22 +1,31 @@
-/** Parse kickoff from schedule date/time (ISO or 中文日期). */
+/** Parse kickoff from schedule date/time (ISO or 中文日期). Times are stored in Asia/Shanghai. */
 
 const CN_DATE = /^(\d{4})年(\d{1,2})月(\d{1,2})日$/
+/** Must match backend `bsd_timezone` (default Asia/Shanghai). */
+const SCHEDULE_TZ_OFFSET = '+08:00'
+
+function pad2(n: number) {
+  return String(n).padStart(2, '0')
+}
 
 export function parseMatchKickoff(date?: string | null, time?: string | null): Date | null {
   if (!date) return null
   const rawDate = date.trim()
   const rawTime = (time || '00:00').trim()
+  const [hhRaw, mmRaw] = rawTime.split(':')
+  const hh = pad2(Number(hhRaw) || 0)
+  const mm = pad2(Number(mmRaw) || 0)
 
   const cn = CN_DATE.exec(rawDate)
   if (cn) {
-    const parts = rawTime.split(':')
-    const hh = Number(parts[0]) || 0
-    const mm = Number(parts[1]) || 0
-    return new Date(Number(cn[1]), Number(cn[2]) - 1, Number(cn[3]), hh, mm)
+    const iso = `${cn[1]}-${pad2(Number(cn[2]))}-${pad2(Number(cn[3]))}T${hh}:${mm}:00${SCHEDULE_TZ_OFFSET}`
+    const parsed = new Date(iso)
+    return Number.isNaN(parsed.getTime()) ? null : parsed
   }
 
   if (/^\d{4}-\d{2}-\d{2}/.test(rawDate)) {
-    const parsed = new Date(`${rawDate}T${rawTime}`)
+    const iso = `${rawDate.slice(0, 10)}T${hh}:${mm}:00${SCHEDULE_TZ_OFFSET}`
+    const parsed = new Date(iso)
     return Number.isNaN(parsed.getTime()) ? null : parsed
   }
   return null

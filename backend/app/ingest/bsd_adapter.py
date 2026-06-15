@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
+from app.core.config import get_settings
 from app.data.bsd_team_names import bsd_name_to_local, is_knockout_placeholder
 
 BSD_STATUS_MAP = {
@@ -40,7 +43,33 @@ class InternalFixture:
     round_name: str | None
     round_number: int | None
     event_date: str | None
-    venue: str | None
+    local_date: str | None = None
+    local_time: str | None = None
+    venue: str | None = None
+
+
+def _event_venue(event: dict) -> str | None:
+    for key in ("venue_name", "venue", "stadium", "stadium_name"):
+        val = event.get(key)
+        if val:
+            return str(val)
+    return None
+
+
+def bsd_event_to_local_schedule(event: dict) -> tuple[str | None, str | None, str | None]:
+    """Map BSD event_date (ISO, tz-aware) to Chinese date + HH:MM in bsd_timezone."""
+    raw = event.get("event_date")
+    venue = _event_venue(event)
+    if not raw:
+        return None, None, venue
+    try:
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except ValueError:
+        return None, None, venue
+    tz = ZoneInfo(get_settings().bsd_timezone)
+    local = dt.astimezone(tz)
+    date_cn = f"{local.year}年{local.month:02d}月{local.day:02d}日"
+    return date_cn, local.strftime("%H:%M"), venue
 
 
 def map_bsd_status(raw: str | None) -> str:
@@ -71,6 +100,7 @@ def event_to_internal(event: dict, *, venue_name: str | None = None) -> Internal
     home = bsd_name_to_local(home_raw) if home_raw and not is_knockout_placeholder(home_raw) else None
     away = bsd_name_to_local(away_raw) if away_raw and not is_knockout_placeholder(away_raw) else None
     event_date = event.get("event_date")
+    local_date, local_time, venue = bsd_event_to_local_schedule(event)
     return InternalFixture(
         external_id=int(event["id"]),
         provider="bsd",
@@ -85,7 +115,9 @@ def event_to_internal(event: dict, *, venue_name: str | None = None) -> Internal
         round_name=event.get("round_name"),
         round_number=event.get("round_number"),
         event_date=(event_date[:10] if event_date else None),
-        venue=venue_name,
+        local_date=local_date,
+        local_time=local_time,
+        venue=venue or venue_name,
     )
 
 

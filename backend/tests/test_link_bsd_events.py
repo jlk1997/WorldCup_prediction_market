@@ -26,6 +26,32 @@ def test_match_group_stage_by_team_pair():
     assert hit["id"] == 8287
 
 
+def test_apply_schedule_from_bsd():
+    from app.ingest.bsd_link_service import apply_bsd_schedule_to_match
+
+    match = Match(
+        id=10,
+        team1_name="韩国",
+        team2_name="南非",
+        match_date="2026年06月13日",
+        match_time="14:00",
+        stadium="洛杉矶 · SoFi体育场",
+        external_fixture_id=8339,
+    )
+    event = {
+        "id": 8339,
+        "home_team": "South Korea",
+        "away_team": "South Africa",
+        "event_date": "2026-06-25T01:00:00+00:00",
+        "venue_name": "BBVA Stadium, Guadalupe",
+        "status": "notstarted",
+    }
+    assert apply_bsd_schedule_to_match(match, event) is True
+    assert match.match_date == "2026年06月25日"
+    assert match.match_time == "09:00"
+    assert "BBVA" in (match.stadium or "")
+
+
 def test_match_knockout_by_bracket_order():
     local = Match(
         id=2,

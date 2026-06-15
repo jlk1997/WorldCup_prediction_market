@@ -1,4 +1,8 @@
-"""Generate full 104-match World Cup 2026 schedule from teams_list.json."""
+"""Generate full 104-match World Cup 2026 schedule from teams_list.json.
+
+Group-stage dates/times are **placeholders** (round-robin slot filler).
+After BSD link, ingest syncs authoritative kickoff from BSD API.
+"""
 
 from __future__ import annotations
 

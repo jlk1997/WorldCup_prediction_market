@@ -36,6 +36,18 @@ def test_event_to_internal_group_match():
     assert fx.home_name == "墨西哥"
     assert fx.away_name == "南非"
     assert fx.status == "scheduled"
+    assert fx.local_date == "2026年06月12日"
+    assert fx.local_time == "03:00"
+
+
+def test_bsd_event_to_local_schedule():
+    from app.ingest.bsd_adapter import bsd_event_to_local_schedule
+
+    date_cn, time_cn, _ = bsd_event_to_local_schedule(
+        {"event_date": "2026-06-24T17:00:00+00:00", "venue_name": "SoFi Stadium"}
+    )
+    assert date_cn == "2026年06月25日"
+    assert time_cn == "01:00"
 
 
 def test_knockout_placeholder():

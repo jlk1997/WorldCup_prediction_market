@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict
+from datetime import datetime, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -57,22 +58,46 @@ def list_group_event_candidates(local: Match, bsd_events: list[dict]) -> list[di
     return out
 
 
+def apply_bsd_schedule_to_match(match: Match, event: dict) -> bool:
+    """Overwrite local placeholder kickoff with BSD authoritative schedule."""
+    fixture = event_to_internal(event)
+    changed = False
+    if fixture.local_date and match.match_date != fixture.local_date:
+        match.match_date = fixture.local_date
+        changed = True
+    if fixture.local_time and match.match_time != fixture.local_time:
+        match.match_time = fixture.local_time
+        changed = True
+    if fixture.venue and match.stadium != fixture.venue:
+        match.stadium = fixture.venue
+        changed = True
+    return changed
+
+
 def pick_best_bsd_event(local: Match, candidates: list[dict]) -> dict | None:
     if not candidates:
         return None
     if len(candidates) == 1:
         return candidates[0]
     local_kick = parse_kickoff(local)
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    kick_passed = bool(local_kick and local_kick <= now)
+
+    finished_live = [
+        e
+        for e in candidates
+        if event_to_internal(e).status in ("finished", "live")
+    ]
+    if kick_passed and finished_live:
+        candidates = finished_live
 
     def rank(event: dict) -> tuple:
         internal = event_to_internal(event)
         status_rank = {"finished": 0, "live": 1, "scheduled": 2}.get(internal.status, 3)
         kick = _bsd_event_kickoff(event)
-        if local_kick and kick:
-            delta = abs((kick - local_kick).total_seconds())
-        else:
-            delta = 999999.0
-        return (status_rank, delta, int(event.get("id") or 0))
+        kick_ts = kick.timestamp() if kick else 9999999999.0
+        has_score = 0 if internal.home_score is not None and internal.away_score is not None else 1
+        return (status_rank, has_score, kick_ts, int(event.get("id") or 0))
 
     return min(candidates, key=rank)
 
@@ -130,6 +155,7 @@ def link_matches_to_bsd(db: Session, client: BsdClient | None = None, *, apply: 
         if apply:
             match.external_fixture_id = event["id"]
             match.external_provider = "bsd"
+            apply_bsd_schedule_to_match(match, event)
         linked += 1
 
     if apply:
