@@ -155,6 +155,7 @@ class NotificationService:
         payload = {
             "status": status,
             "match_id": match_id,
+            "match_label": match_label,
             "team1": team1,
             "team2": team2,
             "final_score": final_score,

@@ -421,3 +421,13 @@ class ReferralWeeklyAward(Base):
     points_awarded: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     coins_awarded: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     awarded_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class SystemUiConfig(Base):
+    __tablename__ = "system_ui_configs"
+    __table_args__ = (UniqueConstraint("config_key", name="uq_system_ui_config_key"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    config_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    config: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())

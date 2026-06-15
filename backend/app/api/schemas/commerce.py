@@ -129,6 +129,24 @@ class MarkNotificationsReadRequest(BaseModel):
     ids: list[int] | None = None
 
 
+class PredictRevealConfigOut(BaseModel):
+    states: dict
+    buttons: dict
+    hints: dict
+    carousel: dict
+    score_template: str
+    score_template_simple: str
+
+
+class PredictRevealConfigUpdate(BaseModel):
+    states: dict | None = None
+    buttons: dict | None = None
+    hints: dict | None = None
+    carousel: dict | None = None
+    score_template: str | None = None
+    score_template_simple: str | None = None
+
+
 class LeaderboardRowOut(BaseModel):
     rank: int | None = None
     user_id: int

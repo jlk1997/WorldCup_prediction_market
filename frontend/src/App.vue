@@ -206,6 +206,7 @@ import { useGuideVisibility } from './composables/useGuideVisibility'
 import { useStadiumStore } from './stores/stadiumStore'
 import { subscribeLiveMatches } from './stores/liveMatchesStore'
 import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
+import { ensurePredictRevealConfig } from './stores/predictRevealConfigStore'
 import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
@@ -252,6 +253,7 @@ let unsubscribeLive: (() => void) | null = null
 onMounted(async () => {
   void warmLegendBackdropImages()
   unsubscribeLive = subscribeLiveMatches()
+  await ensurePredictRevealConfig()
   startHeaderNotificationPoll()
   await initAuth()
   if (authState.accessToken) {

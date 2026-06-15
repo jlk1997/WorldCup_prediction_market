@@ -26,6 +26,8 @@ from app.api.schemas.commerce import (
     SendCodeRequest,
     UpdateProfileRequest,
     UserNotificationOut,
+    PredictRevealConfigOut,
+    PredictRevealConfigUpdate,
     UserOut,
     VerifyCodeRequest,
     MarkNotificationsReadRequest,
@@ -194,12 +196,43 @@ def list_notifications(
     limit: int = Query(20, ge=1, le=50),
 ):
     try:
+        from app.core.predict_notify_parse import enrich_predict_payload
+
         rows = NotificationService(db).list_for_user(
             user.id, unread_only=unread_only, category=category, limit=limit
         )
-        return [UserNotificationOut.model_validate(r) for r in rows]
+        out: list[UserNotificationOut] = []
+        for row in rows:
+            item = UserNotificationOut.model_validate(row)
+            if item.category == NotificationService.CATEGORY_PREDICT:
+                enriched = enrich_predict_payload(item.payload, item.body)
+                item = item.model_copy(update={"payload": enriched})
+            out.append(item)
+        return out
     except SQLAlchemyError:
         raise ServiceUnavailableError("通知暂不可用，请确认已执行数据库迁移") from None
+
+
+@router_game.get("/predict-reveal-config", response_model=PredictRevealConfigOut)
+def get_predict_reveal_config(db: Session = Depends(get_db)):
+    from app.services.predict_reveal_config_service import PredictRevealConfigService
+
+    cfg = PredictRevealConfigService(db).get_config()
+    return PredictRevealConfigOut.model_validate(cfg)
+
+
+@router_game.put("/admin/predict-reveal-config", response_model=PredictRevealConfigOut)
+def update_predict_reveal_config(
+    body: PredictRevealConfigUpdate,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_admin_secret_in_production),
+):
+    from app.services.predict_reveal_config_service import PredictRevealConfigService
+
+    patch = body.model_dump(exclude_unset=True)
+    cfg = PredictRevealConfigService(db).upsert_config(patch)
+    db.commit()
+    return PredictRevealConfigOut.model_validate(cfg)
 
 
 @router_game.get("/notifications/unread-count")
