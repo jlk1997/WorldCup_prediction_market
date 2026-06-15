@@ -31,18 +31,30 @@
             <span v-else>查看军团贡献与球星热力 →</span>
           </div>
           <div class="match-list">
-            <div v-for="m in myMatches" :key="m.id" class="match-card glass-panel" :class="{ live: m.is_live || m.status === 'live' }">
+            <div
+              v-for="m in myMatchesSorted"
+              :key="m.id"
+              class="match-card glass-panel"
+              :class="{ live: m.is_live || m.status === 'live', stale: isMatchStaleScheduled(m) }"
+            >
               <div class="card-main" @click="goMatch(m)">
-                <div class="score" v-if="m.is_live || m.home_score != null">{{ m.home_score ?? 0 }} : {{ m.away_score ?? 0 }}</div>
+                <div class="score">{{ formatMatchScore(m.home_score, m.away_score, { status: m.status, isLive: m.is_live }) }}</div>
                 <div class="teams">{{ m.team1 }} vs {{ m.team2 }}</div>
-                <div class="meta">{{ m.status === 'finished' ? '已结束' : m.is_live ? `${m.minute}' LIVE` : `${m.date} ${m.time}` }}</div>
+                <div class="meta">{{ matchStatusLabel(m) }}</div>
                 <div v-if="arenaByMatch[m.id!]" class="mini-arena">
                   擂台 {{ arenaByMatch[m.id!].home.power }} : {{ arenaByMatch[m.id!].away.power }}
                 </div>
               </div>
               <div class="card-actions">
                 <el-button size="small" @click.stop="goMatch(m)">详情</el-button>
-                <el-button size="small" plain @click.stop="$router.push(`/cheer/${m.id}`)">助威</el-button>
+                <el-button
+                  v-if="isMatchPredictable(m)"
+                  size="small"
+                  plain
+                  @click.stop="$router.push(`/cheer/${m.id}`)"
+                >
+                  助威
+                </el-button>
                 <el-button size="small" type="primary" @click.stop="goAgent(m, m.is_live)">AI 分析</el-button>
               </div>
             </div>
@@ -99,6 +111,13 @@ import MatchTable from '@/components/MatchTable.vue'
 import MatchMobileList from '@/components/MatchMobileList.vue'
 import KnockoutBracket, { type BracketRound } from '@/components/KnockoutBracket.vue'
 import { useBreakpoint } from '@/composables/useBreakpoint'
+import {
+  formatMatchScore,
+  isMatchPredictable,
+  isMatchStaleScheduled,
+  matchStatusLabel,
+  parseMatchKickoff,
+} from '@/utils/matchKickoff'
 
 const { isMobile } = useBreakpoint()
 
@@ -137,6 +156,25 @@ const myMatches = computed(() =>
   matches.value.filter(
     (m) => m.team1 && m.team2 && (myTeamNames.value.has(m.team1) || myTeamNames.value.has(m.team2))
   )
+)
+
+function myMatchSortKey(m: LiveMatch): number {
+  if (m.is_live || m.status === 'live') return 0
+  if (isMatchPredictable(m)) return 1
+  if (isMatchStaleScheduled(m)) return 2
+  if (m.status === 'finished') return 3
+  return 4
+}
+
+const myMatchesSorted = computed(() =>
+  [...myMatches.value].sort((a, b) => {
+    const ka = myMatchSortKey(a)
+    const kb = myMatchSortKey(b)
+    if (ka !== kb) return ka - kb
+    const ta = parseMatchKickoff(a.date, a.time)?.getTime() ?? 0
+    const tb = parseMatchKickoff(b.date, b.time)?.getTime() ?? 0
+    return ka === 3 ? tb - ta : ta - tb
+  }),
 )
 
 const nextMainArena = ref<MatchArena | null>(null)
@@ -264,6 +302,8 @@ watch(myMatches, () => {
   max-width: 100%;
 }
 .match-card.live { border-left: 3px solid var(--wc-accent-rose); }
+.match-card.stale { border-left: 3px solid rgba(230, 162, 60, 0.85); }
+.match-card.stale .meta { color: #e6a23c; }
 .card-main { cursor: pointer; }
 .card-actions { display: flex; gap: 8px; margin-top: 12px; }
 .card-actions .el-button { flex: 1; min-height: 40px; }

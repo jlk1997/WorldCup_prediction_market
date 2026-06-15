@@ -26,7 +26,7 @@
 
 
 
-        <span class="score">{{ match.home_score ?? 0 }} : {{ match.away_score ?? 0 }}</span>
+        <span class="score">{{ formatMatchScore(match.home_score, match.away_score, { status: match.status, isLive: match.is_live }) }}</span>
 
 
 
@@ -47,6 +47,10 @@
 
 
         <el-tag v-else-if="match.status === 'finished'" type="info">已结束</el-tag>
+
+
+
+        <el-tag v-else-if="isMatchStaleScheduled(match)" type="warning">比分同步中</el-tag>
 
 
 
@@ -112,11 +116,19 @@
 
     <PredictCard
 
-      v-if="match?.id && match.status !== 'finished' && !match.is_live"
+      v-if="match?.id && canPredict"
 
       :match-id="match.id"
 
     />
+
+    <div v-else-if="match && !canPredict && match.status !== 'finished'" class="predict-closed glass-panel">
+      <h3>娱乐竞猜</h3>
+      <p class="hint">
+        {{ isMatchStaleScheduled(match) ? '比赛已开赛，比分同步中，暂不可竞猜' : '本场已截止竞猜' }}
+      </p>
+      <el-button type="primary" plain size="small" @click="$router.push('/predict')">去竞猜大厅</el-button>
+    </div>
 
 
 
@@ -210,6 +222,8 @@ import FocusInsightCard from '@/components/FocusInsightCard.vue'
 
 import PredictCard from '@/components/PredictCard.vue'
 
+import { formatMatchScore, isMatchPredictable, isMatchStaleScheduled } from '@/utils/matchKickoff'
+
 
 
 
@@ -243,6 +257,8 @@ const agentMode = computed(() => (match.value ? resolveAgentMode(match.value) : 
 
 
 const agentLabel = computed(() => (match.value ? `${agentButtonLabel(match.value)}（自动运行）` : 'AI 分析'))
+
+const canPredict = computed(() => !!match.value && isMatchPredictable(match.value))
 
 
 
@@ -316,11 +332,7 @@ function syncFromLivePool() {
 
   if (!live) return
 
-  if (match.value.status === 'live' || live.is_live || live.status === 'live') {
-
-    match.value = { ...match.value, ...live }
-
-  }
+  match.value = { ...match.value, ...live }
 
 }
 
@@ -389,6 +401,22 @@ watch(livePool, syncFromLivePool, { deep: true })
 .insight-wrap { margin: 16px 0; max-width: 100%; }
 
 .section { padding: 16px 20px; margin-bottom: 16px; }
+
+.predict-closed {
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.predict-closed h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.predict-closed .hint {
+  margin: 0 0 12px;
+  color: var(--wc-text-muted);
+  font-size: 0.88rem;
+}
 
 .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
