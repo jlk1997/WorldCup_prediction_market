@@ -65,20 +65,46 @@ def _apply_internal_fixture(
 def _should_poll_match(
     match: Match,
     now: datetime,
-    near_start: datetime,
     near_end: datetime,
 ) -> bool:
     """Whether to fetch BSD for a linked match outside the live feed."""
     kick = parse_kickoff(match)
+    if match.status == "live":
+        return True
     if match.status == "scheduled":
         if kick is None:
             return True
-        return near_start <= kick <= near_end
+        # Past kickoff but still marked scheduled — must catch up (e.g. after ingest outage).
+        if kick <= now:
+            return True
+        return kick <= near_end
     if match.status == "finished":
         if kick is None:
-            return True
+            return False
         return kick >= now - timedelta(hours=24)
     return False
+
+
+def _sync_events_batch(
+    client: BsdClient,
+    matches_by_external_id: dict[int, Match],
+    updated_external_ids: set[int],
+    *,
+    date_from: str,
+    date_to: str,
+) -> int:
+    """Bulk-update linked matches from league events list (fewer API calls than per-event GET)."""
+    updated = 0
+    for event in client.list_league_events(date_from=date_from, date_to=date_to):
+        fixture = event_to_internal(event)
+        eid = fixture.external_id
+        if not eid or eid in updated_external_ids:
+            continue
+        match = matches_by_external_id.get(eid)
+        if match and _apply_internal_fixture(match, fixture, client):
+            updated += 1
+            updated_external_ids.add(eid)
+    return updated
 
 
 class LiveMatchSyncService:
@@ -103,8 +129,9 @@ class LiveMatchSyncService:
                 max(0, unlinked - linked),
             )
 
+        live_feed = 0
         updated = 0
-        updated_external_ids: set[str] = set()
+        updated_external_ids: set[int] = set()
         matches = list(
             self.db.scalars(
                 select(Match).where(Match.external_fixture_id.isnot(None))
@@ -116,20 +143,40 @@ class LiveMatchSyncService:
             fixture = event_to_internal(event)
             match = by_external_id.get(fixture.external_id)
             if match and _apply_internal_fixture(match, fixture, self.client):
+                live_feed += 1
                 updated += 1
                 if fixture.external_id:
                     updated_external_ids.add(fixture.external_id)
 
         now = datetime.now(timezone.utc).replace(tzinfo=None)
-        near_start = now - timedelta(hours=6)
         near_end = now + timedelta(hours=48)
+        bulk_from = (now - timedelta(days=14)).strftime("%Y-%m-%d")
+        bulk_to = (now + timedelta(days=2)).strftime("%Y-%m-%d")
+        bulk_updated = _sync_events_batch(
+            self.client,
+            by_external_id,
+            updated_external_ids,
+            date_from=bulk_from,
+            date_to=bulk_to,
+        )
+        updated += bulk_updated
 
+        stale_scheduled = sum(
+            1
+            for m in matches
+            if m.status == "scheduled"
+            and m.external_fixture_id
+            and (kick := parse_kickoff(m)) is not None
+            and kick <= now
+        )
+        if stale_scheduled:
+            logger.info("BSD catch-up: %s scheduled matches past kickoff", stale_scheduled)
+
+        individual = 0
         for match in matches:
             if not match.external_fixture_id or match.external_fixture_id in updated_external_ids:
                 continue
-            if match.status == "live":
-                continue
-            if not _should_poll_match(match, now, near_start, near_end):
+            if not _should_poll_match(match, now, near_end):
                 continue
             event = self.client.get_event(match.external_fixture_id)
             if not event:
@@ -137,6 +184,16 @@ class LiveMatchSyncService:
             fixture = event_to_internal(event)
             if _apply_internal_fixture(match, fixture, self.client):
                 updated += 1
+                individual += 1
+
+        if live_feed or bulk_updated or individual:
+            logger.info(
+                "BSD sync breakdown: live_feed=%s bulk=%s individual=%s total=%s",
+                live_feed,
+                bulk_updated,
+                individual,
+                updated,
+            )
 
         self.db.commit()
         invalidate_live_cache()

@@ -77,8 +77,7 @@ def test_apply_internal_fixture_updates_scores():
 
 
 def test_should_poll_match_uses_parsed_kickoff(monkeypatch):
-    now = datetime(2026, 6, 12, 12, 0, 0)
-    near_start = now - timedelta(hours=6)
+    now = datetime(2026, 6, 15, 12, 0, 0)
     near_end = now + timedelta(hours=48)
     match = Match(
         id=3,
@@ -98,14 +97,26 @@ def test_should_poll_match_uses_parsed_kickoff(monkeypatch):
         match_time="12:00",
         external_fixture_id=1000,
     )
+    old_finished = Match(
+        id=5,
+        team1_name="C",
+        team2_name="D",
+        status="finished",
+        match_date="2026-06-01",
+        match_time="12:00",
+        external_fixture_id=1001,
+    )
 
     def fake_kickoff(m: Match):
         if m.id == 3:
             return datetime(2026, 6, 12, 7, 0)
         if m.id == 4:
             return datetime(2026, 7, 15, 12, 0)
+        if m.id == 5:
+            return datetime(2026, 6, 1, 12, 0)
         return None
 
     monkeypatch.setattr("app.ingest.live_sync_service.parse_kickoff", fake_kickoff)
-    assert _should_poll_match(match, now, near_start, near_end) is True
-    assert _should_poll_match(far, now, near_start, near_end) is False
+    assert _should_poll_match(match, now, near_end) is True
+    assert _should_poll_match(far, now, near_end) is False
+    assert _should_poll_match(old_finished, now, near_end) is False
