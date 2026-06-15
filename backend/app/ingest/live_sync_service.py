@@ -16,6 +16,7 @@ from app.ingest.bsd_client import BsdClient
 from app.ingest.bsd_event_parser import normalize_bsd_incidents
 from app.ingest.bsd_link_service import link_matches_to_bsd, list_group_event_candidates, pick_best_bsd_event, apply_bsd_schedule_to_match
 from app.ingest.quota import invalidate_live_cache
+from app.core.match_cache import invalidate_match_caches
 
 logger = logging.getLogger(__name__)
 
@@ -212,6 +213,47 @@ def _reconcile_stale_matches(
     return updated
 
 
+def _recover_stale_live_matches(
+    matches: list[Match],
+    now: datetime,
+    client: BsdClient,
+    updated_external_ids: set[int],
+) -> int:
+    """Force-refresh matches stuck in live long after kickoff."""
+    from app.ingest.bsd_adapter import resolve_event_status
+
+    updated = 0
+    for match in matches:
+        if match.status != "live" or not match.external_fixture_id:
+            continue
+        ref = match.live_updated_at
+        if ref and ref.tzinfo:
+            ref = ref.replace(tzinfo=None)
+        kick = parse_kickoff(match)
+        stale_ref = ref or kick
+        if not stale_ref or (now - stale_ref) < timedelta(hours=3):
+            continue
+        eid = int(match.external_fixture_id)
+        if eid in updated_external_ids:
+            continue
+        event = client.get_event(eid)
+        if not event:
+            continue
+        fixture = event_to_internal(event)
+        status = resolve_event_status(event)
+        if status == "finished" or (fixture.minute is not None and int(fixture.minute) >= 90):
+            logger.info(
+                "Recover stale live match #%s %s vs %s -> finished",
+                match.id,
+                match.team1_name,
+                match.team2_name,
+            )
+        if _apply_internal_fixture(match, fixture, client):
+            updated += 1
+            updated_external_ids.add(eid)
+    return updated
+
+
 class LiveMatchSyncService:
     def __init__(self, db: Session):
         self.db = db
@@ -292,6 +334,11 @@ class LiveMatchSyncService:
         if stale_scheduled:
             logger.info("BSD catch-up: %s scheduled matches past kickoff", stale_scheduled)
 
+        live_recovered = _recover_stale_live_matches(
+            matches, now, self.client, updated_external_ids
+        )
+        updated += live_recovered
+
         individual = 0
         for match in matches:
             if not match.external_fixture_id or match.external_fixture_id in updated_external_ids:
@@ -306,34 +353,27 @@ class LiveMatchSyncService:
                 updated += 1
                 individual += 1
 
-        if live_feed or bulk_updated or reconciled or individual:
+        if live_feed or bulk_updated or reconciled or live_recovered or individual:
             logger.info(
-                "BSD sync breakdown: live_feed=%s bulk=%s reconcile=%s individual=%s total=%s",
+                "BSD sync breakdown: live_feed=%s bulk=%s reconcile=%s live_recover=%s individual=%s total=%s",
                 live_feed,
                 bulk_updated,
                 reconciled,
+                live_recovered,
                 individual,
                 updated,
             )
 
         self.db.commit()
-        invalidate_live_cache()
-        try:
-            from app.core.cache import cache_delete
-
-            cache_delete("stats:overview")
-            cache_delete("schedule:all")
-            cache_delete("schedule:bracket")
-            cache_delete("schedule:standings:local")
-        except Exception:
-            pass
+        invalidate_match_caches()
         try:
             from app.services.knockout_resolver import KnockoutResolverService
 
             KnockoutResolverService(self.db).resolve()
         except Exception as exc:
             logger.warning("Knockout bracket resolve skipped: %s", exc)
-        self._log("bsd", "ok", updated)
+        log_error = f"stale_scheduled={stale_scheduled}" if stale_scheduled else None
+        self._log("bsd", "ok", updated, log_error)
         return updated
 
     def link_fixtures(self) -> int:
@@ -343,7 +383,7 @@ class LiveMatchSyncService:
             return 0
 
         result = link_matches_to_bsd(self.db, self.client, apply=True)
-        invalidate_live_cache()
+        invalidate_match_caches()
         linked = int(result.get("linked") or 0)
         error = None
         if linked < int(result.get("total") or 0):

@@ -17,13 +17,17 @@ def _utcnow() -> datetime:
 
 
 from app.core.match_kickoff import parse_kickoff
+from app.core.predict_eligibility import is_match_predictable
 
 
 def _match_brief(m: Match, settings) -> dict:
-    kick = parse_kickoff(m)
     now = _utcnow()
-    close_min = settings.predict_close_minutes_before
-    can_predict = m.status in (None, "scheduled") and (not kick or kick - timedelta(minutes=close_min) > now)
+    can_predict = is_match_predictable(
+        m,
+        close_minutes_before=settings.predict_close_minutes_before,
+        now=now,
+    )
+    kick = parse_kickoff(m)
     can_cheer = can_predict and kick and (kick - now) <= timedelta(hours=CHEER_HOURS_BEFORE)
     return {
         "id": m.id,

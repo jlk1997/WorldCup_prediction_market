@@ -17,6 +17,7 @@ from app.db.session import SessionLocal
 from app.ingest.bsd_client import BsdClient
 from app.ingest.bsd_link_service import apply_bsd_schedule_to_match
 from app.ingest.quota import invalidate_live_cache
+from app.core.match_cache import invalidate_match_caches
 
 
 def main() -> int:
@@ -51,16 +52,7 @@ def main() -> int:
             print(f"Dry run: would update {updated} matches")
         else:
             db.commit()
-            invalidate_live_cache()
-            try:
-                from app.core.cache import cache_delete
-
-                cache_delete("schedule:all")
-                cache_delete("schedule:bracket")
-                cache_delete("schedule:standings:local")
-                cache_delete("stats:overview")
-            except Exception:
-                pass
+            invalidate_match_caches()
             print(f"Updated {updated} matches")
     finally:
         db.close()

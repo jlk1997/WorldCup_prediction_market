@@ -27,6 +27,11 @@ def _utcnow() -> datetime:
 
 
 from app.core.match_kickoff import parse_kickoff
+from app.core.predict_eligibility import is_match_predictable, match_has_live_signals
+
+
+def _match_has_live_signals(match: Match) -> bool:
+    return match_has_live_signals(match)
 
 
 class GameService:
@@ -42,6 +47,27 @@ class GameService:
         self.users = UserRepository(db)
         self.wallet = WalletRepository(db)
 
+    def _match_predictable(self, match: Match, now: datetime | None = None) -> bool:
+        return is_match_predictable(
+            match,
+            close_minutes_before=self.settings.predict_close_minutes_before,
+            now=now or _utcnow(),
+        )
+
+    def _assert_match_predictable(self, match: Match) -> None:
+        if match.status not in (None, "scheduled"):
+            raise BadRequestError("该比赛已无法竞猜")
+        kick = parse_kickoff(match)
+        if not kick:
+            raise BadRequestError("该比赛缺少开球时间，暂不可竞猜")
+        now = _utcnow()
+        if kick <= now:
+            raise BadRequestError("比赛已开赛，无法竞猜")
+        if kick - timedelta(minutes=self.settings.predict_close_minutes_before) <= now:
+            raise BadRequestError("已超过竞猜截止时间")
+        if _match_has_live_signals(match):
+            raise BadRequestError("比赛已开始，无法竞猜")
+
     def list_predictable_matches(self) -> list[Match]:
         rows = (
             self.db.query(Match)
@@ -49,17 +75,8 @@ class GameService:
             .order_by(Match.match_date, Match.match_time)
             .all()
         )
-        cutoff_min = self.settings.predict_close_minutes_before
         now = _utcnow()
-        out: list[Match] = []
-        for m in rows:
-            kick = parse_kickoff(m)
-            if not kick:
-                continue
-            if kick - timedelta(minutes=cutoff_min) <= now:
-                continue
-            out.append(m)
-        return out
+        return [m for m in rows if self._match_predictable(m, now)]
 
     def list_predictable_match_cards(self, user: User | None = None) -> list[dict]:
         from app.services.recommendation_service import match_to_brief
@@ -133,17 +150,12 @@ class GameService:
         if existing:
             raise BadRequestError("您已竞猜过该场比赛")
 
-        match = self.db.get(Match, match_id)
+        match = (
+            self.db.query(Match).filter(Match.id == match_id).with_for_update().first()
+        )
         if not match:
             raise NotFoundError("比赛不存在")
-        if match.status not in (None, "scheduled"):
-            raise BadRequestError("该比赛已无法竞猜")
-
-        kick = parse_kickoff(match)
-        if not kick:
-            raise BadRequestError("该比赛缺少开球时间，暂不可竞猜")
-        if kick - timedelta(minutes=self.settings.predict_close_minutes_before) <= _utcnow():
-            raise BadRequestError("已超过竞猜截止时间")
+        self._assert_match_predictable(match)
 
         is_free = False
         stake = 0
@@ -216,17 +228,12 @@ class GameService:
         if existing.is_free:
             raise BadRequestError("免费竞猜不支持追加质押")
 
-        match = self.db.get(Match, match_id)
+        match = (
+            self.db.query(Match).filter(Match.id == match_id).with_for_update().first()
+        )
         if not match:
             raise NotFoundError("比赛不存在")
-        if match.status not in (None, "scheduled"):
-            raise BadRequestError("该比赛已无法追加质押")
-
-        kick = parse_kickoff(match)
-        if not kick:
-            raise BadRequestError("该比赛缺少开球时间，暂不可操作")
-        if kick - timedelta(minutes=self.settings.predict_close_minutes_before) <= _utcnow():
-            raise BadRequestError("已超过竞猜截止时间")
+        self._assert_match_predictable(match)
 
         new_total = existing.stake_coins + additional_stake_coins
         if additional_stake_coins < self.settings.predict_stake_min:
@@ -473,6 +480,7 @@ class GameService:
                     {
                         "user_id": user.id,
                         "prediction_id": locked.id,
+                        "match_id": match.id,
                         "team1": match.team1_name,
                         "team2": match.team2_name,
                         "final_score": None,
@@ -481,6 +489,9 @@ class GameService:
                         "points_awarded": 0,
                         "redeem_points_awarded": 0,
                         "coins_returned": locked.coins_returned,
+                        "stake_coins": locked.stake_coins,
+                        "is_free": locked.is_free,
+                        "user_pick": locked.pick,
                     }
                 )
                 return True
@@ -505,16 +516,25 @@ class GameService:
             notify_payload = {
                 k: v
                 for k, v in payload.items()
-                if k
-                not in ("user_id", "prediction_id", "user_pick", "result_pick")
+                if k not in ("user_id", "prediction_id", "result_pick")
             }
             NotificationService(self.db).notify_predict_settled(
                 payload["user_id"],
                 payload["prediction_id"],
                 **notify_payload,
             )
+            try:
+                from app.core.user_ws_hub import push_predict_settled
+
+                ws_payload = {**notify_payload, "prediction_id": payload["prediction_id"]}
+                push_predict_settled(payload["user_id"], ws_payload)
+            except Exception:
+                logger.debug("User WS push skipped for pred=%s", payload.get("prediction_id"))
             cache_delete_prefix("game:win_feed:")
             cache_delete_prefix("game:pick_stats:")
+            from app.core.match_cache import invalidate_match_caches
+
+            invalidate_match_caches()
             self.db.commit()
         except Exception:
             logger.exception("Post-settle notification failed pred=%s", payload.get("prediction_id"))
@@ -625,6 +645,7 @@ class GameService:
         return {
             "user_id": user.id,
             "prediction_id": pred.id,
+            "match_id": match.id,
             "team1": match.team1_name,
             "team2": match.team2_name,
             "final_score": final_score,
@@ -636,6 +657,10 @@ class GameService:
             "result_pick": result,
             "user_pick_label": user_pick_label,
             "result_pick_label": result_pick_label,
+            "stake_coins": pred.stake_coins,
+            "is_free": pred.is_free,
+            "win_streak_after": user.win_streak or 0,
+            "loss_streak_after": user.loss_streak or 0,
             "next_match_id": next_match["id"] if next_match else None,
             "next_match_label": next_match["label"] if next_match else None,
             "next_match_hours": next_match["hours_until"] if next_match else None,

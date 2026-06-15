@@ -65,6 +65,7 @@
                 </span>
               </button>
               <ReferralNotifier v-if="isLoggedIn" />
+              <PredictSettlementNotifier v-if="isLoggedIn" />
               <button
                 v-if="isLoggedIn"
                 type="button"
@@ -173,6 +174,7 @@
     <MobileMoreDrawer v-model="moreOpen" :show-profile-chip="showProfileHeaderChip" />
     <LeaderboardRewardDialog v-model="showRewardDialog" />
     <InviteShareSheet />
+    <PredictSettlementReveal />
   </div>
 </template>
 
@@ -185,6 +187,7 @@ import AppLogo from './components/AppLogo.vue'
 import OnboardingTour from './components/OnboardingTour.vue'
 import ProfileIncompleteBanner from './components/ProfileIncompleteBanner.vue'
 import PredictSettlementNotifier from './components/PredictSettlementNotifier.vue'
+import PredictSettlementReveal from './components/PredictSettlementReveal.vue'
 import ReferralNotifier from './components/ReferralNotifier.vue'
 import InviteShareSheet from './components/InviteShareSheet.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
@@ -203,6 +206,7 @@ import { useGuideVisibility } from './composables/useGuideVisibility'
 import { useStadiumStore } from './stores/stadiumStore'
 import { subscribeLiveMatches } from './stores/liveMatchesStore'
 import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
+import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
 const router = useRouter()
@@ -240,6 +244,8 @@ const mobileDisplayNick = computed(() => {
 })
 
 const passActive = computed(() => hasActiveSeasonPass(authState.user))
+
+useUserPredictWs()
 
 let unsubscribeLive: (() => void) | null = null
 

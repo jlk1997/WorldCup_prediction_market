@@ -6,6 +6,9 @@
     <p v-if="predictedStake != null" class="stake-info">
       {{ predictedFree ? '免费竞猜' : `已质押 ${predictedStake} 球迷币` }}
       <span v-if="predictedStatus === 'pending'"> · 待开奖</span>
+      <span v-else-if="predictedStatus === 'won'" class="won-tag"> · 已猜中</span>
+      <span v-else-if="predictedStatus === 'lost'" class="lost-tag"> · 未猜中</span>
+      <span v-else-if="predictedStatus === 'void'" class="void-tag"> · 流局退款</span>
     </p>
     <el-button type="primary" plain size="small" @click="$router.push('/predict')">去竞猜大厅</el-button>
   </div>
@@ -30,7 +33,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { submitPrediction, getPredictableMatches } from '../api/commerce'
+import { submitPrediction, getPredictableMatches, getMyPredictions } from '../api/commerce'
 import { authState, fetchMe } from '../stores/authStore'
 import { getErrorMessage, isRateLimitError } from '../api/client'
 import { showApiError } from '../utils/errorHandler'
@@ -66,7 +69,19 @@ onMounted(async () => {
   if (!authState.user) return
   try {
     const matches = await getPredictableMatches()
-    const m = matches.find((x) => x.id === props.matchId)
+    let m = matches.find((x) => x.id === props.matchId)
+    if (!m?.user_predicted) {
+      const history = await getMyPredictions()
+      const hist = history.find((x) => x.match_id === props.matchId)
+      if (hist) {
+        userPredicted.value = true
+        userPick.value = hist.pick ?? null
+        userStake.value = hist.stake_coins ?? null
+        userFree.value = !!hist.is_free
+        userStatus.value = hist.status ?? null
+        return
+      }
+    }
     if (m?.user_predicted) {
       userPredicted.value = true
       userPick.value = m.user_pick ?? null
@@ -147,6 +162,9 @@ async function submit() {
   color: var(--wc-text-secondary);
   margin: 0 0 10px;
 }
+.won-tag { color: #8fd48a; }
+.lost-tag { color: #f89898; }
+.void-tag { color: #79bbff; }
 .row {
   display: flex;
   flex-wrap: wrap;

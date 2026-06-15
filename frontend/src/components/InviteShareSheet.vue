@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="isMobile ? 'el-drawer' : 'el-dialog'"
+    :is="isMobile ? ElDrawer : ElDialog"
     v-model="sheetOpen"
     :title="isMobile ? undefined : '分享给好友'"
     direction="btt"
@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ElDialog, ElDrawer } from 'element-plus'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
 import { isWeChatBrowser } from '../utils/payEnv'

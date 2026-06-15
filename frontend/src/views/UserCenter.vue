@@ -330,7 +330,7 @@ function startPredictPollIfNeeded() {
     if (!predictions.value.some((p) => p.status === 'pending')) {
       stopPredictPoll()
     }
-  }, 60000)
+  }, 30000)
 }
 
 function onPredictRefresh() {

@@ -120,6 +120,12 @@ class NotificationService:
         next_match_id: int | None = None,
         next_match_label: str | None = None,
         next_match_hours: float | None = None,
+        match_id: int | None = None,
+        user_pick: str | None = None,
+        stake_coins: int = 0,
+        is_free: bool = False,
+        win_streak_after: int = 0,
+        loss_streak_after: int = 0,
     ) -> None:
         match_label = f"{team1 or '?'} vs {team2 or '?'}"
         if status == "won":
@@ -148,13 +154,26 @@ class NotificationService:
                 body = f"{match_label} 比分 {final_score or '—'}，下次继续加油"
         payload = {
             "status": status,
+            "match_id": match_id,
+            "team1": team1,
+            "team2": team2,
+            "final_score": final_score,
+            "user_pick": user_pick,
+            "user_pick_label": user_pick_label,
+            "result_pick_label": result_pick_label,
+            "stake_coins": stake_coins,
+            "is_free": is_free,
             "points_awarded": points_awarded,
             "redeem_points_awarded": redeem_points_awarded,
             "coins_returned": coins_returned,
             "season_rank": season_rank,
+            "void_reason": void_reason,
+            "win_streak_after": win_streak_after,
+            "loss_streak_after": loss_streak_after,
             "next_match_id": next_match_id,
             "next_match_label": next_match_label,
             "next_match_hours": next_match_hours,
+            "prediction_id": prediction_id,
         }
         if next_match_id and next_match_label:
             hours_txt = f"{next_match_hours} 小时后" if next_match_hours is not None else "稍后"

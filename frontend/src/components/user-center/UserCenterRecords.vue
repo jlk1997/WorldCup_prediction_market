@@ -24,7 +24,9 @@
               <span v-else>{{ row.stake_coins }} 币</span>
               <span v-if="row.coins_returned > 0" class="return-coins"> +{{ row.coins_returned }}</span>
             </template>
-            <template #status="{ row }">{{ row.status_label || row.status }}</template>
+            <template #status="{ row }">
+              <span :class="statusClass(row.status)">{{ row.status_label || row.status }}</span>
+            </template>
             <template #final="{ row }">{{ row.final_score || '—' }}</template>
             <template #seasonPts="{ row }">
               <span v-if="row.status === 'won' && row.points_awarded">+{{ row.points_awarded }}</span>
@@ -133,6 +135,14 @@ const pointSubTab = ref('season')
 
 const formatTime = formatLedgerTime
 
+function statusClass(status?: string) {
+  if (status === 'won') return 'status-won'
+  if (status === 'lost') return 'status-lost'
+  if (status === 'void') return 'status-void'
+  if (status === 'pending') return 'status-pending'
+  return ''
+}
+
 const predictionColumns = [
   { label: '对阵', minWidth: 160, slot: 'match' },
   { label: '我的选择', width: 100, slot: 'pick' },
@@ -191,4 +201,8 @@ watch(
   0%, 100% { box-shadow: none; }
   20%, 60% { box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.7), 0 0 24px rgba(212, 165, 116, 0.35); }
 }
+.status-won { color: #8fd48a; }
+.status-lost { color: #f89898; }
+.status-void { color: #79bbff; }
+.status-pending { color: #e6a23c; }
 </style>

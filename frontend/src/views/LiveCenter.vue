@@ -22,7 +22,12 @@
         </button>
       </div>
       <el-tabs v-model="tab" class="live-tabs" :class="{ 'hide-header': isMobile }" lazy>
-        <el-tab-pane :label="`我的球队 (${myMatches.length})`" name="myteams" v-if="myTeamNames.size">
+        <el-tab-pane :label="myTeamsTabLabel" name="myteams">
+          <div v-if="!authState.accessToken" class="myteams-login-hint glass-panel">
+            <p>登录并选择主/副队后，这里会集中展示你关注球队的全部赛程。</p>
+            <el-button type="primary" @click="$router.push('/login')">登录查看我的球队</el-button>
+          </div>
+          <template v-else-if="myTeamNames.size">
           <div v-if="authState.accessToken" class="arena-banner glass-panel" @click="$router.push('/arena')">
             <span>球迷擂台</span>
             <span v-if="nextMainArena">
@@ -60,6 +65,8 @@
             </div>
             <el-empty v-if="!myMatches.length" description="暂无主/副队比赛" />
           </div>
+          </template>
+          <el-empty v-else description="请先在球迷中心选择主队或副队" />
         </el-tab-pane>
 
         <el-tab-pane :label="`进行中 (${liveNow.length})`" name="live">
@@ -131,10 +138,19 @@ const tabItems = computed(() => {
     { name: 'finished', shortLabel: `已结束 (${finished.value.length})` },
     { name: 'knockout', shortLabel: '淘汰赛' },
   ]
-  if (myTeamNames.value.size) {
-    items.unshift({ name: 'myteams', shortLabel: `我的 (${myMatches.value.length})` })
-  }
+  items.unshift({
+    name: 'myteams',
+    shortLabel: authState.accessToken
+      ? (myTeamNames.value.size ? `我的 (${myMatches.value.length})` : '我的球队')
+      : '我的球队',
+  })
   return items
+})
+
+const myTeamsTabLabel = computed(() => {
+  if (!authState.accessToken) return '我的球队'
+  if (!myTeamNames.value.size) return '我的球队'
+  return `我的球队 (${myMatches.value.length})`
 })
 
 const { goAgentFromMatch, goMatchDetail } = useAgentNavigate()
@@ -241,6 +257,8 @@ onMounted(async () => {
     } catch {
       /* ignore */
     }
+  } else {
+    tab.value = 'myteams'
   }
 })
 
@@ -315,6 +333,17 @@ watch(myMatches, () => {
 }
 .teams { font-weight: bold; margin: 6px 0; color: var(--wc-text-primary); }
 .meta { color: #c9d1d9; font-size: 0.85rem; }
+.myteams-login-hint {
+  padding: 24px 20px;
+  text-align: center;
+  margin: 12px 0;
+}
+.myteams-login-hint p {
+  margin: 0 0 16px;
+  color: var(--wc-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
 .arena-banner {
   display: flex;
   justify-content: space-between;

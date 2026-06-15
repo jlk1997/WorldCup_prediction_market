@@ -2,8 +2,14 @@ import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getReferralMe, type ReferralMe } from '../api/referral'
 import { authState } from '../stores/authStore'
+import { copyToClipboard } from '../utils/copyToClipboard'
 import { downloadSharePoster, generateSharePosterObjectUrl } from '../utils/sharePoster'
 import { trackEvent } from '../utils/analytics'
+
+export interface OpenShareSheetOptions {
+  /** Copy invite text when opening (default true). */
+  autoCopy?: boolean
+}
 
 const sheetOpen = ref(false)
 const loading = ref(false)
@@ -91,8 +97,26 @@ watch(sheetOpen, (open) => {
   if (!open) revokePosterPreview()
 })
 
+async function copyText(text: string, okMsg: string) {
+  const ok = await copyToClipboard(text)
+  if (ok) {
+    ElMessage.success(okMsg)
+    return true
+  }
+  ElMessage({
+    type: 'warning',
+    message: '无法自动复制，请长按下方文案手动复制',
+    duration: 5000,
+  })
+  ElMessage.info(text)
+  return false
+}
+
 export function useInviteShare() {
-  async function openShareSheet() {
+  async function openShareSheet(arg?: OpenShareSheetOptions | MouseEvent) {
+    const options: OpenShareSheetOptions =
+      arg instanceof MouseEvent || arg == null ? {} : arg
+    const { autoCopy = true } = options
     if (!authState.accessToken) {
       ElMessage.warning('请先登录后再分享')
       return
@@ -107,21 +131,13 @@ export function useInviteShare() {
     trackEvent('share_open', { source: 'invite_sheet' })
     sheetOpen.value = true
     void refreshPosterPreview(me)
+    if (autoCopy) {
+      await copyText(buildInviteShareText(me), '邀请文案已复制，可粘贴发给好友')
+    }
   }
 
   function closeShareSheet() {
     sheetOpen.value = false
-  }
-
-  async function copyText(text: string, okMsg: string) {
-    try {
-      await navigator.clipboard.writeText(text)
-      ElMessage.success(okMsg)
-      return true
-    } catch {
-      ElMessage.warning('复制失败，请手动复制')
-      return false
-    }
   }
 
   async function copyInviteLink() {

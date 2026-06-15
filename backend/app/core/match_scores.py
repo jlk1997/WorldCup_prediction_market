@@ -31,12 +31,10 @@ def result_pick_from_team_scores(
     team2_score: int | None,
 ) -> str | None:
     """Return home/draw/away where home=team1 win, away=team2 win."""
-    if team1_score is None and team2_score is None:
+    if team1_score is None or team2_score is None:
         return None
-    t1 = team1_score if team1_score is not None else 0
-    t2 = team2_score if team2_score is not None else 0
-    if t1 > t2:
+    if team1_score > team2_score:
         return "home"
-    if t1 < t2:
+    if team1_score < team2_score:
         return "away"
     return "draw"

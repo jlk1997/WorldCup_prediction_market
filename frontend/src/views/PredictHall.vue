@@ -61,8 +61,9 @@
       @keydown.enter="$router.push('/me')"
     >
       ⏳ {{ dailyStatus.pending_predictions }} 场待开奖
-      <span v-if="dailyStatus.next_pending_match.hours_until != null">
-        · 最近一场「{{ dailyStatus.next_pending_match.label }}」约 {{ formatHours(dailyStatus.next_pending_match.hours_until) }} 后出结果
+      <span> · 比赛结束后约 1–3 分钟内自动开奖</span>
+      <span v-if="dailyStatus.next_pending_match?.label">
+        · 最近「{{ dailyStatus.next_pending_match.label }}」
       </span>
       <span class="pending-link">去个人中心查看 →</span>
     </div>
@@ -137,6 +138,8 @@
                 <span v-else-if="m.user_prediction_status === 'won'" class="won-tag"> · 已猜中</span>
 
                 <span v-else-if="m.user_prediction_status === 'lost'" class="lost-tag"> · 未猜中</span>
+
+                <span v-else-if="m.user_prediction_status === 'void'" class="void-tag"> · 流局</span>
 
               </div>
 
@@ -567,11 +570,6 @@ async function raiseStake(matchId: number) {
   } finally {
     raisingId.value = null
   }
-}
-
-function formatHours(h: number) {
-  if (h < 1) return `${Math.round(h * 60)} 分钟`
-  return `${h.toFixed(1)} 小时`
 }
 
 async function doSignin() {
@@ -1168,6 +1166,8 @@ onMounted(load)
 }
 
 .won-tag { color: #8fd48a; }
+.lost-tag { color: #f89898; }
+.void-tag { color: #79bbff; }
 .lost-tag { color: #f89898; }
 
 .raise-row {

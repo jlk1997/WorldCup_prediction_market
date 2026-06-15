@@ -150,3 +150,55 @@ async def websocket_live(websocket: WebSocket):
         await _safe_close(websocket)
         with _ws_lock:
             _ws_connections = max(0, _ws_connections - 1)
+
+
+@router.websocket("/ws/user")
+async def websocket_user(websocket: WebSocket):
+    """Authenticated channel for predict_settled and other user events."""
+    from app.core.user_ws_hub import drain_pending, subscribe, unsubscribe
+    from app.db.repositories.user_repository import UserRepository
+    from app.services.auth_service import AuthService
+
+    token = websocket.query_params.get("token")
+    if not token:
+        await _reject_ws(websocket, code=4401)
+        return
+    try:
+        rate_limit_ws_connect(websocket)
+    except RateLimitError:
+        await _reject_ws(websocket, code=1013)
+        return
+
+    db = SessionLocal()
+    user_id: int | None = None
+    try:
+        user_id = AuthService(db).decode_user_id(token)
+        user = UserRepository(db).get_by_id(user_id)
+        if not user or user.status != "active":
+            await _reject_ws(websocket, code=4401)
+            return
+    except Exception:
+        await _reject_ws(websocket, code=4401)
+        return
+    finally:
+        db.close()
+
+    await websocket.accept()
+    queue = subscribe(user_id)
+    try:
+        for msg in drain_pending(user_id):
+            await _safe_send_json(websocket, msg)
+        while True:
+            try:
+                msg = await asyncio.wait_for(queue.get(), timeout=25.0)
+                await _safe_send_json(websocket, msg)
+            except asyncio.TimeoutError:
+                await _safe_send_json(websocket, {"type": "ping"})
+    except WebSocketDisconnect:
+        logger.info("User WebSocket disconnected user=%s", user_id)
+    except Exception as exc:
+        if not _client_gone(exc):
+            logger.warning("User WebSocket error user=%s: %s", user_id, exc)
+    finally:
+        unsubscribe(user_id, queue)
+        await _safe_close(websocket)

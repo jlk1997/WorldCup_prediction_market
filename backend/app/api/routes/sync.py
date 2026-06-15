@@ -34,6 +34,52 @@ def sync_status(db: Session = Depends(get_db)):
         raise ServiceUnavailableError("同步状态暂不可用") from None
 
 
+@router.get("/health", dependencies=[Depends(require_admin_secret_in_production)])
+def sync_health(db: Session = Depends(get_db)):
+    """Operational metrics for match sync and pending predictions."""
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import func, select
+
+    from app.core.match_kickoff import parse_kickoff
+    from app.db.models import Match
+    from app.db.models.commerce import GamePrediction
+
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    unlinked = db.scalar(
+        select(func.count()).select_from(Match).where(Match.external_fixture_id.is_(None))
+    ) or 0
+    stale_scheduled = 0
+    for m in db.scalars(select(Match).where(Match.status == "scheduled")).all():
+        kick = parse_kickoff(m)
+        if kick and kick <= now and m.external_fixture_id:
+            stale_scheduled += 1
+    pending_old = (
+        db.query(func.count(GamePrediction.id))
+        .join(Match, GamePrediction.match_id == Match.id)
+        .filter(
+            GamePrediction.status == "pending",
+            Match.status == "finished",
+        )
+        .scalar()
+    ) or 0
+    pending_stuck = (
+        db.query(func.count(GamePrediction.id))
+        .filter(
+            GamePrediction.status == "pending",
+            GamePrediction.created_at < now - timedelta(hours=24),
+        )
+        .scalar()
+    ) or 0
+    return {
+        "status": "ok",
+        "unlinked_matches": unlinked,
+        "stale_scheduled": stale_scheduled,
+        "pending_finished_matches": pending_old,
+        "pending_older_than_24h": pending_stuck,
+    }
+
+
 @router.post("/run", dependencies=[Depends(require_manual_sync)])
 def sync_run_all(db: Session = Depends(get_db)):
     try:
