@@ -176,6 +176,8 @@
     <InviteShareSheet />
     <PredictSettlementReveal />
     <GuideModal />
+    <OfficialQqGroupFab />
+    <OfficialQqGroupModal />
   </div>
 </template>
 
@@ -187,6 +189,8 @@ import StadiumModeSelector from './components/StadiumModeSelector.vue'
 import AppLogo from './components/AppLogo.vue'
 import OnboardingTour from './components/OnboardingTour.vue'
 import GuideModal from './components/GuideModal.vue'
+import OfficialQqGroupFab from './components/OfficialQqGroupFab.vue'
+import OfficialQqGroupModal from './components/OfficialQqGroupModal.vue'
 import ProfileIncompleteBanner from './components/ProfileIncompleteBanner.vue'
 import PredictSettlementNotifier from './components/PredictSettlementNotifier.vue'
 import PredictSettlementReveal from './components/PredictSettlementReveal.vue'
@@ -210,6 +214,12 @@ import { subscribeLiveMatches } from './stores/liveMatchesStore'
 import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
 import { ensurePredictRevealConfig } from './stores/predictRevealConfigStore'
 import { tryAutoOpenGuide } from './composables/useGuideModal'
+import {
+  ensureOfficialQqGroupConfig,
+  openOfficialQqGroupModal,
+  syncQqGroupClaimed,
+} from './composables/useOfficialQqGroup'
+import { getDailyStatus } from './api/commerce'
 import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
@@ -257,7 +267,9 @@ onMounted(async () => {
   void warmLegendBackdropImages()
   unsubscribeLive = subscribeLiveMatches()
   await ensurePredictRevealConfig()
+  await ensureOfficialQqGroupConfig()
   startHeaderNotificationPoll()
+  window.addEventListener('daily-status-refresh', onDailyStatusRefresh)
   await initAuth()
   if (authState.accessToken) {
     const pendingNo =
@@ -283,6 +295,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   unsubscribeLive?.()
+  window.removeEventListener('daily-status-refresh', onDailyStatusRefresh)
 })
 
 watch(moreOpen, (open) => setUiOverlay('more-drawer', open))
@@ -295,6 +308,29 @@ watch(
     void tryAutoOpenGuide('site_intro', route.path, route.query as Record<string, unknown>)
   },
 )
+
+watch(
+  () => route.query.qq,
+  (v) => {
+    if (v === '1' || v === 'true') openOfficialQqGroupModal()
+  },
+  { immediate: true },
+)
+
+async function refreshQqGroupClaimState() {
+  if (!isLoggedIn.value) {
+    syncQqGroupClaimed(false)
+    return
+  }
+  const daily = await getDailyStatus().catch(() => null)
+  syncQqGroupClaimed(daily?.qq_group_claimed)
+}
+
+watch(isLoggedIn, () => void refreshQqGroupClaimState(), { immediate: true })
+
+function onDailyStatusRefresh() {
+  void refreshQqGroupClaimState()
+}
 
 function onNav(path: string) {
   router.push(path)

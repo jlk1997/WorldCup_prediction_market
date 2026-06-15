@@ -115,6 +115,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { DailyStatus } from '../../api/commerce'
 import { navigateDailyAction } from '../../utils/dailyActionNav'
+import { openOfficialQqGroupModal } from '../../composables/useOfficialQqGroup'
 
 const props = defineProps<{
   status: DailyStatus | null
@@ -144,6 +145,10 @@ function goNext() {
 function onTaskClick(item: { key: string; done: boolean }) {
   if (item.key === 'signin' && !item.done) {
     emit('signin')
+    return
+  }
+  if (item.key === 'qq_group' && !item.done) {
+    openOfficialQqGroupModal()
     return
   }
   if (item.done && item.key !== 'quiz') return

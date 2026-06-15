@@ -1,6 +1,7 @@
 export const walletReasonLabels: Record<string, string> = {
   register_bonus: '注册赠送',
   signin: '每日签到',
+  qq_group_join: '加入官方 QQ 群',
   quiz: '主队问答',
   ai_analysis: 'AI 分析',
   ai_analysis_refund: 'AI 分析退款',

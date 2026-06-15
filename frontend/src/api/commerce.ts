@@ -185,6 +185,15 @@ export async function signin() {
   return data
 }
 
+export async function claimQqGroupReward() {
+  const { data } = await apiClient.post<{
+    already_claimed: boolean
+    coins_added: number
+    fan_coins: number
+  }>('/api/game/qq-group/claim')
+  return data
+}
+
 export interface DailyStatus {
   signed_today: boolean
   last_signin_date?: string | null
@@ -231,6 +240,7 @@ export interface DailyStatus {
     hint?: string | null
   }
   ritual_progress?: { done: number; total: number; pct: number }
+  qq_group_claimed?: boolean
 }
 
 export interface PickStats {

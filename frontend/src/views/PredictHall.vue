@@ -366,6 +366,7 @@ import VirtualList from '../components/VirtualList.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
 import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
+import { syncQqGroupClaimed } from '../composables/useOfficialQqGroup'
 
 
 
@@ -593,6 +594,7 @@ async function doSignin() {
     const res = await signin()
     await fetchMe()
     dailyStatus.value = await getDailyStatus().catch(() => null)
+    syncQqGroupClaimed(dailyStatus.value?.qq_group_claimed)
     ElMessage.success(`签到成功 +${res.added} 币${res.streak_bonus ? ` · 连签奖励 +${res.streak_bonus}` : ''}`)
   } catch (e) {
     showApiError(e)
@@ -625,6 +627,7 @@ async function load(options: { silent?: boolean } = {}) {
       await fetchRecommendations()
 
       dailyStatus.value = await getDailyStatus().catch(() => null)
+      syncQqGroupClaimed(dailyStatus.value?.qq_group_claimed)
 
     }
 

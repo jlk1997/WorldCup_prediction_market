@@ -40,6 +40,8 @@ class GameService:
     CHEER_POINTS = 10
     QUIZ_REWARD = 15
     MATCH_DAY_SIGNIN_BONUS = 10
+    QQ_GROUP_REASON = "qq_group_join"
+    QQ_GROUP_REWARD_COINS = 50
 
     def __init__(self, db: Session, settings: Settings | None = None):
         self.db = db
@@ -313,6 +315,31 @@ class GameService:
             "signin_streak": streak,
             "streak_bonus": streak_bonus,
             "signin_streak_bonus_next": next_bonus_day,
+        }
+
+    def qq_group_claimed(self, user_id: int) -> bool:
+        return self.wallet._coin_ledger_exists(
+            user_id, self.QQ_GROUP_REASON, "user", user_id
+        )
+
+    def claim_qq_group_reward(self, user: User) -> dict:
+        if self.qq_group_claimed(user.id):
+            return {
+                "already_claimed": True,
+                "coins_added": 0,
+                "fan_coins": user.fan_coins,
+            }
+        self.wallet.add_coins(
+            user,
+            self.QQ_GROUP_REWARD_COINS,
+            self.QQ_GROUP_REASON,
+            "user",
+            user.id,
+        )
+        return {
+            "already_claimed": False,
+            "coins_added": self.QQ_GROUP_REWARD_COINS,
+            "fan_coins": user.fan_coins,
         }
 
     def my_predictions(self, user_id: int, limit: int = 50) -> list[dict]:
@@ -1082,10 +1109,11 @@ class GameService:
         free_remaining = max(0, free_limit - free_used)
         pending_count = self.pending_predictions_count(user.id)
         match_day = RecommendationService(self.db).is_match_day_for_user(user, today)
+        qq_claimed = self.qq_group_claimed(user.id)
         checklist = self._daily_checklist(
-            signed_today, quiz_answered, free_remaining, free_limit, pending_count, match_day
+            signed_today, quiz_answered, free_remaining, free_limit, pending_count, match_day, qq_claimed
         )
-        next_action = self._daily_next_action(checklist, free_remaining, pending_count, match_day)
+        next_action = self._daily_next_action(checklist, free_remaining, pending_count, match_day, qq_claimed)
         return {
             "signed_today": signed_today,
             "last_signin_date": user.last_signin_date.isoformat() if user.last_signin_date else None,
@@ -1115,6 +1143,7 @@ class GameService:
             "checklist": checklist,
             "next_action": next_action,
             "ritual_progress": self._ritual_progress(checklist),
+            "qq_group_claimed": qq_claimed,
         }
 
     def get_match_pick_stats(self, match_id: int) -> dict:
@@ -1191,11 +1220,12 @@ class GameService:
         free_limit: int,
         pending_count: int,
         match_day: bool,
+        qq_claimed: bool = True,
     ) -> list[dict]:
         signin_reward = "+20币"
         if match_day:
             signin_reward = "+30币(比赛日)"
-        return [
+        items = [
             {"key": "signin", "label": "每日签到", "done": signed_today, "reward": signin_reward},
             {"key": "quiz", "label": "主队问答", "done": quiz_answered, "reward": "+15币"},
             {
@@ -1212,9 +1242,22 @@ class GameService:
                 "optional": True,
             },
         ]
+        if not qq_claimed:
+            items.insert(
+                1,
+                {
+                    "key": "qq_group",
+                    "label": "加入官方 QQ 群",
+                    "done": False,
+                    "reward": f"+{self.QQ_GROUP_REWARD_COINS}币(一次)",
+                },
+            )
+        return items
 
     def _ritual_progress(self, checklist: list[dict]) -> dict:
-        core = [c for c in checklist if not c.get("optional")]
+        core = [
+            c for c in checklist if not c.get("optional") and c.get("key") != "qq_group"
+        ]
         done = sum(1 for c in core if c["done"])
         total = len(core)
         return {
@@ -1229,6 +1272,7 @@ class GameService:
         free_remaining: int,
         pending_count: int,
         match_day: bool,
+        qq_claimed: bool = True,
     ) -> dict:
         by_key = {c["key"]: c for c in checklist}
         if not by_key["signin"]["done"]:
@@ -1237,6 +1281,13 @@ class GameService:
                 "label": "先签到领今日球迷币",
                 "path": "/me?focus=signin",
                 "hint": by_key["signin"]["reward"],
+            }
+        if not qq_claimed and "qq_group" in by_key:
+            return {
+                "key": "qq_group",
+                "label": "加入官方 QQ 群领球迷币",
+                "path": "/predict?qq=1",
+                "hint": by_key["qq_group"]["reward"],
             }
         if not by_key["quiz"]["done"]:
             return {

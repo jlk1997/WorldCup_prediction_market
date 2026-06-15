@@ -1,4 +1,5 @@
 import type { RouteLocationNormalizedLoaded, Router } from 'vue-router'
+import { openOfficialQqGroupModal } from '@/composables/useOfficialQqGroup'
 
 export type DailyNextAction = {
   key: string
@@ -10,6 +11,7 @@ const FOCUS_BY_KEY: Record<string, string> = {
   quiz: 'quiz',
   signin: 'signin',
   pending: 'predictions',
+  qq_group: 'qq_group',
 }
 
 export function scrollMeFocus(focus: string) {
@@ -26,6 +28,10 @@ export function navigateDailyAction(
   action: DailyNextAction | null | undefined,
 ) {
   if (!action) return
+  if (action.key === 'qq_group') {
+    openOfficialQqGroupModal()
+    return
+  }
   const focus = FOCUS_BY_KEY[action.key]
   if (focus) {
     if (route.path === '/me') {

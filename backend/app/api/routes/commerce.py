@@ -269,6 +269,15 @@ def signin(user: User = Depends(get_current_user), db: Session = Depends(get_db)
     return GameService(db).signin(user)
 
 
+@router_game.post("/qq-group/claim")
+def claim_qq_group_reward(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    result = GameService(db).claim_qq_group_reward(user)
+    db.commit()
+    db.refresh(user)
+    result["fan_coins"] = user.fan_coins
+    return result
+
+
 @router_game.get("/daily-status")
 def daily_status(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return GameService(db).get_daily_status(user)
