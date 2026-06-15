@@ -9,6 +9,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.db.models import DataSyncLog, Match
+from app.core.match_kickoff import parse_kickoff
 from app.core.match_scores import scores_for_team1_team2
 from app.ingest.bsd_adapter import InternalFixture, event_to_internal
 from app.ingest.bsd_client import BsdClient
@@ -61,6 +62,25 @@ def _apply_internal_fixture(
     return True
 
 
+def _should_poll_match(
+    match: Match,
+    now: datetime,
+    near_start: datetime,
+    near_end: datetime,
+) -> bool:
+    """Whether to fetch BSD for a linked match outside the live feed."""
+    kick = parse_kickoff(match)
+    if match.status == "scheduled":
+        if kick is None:
+            return True
+        return near_start <= kick <= near_end
+    if match.status == "finished":
+        if kick is None:
+            return True
+        return kick >= now - timedelta(hours=24)
+    return False
+
+
 class LiveMatchSyncService:
     def __init__(self, db: Session):
         self.db = db
@@ -109,14 +129,7 @@ class LiveMatchSyncService:
                 continue
             if match.status == "live":
                 continue
-            md = match.match_date
-            if match.status == "scheduled":
-                if md and (md < near_start or md > near_end):
-                    continue
-            elif match.status == "finished":
-                if md and md < now - timedelta(hours=24):
-                    continue
-            else:
+            if not _should_poll_match(match, now, near_start, near_end):
                 continue
             event = self.client.get_event(match.external_fixture_id)
             if not event:

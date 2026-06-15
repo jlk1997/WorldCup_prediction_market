@@ -1,11 +1,11 @@
 """Tests for BSD live sync apply logic."""
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock
 
 from app.db.models import Match
 from app.ingest.bsd_adapter import InternalFixture
-from app.ingest.live_sync_service import _apply_internal_fixture
+from app.ingest.live_sync_service import _apply_internal_fixture, _should_poll_match
 
 
 def test_apply_internal_fixture_swaps_scores_when_bsd_home_is_team2():
@@ -74,3 +74,38 @@ def test_apply_internal_fixture_updates_scores():
     assert match.external_provider == "bsd"
     assert match.events_json
     assert match.live_updated_at is not None
+
+
+def test_should_poll_match_uses_parsed_kickoff(monkeypatch):
+    now = datetime(2026, 6, 12, 12, 0, 0)
+    near_start = now - timedelta(hours=6)
+    near_end = now + timedelta(hours=48)
+    match = Match(
+        id=3,
+        team1_name="墨西哥",
+        team2_name="南非",
+        status="scheduled",
+        match_date="2026-06-12",
+        match_time="07:00",
+        external_fixture_id=999,
+    )
+    far = Match(
+        id=4,
+        team1_name="A",
+        team2_name="B",
+        status="scheduled",
+        match_date="2026-07-15",
+        match_time="12:00",
+        external_fixture_id=1000,
+    )
+
+    def fake_kickoff(m: Match):
+        if m.id == 3:
+            return datetime(2026, 6, 12, 7, 0)
+        if m.id == 4:
+            return datetime(2026, 7, 15, 12, 0)
+        return None
+
+    monkeypatch.setattr("app.ingest.live_sync_service.parse_kickoff", fake_kickoff)
+    assert _should_poll_match(match, now, near_start, near_end) is True
+    assert _should_poll_match(far, now, near_start, near_end) is False
