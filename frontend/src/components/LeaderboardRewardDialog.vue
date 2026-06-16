@@ -26,7 +26,7 @@
       </p>
 
       <div class="gift-grid">
-        <div v-for="item in gifts" :key="item.title" class="gift-card glass-inner">
+        <div v-for="item in gifts" :key="item.title" class="gift-card">
           <span class="gift-icon" aria-hidden="true">{{ item.icon }}</span>
           <strong>{{ item.title }}</strong>
           <span class="gift-desc">{{ item.desc }}</span>
@@ -45,7 +45,49 @@
         <label class="dismiss-row" :class="{ checked: skipToday }">
           <el-checkbox v-model="skipToday">今日不再显示</el-checkbox>
         </label>
-        <el-button plain class="share-btn" @click="shareRank">晒排名链接</el-button>
+
+        <div v-if="sharePanelOpen" class="share-panel">
+          <p class="share-panel-title">分享排行榜 · 邀好友一起冲榜</p>
+          <p class="share-panel-hint">链接带预览卡片，适合发微信好友或群</p>
+          <textarea
+            ref="shareTextRef"
+            class="share-textarea"
+            readonly
+            rows="3"
+            :value="shareText"
+            @focus="selectShareText"
+            @click="selectShareText"
+          />
+          <div class="share-panel-actions">
+            <el-button
+              type="primary"
+              plain
+              class="share-copy-btn"
+              :loading="shareLoading"
+              @click="copyShare"
+            >
+              {{ shareCopied ? '已复制，去粘贴分享' : '复制分享文案' }}
+            </el-button>
+            <el-button
+              v-if="canNativeShare"
+              plain
+              class="share-native-btn"
+              :disabled="shareLoading"
+              @click="nativeShare"
+            >
+              唤起分享
+            </el-button>
+          </div>
+        </div>
+
+        <el-button
+          plain
+          class="share-btn"
+          :class="{ active: sharePanelOpen }"
+          @click="openSharePanel"
+        >
+          {{ sharePanelOpen ? '收起分享' : '晒排名链接' }}
+        </el-button>
         <el-button type="primary" class="confirm-btn" @click="confirm">
           我知道了，冲榜去
         </el-button>
@@ -55,11 +97,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { dismissLeaderboardRewardForToday } from '../utils/leaderboardRewardPrompt'
 import { copyToClipboard } from '../utils/copyToClipboard'
+import { authState } from '../stores/authStore'
 
 const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
@@ -67,6 +110,10 @@ const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
 const { isMobile } = useBreakpoint()
 const visible = ref(props.modelValue)
 const skipToday = ref(false)
+const sharePanelOpen = ref(false)
+const shareLoading = ref(false)
+const shareCopied = ref(false)
+const shareTextRef = ref<HTMLTextAreaElement | null>(null)
 
 const gifts = [
   { icon: '🪙', title: '金豆礼包', desc: '球迷币、积分加成' },
@@ -74,6 +121,20 @@ const gifts = [
   { icon: '👕', title: '正版球衣', desc: '国家队 / 俱乐部' },
   { icon: '🎁', title: '更多惊喜', desc: '神秘周边等你拆' },
 ]
+
+const rankShareUrl = computed(() => {
+  const site = (import.meta.env.VITE_SITE_URL || 'https://loveaibaby.cn').replace(/\/$/, '')
+  return `${site}/share/rank?period=season`
+})
+
+const shareText = computed(() => {
+  const nick = authState.user?.nickname || '我'
+  return `${nick} 正在「最后一舞」冲世界杯排行榜！一起来猜球冲榜\n${rankShareUrl.value}`
+})
+
+const canNativeShare = computed(
+  () => typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+)
 
 watch(
   () => props.modelValue,
@@ -84,6 +145,10 @@ watch(
 
 watch(visible, (v) => {
   emit('update:modelValue', v)
+  if (!v) {
+    sharePanelOpen.value = false
+    shareCopied.value = false
+  }
 })
 
 function confirm() {
@@ -93,13 +158,79 @@ function confirm() {
   visible.value = false
 }
 
-function shareRank() {
-  const site = (import.meta.env.VITE_SITE_URL || 'https://loveaibaby.cn').replace(/\/$/, '')
-  const url = `${site}/share/rank?period=season`
-  void copyToClipboard(url).then((ok) => {
-    if (ok) ElMessage.success('排行榜分享链接已复制')
-    else ElMessage.info(url)
-  })
+async function openSharePanel() {
+  if (sharePanelOpen.value) {
+    sharePanelOpen.value = false
+    return
+  }
+  sharePanelOpen.value = true
+  shareCopied.value = false
+  await nextTick()
+  await copyShare()
+}
+
+function selectShareText() {
+  const el = shareTextRef.value
+  if (!el) return
+  el.focus()
+  el.select()
+  try {
+    el.setSelectionRange(0, el.value.length)
+  } catch {
+    /* ignore */
+  }
+}
+
+async function copyShare() {
+  shareLoading.value = true
+  try {
+    await nextTick()
+    selectShareText()
+    let ok = false
+    try {
+      ok = document.execCommand('copy')
+    } catch {
+      ok = false
+    }
+    if (!ok) {
+      ok = await copyToClipboard(shareText.value)
+    }
+    if (ok) {
+      shareCopied.value = true
+      ElMessage.success({
+        message: '分享文案已复制，去微信粘贴即可',
+        duration: 2800,
+        showClose: true,
+      })
+    } else {
+      ElMessage.warning({
+        message: '无法自动复制，请长按上方灰框内文字手动复制',
+        duration: 5000,
+        showClose: true,
+      })
+    }
+  } finally {
+    shareLoading.value = false
+  }
+}
+
+async function nativeShare() {
+  if (!canNativeShare.value) return
+  shareLoading.value = true
+  try {
+    await navigator.share({
+      title: '最后一舞 · 排行榜',
+      text: `${authState.user?.nickname || '我'} 正在冲榜，一起来猜世界杯！`,
+      url: rankShareUrl.value,
+    })
+    ElMessage.success('已唤起系统分享')
+  } catch (e) {
+    if ((e as Error).name !== 'AbortError') {
+      await copyShare()
+    }
+  } finally {
+    shareLoading.value = false
+  }
 }
 
 function onClosed() {
@@ -107,6 +238,8 @@ function onClosed() {
     dismissLeaderboardRewardForToday()
   }
   skipToday.value = false
+  sharePanelOpen.value = false
+  shareCopied.value = false
 }
 </script>
 
@@ -197,7 +330,7 @@ function onClosed() {
   padding: 12px 12px 10px;
   border-radius: 12px;
   border: 1px solid rgba(212, 165, 116, 0.22);
-  background: rgba(212, 165, 116, 0.06);
+  background: rgba(10, 12, 24, 0.55);
 }
 
 .gift-icon {
@@ -233,7 +366,7 @@ function onClosed() {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -252,18 +385,95 @@ function onClosed() {
   background: rgba(212, 165, 116, 0.08);
 }
 
-.confirm-btn {
+.share-panel {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  background: rgba(10, 12, 24, 0.75);
+  animation: share-panel-in 0.22s ease;
+}
+
+@keyframes share-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.share-panel-title {
+  margin: 0 0 4px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f0d9b5;
+}
+
+.share-panel-hint {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.share-textarea {
   width: 100%;
-  min-height: 42px;
-  font-weight: 800;
-  border: none;
-  background: linear-gradient(135deg, #f0d9b5 0%, var(--wc-accent-gold) 50%, #c9788a 100%);
-  color: #1a1208;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  resize: none;
+  font-family: inherit;
+  -webkit-user-select: all;
+  user-select: all;
+}
+
+.share-textarea:focus {
+  outline: none;
+  border-color: rgba(212, 165, 116, 0.5);
+  box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.15);
+}
+
+.share-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.share-copy-btn,
+.share-native-btn {
+  flex: 1;
+  min-height: 40px;
+  min-width: 0;
 }
 
 .share-btn {
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
+  font-weight: 700;
+  border-color: rgba(212, 165, 116, 0.45);
+  color: var(--wc-accent-gold);
+  background: rgba(212, 165, 116, 0.08);
+}
+
+.share-btn.active {
+  border-color: rgba(212, 165, 116, 0.65);
+  background: rgba(212, 165, 116, 0.16);
+}
+
+.confirm-btn {
+  width: 100%;
+  min-height: 44px;
+  font-weight: 800;
+  border: none;
+  background: linear-gradient(135deg, #f0d9b5 0%, var(--wc-accent-gold) 50%, #c9788a 100%);
+  color: #1a1208;
 }
 
 .confirm-btn:hover {
@@ -273,6 +483,10 @@ function onClosed() {
 @media (max-width: 480px) {
   .gift-grid {
     grid-template-columns: 1fr;
+  }
+
+  .share-panel-actions {
+    flex-direction: column;
   }
 }
 </style>
@@ -309,5 +523,9 @@ function onClosed() {
 
 .leaderboard-reward-dialog .el-dialog__headerbtn:hover .el-dialog__close {
   color: var(--wc-accent-gold);
+}
+
+.leaderboard-reward-dialog .el-dialog__footer .el-button {
+  pointer-events: auto;
 }
 </style>
