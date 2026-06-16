@@ -8,46 +8,48 @@
 
     <!-- 球星背景由 App.vue 全站统一渲染 -->
     
-    <!-- 顶部统计条（合并为一条，减少遮挡） -->
-    <div class="stats-strip glass-panel">
-      <div class="stats-group stats-group--user" v-if="authState.accessToken && (mainTeamLabel || dailyStatus || arenaMini)">
-        <span v-if="mainTeamLabel" class="stat-chip stat-chip--main">
-          <em>主队</em>{{ mainTeamLabel }}
-        </span>
-        <button
-          v-if="dailyStatus"
-          type="button"
-          class="stat-chip stat-chip--link"
-          @click="goDailyNext"
-        >
-          <em>今日</em>{{ dailyStatus.ritual_progress?.done ?? 0 }}/{{ dailyStatus.ritual_progress?.total ?? 3 }}
-        </button>
-        <button
-          v-if="arenaMini"
-          type="button"
-          class="stat-chip stat-chip--link"
-          @click="$router.push('/arena')"
-        >
-          <em>擂台</em>{{ arenaMini.home.power }}:{{ arenaMini.away.power }}
-        </button>
+    <!-- 顶部：统计 + 邀友/QQ 群 + 连胜守护（文档流排列，避免与焦点赛重叠） -->
+    <div class="dashboard-top-stack">
+      <div class="stats-strip glass-panel">
+        <div class="stats-group stats-group--user" v-if="authState.accessToken && (mainTeamLabel || dailyStatus || arenaMini)">
+          <span v-if="mainTeamLabel" class="stat-chip stat-chip--main">
+            <em>主队</em>{{ mainTeamLabel }}
+          </span>
+          <button
+            v-if="dailyStatus"
+            type="button"
+            class="stat-chip stat-chip--link"
+            @click="goDailyNext"
+          >
+            <em>今日</em>{{ dailyStatus.ritual_progress?.done ?? 0 }}/{{ dailyStatus.ritual_progress?.total ?? 3 }}
+          </button>
+          <button
+            v-if="arenaMini"
+            type="button"
+            class="stat-chip stat-chip--link"
+            @click="$router.push('/arena')"
+          >
+            <em>擂台</em>{{ arenaMini.home.power }}:{{ arenaMini.away.power }}
+          </button>
+        </div>
+        <div class="stats-group stats-group--global">
+          <span class="stat-chip"><em>开幕</em>{{ countdownDays }} 天</span>
+          <span class="stat-chip"><em>球队</em>48</span>
+          <span class="stat-chip"><em>场次</em>{{ stats.matches || 104 }}</span>
+          <span v-if="stats.live_matches" class="stat-chip stat-chip--live"><em>LIVE</em>{{ stats.live_matches }}</span>
+        </div>
       </div>
-      <div class="stats-group stats-group--global">
-        <span class="stat-chip"><em>开幕</em>{{ countdownDays }} 天</span>
-        <span class="stat-chip"><em>球队</em>48</span>
-        <span class="stat-chip"><em>场次</em>{{ stats.matches || 104 }}</span>
-        <span v-if="stats.live_matches" class="stat-chip stat-chip--live"><em>LIVE</em>{{ stats.live_matches }}</span>
+
+      <div v-if="authState.accessToken" class="dashboard-invite-wrap">
+        <InvitePromptBar scene="dashboard" :match-day="!!dailyStatus?.match_day" />
+        <OfficialQqGroupBar
+          :match-day="!!dailyStatus?.match_day"
+          :today-signin-count="dailyStatus?.today_signin_count ?? 0"
+        />
       </div>
-    </div>
 
-    <div v-if="authState.accessToken" class="dashboard-invite-wrap">
-      <InvitePromptBar scene="dashboard" :match-day="!!dailyStatus?.match_day" />
-      <OfficialQqGroupBar
-        :match-day="!!dailyStatus?.match_day"
-        :today-signin-count="dailyStatus?.today_signin_count ?? 0"
-      />
+      <StreakRiskBanner :status="dailyStatus" class="dashboard-streak-banner" />
     </div>
-
-    <StreakRiskBanner :status="dailyStatus" />
 
     <!-- 核心聚焦区 -->
     <div class="focus-section" v-if="focusMatch" :class="{ 'lineup-open': showSideDetails && !isMobile, 'schedule-open': scheduleExpanded && !isMobile }">
@@ -710,13 +712,24 @@ onMounted(async () => {
   pointer-events: none;
 }
 
-/* ======= 顶部统计条 ======= */
-.stats-strip {
-  position: absolute;
-  top: 12px;
-  left: 20px;
-  right: 20px;
+/* ======= 顶部区域（统计 + 邀友 + 连胜） ======= */
+.dashboard-top-stack {
+  position: relative;
   z-index: 25;
+  pointer-events: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 20px 0;
+}
+
+.stats-strip {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: 1;
   pointer-events: auto;
   display: flex;
   align-items: center;
@@ -730,13 +743,24 @@ onMounted(async () => {
 }
 
 .dashboard-invite-wrap {
-  position: absolute;
-  top: 58px;
-  left: 20px;
-  right: 20px;
-  z-index: 24;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: 1;
   pointer-events: auto;
   max-width: 480px;
+  width: 100%;
+}
+
+.dashboard-top-stack :deep(.invite-prompt-bar),
+.dashboard-top-stack :deep(.qq-social-bar) {
+  margin-bottom: 0;
+}
+
+.dashboard-top-stack :deep(.dashboard-streak-banner),
+.dashboard-top-stack :deep(.streak-risk-banner) {
+  margin-bottom: 0;
 }
 
 .stats-group {
@@ -808,7 +832,7 @@ onMounted(async () => {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 96px;
+  padding-top: 12px;
   width: 100%;
   min-height: 0;
   z-index: 10;
@@ -816,17 +840,19 @@ onMounted(async () => {
 }
 
 .focus-section.lineup-open {
-  padding-top: 72px;
+  padding-top: 12px;
 }
 
 .focus-section.schedule-open {
-  padding-top: 64px;
+  padding-top: 12px;
 }
 
 .focus-title {
-  position: absolute;
-  top: 108px;
-  left: 20px;
+  position: relative;
+  top: auto;
+  left: auto;
+  margin: 0 20px 10px;
+  align-self: flex-start;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1787,10 +1813,16 @@ onMounted(async () => {
     -webkit-overflow-scrolling: touch;
   }
 
+  .dashboard-top-stack {
+    padding: 8px 8px 0;
+    gap: 8px;
+  }
+
+  .dashboard-invite-wrap {
+    max-width: none;
+  }
+
   .stats-strip {
-    top: 8px;
-    left: 8px;
-    right: 8px;
     flex-direction: row;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -1807,21 +1839,17 @@ onMounted(async () => {
   }
 
   .focus-section {
-    padding-top: 64px;
+    padding-top: 8px;
     overflow: visible;
     min-height: auto;
   }
 
   .focus-section.lineup-open {
-    padding-top: 64px;
+    padding-top: 8px;
   }
 
   .focus-title {
-    top: auto;
-    position: relative;
-    left: auto;
     margin: 0 12px 8px;
-    align-self: flex-start;
     flex-wrap: wrap;
   }
 
