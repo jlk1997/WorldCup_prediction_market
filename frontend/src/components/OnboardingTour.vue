@@ -10,9 +10,9 @@
   >
     <template #header>
       <div class="onboard-header">
-        <span class="onboard-badge">首次使用 · 5 步指引</span>
+        <span class="onboard-badge">首次使用 · 6 步指引</span>
         <h2 class="onboard-title">欢迎使用「最后一舞：世界杯2026」</h2>
-        <p class="onboard-subtitle">带你快速上手赛事大屏、Live 中心与 AI 分析</p>
+        <p class="onboard-subtitle">带你快速上手赛事大屏、竞猜大厅与 AI 分析</p>
       </div>
     </template>
 
@@ -68,7 +68,9 @@
 <script setup lang="ts">
 import { ref, type Component } from 'vue'
 import { useRouter } from 'vue-router'
-import { DataBoard, Trophy, MagicStick, View, Share } from '@element-plus/icons-vue'
+import { DataBoard, Trophy, MagicStick, View, Share, Coin } from '@element-plus/icons-vue'
+import { trackEvent } from '@/utils/analytics'
+import { fetchRecommendations, profileState } from '@/stores/profileStore'
 
 const STORAGE_KEY = 'wc2026_onboarded'
 const STEP_KEY = 'wc2026_tour_step'
@@ -78,7 +80,7 @@ const visible = ref(true)
 function readStep() {
   const raw = sessionStorage.getItem(STEP_KEY)
   const n = raw ? Number.parseInt(raw, 10) : 0
-  return Number.isFinite(n) && n >= 0 && n < 5 ? n : 0
+  return Number.isFinite(n) && n >= 0 && n < 6 ? n : 0
 }
 
 const step = ref(readStep())
@@ -130,6 +132,14 @@ const steps: TourStep[] = [
     color: '#3fb950',
   },
   {
+    title: '竞猜大厅',
+    short: '竞猜',
+    desc: '每天 1 次免费竞猜，猜中得积分冲榜；质押球迷币可加码收益。',
+    tips: ['选胜平负 → 勾选免费 → 提交', '赛后自动开奖，猜中有弹窗通知'],
+    icon: Coin,
+    color: '#e6a23c',
+  },
+  {
     title: '召友扩编',
     short: '召友',
     desc: '分享邀请链接，好友注册并完成档案，双方得球迷币与军团贡献。',
@@ -139,15 +149,17 @@ const steps: TourStep[] = [
   },
 ]
 
-const routes = ['/', '/live', '/agent', '/', '/invite']
+const routes = ['/', '/live', '/agent', '/', '/predict', '/invite']
 
 function finish() {
   sessionStorage.removeItem(STEP_KEY)
   localStorage.setItem(STORAGE_KEY, '1')
+  trackEvent('tour_finish')
 }
 
 function skip() {
   visible.value = false
+  trackEvent('tour_skip', { step: step.value })
   finish()
 }
 
@@ -169,12 +181,26 @@ function next() {
   if (step.value >= steps.length - 1) {
     visible.value = false
     finish()
-    router.push('/agent')
+    void goPredictAfterTour()
     return
   }
   step.value += 1
   saveStep(step.value)
   router.push(routes[step.value] || '/')
+}
+
+async function goPredictAfterTour() {
+  let path = '/predict'
+  try {
+    if (!profileState.recommendations) {
+      await fetchRecommendations()
+    }
+    const mid = profileState.recommendations?.next_main_match?.id
+    if (mid) path = `/predict?highlight=${mid}`
+  } catch {
+    /* optional */
+  }
+  router.push(path)
 }
 
 function onDialogClosed() {
@@ -226,7 +252,7 @@ function onDialogClosed() {
 
 .step-track {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 8px;
   margin-bottom: 20px;
 }

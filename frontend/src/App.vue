@@ -174,6 +174,7 @@
     <MobileMoreDrawer v-model="moreOpen" :show-profile-chip="showProfileHeaderChip" />
     <LeaderboardRewardDialog v-model="showRewardDialog" />
     <InviteShareSheet />
+    <PredictShareSheet />
     <PredictSettlementReveal />
     <GuideModal />
     <OfficialQqGroupFab />
@@ -194,6 +195,7 @@ import OfficialQqGroupModal from './components/OfficialQqGroupModal.vue'
 import ProfileIncompleteBanner from './components/ProfileIncompleteBanner.vue'
 import PredictSettlementNotifier from './components/PredictSettlementNotifier.vue'
 import PredictSettlementReveal from './components/PredictSettlementReveal.vue'
+import PredictShareSheet from './components/PredictShareSheet.vue'
 import ReferralNotifier from './components/ReferralNotifier.vue'
 import InviteShareSheet from './components/InviteShareSheet.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
@@ -214,12 +216,14 @@ import { subscribeLiveMatches } from './stores/liveMatchesStore'
 import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
 import { ensurePredictRevealConfig } from './stores/predictRevealConfigStore'
 import { tryAutoOpenGuide } from './composables/useGuideModal'
+import { useBrowserNotify } from './composables/useBrowserNotify'
 import {
   ensureOfficialQqGroupConfig,
   openOfficialQqGroupModal,
   syncQqGroupClaimed,
 } from './composables/useOfficialQqGroup'
-import { getDailyStatus } from './api/commerce'
+import { getDailyStatus, type DailyStatus } from './api/commerce'
+import { syncMatchKickoffReminders } from './composables/useMatchKickoffReminders'
 import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 
@@ -231,6 +235,8 @@ const profileBannerHidden = ref(false)
 const { setUiOverlay } = useStadiumStore()
 const { isAuthFlow, showProfileBanner, showProfileHeaderChip, showFeatureTour } = useGuideVisibility()
 const { showRewardDialog } = useLeaderboardRewardPrompt({ blocked: showFeatureTour })
+const { maybePromptForNotify, showNotification } = useBrowserNotify()
+const lastDailyStatus = ref<DailyStatus | null>(null)
 
 const showProfileBannerVisible = computed(
   () => showProfileBanner.value && !profileBannerHidden.value,
@@ -320,13 +326,27 @@ watch(
 async function refreshQqGroupClaimState() {
   if (!isLoggedIn.value) {
     syncQqGroupClaimed(false)
+    lastDailyStatus.value = null
     return
   }
   const daily = await getDailyStatus().catch(() => null)
   syncQqGroupClaimed(daily?.qq_group_claimed)
+  if (daily) {
+    const prevPending = lastDailyStatus.value?.pending_predictions ?? 0
+    if ((daily.pending_predictions ?? 0) > prevPending && document.hidden) {
+      showNotification('你有新的待开奖', '提交成功，赛后会自动通知结果', '/me?focus=predictions')
+    }
+    if (daily.streak_risk?.message && !lastDailyStatus.value?.streak_risk) {
+      void maybePromptForNotify('开启后可收到待开奖与连胜提醒')
+    }
+    lastDailyStatus.value = daily
+  }
 }
 
-watch(isLoggedIn, () => void refreshQqGroupClaimState(), { immediate: true })
+watch(isLoggedIn, () => {
+  void refreshQqGroupClaimState()
+  if (isLoggedIn.value) void syncMatchKickoffReminders()
+}, { immediate: true })
 
 function onDailyStatusRefresh() {
   void refreshQqGroupClaimState()

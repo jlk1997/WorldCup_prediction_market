@@ -423,6 +423,24 @@ class ReferralWeeklyAward(Base):
     awarded_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
 
 
+class LeaderboardSeasonAward(Base):
+    __tablename__ = "leaderboard_season_awards"
+    __table_args__ = (
+        UniqueConstraint("user_id", "season_key", "board", name="uq_leaderboard_season_award"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    season_key: Mapped[str] = mapped_column(String(20), nullable=False)
+    board: Mapped[str] = mapped_column(String(32), nullable=False)
+    rank: Mapped[int] = mapped_column(Integer, nullable=False)
+    score: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    season_points_awarded: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    coins_awarded: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    redeem_points_awarded: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    awarded_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
 class SystemUiConfig(Base):
     __tablename__ = "system_ui_configs"
     __table_args__ = (UniqueConstraint("config_key", name="uq_system_ui_config_key"),)

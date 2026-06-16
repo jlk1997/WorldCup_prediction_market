@@ -83,7 +83,7 @@
         <el-button v-if="step > 0 && step < 3" plain @click="step--">上一步</el-button>
         <el-button v-if="step === 1" plain @click="step++">跳过副队</el-button>
         <el-button type="primary" :loading="loading" @click="next">
-          {{ step === 3 ? '进入赛事大屏' : '下一步' }}
+          {{ step === 3 ? finishButtonLabel : '下一步' }}
         </el-button>
       </div>
     </div>
@@ -106,6 +106,7 @@ import { getReferralMe, type InviteeJourney } from '../api/referral'
 import { fetchMe } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
 import { showApiError } from '../utils/errorHandler'
+import { trackEvent } from '../utils/analytics'
 
 const router = useRouter()
 const route = useRoute()
@@ -148,6 +149,16 @@ function ctaEmoji(type: string) {
   }
   return map[type] || '⚽'
 }
+
+const predictCta = computed(() => recs.value?.cta?.find((c) => c.type === 'predict'))
+
+const finishButtonLabel = computed(() => predictCta.value?.label || '去猜第一场')
+
+const finishPath = computed(() => {
+  if (predictCta.value?.path) return predictCta.value.path
+  const mid = recs.value?.next_main_match?.id
+  return mid ? `/predict?highlight=${mid}` : '/predict'
+})
 
 async function loadPlayers() {
   const ids = [mainTeamId.value, subTeamId.value].filter((x): x is number => !!x)
@@ -205,7 +216,8 @@ async function next() {
     return
   }
   if (step.value === 3) {
-    router.replace('/')
+    trackEvent('onboarding_complete', { has_predict_cta: !!predictCta.value })
+    router.replace(finishPath.value)
     return
   }
 }

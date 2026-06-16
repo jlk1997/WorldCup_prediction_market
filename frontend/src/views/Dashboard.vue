@@ -40,8 +40,14 @@
     </div>
 
     <div v-if="authState.accessToken" class="dashboard-invite-wrap">
-      <InvitePromptBar scene="dashboard" />
+      <InvitePromptBar scene="dashboard" :match-day="!!dailyStatus?.match_day" />
+      <OfficialQqGroupBar
+        :match-day="!!dailyStatus?.match_day"
+        :today-signin-count="dailyStatus?.today_signin_count ?? 0"
+      />
     </div>
+
+    <StreakRiskBanner :status="dailyStatus" />
 
     <!-- 核心聚焦区 -->
     <div class="focus-section" v-if="focusMatch" :class="{ 'lineup-open': showSideDetails && !isMobile, 'schedule-open': scheduleExpanded && !isMobile }">
@@ -116,6 +122,14 @@
                 @click.stop="goMatchDetail(focusMatch)"
               >
                 赛事详情
+              </el-button>
+              <el-button
+                v-if="focusMatch.id && focusCanPredict"
+                plain
+                class="cyber-btn-secondary"
+                @click.stop="$router.push({ path: '/predict', query: { highlight: String(focusMatch.id) } })"
+              >
+                去竞猜
               </el-button>
               <el-button
                 v-if="focusMatch.id && focusCanCheer && authState.user?.profile_completed"
@@ -236,14 +250,13 @@
         <div v-if="!scheduleExpanded && !scheduleDrawerOpen" class="scroll-fade" aria-hidden="true" />
       </div>
     </div>
-    <!-- 猜中滚动 feed -->
-    <div v-if="winFeed.length" class="win-feed-bar glass-panel" :class="{ 'above-bottom-nav': isMobile }">
-      <div class="feed-track">
-        <span v-for="(item, idx) in winFeedDup" :key="idx" class="feed-item">
-          🎯 球迷 {{ item.nickname }} 猜中 {{ item.team1 }} vs {{ item.team2 }} +{{ item.points_awarded }} 分
-        </span>
-      </div>
-    </div>
+    <WinFeedBar
+      :items="winFeed"
+      :recent-count="winFeedRecentCount"
+      :above-bottom-nav="isMobile"
+      :pinned="isMobile"
+      :highlight-match-id="dailyStatus?.streak_risk?.match_id ?? profileState.recommendations?.next_main_match?.id ?? null"
+    />
 
     <MobileLineupDrawer
       v-if="isMobile"
@@ -288,8 +301,12 @@ import TeamLineupColumn from '../components/TeamLineupColumn.vue'
 import MobileLineupDrawer from '../components/MobileLineupDrawer.vue'
 import MobileScheduleDrawer from '../components/MobileScheduleDrawer.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
+import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
+import StreakRiskBanner from '../components/StreakRiskBanner.vue'
+import WinFeedBar from '../components/WinFeedBar.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { usePageMeta } from '../composables/usePageMeta'
+import { isMatchPredictable } from '../utils/matchKickoff'
 import { injectJsonLd } from '../utils/jsonLd'
 
 usePageMeta({
@@ -330,7 +347,7 @@ let teamFetchGeneration = 0
 const arenaMini = ref<MatchArena | null>(null)
 const dailyStatus = ref<DailyStatus | null>(null)
 const winFeed = ref<WinFeedItem[]>([])
-const winFeedDup = computed(() => [...winFeed.value, ...winFeed.value])
+const winFeedRecentCount = ref(0)
 
 function toggleSchedule() {
   if (isMobile.value) {
@@ -415,6 +432,11 @@ const rightPanel = computed(() => (focusSides.value ? buildSidePanel(focusSides.
 const focusCanCheer = computed(
   () => profileState.recommendations?.next_main_match?.can_cheer ?? false
 )
+
+const focusCanPredict = computed(() => {
+  const m = focusMatch.value
+  return !!m?.id && isMatchPredictable(m)
+})
 
 const focusEvents = computed(() => {
   const ev = focusMatch.value?.events
@@ -619,7 +641,9 @@ onMounted(async () => {
     }
   }
   try {
-    winFeed.value = await getWinFeed(12)
+    const res = await getWinFeed(12)
+    winFeed.value = res.items
+    winFeedRecentCount.value = res.recent_count
   } catch {
     winFeed.value = []
   }
@@ -1844,10 +1868,6 @@ onMounted(async () => {
     display: inline;
   }
 
-  .win-feed-bar.above-bottom-nav {
-    bottom: calc(var(--wc-bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 8px);
-  }
-
   .mobile-schedule-list {
     display: flex;
     flex-direction: column;
@@ -1928,30 +1948,5 @@ onMounted(async () => {
   font-size: 0.65rem;
   color: #9a94a8;
   margin-top: 4px;
-}
-
-.win-feed-bar {
-  position: fixed;
-  bottom: 72px;
-  left: 16px;
-  right: 16px;
-  z-index: 20;
-  padding: 8px 12px;
-  overflow: hidden;
-  opacity: 0.92;
-}
-.win-feed-bar .feed-track {
-  display: flex;
-  gap: 32px;
-  animation: dash-feed-scroll 35s linear infinite;
-  white-space: nowrap;
-}
-.win-feed-bar .feed-item {
-  font-size: 12px;
-  color: #d4a574;
-}
-@keyframes dash-feed-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
 }
 </style>

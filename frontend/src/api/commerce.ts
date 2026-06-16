@@ -194,6 +194,15 @@ export async function claimQqGroupReward() {
   return data
 }
 
+export async function claimSeasonPassDaily() {
+  const { data } = await apiClient.post<{
+    granted: number
+    reason: string
+    fan_coins?: number
+  }>('/api/game/season-pass/daily-claim')
+  return data
+}
+
 export interface DailyStatus {
   signed_today: boolean
   last_signin_date?: string | null
@@ -220,6 +229,8 @@ export interface DailyStatus {
     have: number
     gap: number
     pct: number
+    wins_estimate?: number
+    avg_redeem_per_win?: number
   } | null
   match_day: boolean
   match_day_message?: string | null
@@ -241,6 +252,16 @@ export interface DailyStatus {
   }
   ritual_progress?: { done: number; total: number; pct: number }
   qq_group_claimed?: boolean
+  today_signin_count?: number
+  pass_benefits?: {
+    active: boolean
+    daily_coins_grant: number
+    coins_claimed_today: boolean
+    coins_saved_today: number
+    points_bonus_pct: number
+    extra_ai_free_total: number
+    extra_ai_free_used: number
+  } | null
 }
 
 export interface PickStats {
@@ -270,6 +291,11 @@ export interface WinFeedItem {
   settled_at?: string | null
 }
 
+export interface WinFeedResponse {
+  items: WinFeedItem[]
+  recent_count: number
+}
+
 export async function getDailyStatus() {
   const { data } = await apiClient.get<DailyStatus>('/api/game/daily-status')
   return data
@@ -289,8 +315,30 @@ export async function getPredictPreview(params: {
   return data
 }
 
-export async function getWinFeed(limit = 15) {
-  const { data } = await apiClient.get<WinFeedItem[]>('/api/game/win-feed', { params: { limit } })
+export async function getWinFeed(limit = 15): Promise<WinFeedResponse> {
+  const { data } = await apiClient.get<WinFeedResponse | WinFeedItem[]>('/api/game/win-feed', {
+    params: { limit },
+  })
+  if (Array.isArray(data)) {
+    return { items: data, recent_count: data.length }
+  }
+  return data
+}
+
+export interface LeaderboardRewardTier {
+  rank: number
+  season_points: number
+  coins: number
+  redeem_points: number
+}
+
+export async function getLeaderboardRewardTiers() {
+  const { data } = await apiClient.get<{
+    season_key: string
+    board: string
+    description: string
+    tiers: LeaderboardRewardTier[]
+  }>('/api/game/leaderboard/reward-tiers')
   return data
 }
 

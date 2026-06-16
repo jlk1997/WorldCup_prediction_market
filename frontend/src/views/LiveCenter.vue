@@ -23,10 +23,9 @@
       </div>
       <el-tabs v-model="tab" class="live-tabs" :class="{ 'hide-header': isMobile }" lazy>
         <el-tab-pane :label="myTeamsTabLabel" name="myteams">
-          <div v-if="!authState.accessToken" class="myteams-login-hint glass-panel">
-            <p>登录并选择主/副队后，这里会集中展示你关注球队的全部赛程。</p>
-            <el-button type="primary" @click="$router.push('/login')">登录查看我的球队</el-button>
-          </div>
+      <div v-if="!authState.accessToken" class="myteams-login-hint">
+        <GuestLoginBanner />
+      </div>
           <template v-else-if="myTeamNames.size">
           <div v-if="authState.accessToken" class="arena-banner glass-panel" @click="$router.push('/arena')">
             <span>球迷擂台</span>
@@ -52,6 +51,14 @@
               </div>
               <div class="card-actions">
                 <el-button size="small" @click.stop="goMatch(m)">详情</el-button>
+                <el-button
+                  v-if="isMatchPredictable(m)"
+                  size="small"
+                  plain
+                  @click.stop="$router.push({ path: '/predict', query: { highlight: String(m.id) } })"
+                >
+                  竞猜
+                </el-button>
                 <el-button
                   v-if="isMatchPredictable(m)"
                   size="small"
@@ -116,6 +123,7 @@ import { fetchRecommendations, profileState } from '@/stores/profileStore'
 import type { LiveMatch } from '@/types/api'
 import MatchTable from '@/components/MatchTable.vue'
 import MatchMobileList from '@/components/MatchMobileList.vue'
+import GuestLoginBanner from '@/components/GuestLoginBanner.vue'
 import KnockoutBracket, { type BracketRound } from '@/components/KnockoutBracket.vue'
 import { useBreakpoint } from '@/composables/useBreakpoint'
 import { usePageMeta } from '@/composables/usePageMeta'
@@ -342,15 +350,10 @@ watch(myMatches, () => {
 .teams { font-weight: bold; margin: 6px 0; color: var(--wc-text-primary); }
 .meta { color: #c9d1d9; font-size: 0.85rem; }
 .myteams-login-hint {
-  padding: 24px 20px;
-  text-align: center;
   margin: 12px 0;
 }
-.myteams-login-hint p {
-  margin: 0 0 16px;
-  color: var(--wc-text-muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
+.myteams-login-hint :deep(.guest-login-banner) {
+  margin-top: 0;
 }
 .arena-banner {
   display: flex;

@@ -43,17 +43,42 @@
 
       <el-alert v-else-if="authState.user" title="加载每日任务…" type="info" show-icon :closable="false" />
 
-      <el-alert v-else title="登录后可提交竞猜" type="info" show-icon :closable="false">
-
-        <el-button type="primary" size="small" @click="$router.push('/login')">立即登录</el-button>
-
-      </el-alert>
+      <GuestLoginBanner v-else />
 
     </div>
 
 
 
+    <StreakRiskBanner :status="dailyStatus" />
+
+    <OfficialQqGroupBar
+      :match-day="!!dailyStatus?.match_day"
+      :today-signin-count="dailyStatus?.today_signin_count ?? 0"
+    />
+
     <InvitePromptBar v-if="authState.user" scene="predict" :match-day="!!dailyStatus?.match_day" />
+
+    <PredictFirstCoach v-if="authState.user && sortedMatches.length" />
+
+    <el-alert
+      v-if="showProfileBindHint"
+      type="warning"
+      show-icon
+      closable
+      class="profile-bind-hint"
+      title="选主队解锁更多玩法"
+      @close="dismissProfileBindHint"
+    >
+      完善档案后，主队比赛会高亮显示，还能解锁军团、比赛日签到 +10 币。
+      <el-button link type="primary" @click="$router.push('/onboarding')">去建档</el-button>
+    </el-alert>
+
+    <PassDailyClaimBar :status="dailyStatus" @refresh="refreshDailyStatus" />
+
+    <div v-if="passBenefitsLine" class="pass-value-bar glass-inner">
+      {{ passBenefitsLine }}
+      <button type="button" class="pass-link" @click="$router.push('/shop')">查看权益</button>
+    </div>
 
     <FanRecommendationsBar :daily-status="dailyStatus" />
 
@@ -184,7 +209,7 @@
 
             <template v-else>
 
-              <div class="pick-row">
+              <div class="pick-row" :data-coach="isFirstOpenMatch(m) ? 'pick' : undefined">
 
                 <el-radio-group v-model="picks[m.id]" size="small" @change="updatePreview(m.id)">
 
@@ -214,6 +239,7 @@
                 <el-checkbox
                   v-model="useFree[m.id]"
                   :disabled="freeRemaining <= 0"
+                  :data-coach="isFirstOpenMatch(m) ? 'free' : undefined"
                   @change="onStakeChange(m.id)"
                 >
                   使用今日免费竞猜
@@ -245,6 +271,7 @@
                   type="primary"
 
                   class="submit-btn"
+                  :data-coach="isFirstOpenMatch(m) ? 'submit' : undefined"
 
                   :disabled="!authState.user || submittingId === m.id"
 
@@ -269,7 +296,7 @@
                   <strong>{{ fanCoins }}</strong> 币，还差
                   <strong>{{ coinShortfall(m.id) }}</strong> 币
                 </span>
-                <button type="button" class="coin-hint-action" @click="goRecharge">
+                <button type="button" class="coin-hint-action" @click="goRecharge(coinShortfall(m.id))">
                   去充值
                 </button>
                 <span v-if="freeRemaining > 0" class="coin-hint-alt">或勾选上方免费竞猜</span>
@@ -282,7 +309,7 @@
                   v-if="isCoinRelatedError(submitErrors[m.id])"
                   type="button"
                   class="coin-hint-action inline"
-                  @click="goRecharge"
+                  @click="goRecharge(coinShortfall(m.id))"
                 >
                   去充值球迷币
                 </button>
@@ -307,6 +334,15 @@
                 📣 去助威
               </button>
 
+              <button
+                v-if="authState.user"
+                type="button"
+                class="share-match-link"
+                @click="shareMatchInvite(m)"
+              >
+                邀友猜这场
+              </button>
+
             </div>
 
           </div>
@@ -318,21 +354,24 @@
       <el-empty v-else-if="!loading && !sortedMatches.length">
         <template #description>
           <p>暂无可竞猜比赛</p>
-          <p class="empty-hint">可以先去赛事中心看看赛程，或完成今日签到问答</p>
+          <p class="empty-hint">{{ emptyStateHint }}</p>
         </template>
-        <el-button type="primary" @click="$router.push('/')">去赛事中心</el-button>
-        <el-button type="primary" @click="$router.push('/me')">球迷中心</el-button>
+        <el-button v-if="nextMainMatchId" type="primary" @click="goMainMatch">
+          猜主队 {{ nextMainMatchLabel }}
+        </el-button>
+        <el-button type="primary" plain @click="$router.push('/live')">看 Live 赛程</el-button>
+        <el-button v-if="!dailyStatus?.signed_today && authState.user" plain @click="doSignin">签到领币</el-button>
+        <el-button v-else plain @click="$router.push('/me')">球迷中心</el-button>
       </el-empty>
 
     </div>
 
-    <div v-if="winFeed.length" class="win-feed glass-panel">
-      <div class="feed-track">
-        <span v-for="(item, idx) in winFeedDup" :key="idx" class="feed-item">
-          球迷 {{ item.nickname }} 猜中 {{ item.team1 }} vs {{ item.team2 }} +{{ item.points_awarded }} 分
-        </span>
-      </div>
-    </div>
+    <WinFeedBar
+      :items="winFeed"
+      :recent-count="winFeedRecentCount"
+      variant="compact"
+      :highlight-match-id="profileState.recommendations?.next_main_match?.id ?? null"
+    />
 
   </div>
 
@@ -362,12 +401,22 @@ import { showApiError } from '../utils/errorHandler'
 import FanRecommendationsBar from '../components/FanRecommendationsBar.vue'
 import DailyRitualPanel from '../components/DailyRitualPanel.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
+import PredictFirstCoach from '../components/PredictFirstCoach.vue'
+import PassDailyClaimBar from '../components/PassDailyClaimBar.vue'
 import VirtualList from '../components/VirtualList.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
+import { openPredictShareSheet } from '../composables/usePredictShareSheet'
 import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
 import { syncQqGroupClaimed } from '../composables/useOfficialQqGroup'
 import { usePageMeta } from '../composables/usePageMeta'
+import { trackEvent } from '../utils/analytics'
+import { copyToClipboard } from '../utils/copyToClipboard'
+import { passBenefitsSummary, offerStarterPack } from '../composables/useStarterPackOffer'
+import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
+import GuestLoginBanner from '../components/GuestLoginBanner.vue'
+import StreakRiskBanner from '../components/StreakRiskBanner.vue'
+import WinFeedBar from '../components/WinFeedBar.vue'
 
 usePageMeta({
   title: '竞猜大厅 — 最后一舞',
@@ -380,7 +429,64 @@ usePageMeta({
 const route = useRoute()
 const router = useRouter()
 const { isMobile } = useBreakpoint()
-const { openShareSheet } = useInviteShare()
+const { openShareSheet, cachedMe, ensureMe } = useInviteShare()
+
+const passBenefitsLine = computed(() => passBenefitsSummary(dailyStatus.value?.pass_benefits ?? null))
+
+const PROFILE_BIND_HINT_KEY = 'wc_skip_profile_predict_hint'
+
+const showProfileBindHint = computed(
+  () =>
+    !!authState.user &&
+    !authState.user.profile_completed &&
+    !localStorage.getItem(PROFILE_BIND_HINT_KEY),
+)
+
+function dismissProfileBindHint() {
+  try {
+    localStorage.setItem(PROFILE_BIND_HINT_KEY, '1')
+  } catch {
+    /* ignore */
+  }
+}
+
+function siteBase() {
+  return (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/$/, '')
+}
+
+function pickLabelForShare(m: GameMatch, pick: string) {
+  if (pick === 'home') return `${m.team1} 胜`
+  if (pick === 'away') return `${m.team2} 胜`
+  return '平局'
+}
+
+function openPredictShareForMatch(m: GameMatch, pick: string) {
+  const label = pickLabelForShare(m, pick)
+  openPredictShareSheet({
+    team1: m.team1 || '?',
+    team2: m.team2 || '?',
+    pickLabel: label,
+    shareUrl: buildPredictShareText(m, pick).split('\n').pop() || '',
+    nickname: authState.user?.nickname,
+  })
+}
+function buildPredictShareText(m: GameMatch, pick: string) {
+  const label = pickLabelForShare(m, pick)
+  const ref = cachedMe.value?.invite_code
+  const url = ref
+    ? `${siteBase()}/share/match/${m.id}?ref=${encodeURIComponent(ref)}`
+    : `${siteBase()}/share/match/${m.id}`
+  return `我押了 ${m.team1} vs ${m.team2} · ${label}\n${url}`
+}
+
+async function shareMatchInvite(m: GameMatch) {
+  const pick = picks[m.id] || 'home'
+  const text = buildPredictShareText(m, pick)
+  const ok = await copyToClipboard(text)
+  if (ok) ElMessage.success('已复制，去微信粘贴邀友猜这场')
+  else ElMessage.info(text)
+  trackEvent('share_match_invite', { match_id: m.id })
+}
 
 function openGameplayGuide() {
   void openGuideModalByKey('gameplay_guide')
@@ -410,6 +516,7 @@ function markPredictShareNudge() {
   }
 }
 
+
 const matches = ref<GameMatch[]>([])
 
 const loading = ref(false)
@@ -428,10 +535,15 @@ const submittingId = ref<number | null>(null)
 const raisingId = ref<number | null>(null)
 
 const dailyStatus = ref<DailyStatus | null>(null)
+
+async function refreshDailyStatus() {
+  dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
+}
+
 const signingIn = ref(false)
 const previewText = shallowReactive<Record<number, string>>({})
 const winFeed = ref<{ nickname: string; team1: string; team2: string; points_awarded: number }[]>([])
-const winFeedDup = computed(() => [...winFeed.value, ...winFeed.value])
+const winFeedRecentCount = ref(0)
 const activePreviewId = ref<number | null>(null)
 
 /** 虚拟列表行高：移动端选项纵向堆叠需更高行 */
@@ -450,6 +562,32 @@ const highlightId = computed(
     null
 
 )
+
+const nextMainMatch = computed(() => profileState.recommendations?.next_main_match ?? null)
+
+const nextMainMatchId = computed(() => nextMainMatch.value?.id ?? null)
+
+const nextMainMatchLabel = computed(() => {
+  const m = nextMainMatch.value
+  if (!m?.team1 || !m?.team2) return '下一场'
+  return `${m.team1} vs ${m.team2}`
+})
+
+const emptyStateHint = computed(() => {
+  if (nextMainMatch.value && !dailyStatus.value?.signed_today) {
+    return '今日可先签到领币；主队比赛开猜后会出现在这里'
+  }
+  if (nextMainMatch.value) {
+    return '主队比赛尚未开猜，可先完成签到问答或去 Live 看赛程'
+  }
+  return '可以先去 Live 看赛程，或完成今日签到问答'
+})
+
+function goMainMatch() {
+  const id = nextMainMatchId.value
+  if (id) router.push({ path: '/predict', query: { highlight: String(id) } })
+  else router.push('/live')
+}
 
 
 
@@ -470,6 +608,11 @@ const sortedMatches = computed(() => {
   return list
 
 })
+
+function isFirstOpenMatch(m: GameMatch) {
+  const first = sortedMatches.value.find((x) => !x.user_predicted)
+  return first?.id === m.id
+}
 
 
 
@@ -502,8 +645,12 @@ function isCoinRelatedError(message: string): boolean {
   return /球迷币不足|余额不足|币不够/.test(message)
 }
 
-function goRecharge() {
-  router.push('/shop')
+function goRecharge(shortfall?: number) {
+  void offerStarterPack({
+    reason: 'predict_stake',
+    shortfall,
+    onNavigate: (path, query) => router.push({ path, query }),
+  })
 }
 
 function onStakeChange(matchId: number) {
@@ -639,7 +786,9 @@ async function load(options: { silent?: boolean } = {}) {
     }
 
     matches.value = await getPredictableMatches()
-    winFeed.value = await getWinFeed().catch(() => [])
+    const res = await getWinFeed().catch(() => ({ items: [], recent_count: 0 }))
+    winFeed.value = res.items
+    winFeedRecentCount.value = res.recent_count
 
     for (const m of matches.value) {
       if (!m.user_predicted) {
@@ -719,19 +868,35 @@ async function submit(matchId: number) {
       `球迷币还差 ${shortfall} 币（本局 ${need} 币 · 当前 ${fanCoins.value} 币），可去充值或调低质押`,
       { soft: true },
     )
+    trackEvent('starter_pack_trigger', { match_id: matchId, shortfall })
+    void offerStarterPack({
+      reason: 'predict_stake',
+      shortfall,
+      onNavigate: (path, query) => router.push({ path, query }),
+    })
     return
   }
   submittingId.value = matchId
+  const submittedPick = picks[matchId]
+  const matchRow = matches.value.find((x) => x.id === matchId)
   try {
     await submitPrediction({
       match_id: matchId,
-      pick: picks[matchId],
+      pick: submittedPick,
       stake_coins: free ? 0 : stakes[matchId],
       use_free: free,
     })
     await fetchMe()
+    trackEvent('first_predict_submit', {
+      match_id: matchId,
+      use_free: free,
+      has_profile: !!authState.user?.profile_completed,
+    })
     const msg = free ? '免费竞猜已提交，猜中得积分！' : `已质押 ${stakes[matchId]} 币，祝你好运！`
     ElMessage.success(msg)
+    if (matchRow && submittedPick) {
+      openPredictShareForMatch(matchRow, submittedPick)
+    }
     if (authState.user && shouldShowPredictShareNudge()) {
       markPredictShareNudge()
       ElNotification({
@@ -774,6 +939,7 @@ async function submit(matchId: number) {
 
 onMounted(() => {
   void load()
+  void ensureMe()
   maybeOpenGameplayGuide()
 })
 
@@ -789,6 +955,60 @@ watch(
 
 
 <style scoped>
+
+.profile-bind-hint {
+  margin-bottom: 12px;
+}
+
+.pass-value-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: var(--wc-accent-gold, #d4a574);
+}
+
+.pass-link {
+  background: none;
+  border: none;
+  color: var(--wc-accent-rose, #e8a0bf);
+  cursor: pointer;
+  font-size: inherit;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.share-match-link {
+  background: none;
+  border: none;
+  color: var(--wc-accent-gold, #d4a574);
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0;
+  margin-left: 12px;
+}
+
+.win-feed .feed-item {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.win-feed .feed-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--wc-accent-gold, #d4a574);
+  margin-bottom: 6px;
+}
 
 .predict-hall {
 

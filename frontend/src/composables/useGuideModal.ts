@@ -2,6 +2,16 @@ import { reactive, ref } from 'vue'
 import { getUiConfig, type GuideModalConfig } from '@/api/uiConfig'
 import { authState, isLoggedIn } from '@/stores/authStore'
 
+/** Suppress intro modals while the 6-step product tour is still pending. */
+export function isFeatureTourPending(): boolean {
+  if (!isLoggedIn.value || !authState.user?.profile_completed) return false
+  try {
+    return !localStorage.getItem('wc2026_onboarded')
+  } catch {
+    return false
+  }
+}
+
 export const guideModalState = reactive({
   open: false,
   configKey: '' as string,
@@ -100,6 +110,7 @@ export async function tryAutoOpenGuide(
   path: string,
   query: Record<string, unknown>,
 ) {
+  if (isFeatureTourPending() && (key === 'site_intro' || key === 'gameplay_guide')) return
   const cfg = await loadGuideConfig(key)
   if (!cfg) return
   if (!shouldAutoOpenGuide(cfg, path, query)) return

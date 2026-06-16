@@ -53,6 +53,7 @@ export interface MatchBrief {
   status: string
   can_predict: boolean
   can_cheer: boolean
+  hours_until?: number | null
 }
 
 export async function getProfileStatus() {

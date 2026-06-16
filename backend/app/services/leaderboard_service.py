@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import date, datetime, timedelta, timezone
 
 from sqlalchemy import case, desc, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.db.models.commerce import GamePrediction, PointLedger, User
+from app.core.config import get_settings
+from app.db.models.commerce import GamePrediction, LeaderboardSeasonAward, PointLedger, User
+from app.db.repositories.user_repository import WalletRepository
 from app.services.arena_service import TIER_LABELS
+
+logger = logging.getLogger(__name__)
 
 PERIOD_LABELS = {
     "daily": "今日",
@@ -55,6 +61,152 @@ def _period_start(period: str) -> datetime | None:
 class LeaderboardService:
     def __init__(self, db: Session):
         self.db = db
+        self.settings = get_settings()
+        self.wallet = WalletRepository(db)
+
+    def get_reward_tiers(self) -> dict:
+        rewards = self.settings.season_leaderboard_rank_rewards_map
+        tiers = []
+        for rank in sorted(rewards.keys()):
+            season_pts, coins, redeem = rewards[rank]
+            tiers.append(
+                {
+                    "rank": rank,
+                    "season_points": season_pts,
+                    "coins": coins,
+                    "redeem_points": redeem,
+                }
+            )
+        return {
+            "season_key": self.settings.season_key,
+            "board": "points",
+            "description": "赛季累计积分总榜 · 赛后虚拟奖励（球迷币 / 累计积分 / 可用积分）",
+            "tiers": tiers,
+        }
+
+    def settle_season_board(
+        self,
+        *,
+        board: str = "points",
+        season_key: str | None = None,
+        force: bool = False,
+    ) -> dict:
+        """Award configured virtual rewards for season leaderboard (admin-triggered)."""
+        board = board if board in ("points", "redeem_points") else "points"
+        season_key = season_key or self.settings.season_key
+        rewards = self.settings.season_leaderboard_rank_rewards_map
+        top_n = self.settings.season_leaderboard_settle_top_n or 10
+        if not rewards:
+            return {"skipped": True, "reason": "no_rewards_configured"}
+
+        if board == "points":
+            rows = self._balance_board("season", top_n, None)
+        else:
+            rows = self._balance_board("redeem", top_n, None)
+
+        awarded = 0
+        skipped = 0
+        errors = 0
+        ledger_ref_type = "lb_pts" if board == "points" else "lb_rdm"
+        for row in rows:
+            rank = row["rank"]
+            reward = rewards.get(rank)
+            if not reward:
+                continue
+            uid = row["user_id"]
+            score = row["points"]
+            try:
+                user = self.db.query(User).filter(User.id == uid).with_for_update().first()
+                if not user:
+                    continue
+                existing = (
+                    self.db.query(LeaderboardSeasonAward)
+                    .filter(
+                        LeaderboardSeasonAward.user_id == uid,
+                        LeaderboardSeasonAward.season_key == season_key,
+                        LeaderboardSeasonAward.board == board,
+                    )
+                    .first()
+                )
+                if existing and not force:
+                    skipped += 1
+                    self.db.rollback()
+                    continue
+                if existing and force:
+                    self.db.delete(existing)
+                    self.db.flush()
+                season_pts, coins, redeem = reward
+                if season_pts > 0:
+                    self.wallet.add_season_points(
+                        user, season_pts, "leaderboard_season", ledger_ref_type, rank
+                    )
+                if coins > 0:
+                    self.wallet.add_coins(user, coins, "leaderboard_season", ledger_ref_type, rank)
+                if redeem > 0:
+                    self.wallet.add_redeem_points(
+                        user, redeem, "leaderboard_season", ledger_ref_type, rank
+                    )
+                self.db.add(
+                    LeaderboardSeasonAward(
+                        user_id=uid,
+                        season_key=season_key,
+                        board=board,
+                        rank=rank,
+                        score=int(score),
+                        season_points_awarded=season_pts,
+                        coins_awarded=coins,
+                        redeem_points_awarded=redeem,
+                    )
+                )
+                self.db.flush()
+                self.db.commit()
+            except IntegrityError:
+                self.db.rollback()
+                errors += 1
+                logger.warning(
+                    "Season award race skipped user=%s season=%s board=%s",
+                    uid,
+                    season_key,
+                    board,
+                )
+                continue
+            try:
+                from app.services.notification_service import NotificationService
+
+                parts = []
+                if season_pts:
+                    parts.append(f"+{season_pts} 累计积分")
+                if coins:
+                    parts.append(f"+{coins} 球迷币")
+                if redeem:
+                    parts.append(f"+{redeem} 可用积分")
+                board_label = "累计积分榜" if board == "points" else "可用积分榜"
+                NotificationService(self.db).notify_leaderboard_season_reward(
+                    uid,
+                    title=f"赛季{board_label}第 {rank} 名",
+                    body=f"虚拟奖励已发放：{' · '.join(parts) or '荣誉已记录'}",
+                    season_key=season_key,
+                    board=board,
+                    rank=rank,
+                    season_points=season_pts,
+                    coins=coins,
+                    redeem_points=redeem,
+                )
+                self.db.commit()
+            except Exception:
+                self.db.rollback()
+                logger.exception("Season leaderboard notify failed user=%s rank=%s", uid, rank)
+            awarded += 1
+
+        return {
+            "season_key": season_key,
+            "board": board,
+            "top_n": top_n,
+            "awarded": awarded,
+            "skipped_existing": skipped,
+            "race_conflicts": errors,
+            "candidates": len(rows),
+        }
 
     def get_rules(self) -> dict:
         return {"boards": BOARD_RULES, "periods": PERIOD_LABELS}

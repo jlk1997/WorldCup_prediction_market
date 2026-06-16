@@ -9,6 +9,15 @@
       </div>
       <div class="card-actions">
         <el-button v-if="m.id" size="small" class="mobile-full-btn" @click.stop="goDetail(m)">详情</el-button>
+        <el-button
+          v-if="m.id && isMatchPredictable(m)"
+          size="small"
+          plain
+          class="mobile-full-btn"
+          @click.stop="goPredict(m)"
+        >
+          竞猜
+        </el-button>
         <el-button size="small" type="primary" class="mobile-full-btn" @click.stop="$emit('analyze', m)">
           {{ label(m) }}
         </el-button>
@@ -20,11 +29,14 @@
 
 <script setup lang="ts">
 import type { LiveMatch } from '@/types/api'
+import { useRouter } from 'vue-router'
 import { useAgentNavigate } from '@/composables/useAgentNavigate'
+import { isMatchPredictable } from '@/utils/matchKickoff'
 
 defineProps<{ rows: LiveMatch[] }>()
 defineEmits<{ analyze: [row: LiveMatch] }>()
 
+const router = useRouter()
 const { goMatchDetail, agentButtonLabel } = useAgentNavigate()
 
 function label(row: LiveMatch) {
@@ -33,6 +45,11 @@ function label(row: LiveMatch) {
 
 function goDetail(row: LiveMatch) {
   goMatchDetail(row)
+}
+
+function goPredict(row: LiveMatch) {
+  if (!row.id) return
+  router.push({ path: '/predict', query: { highlight: String(row.id) } })
 }
 </script>
 

@@ -123,6 +123,16 @@ const initial = computed(() => (props.nickname || '球').slice(0, 1))
   background: #2a3050;
 }
 
+.theme-strip.theme-gold_wc span:nth-child(1) {
+  background: #e8c88a;
+}
+.theme-strip.theme-gold_wc span:nth-child(2) {
+  background: #d4a574;
+}
+.theme-strip.theme-gold_wc span:nth-child(3) {
+  background: #8a6b3a;
+}
+
 .preview-right {
   flex: 1;
   min-width: 0;

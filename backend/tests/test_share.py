@@ -38,3 +38,25 @@ def test_invite_share_page_with_valid_ref(client, db: Session):
     assert r.status_code == 200
     assert "分享测试" in r.text
     assert f"ref={code}" in r.text
+
+
+def test_match_share_page(client, db: Session):
+    from app.db.models import Match
+
+    suffix = uuid.uuid4().hex[:8]
+    match = Match(
+        team1_name="巴西",
+        team2_name="法国",
+        group_name="A组",
+        match_date="2026-06-15",
+        match_time="20:00",
+    )
+    db.add(match)
+    db.commit()
+    db.refresh(match)
+
+    r = client.get(f"/share/match/{match.id}")
+    assert r.status_code == 200
+    assert "巴西" in r.text
+    assert "法国" in r.text
+    assert f"highlight={match.id}" in r.text

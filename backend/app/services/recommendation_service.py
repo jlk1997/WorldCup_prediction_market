@@ -29,6 +29,9 @@ def _match_brief(m: Match, settings) -> dict:
     )
     kick = parse_kickoff(m)
     can_cheer = can_predict and kick and (kick - now) <= timedelta(hours=CHEER_HOURS_BEFORE)
+    hours_until = None
+    if kick:
+        hours_until = max(0, round((kick - now).total_seconds() / 3600, 1))
     return {
         "id": m.id,
         "team1": m.team1_name,
@@ -39,6 +42,7 @@ def _match_brief(m: Match, settings) -> dict:
         "status": m.status or "scheduled",
         "can_predict": can_predict,
         "can_cheer": bool(can_cheer),
+        "hours_until": hours_until,
     }
 
 

@@ -92,6 +92,30 @@ class SharePageService:
             "redirect_path": f"{self.base}/leaderboard",
         }
 
+    def build_match_share_url(self, match_id: int, ref: str = "") -> str:
+        q = f"?ref={ref}" if ref else ""
+        return f"{self.base}/share/match/{match_id}{q}"
+
+    def match_share_page(self, match_id: int, ref: str = "") -> dict | None:
+        match = self.db.get(Match, match_id)
+        if not match:
+            return None
+        t1 = match.team1_name or "?"
+        t2 = match.team2_name or "?"
+        title = f"一起来猜 {t1} vs {t2} — 最后一舞"
+        description = f"2026 世界杯娱乐竞猜 · {match.group_name or '世界杯'} · 猜中得积分冲榜"
+        code = (ref or "").strip().upper()
+        redirect = f"{self.base}/predict?highlight={match_id}"
+        if code:
+            redirect = f"{self.base}/login?ref={code}&redirect=/predict?highlight={match_id}"
+        url = self.build_match_share_url(match_id, code)
+        return {
+            "title": title,
+            "description": description,
+            "url": url,
+            "redirect_path": redirect,
+        }
+
     def invite_share_page(self, code: str) -> dict:
         redirect_path = f"{self.base}/login?ref={code}" if code else f"{self.base}/login"
         preview = ReferralService(self.db, self.settings).preview_invite_code(code) if code else {"valid": False}

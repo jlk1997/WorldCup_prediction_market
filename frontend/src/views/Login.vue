@@ -123,7 +123,7 @@ async function redirectAfterAuth(referralBound: boolean) {
     await router.replace(`/onboarding${fromReferral}`)
     return
   }
-  const redirect = (route.query.redirect as string) || '/'
+  const redirect = (route.query.redirect as string) || '/predict'
   await router.replace(redirect)
 }
 

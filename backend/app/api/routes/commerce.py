@@ -283,6 +283,49 @@ def daily_status(user: User = Depends(get_current_user), db: Session = Depends(g
     return GameService(db).get_daily_status(user)
 
 
+@router_game.post("/season-pass/daily-claim")
+def claim_season_pass_daily(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    result = SeasonPassService(db).grant_daily_if_eligible(user, commit=False)
+    if result.get("granted", 0) > 0:
+        db.commit()
+        refreshed = UserRepository(db).get_by_id(user.id)
+        if refreshed:
+            result["fan_coins"] = refreshed.fan_coins
+    else:
+        db.rollback()
+    return result
+
+
+@router_game.get("/admin/funnel-summary", dependencies=[Depends(require_admin_secret_in_production)])
+def funnel_summary(
+    days: int = Query(7, ge=1, le=90),
+    db: Session = Depends(get_db),
+):
+    from app.services.funnel_service import FunnelService
+
+    return FunnelService(db).summary(days)
+
+
+@router_game.get("/leaderboard/reward-tiers")
+def leaderboard_reward_tiers(db: Session = Depends(get_db)):
+    return LeaderboardService(db).get_reward_tiers()
+
+
+@router_game.post("/admin/leaderboard/settle-season", dependencies=[Depends(require_admin_secret_in_production)])
+def admin_settle_season_leaderboard(
+    board: str = Query("points"),
+    season_key: str | None = Query(None),
+    force: bool = Query(False),
+    db: Session = Depends(get_db),
+):
+    result = LeaderboardService(db).settle_season_board(
+        board=board,
+        season_key=season_key,
+        force=force,
+    )
+    return result
+
+
 @router_game.get("/matches/{match_id}/pick-stats")
 def match_pick_stats(match_id: int, db: Session = Depends(get_db)):
     return GameService(db).get_match_pick_stats(match_id)

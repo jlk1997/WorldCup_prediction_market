@@ -1,6 +1,7 @@
 import { onUnmounted, ref, watch, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { shouldShowLeaderboardRewardPrompt } from '../utils/leaderboardRewardPrompt'
+import { isFeatureTourPending } from './useGuideModal'
 
 /** 进入这些页面时展示「冲榜神秘大礼」弹窗 */
 export const REWARD_PROMPT_ROUTES = ['/', '/predict', '/leaderboard'] as const
@@ -31,11 +32,13 @@ export function useLeaderboardRewardPrompt(options?: {
 
     if (!isRewardPromptRoute(route.path)) return
     if (options?.blocked?.value) return
+    if (isFeatureTourPending()) return
     if (!shouldShowLeaderboardRewardPrompt()) return
 
     timer = setTimeout(() => {
       if (!isRewardPromptRoute(route.path)) return
       if (options?.blocked?.value) return
+      if (isFeatureTourPending()) return
       if (!shouldShowLeaderboardRewardPrompt()) return
       showRewardDialog.value = true
       timer = null

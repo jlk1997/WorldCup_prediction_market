@@ -30,11 +30,20 @@
 
     <el-table-column prop="stadium" label="球场" />
 
-    <el-table-column label="操作" width="160">
+    <el-table-column label="操作" width="220">
 
       <template #default="{ row }">
 
         <el-button v-if="row.id" size="small" link @click="goDetail(row)">详情</el-button>
+
+        <el-button
+          v-if="row.id && isMatchPredictable(row)"
+          size="small"
+          link
+          @click="goPredict(row)"
+        >
+          竞猜
+        </el-button>
 
         <el-button size="small" type="primary" @click="$emit('analyze', row)">{{ label(row) }}</el-button>
 
@@ -54,6 +63,10 @@ import type { LiveMatch } from '@/types/api'
 
 import { useAgentNavigate } from '@/composables/useAgentNavigate'
 
+import { useRouter } from 'vue-router'
+
+import { isMatchPredictable } from '@/utils/matchKickoff'
+
 
 
 defineProps<{ rows: LiveMatch[] }>()
@@ -61,6 +74,8 @@ defineProps<{ rows: LiveMatch[] }>()
 defineEmits<{ analyze: [row: LiveMatch] }>()
 
 
+
+const router = useRouter()
 
 const { goMatchDetail, agentButtonLabel } = useAgentNavigate()
 
@@ -78,6 +93,11 @@ function goDetail(row: LiveMatch) {
 
   goMatchDetail(row)
 
+}
+
+function goPredict(row: LiveMatch) {
+  if (!row.id) return
+  router.push({ path: '/predict', query: { highlight: String(row.id) } })
 }
 
 </script>

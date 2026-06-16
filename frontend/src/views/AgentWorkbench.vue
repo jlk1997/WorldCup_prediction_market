@@ -95,6 +95,18 @@
             <span v-else class="cost-value paid">扣 {{ billingPreview.data.charge_coins }} 球迷币</span>
           </div>
 
+          <el-alert
+            v-if="billingStatus && billingStatus.free_remaining <= 0"
+            type="warning"
+            :closable="false"
+            show-icon
+            class="quota-alert"
+            title="今日免费 AI 已用完"
+          >
+            超出后按次扣币；开通通行证每日多 3 次免费。
+            <el-button link type="primary" @click="$router.push('/shop')">去商城</el-button>
+          </el-alert>
+
           <AiBillingIntro :visible="showBillingIntro" @ack="ackBilling" />
 
           <div class="form-row" v-if="authState.accessToken">
@@ -343,7 +355,7 @@ import { authState } from '@/stores/authStore'
 
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { apiClient, getErrorMessage, isRateLimitError } from '@/api/client'
 import { showApiError } from '@/utils/errorHandler'
@@ -382,6 +394,8 @@ import BettingGuideCard from '@/components/BettingGuideCard.vue'
 import AiBillingIntro from '@/components/AiBillingIntro.vue'
 import { useStadiumScene } from '@/composables/useStadiumScene'
 import { useBreakpoint } from '@/composables/useBreakpoint'
+import { offerStarterPack } from '@/composables/useStarterPackOffer'
+import { isWeChatBrowser, WECHAT_PAY_HINT } from '@/utils/payEnv'
 
 
 
@@ -1002,6 +1016,15 @@ async function runAnalysis(fromAuto = false) {
       report.value = previousReport
     }
     ElMessage.error(msg)
+    if (/免费 AI|余额不足|球迷币不足|次数已用完/.test(msg)) {
+      if (isWeChatBrowser()) {
+        void ElMessageBox.alert(WECHAT_PAY_HINT, '请用浏览器打开', { confirmButtonText: '我知道了', type: 'warning' })
+      }
+      void offerStarterPack({
+        reason: 'ai_billing',
+        onNavigate: (path, query) => router.push({ path, query }),
+      })
+    }
 
   } finally {
 

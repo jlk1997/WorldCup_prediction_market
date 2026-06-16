@@ -8,6 +8,10 @@
         <span><strong>{{ authState.user.season_points }}</strong> 累计积分</span>
         <span class="redeem"><strong>{{ authState.user.redeem_points ?? 0 }}</strong> 可用积分</span>
       </div>
+      <div v-if="passBenefitsLine" class="pass-value-strip">
+        🎫 {{ passBenefitsLine }}
+        <router-link to="/shop" class="pass-link">去领取 / 续费</router-link>
+      </div>
     </div>
 
     <el-tabs v-model="activeTab" class="shop-tabs tabs-scroll">
@@ -25,7 +29,8 @@
             v-for="p in cashProducts"
             :key="p.id"
             class="product glass-panel"
-            :class="{ featured: p.featured, [`type-${p.product_type}`]: true }"
+            :class="{ featured: p.featured, [`type-${p.product_type}`]: true, 'sku-highlight': p.sku === highlightSku }"
+            :id="p.sku ? `product-${p.sku}` : undefined"
           >
             <div class="product-head">
               <h3>{{ p.name }}</h3>
@@ -137,10 +142,12 @@ import {
   getRedeemRules,
   redeemPurchase,
   fetchPaidPendingOrder,
+  getDailyStatus,
   type Product,
   type RedeemProduct,
   type RedeemShopRules,
 } from '../api/commerce'
+import { passBenefitsSummary } from '../composables/useStarterPackOffer'
 import { showApiError } from '../utils/errorHandler'
 import { usePageMeta } from '../composables/usePageMeta'
 
@@ -182,6 +189,8 @@ const payProcessing = ref(false)
 const payProcessingMessage = ref('正在创建订单…')
 const payProcessingHint = ref('')
 const { setUiOverlay } = useStadiumStore()
+const highlightSku = ref(typeof route.query.highlight === 'string' ? route.query.highlight : '')
+const passBenefitsLine = ref<string | null>(null)
 
 const cashBuyDisabled = computed(() => !authState.user)
 const cashBuyLabel = computed(() => {
@@ -319,8 +328,21 @@ async function load() {
     const redirected = await syncPendingPayment()
     if (redirected) return
     await fetchMe()
+    const daily = await getDailyStatus().catch(() => null)
+    passBenefitsLine.value = passBenefitsSummary(daily?.pass_benefits ?? null)
   }
   await Promise.all([loadCash(), loadRedeem()])
+  await scrollToHighlightProduct()
+  if (route.query.buy === '1' && highlightSku.value) {
+    const product = cashProducts.value.find((p) => p.sku === highlightSku.value)
+    if (product) requestBuy(product)
+  }
+}
+
+async function scrollToHighlightProduct() {
+  if (!highlightSku.value) return
+  await new Promise((r) => setTimeout(r, 120))
+  document.getElementById(`product-${highlightSku.value}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 function requestBuy(product: Product) {
@@ -432,6 +454,24 @@ onMounted(load)
   gap: 16px;
   margin-top: 8px;
   font-size: 0.9rem;
+}
+.pass-value-strip {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--wc-accent-gold, #d4a574);
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid rgba(212, 165, 116, 0.25);
+}
+.pass-value-strip .pass-link {
+  margin-left: 8px;
+  color: var(--wc-accent-rose, #e8a0bf);
+  text-decoration: underline;
+}
+.product.sku-highlight {
+  border: 2px solid rgba(212, 165, 116, 0.65);
+  box-shadow: 0 0 24px rgba(212, 165, 116, 0.2);
 }
 .balances .redeem {
   color: var(--wc-accent-rose);

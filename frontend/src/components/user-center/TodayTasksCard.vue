@@ -107,6 +107,18 @@
       class="task-alert"
       :title="status.streak_risk.message"
     />
+
+    <div v-if="status?.redeem_progress && status.redeem_progress.gap > 0" class="redeem-progress glass-inner">
+      <div class="redeem-head">
+        <span>兑换进度 · {{ status.redeem_progress.next_name }}</span>
+        <span class="redeem-gap">差 {{ status.redeem_progress.gap }} 可用积分</span>
+      </div>
+      <el-progress :percentage="status.redeem_progress.pct" :stroke-width="10" />
+      <p v-if="status.redeem_progress.wins_estimate" class="redeem-wins-hint">
+        约再猜中 {{ status.redeem_progress.wins_estimate }} 场可兑换（按场均 +{{ status.redeem_progress.avg_redeem_per_win ?? 15 }} 可用积分估算）
+      </p>
+      <button type="button" class="redeem-cta" @click="$router.push('/predict')">再猜中为兑换助力 →</button>
+    </div>
   </div>
 </template>
 
@@ -398,6 +410,42 @@ function onTaskClick(item: { key: string; done: boolean }) {
 .task-alert {
   margin-top: 10px;
   margin-bottom: 0;
+}
+
+.redeem-progress {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+
+.redeem-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.redeem-gap {
+  color: var(--wc-accent-gold, #d4a574);
+  font-weight: 600;
+}
+
+.redeem-cta {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--wc-accent-rose, #e8a0bf);
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0;
+}
+
+.redeem-wins-hint {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .focus-flash {

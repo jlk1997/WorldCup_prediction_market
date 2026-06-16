@@ -63,6 +63,7 @@ import { getFanCard } from '../api/profile'
 import { getReferralMe } from '../api/referral'
 import { getFanCardShareUrl } from '../api/commerce'
 import { downloadSharePoster } from '../utils/sharePoster'
+import { posterDisplayName } from '../utils/sharePosterDisplayName'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { authState } from '../stores/authStore'
 import { avatarFrameClass, formatPassUntil, hasActiveSeasonPass } from '../utils/entitlements'
@@ -139,7 +140,8 @@ async function downloadPoster() {
   if (!card.value) return
   try {
     await downloadSharePoster({
-      title: card.value.nickname,
+      variant: 'profile',
+      displayName: posterDisplayName(card.value.nickname),
       subtitle: card.value.tagline,
       statsLine: `累计 ${card.value.season_points} 分 · 胜率 ${card.value.win_rate}% · 军团 ${card.value.battalion_points ?? 0}`,
       footer: '虚拟奖励不可提现 · 一起来猜世界杯',

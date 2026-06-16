@@ -14,15 +14,15 @@
         <div class="trophy-glow" aria-hidden="true">🏆</div>
         <div>
           <span class="head-badge">世界杯赛后福利</span>
-          <h3 class="dialog-title">冲榜有礼 · 神秘大礼等你来拿</h3>
-          <p class="dialog-sub">2026 世界杯结束后，排行榜上榜用户均可获得惊喜回馈</p>
+          <h3 class="dialog-title">冲榜有礼 · 赛季虚拟荣誉</h3>
+          <p class="dialog-sub">2026 世界杯结束后，排行榜上榜用户将获得站内虚拟奖励</p>
         </div>
       </div>
     </template>
 
     <div class="reward-body">
       <p class="lead">
-        在「最后一舞」各榜<strong>成功上榜</strong>的球迷，赛后将统一发放神秘礼包，人人有份、排名越高惊喜越多！
+        在「最后一舞」各榜<strong>成功上榜</strong>的球迷，赛后将统一发放<strong>虚拟礼包</strong>（球迷币、可用积分、专属装扮等），排名越高奖励越丰厚。
       </p>
 
       <div class="gift-grid">
@@ -35,8 +35,8 @@
 
       <ul class="rule-list">
         <li>覆盖<strong>累计积分、可用积分、竞猜准度、军团榜</strong>等主流榜单</li>
-        <li>实物类奖品以站内公告为准，颜色/尺码随机或按登记信息发放</li>
-        <li>活动最终解释权归平台所有，请以赛后官方通知为准</li>
+        <li>奖励均为<strong>站内虚拟物品</strong>（球迷币 / 积分 / 装扮），不可提现、不含实物</li>
+        <li>具体档位以赛后站内公告为准，请以官方通知为最终依据</li>
       </ul>
     </div>
 
@@ -116,10 +116,10 @@ const shareCopied = ref(false)
 const shareTextRef = ref<HTMLTextAreaElement | null>(null)
 
 const gifts = [
-  { icon: '🪙', title: '金豆礼包', desc: '球迷币、积分加成' },
-  { icon: '🏅', title: 'C罗 / 梅西手办', desc: '限量收藏款' },
-  { icon: '👕', title: '正版球衣', desc: '国家队 / 俱乐部' },
-  { icon: '🎁', title: '更多惊喜', desc: '神秘周边等你拆' },
+  { icon: '🪙', title: '球迷币礼包', desc: '上榜档位对应不同数量' },
+  { icon: '✨', title: '可用积分', desc: '兑换头像框与主题' },
+  { icon: '🏅', title: '专属装扮', desc: '赛季限定虚拟外观' },
+  { icon: '🎖️', title: '荣誉徽章', desc: '名片与排行榜展示' },
 ]
 
 const rankShareUrl = computed(() => {

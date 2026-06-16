@@ -14,6 +14,7 @@
     </template>
 
     <div v-loading="loading || posterLoading" class="sheet-body">
+      <p class="share-steps">① 保存海报 → ② 发微信好友/群 → ③ 好友扫码注册得币</p>
       <p v-if="benefitLine" class="benefit-line">{{ benefitLine }}</p>
 
       <el-alert
@@ -94,6 +95,18 @@ const benefitLine = computed(() => {
   padding: 0 4px 12px;
 }
 
+.share-steps {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(103, 194, 58, 0.1);
+  border: 1px solid rgba(103, 194, 58, 0.25);
+  font-size: 0.82rem;
+  color: #8fd48a;
+  text-align: center;
+  line-height: 1.45;
+}
+
 .benefit-line {
   margin: 0;
   font-size: 0.88rem;
@@ -113,11 +126,11 @@ const benefitLine = computed(() => {
 }
 
 .poster-preview img {
-  max-width: 200px;
+  max-width: 260px;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid rgba(212, 165, 116, 0.35);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 .main-btn {

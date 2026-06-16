@@ -25,6 +25,7 @@
         >
           <span class="next-label">{{ status.next_action.label }}</span>
           <span v-if="status.next_action.hint" class="next-hint">{{ status.next_action.hint }}</span>
+          <span class="next-arrow" aria-hidden="true">→</span>
         </button>
       </div>
       <el-button
@@ -60,6 +61,9 @@
       />
       <span class="redeem-gap">
         差 {{ status.redeem_progress.gap }} 分换 {{ status.redeem_progress.next_name }}
+        <template v-if="status.redeem_progress.wins_estimate">
+          · 约 {{ status.redeem_progress.wins_estimate }} 场
+        </template>
       </span>
     </div>
 
@@ -71,13 +75,19 @@
       class="ritual-alert"
       :title="status.match_day_message"
     />
-    <el-alert
+    <button
       v-if="status.streak_risk"
-      type="warning"
-      :closable="true"
-      class="ritual-alert"
-      :title="status.streak_risk.message"
-    />
+      type="button"
+      class="streak-risk-alert"
+      @click="goStreakProtect"
+    >
+      <el-alert
+        type="warning"
+        :closable="false"
+        class="ritual-alert ritual-alert--click"
+        :title="status.streak_risk.message"
+      />
+    </button>
     <el-alert
       v-else-if="showLossHint"
       type="info"
@@ -116,6 +126,11 @@ const showLossHint = computed(() => {
 
 function goNext() {
   navigateDailyAction(router, route, props.status?.next_action ?? null)
+}
+
+function goStreakProtect() {
+  const mid = props.status?.streak_risk?.match_id
+  router.push(mid ? { path: '/predict', query: { highlight: String(mid) } } : '/predict')
 }
 
 function onCheckItem(item: { key: string; done: boolean }) {
@@ -187,30 +202,59 @@ function onCheckItem(item: { key: string; done: boolean }) {
 
 .next-action {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 0;
-  border: none;
-  background: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 165, 116, 0.25);
+  background: rgba(212, 165, 116, 0.06);
   cursor: pointer;
   text-align: left;
-  color: var(--wc-accent-gold, #d4a574);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.next-action:hover .next-label {
-  text-decoration: underline;
+.next-action:hover {
+  border-color: rgba(212, 165, 116, 0.45);
+  background: rgba(212, 165, 116, 0.1);
 }
 
 .next-label {
   font-size: 14px;
   font-weight: 600;
   color: var(--wc-text-primary, #eee);
+  flex: 1;
+  min-width: 0;
 }
 
 .next-hint {
   font-size: 12px;
   color: var(--wc-text-muted, #9a94a8);
+  width: 100%;
+}
+
+.next-arrow {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--wc-accent-gold, #d4a574);
+  flex-shrink: 0;
+}
+
+.streak-risk-alert {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ritual-alert--click {
+  margin: 0;
+  pointer-events: none;
 }
 
 .checklist {

@@ -59,6 +59,7 @@ class ProductCatalogService:
                 product.per_user_limit = int(item.get("per_user_limit") or 0)
                 product.stock_total = stock_total
                 product.sort_order = int(item.get("sort_order") or 0)
+                product.featured = bool(item.get("featured", False))
                 product.active = True
                 product.updated_at = _utcnow()
                 updated += 1
@@ -79,6 +80,7 @@ class ProductCatalogService:
                         stock_total=stock_total,
                         stock_sold=0,
                         sort_order=int(item.get("sort_order") or 0),
+                        featured=bool(item.get("featured", False)),
                         active=True,
                         updated_at=_utcnow(),
                     )

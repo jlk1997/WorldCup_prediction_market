@@ -1,11 +1,13 @@
 import logging
+import math
 import random
 from datetime import date, datetime, timedelta, timezone
 
 from sqlalchemy import desc, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.cache import cache_delete_prefix, cache_get, cache_set
+from app.core.cache import cache_delete, cache_delete_prefix, cache_get, cache_set
 from app.core.config import Settings, get_settings
 from app.core.exceptions import BadRequestError, NotFoundError
 from app.core.match_scores import result_pick_from_team_scores
@@ -195,7 +197,11 @@ class GameService:
             status="pending",
         )
         self.db.add(pred)
-        self.db.flush()
+        try:
+            self.db.flush()
+        except IntegrityError:
+            self.db.rollback()
+            raise BadRequestError("您已竞猜过该场比赛") from None
         ArenaService(self.db).on_predict_submit(user, match_id)
         self.db.commit()
         self.db.refresh(pred)
@@ -299,6 +305,7 @@ class GameService:
         arena_extra = ArenaService(self.db).on_signin(user, today, match_day)
         self._recalc_fan_level(user)
         self.db.commit()
+        cache_delete("stats:signin_today")
         self.db.refresh(user)
         try:
             from app.services.referral_service import ReferralService
@@ -322,7 +329,25 @@ class GameService:
             user_id, self.QQ_GROUP_REASON, "user", user_id
         )
 
+    def _today_signin_count(self) -> int:
+        cached = cache_get("stats:signin_today")
+        if cached is not None:
+            return int(cached)
+        today = _utcnow().date()
+        cnt = (
+            self.db.query(func.count(User.id))
+            .filter(User.last_signin_date == today, User.status == "active")
+            .scalar()
+            or 0
+        )
+        cache_set("stats:signin_today", int(cnt), ttl=120)
+        return int(cnt)
+
     def claim_qq_group_reward(self, user: User) -> dict:
+        locked = self.db.query(User).filter(User.id == user.id).with_for_update().first()
+        if not locked:
+            raise NotFoundError("用户不存在")
+        user = locked
         if self.qq_group_claimed(user.id):
             return {
                 "already_claimed": True,
@@ -1023,6 +1048,10 @@ class GameService:
         from app.db.models.commerce import Product
 
         have = user.redeem_points or 0
+        avg_redeem_per_win = max(
+            1,
+            int(30 * self.settings.predict_win_redeem_ratio),
+        )
         candidates = (
             self.db.query(Product)
             .filter(Product.pay_currency == "redeem", Product.active.is_(True))
@@ -1034,13 +1063,16 @@ class GameService:
             if need <= 0:
                 continue
             if have < need:
+                gap = need - have
                 return {
                     "next_sku": product.sku,
                     "next_name": product.name,
                     "need": need,
                     "have": have,
-                    "gap": need - have,
+                    "gap": gap,
                     "pct": round(have / need * 100, 1) if need else 100,
+                    "wins_estimate": math.ceil(gap / avg_redeem_per_win),
+                    "avg_redeem_per_win": avg_redeem_per_win,
                 }
         if candidates:
             last = candidates[-1]
@@ -1052,6 +1084,8 @@ class GameService:
                 "have": have,
                 "gap": 0,
                 "pct": 100,
+                "wins_estimate": 0,
+                "avg_redeem_per_win": avg_redeem_per_win,
             }
         return None
 
@@ -1092,6 +1126,32 @@ class GameService:
             }
         return None
 
+    def _pass_benefits_today(self, user: User) -> dict | None:
+        if not user.has_season_pass or not user.season_pass_until or user.season_pass_until <= _utcnow():
+            return None
+        today = _utcnow().date()
+        claimed = user.last_season_pass_daily == today
+        daily_coins = self.settings.season_pass_daily_coins
+        from app.services.ai_billing_service import AiBillingService
+
+        ai = AiBillingService(self.db, self.settings)
+        base_ai = self.settings.ai_daily_free_analyses
+        limit = ai.daily_free_limit(user)
+        row = ai._get_usage_row(user.id, today)  # noqa: SLF001 — internal quota row
+        free_used = row.free_used if row else 0
+        extra_ai_used = max(0, min(free_used - base_ai, limit - base_ai))
+        ai_saved = extra_ai_used * self.settings.ai_coin_cost_pre_match
+        coins_saved = (daily_coins if claimed else 0) + ai_saved
+        return {
+            "active": True,
+            "daily_coins_grant": daily_coins,
+            "coins_claimed_today": claimed,
+            "coins_saved_today": coins_saved,
+            "points_bonus_pct": 20,
+            "extra_ai_free_total": max(0, limit - base_ai),
+            "extra_ai_free_used": extra_ai_used,
+        }
+
     def get_daily_status(self, user: User) -> dict:
         today = _utcnow().date()
         free_used = self.wallet.count_free_predictions_today(user.id, today)
@@ -1113,12 +1173,15 @@ class GameService:
         checklist = self._daily_checklist(
             signed_today, quiz_answered, free_remaining, free_limit, pending_count, match_day, qq_claimed
         )
-        next_action = self._daily_next_action(checklist, free_remaining, pending_count, match_day, qq_claimed)
+        next_action = self._daily_next_action(
+            user, checklist, free_remaining, pending_count, match_day, qq_claimed
+        )
         return {
             "signed_today": signed_today,
             "last_signin_date": user.last_signin_date.isoformat() if user.last_signin_date else None,
             "signin_streak": streak,
             "signin_streak_bonus_next": self._next_signin_streak_bonus_day(streak),
+            "today_signin_count": self._today_signin_count(),
             "free_predict": {
                 "used": free_used,
                 "limit": free_limit,
@@ -1144,6 +1207,7 @@ class GameService:
             "next_action": next_action,
             "ritual_progress": self._ritual_progress(checklist),
             "qq_group_claimed": qq_claimed,
+            "pass_benefits": self._pass_benefits_today(user),
         }
 
     def get_match_pick_stats(self, match_id: int) -> dict:
@@ -1266,8 +1330,62 @@ class GameService:
             "pct": round(done / total * 100) if total else 100,
         }
 
+    def _daily_bonus_action(self, user: User, pending_count: int) -> dict | None:
+        streak = user.win_streak or 0
+        if streak >= 2 and pending_count == 0:
+            nxt = self._next_predictable_match(user)
+            if nxt:
+                return {
+                    "key": "streak_protect",
+                    "label": f"连胜 {streak} 场 · 再猜一场守护加成",
+                    "path": f"/predict?highlight={nxt['id']}",
+                    "hint": f"下一场 {nxt['label']}",
+                }
+        gap = self._redeem_progress(user)
+        if gap and gap.get("gap", 0) > 0:
+            return {
+                "key": "redeem_goal",
+                "label": f"差 {gap['gap']} 可用积分换 {gap['next_name']}",
+                "path": "/predict",
+                "hint": "继续猜中为兑换助力",
+            }
+        try:
+            from app.services.leaderboard_service import LeaderboardService
+
+            summary = LeaderboardService(self.db).get_my_summary(user)
+            season_gap = summary.get("season_gap_to_prev")
+            if season_gap and season_gap > 0:
+                return {
+                    "key": "rank_up",
+                    "label": f"累计积分再 +{season_gap} 可超过上一名",
+                    "path": "/leaderboard",
+                    "hint": "冲榜进行中",
+                }
+        except Exception:
+            logger.exception("Leaderboard gap lookup failed for daily bonus action")
+        today = _utcnow().date()
+        pass_active = bool(
+            user.has_season_pass
+            and user.season_pass_until
+            and user.season_pass_until > _utcnow()
+        )
+        if pass_active and user.last_season_pass_daily != today:
+            return {
+                "key": "pass_daily",
+                "label": f"通行证每日 {self.settings.season_pass_daily_coins} 币未领",
+                "path": "/shop",
+                "hint": "猜中积分 +20%",
+            }
+        return {
+            "key": "invite",
+            "label": "邀球友一起猜 · 双方得球迷币",
+            "path": "/invite",
+            "hint": "有效邀请冲召友榜",
+        }
+
     def _daily_next_action(
         self,
+        user: User,
         checklist: list[dict],
         free_remaining: int,
         pending_count: int,
@@ -1317,6 +1435,9 @@ class GameService:
                 "path": "/arena",
                 "hint": "为军团加分",
             }
+        bonus = self._daily_bonus_action(user, pending_count)
+        if bonus:
+            return bonus
         return {
             "key": "done",
             "label": "今日核心任务已完成，明天再来",
@@ -1396,12 +1517,25 @@ class GameService:
             },
         }
 
-    def get_win_feed(self, limit: int = 20) -> list[dict]:
+    def get_win_feed(self, limit: int = 20) -> dict:
         lim = min(limit, 50)
         cache_key = f"game:win_feed:{lim}"
         cached = cache_get(cache_key)
         if cached is not None:
+            if isinstance(cached, list):
+                return {"items": cached, "recent_count": len(cached)}
             return cached
+        since = _utcnow() - timedelta(hours=6)
+        recent_count = (
+            self.db.query(func.count(GamePrediction.id))
+            .filter(
+                GamePrediction.status == "won",
+                GamePrediction.settled_at.isnot(None),
+                GamePrediction.settled_at >= since,
+            )
+            .scalar()
+            or 0
+        )
         rows = (
             self.db.query(GamePrediction, Match, User)
             .join(Match, GamePrediction.match_id == Match.id)
@@ -1425,5 +1559,6 @@ class GameService:
                     "settled_at": pred.settled_at.isoformat() if pred.settled_at else None,
                 }
             )
-        cache_set(cache_key, out, ttl=30)
-        return out
+        result = {"items": out, "recent_count": int(recent_count)}
+        cache_set(cache_key, result, ttl=30)
+        return result

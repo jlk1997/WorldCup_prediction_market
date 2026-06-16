@@ -6,6 +6,29 @@
 
       <InvitePromptBar v-if="authState.accessToken" scene="leaderboard" />
 
+      <div
+        v-if="showSeasonRewards && rewardTiers?.tiers?.length"
+        class="season-rewards glass-inner"
+      >
+        <div class="season-rewards-head">
+          <span class="trophy" aria-hidden="true">🏆</span>
+          <div>
+            <strong>赛季总榜 · 赛后虚拟奖励</strong>
+            <p>上榜用户赛后发放球迷币 / 积分 / 装扮额度（不可提现）</p>
+          </div>
+        </div>
+        <div class="tier-grid">
+          <div v-for="t in rewardTierPreview" :key="t.rank" class="tier-chip">
+            <span class="tier-rank">第 {{ t.rank }} 名</span>
+            <span class="tier-reward">
+              {{ t.coins }} 币
+              <template v-if="t.redeem_points"> · {{ t.redeem_points }} 可用积分</template>
+            </span>
+          </div>
+        </div>
+        <p class="tier-more">第 4–10 名亦有档位 · 详见冲榜弹窗说明</p>
+      </div>
+
       <div v-if="mySummary" class="my-summary glass-inner">
         <div class="my-title">我的排名</div>
         <div class="my-grid">
@@ -47,6 +70,10 @@
         <p v-if="mySummary.redeem_gap_to_prev" class="gap-hint">
           可用积分再 +{{ mySummary.redeem_gap_to_prev }} 分即可超过上一名
         </p>
+        <div v-if="mySummary.season_gap_to_prev || mySummary.redeem_gap_to_prev" class="gap-cta-row">
+          <el-button type="primary" size="small" @click="$router.push('/predict')">去竞猜赚积分</el-button>
+          <el-button plain size="small" @click="openShareSheet">邀友一起冲榜</el-button>
+        </div>
       </div>
 
       <div class="board-tabs mobile-segment">
@@ -180,8 +207,10 @@ import { useRoute } from 'vue-router'
 import {
   getFanRank,
   getLeaderboardBoard,
+  getLeaderboardRewardTiers,
   getMyLeaderboardSummary,
   type LeaderboardEntry,
+  type LeaderboardRewardTier,
   type MyLeaderboardSummary,
 } from '../api/commerce'
 import { getStarAccuracy, getStarHeat, type StarHeatRow } from '../api/arena'
@@ -218,6 +247,14 @@ const accuracyRows = ref<any[]>([])
 const fanRank = ref<{ team: string; fans: number }[]>([])
 const contribution = ref<{ user_id: number; nickname: string; season_points: number; battalion_points?: number }[]>([])
 const loading = ref(false)
+const rewardTiers = ref<{ tiers: LeaderboardRewardTier[] } | null>(null)
+
+const showSeasonRewards = computed(() => board.value === 'points' && period.value === 'season')
+
+const rewardTierPreview = computed(() => {
+  const tiers = rewardTiers.value?.tiers ?? []
+  return tiers.filter((t) => t.rank <= 3)
+})
 
 const boardTitle = computed(() => {
   const map: Record<string, string> = {
@@ -322,6 +359,11 @@ onMounted(() => {
     board.value = 'referral'
   }
   load()
+  void getLeaderboardRewardTiers()
+    .then((data) => {
+      rewardTiers.value = data
+    })
+    .catch(() => {})
   window.addEventListener('leaderboard-refresh', onLeaderboardRefresh)
 })
 
@@ -342,6 +384,68 @@ onUnmounted(() => {
 }
 .header h1 {
   margin: 0 0 8px;
+}
+.header p {
+  margin: 0 0 16px;
+  color: var(--wc-text-muted);
+  font-size: 0.9rem;
+}
+.season-rewards {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(232, 197, 71, 0.25);
+  border-radius: 12px;
+}
+.season-rewards-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.season-rewards-head .trophy {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.season-rewards-head strong {
+  display: block;
+  color: var(--wc-accent-gold);
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+.season-rewards-head p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--wc-text-muted);
+  line-height: 1.45;
+}
+.tier-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tier-chip {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(61, 214, 140, 0.2);
+}
+.tier-rank {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--wc-text-muted);
+  margin-bottom: 2px;
+}
+.tier-reward {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f5f0e8;
+}
+.tier-more {
+  margin: 10px 0 0;
+  font-size: 0.72rem;
+  color: var(--wc-text-muted);
 }
 .my-summary {
   margin: 16px 0;
@@ -384,6 +488,12 @@ onUnmounted(() => {
   margin: 4px 0 0;
   font-size: 0.78rem;
   color: var(--wc-accent-rose, #c9788a);
+}
+.gap-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 .period {
   margin-top: 12px;

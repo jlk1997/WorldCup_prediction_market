@@ -12,9 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { isLoggedIn } from '../stores/authStore'
 import { useInviteShare } from '../composables/useInviteShare'
+import { getReferralMe } from '../api/referral'
 
 const props = defineProps<{
   scene: 'predict' | 'dashboard' | 'leaderboard'
@@ -23,6 +24,7 @@ const props = defineProps<{
 
 const { openShareSheet } = useInviteShare()
 const visible = ref(false)
+const inviterNick = ref<string | null>(null)
 
 const DISMISS_DAYS = 7
 const MATCH_DAY_DISMISS_DAYS = 1
@@ -33,6 +35,9 @@ const headline = computed(() => {
 })
 
 const subline = computed(() => {
+  if (inviterNick.value) {
+    return `帮 ${inviterNick.value} 冲召友榜 · 好友完成档案+首猜双方得币`
+  }
   if (props.matchDay) {
     return '好友完成档案双方得币 · 成功邀请冲召友榜 · 里程碑最高 +100 币'
   }
@@ -65,6 +70,16 @@ function syncVisible() {
 
 watch(isLoggedIn, syncVisible, { immediate: true })
 watch(() => props.matchDay, syncVisible)
+
+onMounted(async () => {
+  if (!isLoggedIn.value) return
+  try {
+    const me = await getReferralMe()
+    inviterNick.value = me.invitee_journey?.inviter_nickname ?? null
+  } catch {
+    inviterNick.value = null
+  }
+})
 
 function dismiss() {
   visible.value = false

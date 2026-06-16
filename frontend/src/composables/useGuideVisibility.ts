@@ -5,8 +5,8 @@ import { authState, isLoggedIn } from '@/stores/authStore'
 /** Routes where onboarding / profile prompts must not appear. */
 export const AUTH_FLOW_PREFIXES = ['/login', '/onboarding'] as const
 
-/** Pages visited during the 5-step product tour (home appears twice: steps 1 & 4). */
-export const FEATURE_TOUR_ROUTES = ['/', '/live', '/agent', '/invite'] as const
+/** Pages visited during the 6-step product tour (home appears twice: steps 1 & 4). */
+export const FEATURE_TOUR_ROUTES = ['/', '/live', '/agent', '/predict', '/invite'] as const
 
 export function isFeatureTourRoute(path: string) {
   return FEATURE_TOUR_ROUTES.some((p) => path === p || path.startsWith(`${p}/`))
@@ -37,7 +37,7 @@ export function useGuideVisibility() {
   /** Header chip — only when banner is hidden but profile still incomplete. */
   const showProfileHeaderChip = computed(() => profileIncomplete.value && !showProfileBanner.value && !isAuthFlow.value)
 
-  /** 5-step product tour — follows user across tour pages until finished/skipped. */
+  /** 6-step product tour — follows user across tour pages until finished/skipped. */
   const showFeatureTour = computed(() => {
     if (!isLoggedIn.value || !authState.user?.profile_completed) return false
     if (localStorage.getItem('wc2026_onboarded')) return false

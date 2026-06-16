@@ -9,6 +9,7 @@ import {
 import { enrichNotificationPayload } from '@/utils/predictRevealPayload'
 import { isLoggedIn } from '@/stores/authStore'
 import { predictRevealConfig } from '@/stores/predictRevealConfigStore'
+import { notifyIfHidden } from '@/composables/useBrowserNotify'
 
 const POLL_FAST_MS = 30_000
 const POLL_SLOW_MS = 120_000
@@ -84,7 +85,17 @@ async function pollAll() {
         getNotifications({ unread_only: true, category: 'predict_settled', limit }).then((rows) => {
           const notes = rows.map(normalizePredictNote)
           predictNotify.latest = notes[0] ?? null
-          if (notes.length) mergePredictQueue(notes)
+          if (notes.length) {
+            mergePredictQueue(notes)
+            const latest = notes[0]
+            const payload = latest?.payload as Record<string, unknown> | undefined
+            const won = payload?.status === 'won'
+            notifyIfHidden(
+              won ? '猜中了！' : '竞猜已开奖',
+              won ? '点击查看结算详情' : '来看看本场结果',
+              '/me?focus=predictions',
+            )
+          }
         }),
       )
     } else if (!predictReveal.visible) {

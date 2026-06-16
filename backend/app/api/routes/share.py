@@ -107,3 +107,14 @@ def rank_share_page(
     settings = get_settings()
     svc = SharePageService(db, settings)
     return _render_page(svc, svc.rank_share_page(period))
+
+
+@router.get("/share/match/{match_id}", response_class=HTMLResponse)
+def match_share_page(
+    match_id: int,
+    ref: str = Query("", min_length=0, max_length=32),
+    db: Session = Depends(get_db),
+):
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.match_share_page(match_id, ref))

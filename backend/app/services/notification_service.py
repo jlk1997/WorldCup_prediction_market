@@ -254,6 +254,44 @@ class NotificationService:
                 milestone_key,
             )
 
+    def notify_leaderboard_season_reward(
+        self,
+        user_id: int,
+        *,
+        title: str,
+        body: str,
+        season_key: str,
+        board: str,
+        rank: int,
+        season_points: int = 0,
+        coins: int = 0,
+        redeem_points: int = 0,
+    ) -> None:
+        try:
+            self._upsert(
+                user_id,
+                "leaderboard_reward",
+                title,
+                body,
+                ref_type="leaderboard_season",
+                ref_id=rank,
+                payload={
+                    "season_key": season_key,
+                    "board": board,
+                    "rank": rank,
+                    "season_points": season_points,
+                    "coins": coins,
+                    "redeem_points": redeem_points,
+                    "action": "/leaderboard",
+                },
+            )
+        except Exception:
+            logger.exception(
+                "notify_leaderboard_season_reward failed user=%s rank=%s",
+                user_id,
+                rank,
+            )
+
     def notify_redeem_refund(
         self,
         user_id: int,

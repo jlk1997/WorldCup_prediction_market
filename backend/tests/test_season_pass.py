@@ -58,6 +58,26 @@ def test_season_pass_daily_grant(client, db: Session):
     assert me2["fan_coins"] == me1["fan_coins"]
 
 
+def test_season_pass_daily_claim_endpoint(client, db: Session):
+    email = f"passclaim_{uuid.uuid4().hex[:10]}@example.com"
+    _seed_auth_code(db, email)
+    login = client.post(
+        "/api/auth/verify",
+        json={"email": email, "code": "123456", "age_confirmed": True},
+    ).json()
+    user = db.get(User, login["user"]["id"])
+    user.has_season_pass = True
+    user.season_pass_until = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(days=30)
+    user.last_season_pass_daily = None
+    db.commit()
+
+    headers = {"Authorization": f"Bearer {login['access_token']}"}
+    r = client.post("/api/game/season-pass/daily-claim", headers=headers)
+    assert r.status_code == 200
+    body = r.json()
+    assert body.get("granted", 0) > 0
+
+
 def test_create_order_requires_age(client, db: Session):
     email = f"pay_age_{uuid.uuid4().hex[:10]}@example.com"
     _seed_auth_code(db, email)

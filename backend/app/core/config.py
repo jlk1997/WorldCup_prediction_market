@@ -146,6 +146,9 @@ class Settings(BaseSettings):
     # Default matches legacy: top3 get 200pts+100coins, ranks 4-10 get 200pts only
     referral_weekly_rank_rewards: str = "1:200:100,2:200:100,3:200:100,4-10:200:0"
     referral_ip_daily_limit: int = 3
+    # Season leaderboard virtual rewards (post-tournament admin settle)
+    season_key: str = "wc2026"
+    season_leaderboard_rank_rewards: str = "1:500:300:120,2:300:200:80,3:300:150:60,4-10:150:80:30"
 
     @property
     def signin_streak_bonus_map(self) -> dict[int, int]:
@@ -172,6 +175,18 @@ class Settings(BaseSettings):
         from app.core.referral_rewards import weekly_settle_top_n
 
         return weekly_settle_top_n(self.referral_weekly_rank_rewards_map)
+
+    @property
+    def season_leaderboard_rank_rewards_map(self) -> dict[int, tuple[int, int, int]]:
+        from app.core.leaderboard_rewards import parse_season_rank_rewards
+
+        return parse_season_rank_rewards(self.season_leaderboard_rank_rewards)
+
+    @property
+    def season_leaderboard_settle_top_n(self) -> int:
+        from app.core.leaderboard_rewards import season_settle_top_n
+
+        return season_settle_top_n(self.season_leaderboard_rank_rewards_map)
 
     @property
     def frontend_base_url(self) -> str:

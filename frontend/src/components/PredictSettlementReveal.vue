@@ -58,13 +58,31 @@
       <p v-if="resolved.status === 'void' && voidHint" class="comfort">{{ voidHint }}</p>
 
       <div class="actions">
-        <el-button v-if="resolved.nextMatchId" type="primary" @click="goNext">
-          {{ btnNext }}
-        </el-button>
-        <el-button v-if="resolved.status === 'won'" type="primary" plain @click="shareWin">
-          分享战绩
-        </el-button>
-        <el-button v-if="resolved.status === 'won'" plain @click="goFanCard">{{ btnShare }}</el-button>
+        <div class="actions-primary">
+          <el-button
+            v-if="resolved.status === 'won' && (resolved.winStreak ?? 0) >= 2"
+            type="primary"
+            @click="goStreakProtect"
+          >
+            再猜一场保 {{ resolved.winStreak }} 连胜
+          </el-button>
+          <el-button v-else-if="resolved.nextMatchId" type="primary" @click="goNext">
+            {{ btnNext }}
+          </el-button>
+          <el-button v-else-if="resolved.status === 'won'" type="primary" @click="goStreakProtect">
+            继续猜下一场
+          </el-button>
+        </div>
+        <div v-if="resolved.status === 'won'" class="actions-row">
+          <el-button type="primary" plain @click="shareWin">晒预测 · 海报</el-button>
+          <el-button plain @click="goAiInsight">AI 洞察</el-button>
+        </div>
+        <div v-if="resolved.status === 'won'" class="actions-muted">
+          <button v-if="!hasActivePass" type="button" class="link-btn" @click="goPassShop">
+            开通通行证 · 猜中多赚
+          </button>
+          <button type="button" class="link-btn" @click="goFanCard">{{ btnShare }}</button>
+        </div>
         <el-button v-if="resolved.status === 'lost'" plain @click="goRecords">{{ btnRecords }}</el-button>
         <el-button plain @click="close">{{ btnDismiss }}</el-button>
       </div>
@@ -88,7 +106,11 @@ import { predictRevealConfig, ensurePredictRevealConfig } from '@/stores/predict
 import { fetchMe } from '@/stores/authStore'
 import { formatTemplate, resolvePredictPayload } from '@/utils/predictRevealPayload'
 import { getPredictShareUrl } from '@/api/commerce'
-import { copyToClipboard } from '@/utils/copyToClipboard'
+import { openPredictShareSheet } from '@/composables/usePredictShareSheet'
+import { isWeChatBrowser, WECHAT_PAY_HINT } from '@/utils/payEnv'
+import { ElMessageBox } from 'element-plus'
+import { hasActiveSeasonPass } from '@/utils/entitlements'
+import { authState } from '@/stores/authStore'
 
 const router = useRouter()
 const confettiActive = ref(false)
@@ -245,6 +267,44 @@ function goNext() {
   if (id) router.push({ path: '/predict', query: { highlight: String(id) } })
 }
 
+function goStreakProtect() {
+  const id = resolved.value?.nextMatchId
+  close()
+  if (id) router.push({ path: '/predict', query: { highlight: String(id) } })
+  else router.push('/predict')
+}
+
+async function goAiInsight() {
+  if (isWeChatBrowser() && !hasActiveSeasonPass(authState.user)) {
+    try {
+      await ElMessageBox.confirm(
+        `${WECHAT_PAY_HINT}\n\n也可在竞猜大厅用球迷币单次购买 AI 分析。`,
+        '通行证 / 充值提示',
+        { confirmButtonText: '去商城', cancelButtonText: '先去看看 AI', distinguishCancelAndClose: true },
+      )
+      close()
+      router.push('/shop')
+      return
+    } catch (action) {
+      if (action === 'cancel') {
+        close()
+        router.push('/agent')
+        return
+      }
+      return
+    }
+  }
+  close()
+  router.push('/agent')
+}
+
+function goPassShop() {
+  close()
+  router.push('/shop')
+}
+
+const hasActivePass = computed(() => hasActiveSeasonPass(authState.user))
+
 function goFanCard() {
   close()
   router.push('/me/card')
@@ -260,10 +320,16 @@ async function shareWin() {
   }
   try {
     const url = await getPredictShareUrl(predId)
-    const text = `我在「最后一舞」猜中了 ${r.team1} vs ${r.team2}${r.finalScore ? `（${r.finalScore}）` : ''} · +${r.pointsAwarded || 0} 分\n${url}`
-    const ok = await copyToClipboard(text)
-    if (ok) ElMessage.success('战绩链接已复制，去微信粘贴分享吧')
-    else ElMessage.info(text)
+    const pickLabel = r.userPickLabel
+      ? `${r.userPickLabel} · 猜中 +${r.pointsAwarded || 0} 分`
+      : `猜中 +${r.pointsAwarded || 0} 分`
+    openPredictShareSheet({
+      team1: r.team1,
+      team2: r.team2,
+      pickLabel,
+      shareUrl: url,
+      nickname: authState.user?.nickname,
+    })
   } catch {
     ElMessage.warning('分享链接获取失败，请稍后再试')
   }
@@ -427,8 +493,37 @@ function goRecords() {
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 8px;
+}
+.actions-primary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.actions-muted {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.link-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.78rem;
+  color: var(--wc-text-muted, #9a94a8);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.link-btn:hover {
+  color: var(--wc-accent-gold, #d4a574);
 }
 .confetti-layer {
   position: absolute;

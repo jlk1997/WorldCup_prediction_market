@@ -4,6 +4,7 @@ import { getReferralMe, type ReferralMe } from '../api/referral'
 import { authState } from '../stores/authStore'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { downloadSharePoster, generateSharePosterObjectUrl } from '../utils/sharePoster'
+import { posterDisplayName } from '../utils/sharePosterDisplayName'
 import { trackEvent } from '../utils/analytics'
 
 export interface OpenShareSheetOptions {
@@ -30,22 +31,24 @@ function revokePosterPreview() {
 }
 
 export function buildInviteShareText(me: ReferralMe | null) {
-  const nick = authState.user?.nickname || '我'
+  const nick = posterDisplayName(authState.user?.nickname)
   const link = me?.invite_link || ''
   if (!link) return `${nick} 邀你一起玩世界杯竞猜，注册得球迷币`
   return `${nick} 邀你一起玩世界杯竞猜，注册得球迷币\n${link}`
 }
 
 function posterOptions(me: ReferralMe) {
-  const nick = authState.user?.nickname || '球迷'
+  const nick = posterDisplayName(authState.user?.nickname)
   const tierHint = me.next_tier
     ? `再邀 ${me.next_tier.remaining} 人解锁「${me.next_tier.title}」`
     : `有效邀请 ${me.effective_invites} 人 · 本季已赚 ${me.season_coins_earned} 币`
   return {
-    title: `${nick} 邀你一起猜世界杯`,
-    subtitle: '注册得球迷币 · 猜中冲榜赢积分',
+    variant: 'invite' as const,
+    displayName: nick,
+    subtitle: '猜中冲榜 · 可用积分换头像框',
     statsLine: tierHint,
-    footer: '扫码或复制链接加入 · 最后一舞',
+    badge: '注册送100币',
+    footer: '虚拟奖励不可提现 · 非博彩 · 最后一舞',
     qrUrl: me.invite_link,
   }
 }
