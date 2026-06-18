@@ -304,6 +304,13 @@ class GameService:
         added = signin_coins + streak_bonus
         arena_extra = ArenaService(self.db).on_signin(user, today, match_day)
         self._recalc_fan_level(user)
+        collectible_drop = None
+        try:
+            from app.services.collectible_service import CollectibleService
+
+            collectible_drop = CollectibleService(self.db).signin_drop_if_milestone(user, streak)
+        except Exception:
+            logger.exception("Collectible signin drop failed")
         self.db.commit()
         cache_delete("stats:signin_today")
         self.db.refresh(user)
@@ -322,6 +329,7 @@ class GameService:
             "signin_streak": streak,
             "streak_bonus": streak_bonus,
             "signin_streak_bonus_next": next_bonus_day,
+            "collectible_drop": collectible_drop,
         }
 
     def qq_group_claimed(self, user_id: int) -> bool:
@@ -681,12 +689,14 @@ class GameService:
             if user.win_streak >= 3:
                 self._award_badge(user, f"streak_{user.win_streak}", f"{user.win_streak} 连胜")
             ArenaService(self.db).on_predict_settle(user, pred, match)
+            collectible_drop = self._drop_collectible_on_win(user, pred, match)
         else:
             pred.status = "lost"
             user.win_streak = 0
             user.loss_streak = (user.loss_streak or 0) + 1
             if not pred.is_free:
                 pred.coins_returned = 0
+            collectible_drop = None
         final_score = (
             f"{match.home_score}:{match.away_score}"
             if match.home_score is not None and match.away_score is not None
@@ -716,7 +726,24 @@ class GameService:
             "next_match_id": next_match["id"] if next_match else None,
             "next_match_label": next_match["label"] if next_match else None,
             "next_match_hours": next_match["hours_until"] if next_match else None,
+            "collectible_drop": collectible_drop if won else None,
         }
+
+    def _drop_collectible_on_win(self, user: User, pred: GamePrediction, match: Match) -> dict | None:
+        try:
+            from app.services.collectible_service import CollectibleService
+
+            return CollectibleService(self.db).drop_cards(
+                user,
+                "predict_win",
+                "game_prediction",
+                pred.id,
+                match_id=match.id,
+                team_boost_id=user.favorite_team_id,
+            )
+        except Exception:
+            logger.exception("Collectible drop failed pred=%s", pred.id)
+            return None
 
     def _award_badge(self, user: User, code: str, title: str) -> None:
         exists = (

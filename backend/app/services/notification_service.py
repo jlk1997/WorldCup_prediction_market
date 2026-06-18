@@ -46,6 +46,20 @@ class NotificationService:
             q = q.filter(UserNotification.category == category)
         return q.count()
 
+    def unread_badge(self, user_id: int) -> dict[str, int]:
+        from sqlalchemy import func
+
+        rows = (
+            self.db.query(UserNotification.category, func.count())
+            .filter(
+                UserNotification.user_id == user_id,
+                UserNotification.read_at.is_(None),
+            )
+            .group_by(UserNotification.category)
+            .all()
+        )
+        return {cat: int(cnt) for cat, cnt in rows}
+
     def mark_read(self, user_id: int, ids: list[int] | None) -> int:
         q = self.db.query(UserNotification).filter(
             UserNotification.user_id == user_id,
@@ -290,6 +304,108 @@ class NotificationService:
                 "notify_leaderboard_season_reward failed user=%s rank=%s",
                 user_id,
                 rank,
+            )
+
+    def notify_collectible_drop(
+        self,
+        user_id: int,
+        *,
+        drop_log_id: int,
+        result: dict,
+    ) -> None:
+        cards = result.get("cards") or []
+        if not cards:
+            return
+        card = cards[0]
+        source = str(result.get("source") or "drop")
+        source_labels = {
+            "predict_win": "猜中",
+            "signin": "连签",
+            "matchday": "比赛日",
+            "referral": "召友",
+            "synthesis": "合成",
+        }
+        src_label = source_labels.get(source, "玩法")
+        if card.get("is_duplicate"):
+            title = "获得球星碎片"
+            body = f"{card.get('name', '球星卡')} 重复 · +{card.get('shards_gained', 0)} 碎片"
+        else:
+            title = "获得球星卡"
+            body = f"{src_label}掉落 · {card.get('name', '球星卡')}"
+        try:
+            self._upsert(
+                user_id,
+                "collectible_drop",
+                title,
+                body,
+                ref_type="collectible_drop_log",
+                ref_id=drop_log_id,
+                payload={
+                    "action": "/collection",
+                    "source": source,
+                    "card_code": card.get("code"),
+                    "card_name": card.get("name"),
+                    "is_duplicate": bool(card.get("is_duplicate")),
+                    "collectible_drop": result,
+                },
+            )
+        except Exception:
+            logger.exception("notify_collectible_drop failed user=%s log=%s", user_id, drop_log_id)
+
+    def notify_collectible_set_claimed(
+        self,
+        user_id: int,
+        *,
+        set_id: int,
+        set_name: str,
+        reward: dict,
+    ) -> None:
+        parts = [f"集齐「{set_name}」"]
+        if reward.get("badge_title"):
+            parts.append(f"徽章 {reward['badge_title']}")
+        if reward.get("fan_coins"):
+            parts.append(f"+{reward['fan_coins']} 球迷币")
+        if reward.get("redeem_points"):
+            parts.append(f"+{reward['redeem_points']} 可用积分")
+        try:
+            self._upsert(
+                user_id,
+                "collectible_set",
+                "套组奖励已领取",
+                " · ".join(parts),
+                ref_type="card_set",
+                ref_id=set_id,
+                payload={"action": "/collection", "set_name": set_name, "reward": reward},
+            )
+        except Exception:
+            logger.exception("notify_collectible_set_claimed failed user=%s set=%s", user_id, set_id)
+
+    def notify_collectible_chain_minted(
+        self,
+        user_id: int,
+        *,
+        user_card_id: int,
+        card_name: str,
+        nft_id: str | None = None,
+    ) -> None:
+        body = f"{card_name} 已铸造为文昌链数字藏品"
+        if nft_id:
+            body = f"{body} · ID {nft_id[:12]}…"
+        try:
+            self._upsert(
+                user_id,
+                "collectible_chain",
+                "文昌链凭证已就绪",
+                body,
+                ref_type="user_collectible_card",
+                ref_id=user_card_id,
+                payload={"action": "/collection", "card_name": card_name, "nft_id": nft_id},
+            )
+        except Exception:
+            logger.exception(
+                "notify_collectible_chain_minted failed user=%s card=%s",
+                user_id,
+                user_card_id,
             )
 
     def notify_redeem_refund(

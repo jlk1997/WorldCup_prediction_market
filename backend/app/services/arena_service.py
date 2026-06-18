@@ -708,8 +708,19 @@ class ArenaService:
         )
         if not ok:
             raise BadRequestError("动员失败")
+        collectible_drop = None
+        try:
+            from app.services.collectible_service import CollectibleService
+
+            collectible_drop = CollectibleService(self.db).matchday_drop(user, user.favorite_team_id)
+        except Exception:
+            logger.exception("Collectible matchday drop failed user=%s", user.id)
         self.db.commit()
-        return {"fan_coins": user.fan_coins, "battalion_added": MATCHDAY_RALLY_BATTALION}
+        return {
+            "fan_coins": user.fan_coins,
+            "battalion_added": MATCHDAY_RALLY_BATTALION,
+            "collectible_drop": collectible_drop,
+        }
 
     def recalc_arena_tiers(self, team_id: int | None = None) -> int:
         q = self.db.query(User).filter(User.status == "active", User.favorite_team_id.isnot(None))

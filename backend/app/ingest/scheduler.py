@@ -80,6 +80,22 @@ def run_once():
                 logger.info("Referral weekly settlement: %s", referral_result)
         except Exception:
             logger.exception("Referral weekly settlement failed")
+        try:
+            from app.services.collectible_service import CollectibleService
+
+            highlights = CollectibleService(db).apply_match_highlights_batch()
+            if highlights:
+                logger.info("Collectible match highlights updated: %s cards", highlights)
+        except Exception:
+            logger.exception("Collectible highlight sync failed")
+        try:
+            from app.services.collectible_chain_service import CollectibleChainService
+
+            chain_result = CollectibleChainService(db).process_pending()
+            if chain_result.get("minted") or chain_result.get("failed"):
+                logger.info("Collectible AVATA mint batch: %s", chain_result)
+        except Exception:
+            logger.exception("Collectible AVATA mint batch failed")
         logger.info(
             "Ingest complete: live=%s news=%s enrich=%s standings=%s settled=%s voided=%s",
             live,

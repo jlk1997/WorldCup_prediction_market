@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -149,6 +150,40 @@ class Settings(BaseSettings):
     # Season leaderboard virtual rewards (post-tournament admin settle)
     season_key: str = "wc2026"
     season_leaderboard_rank_rewards: str = "1:500:300:120,2:300:200:80,3:300:150:60,4-10:150:80:30"
+
+    # AVATA / 文昌链数字藏品（合规托管，不可转赠）
+    avata_enabled: bool = False
+    avata_mock: bool = True
+    avata_host: str = "https://apis.avata.bianjie.ai"
+    avata_api_key: str = ""
+    avata_api_secret: str = ""
+    avata_nft_class_id: str = ""
+    avata_nft_class_name: str = "最后一舞·球星收藏"
+    avata_chain_name: str = "文昌链"
+    # NFT 类别权属地址（AVATA 控制台「归集/应用链账户」或 create_accounts 创建的平台地址）
+    avata_class_owner: str = ""
+    # NFT 元数据 URI 前缀（须公网可访问；留空则从 CORS/端口推导）
+    public_api_base_url_env: str = Field(default="", validation_alias="PUBLIC_API_BASE_URL")
+
+    @property
+    def avata_configured(self) -> bool:
+        key_ok = bool(self.avata_api_key) and not str(self.avata_api_key).startswith("请填写")
+        secret_ok = bool(self.avata_api_secret) and not str(self.avata_api_secret).startswith("请填写")
+        return key_ok and secret_ok
+
+    @property
+    def avata_active(self) -> bool:
+        return self.avata_enabled and (self.avata_configured or self.avata_mock)
+
+    @property
+    def public_api_base_url(self) -> str:
+        override = (self.public_api_base_url_env or "").strip().rstrip("/")
+        if override:
+            return override
+        origin = self.cors_origin_list[0] if self.cors_origin_list else "http://localhost:10087"
+        if "localhost" in origin or "127.0.0.1" in origin:
+            return f"http://127.0.0.1:{self.backend_port}"
+        return origin.replace(":10087", f":{self.backend_port}") if ":10087" in origin else origin
 
     @property
     def signin_streak_bonus_map(self) -> dict[int, int]:

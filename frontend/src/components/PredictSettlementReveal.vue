@@ -51,7 +51,15 @@
           <span class="reward-val">+{{ resolved.coinsReturned }}</span>
           <span class="reward-label">球迷币返还</span>
         </div>
+        <div v-if="resolved.collectibleDrop?.dropped" class="reward-item card-drop">
+          <span class="reward-val">🃏</span>
+          <span class="reward-label">获得球星卡</span>
+        </div>
         <div v-if="resolved.winStreak >= 2" class="streak-badge">🔥 {{ resolved.winStreak }} 连胜</div>
+      </div>
+
+      <div v-if="resolved.status === 'won' && resolved.collectibleDrop?.dropped" class="card-drop-cta">
+        <el-button type="primary" plain size="small" @click="openCardReveal">查看新卡</el-button>
       </div>
 
       <p v-if="resolved.status === 'lost' && comfortHint" class="comfort">{{ comfortHint }}</p>
@@ -99,6 +107,11 @@
 
       <p v-if="showCarousel" class="swipe-hint">左右滑动可切换多条结算</p>
     </div>
+
+    <CardRevealDialog
+      v-model="cardRevealOpen"
+      :drop="resolved?.collectibleDrop ?? null"
+    />
   </el-dialog>
 </template>
 
@@ -123,9 +136,11 @@ import { isWeChatBrowser, WECHAT_PAY_HINT } from '@/utils/payEnv'
 import { ElMessageBox } from 'element-plus'
 import { hasActiveSeasonPass } from '@/utils/entitlements'
 import { authState } from '@/stores/authStore'
+import CardRevealDialog from '@/components/collectible/CardRevealDialog.vue'
 
 const router = useRouter()
 const confettiActive = ref(false)
+const cardRevealOpen = ref(false)
 const slideDir = ref<'left' | 'right' | ''>('')
 const touchStartX = ref(0)
 const settlementDaily = ref<DailyStatus | null>(null)
@@ -238,16 +253,25 @@ const btnRecords = computed(() => predictRevealConfig.buttons?.view_records || '
 const btnDismiss = computed(() => predictRevealConfig.buttons?.dismiss || '知道了')
 
 watch(
-  () => [visible.value, predictReveal.index, resolved.value?.status] as const,
-  ([open, , status]) => {
+  () => [visible.value, predictReveal.index, resolved.value?.status, resolved.value?.collectibleDrop?.dropped] as const,
+  ([open, , status, cardDropped]) => {
     if (open && status === 'won' && showConfetti.value) {
       confettiActive.value = true
       setTimeout(() => {
         confettiActive.value = false
       }, 2800)
     }
+    if (open && status === 'won' && cardDropped) {
+      setTimeout(() => {
+        cardRevealOpen.value = true
+      }, 900)
+    }
   },
 )
+
+function openCardReveal() {
+  cardRevealOpen.value = true
+}
 
 function prev() {
   slideDir.value = 'right'

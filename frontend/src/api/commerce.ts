@@ -181,6 +181,7 @@ export async function signin() {
     match_day_bonus?: boolean
     signin_streak?: number
     streak_bonus?: number
+    collectible_drop?: import('./collectible').CollectibleDropResult | null
   }>('/api/game/signin')
   return data
 }

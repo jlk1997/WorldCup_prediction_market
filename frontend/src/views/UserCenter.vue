@@ -102,6 +102,8 @@ import { getUnreadNotificationCount } from '../api/notifications'
 import { getReferralMe, type ReferralMe } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
 import { scrollMeFocus } from '../utils/dailyActionNav'
+import { openCollectibleReveal } from '../stores/collectibleRevealStore'
+import type { CollectibleDropResult } from '../api/collectible'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { hasActiveSeasonPass } from '../utils/entitlements'
 
@@ -286,6 +288,14 @@ async function doSignin() {
     const battalion = (res as { battalion_added?: number }).battalion_added
     const battalionMsg = battalion ? ` · +${battalion} 军团贡献` : ''
     ElMessage.success(`签到成功，+${res.added} 球迷币${bonus}${streakMsg}${chestMsg}${battalionMsg}`)
+    const drop = res.collectible_drop as CollectibleDropResult | null | undefined
+    if (drop?.dropped) {
+      openCollectibleReveal(drop, {
+        subtitle: res.signin_streak && [3, 7, 14].includes(res.signin_streak)
+          ? `连签 ${res.signin_streak} 天里程碑奖励`
+          : '签到掉落',
+      })
+    }
   } catch (e) {
     showApiError(e)
   } finally {

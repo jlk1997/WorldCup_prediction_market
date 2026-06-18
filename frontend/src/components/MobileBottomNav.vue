@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { HomeFilled, Trophy, Coin, Flag, User } from '@element-plus/icons-vue'
+import { HomeFilled, Trophy, Coin, Flag, User, Postcard } from '@element-plus/icons-vue'
 import { isLoggedIn } from '../stores/authStore'
 import { needsFirstPredict } from '../stores/dailyStatusStore'
 
@@ -29,6 +29,7 @@ const tabs = computed(() => [
   { path: '/', label: '首页', icon: HomeFilled, auth: false, hint: false },
   { path: '/live', label: '赛事', icon: Trophy, auth: false, hint: false },
   { path: '/predict', label: '竞猜', icon: Coin, auth: true, hint: needsFirstPredict.value },
+  { path: '/collection', label: '收藏', icon: Postcard, auth: true, hint: false },
   { path: '/arena', label: '擂台', icon: Flag, auth: true, hint: false },
   { path: '/me', label: '我的', icon: User, auth: true, hint: false },
 ])

@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import {
   getNotifications,
-  getUnreadNotificationCount,
+  getNotificationBadge,
   markNotificationsRead,
   getPendingPredictionsCount,
   type UserNotification,
@@ -16,6 +16,7 @@ const POLL_SLOW_MS = 120_000
 
 export const referralNotify = reactive({ unread: 0, latest: null as UserNotification | null })
 export const predictNotify = reactive({ unread: 0, latest: null as UserNotification | null })
+export const collectibleNotify = reactive({ unread: 0, latest: null as UserNotification | null })
 
 export const predictReveal = reactive({
   visible: false,
@@ -59,15 +60,21 @@ async function pollAll() {
     referralNotify.latest = null
     predictNotify.unread = 0
     predictNotify.latest = null
+    collectibleNotify.unread = 0
+    collectibleNotify.latest = null
     return
   }
   try {
-    const [refCount, predCount] = await Promise.all([
-      getUnreadNotificationCount('referral_reward'),
-      getUnreadNotificationCount('predict_settled'),
-    ])
+    const badge = await getNotificationBadge()
+    const counts = badge.counts
+    const refCount = counts.referral_reward ?? 0
+    const predCount = counts.predict_settled ?? 0
+    const dropC = counts.collectible_drop ?? 0
+    const setC = counts.collectible_set ?? 0
+    const chainC = counts.collectible_chain ?? 0
     referralNotify.unread = refCount
     predictNotify.unread = predCount
+    collectibleNotify.unread = dropC + setC + chainC
 
     const fetches: Promise<void>[] = []
     if (refCount > 0) {
@@ -101,6 +108,23 @@ async function pollAll() {
     } else if (!predictReveal.visible) {
       predictNotify.latest = null
     }
+    if (collectibleNotify.unread > 0) {
+      fetches.push(
+        Promise.all([
+          getNotifications({ unread_only: true, category: 'collectible_drop', limit: 1 }),
+          getNotifications({ unread_only: true, category: 'collectible_set', limit: 1 }),
+          getNotifications({ unread_only: true, category: 'collectible_chain', limit: 1 }),
+        ]).then((groups) => {
+          const latest = groups.flat().sort((a, b) => b.id - a.id)[0] ?? null
+          collectibleNotify.latest = latest
+          if (latest) {
+            notifyIfHidden(latest.title, latest.body, '/collection')
+          }
+        }),
+      )
+    } else {
+      collectibleNotify.latest = null
+    }
     await Promise.all(fetches)
 
     const nextInterval = await resolvePollInterval()
@@ -114,6 +138,7 @@ async function pollAll() {
   } catch {
     referralNotify.unread = 0
     predictNotify.unread = 0
+    collectibleNotify.unread = 0
   }
 }
 
@@ -153,6 +178,14 @@ export async function markReferralRead() {
   await markNotificationsRead([referralNotify.latest.id])
   referralNotify.unread = Math.max(0, referralNotify.unread - 1)
   referralNotify.latest = null
+  await pollAll()
+}
+
+export async function markCollectibleRead() {
+  if (!collectibleNotify.latest) return
+  await markNotificationsRead([collectibleNotify.latest.id])
+  collectibleNotify.unread = Math.max(0, collectibleNotify.unread - 1)
+  collectibleNotify.latest = null
   await pollAll()
 }
 

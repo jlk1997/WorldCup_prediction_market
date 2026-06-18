@@ -23,6 +23,16 @@
           <strong>{{ card.secondary_team.name }}</strong>
         </div>
       </div>
+      <div v-if="topCards.length" class="card-wall">
+        <h3 class="wall-title">稀有收藏</h3>
+        <div class="wall-grid">
+          <div v-for="c in topCards" :key="c.code" class="wall-card" :class="`rarity-${c.rarity}`">
+            <span class="wall-name">{{ c.name }}</span>
+            <span class="wall-rarity">{{ rarityLabel(c.rarity) }}</span>
+          </div>
+        </div>
+        <el-button link type="primary" @click="$router.push('/collection')">查看完整收藏册 ›</el-button>
+      </div>
       <div class="stars">
         <span v-for="p in card.players" :key="p.id" class="star-chip">⭐ {{ p.name }}</span>
       </div>
@@ -61,6 +71,7 @@ import { onMounted, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getFanCard } from '../api/profile'
 import { getReferralMe } from '../api/referral'
+import { getCollectibleOwnedPreview, RARITY_LABELS, type CollectibleCardBrief, type CardRarity } from '../api/collectible'
 import { getFanCardShareUrl } from '../api/commerce'
 import { downloadSharePoster } from '../utils/sharePoster'
 import { posterDisplayName } from '../utils/sharePosterDisplayName'
@@ -77,6 +88,7 @@ usePageMeta({
 
 const loading = ref(false)
 const card = ref<any>(null)
+const topCards = ref<CollectibleCardBrief[]>([])
 const inviteLink = ref('')
 const cardShareUrl = ref('')
 
@@ -99,6 +111,18 @@ const tierLabels: Record<string, string> = {
 
 function tierLabel(code: string) {
   return tierLabels[code] ?? code
+}
+
+function rarityLabel(r: string) {
+  return RARITY_LABELS[r as CardRarity] || r
+}
+
+async function loadTopCards() {
+  try {
+    topCards.value = await getCollectibleOwnedPreview(6, 'rare')
+  } catch {
+    topCards.value = []
+  }
 }
 
 async function copyText() {
@@ -164,6 +188,7 @@ onMounted(async () => {
     card.value = c
     if (refMe?.invite_link) inviteLink.value = refMe.invite_link
     if (shareUrl) cardShareUrl.value = shareUrl
+    await loadTopCards()
   } finally {
     loading.value = false
   }
@@ -308,6 +333,41 @@ onMounted(async () => {
   font-size: 0.85rem;
   color: var(--wc-accent-gold);
   margin-bottom: 16px;
+}
+.card-wall {
+  margin: 12px 0 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+}
+.wall-title {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: var(--wc-gold);
+}
+.wall-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.wall-card {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.wall-card.rarity-legend { border-color: rgba(232, 197, 71, 0.5); }
+.wall-card.rarity-epic { border-color: rgba(201, 120, 138, 0.5); }
+.wall-card.rarity-rare { border-color: rgba(126, 184, 255, 0.5); }
+.wall-rarity {
+  color: var(--wc-text-muted);
+  font-size: 0.65rem;
 }
 .actions { display: flex; flex-direction: column; gap: 10px; }
 

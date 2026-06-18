@@ -41,6 +41,8 @@
         @signin="doSignin"
       />
 
+      <CollectibleHookBanner v-if="authState.user" :signin-streak="dailyStatus?.signin_streak ?? 0" />
+
       <el-alert v-else-if="authState.user" title="加载每日任务…" type="info" show-icon :closable="false" />
 
       <GuestLoginBanner v-else />
@@ -443,6 +445,9 @@ import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
 import GuestLoginBanner from '../components/GuestLoginBanner.vue'
 import StreakRiskBanner from '../components/StreakRiskBanner.vue'
 import WinFeedBar from '../components/WinFeedBar.vue'
+import CollectibleHookBanner from '../components/collectible/CollectibleHookBanner.vue'
+import { openCollectibleReveal } from '../stores/collectibleRevealStore'
+import type { CollectibleDropResult } from '../api/collectible'
 
 usePageMeta({
   title: '竞猜大厅 — 最后一舞',
@@ -801,6 +806,14 @@ async function doSignin() {
     await fetchDailyStatus(true)
     syncQqGroupClaimed(dailyStatus.value?.qq_group_claimed)
     ElMessage.success(`签到成功 +${res.added} 币${res.streak_bonus ? ` · 连签奖励 +${res.streak_bonus}` : ''}`)
+    const drop = res.collectible_drop as CollectibleDropResult | null | undefined
+    if (drop?.dropped) {
+      openCollectibleReveal(drop, {
+        subtitle: res.signin_streak && [3, 7, 14].includes(res.signin_streak)
+          ? `连签 ${res.signin_streak} 天里程碑奖励`
+          : '签到掉落',
+      })
+    }
   } catch (e) {
     showApiError(e)
   } finally {

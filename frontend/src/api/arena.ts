@@ -102,6 +102,8 @@ export async function boostCheerExtra(matchId: number) {
 }
 
 export async function matchdayRally() {
-  const { data } = await apiClient.post('/api/arena/boost/matchday-rally')
+  const { data } = await apiClient.post<{
+    collectible_drop?: import('./collectible').CollectibleDropResult | null
+  }>('/api/arena/boost/matchday-rally')
   return data
 }

@@ -84,6 +84,7 @@
             已获得：{{ overview.matchday_goal.my_titles.join('、') }}
           </p>
           <button type="button" class="cta-btn rally" @click="doRally">比赛日动员 · 20 币 +30 贡献</button>
+          <p class="rally-hint">有机会获得主队球星数字藏品</p>
           <span class="legal-hint">虚拟道具，不可提现</span>
         </section>
       </div>
@@ -167,6 +168,8 @@ import {
 } from '../api/arena'
 import { fetchMe } from '../stores/authStore'
 import { showApiError } from '../utils/errorHandler'
+import { openCollectibleReveal } from '../stores/collectibleRevealStore'
+import type { CollectibleDropResult } from '../api/collectible'
 
 const loading = ref(false)
 const overview = ref<Awaited<ReturnType<typeof getArenaOverview>> | null>(null)
@@ -220,9 +223,13 @@ async function doBoostStar(playerId: number) {
 
 async function doRally() {
   try {
-    await matchdayRally()
+    const res = await matchdayRally()
     await fetchMe()
     ElMessage.success('动员成功')
+    const drop = res.collectible_drop as CollectibleDropResult | null | undefined
+    if (drop?.dropped) {
+      openCollectibleReveal(drop, { subtitle: '比赛日动员奖励' })
+    }
     await load()
   } catch (e) {
     showApiError(e)
@@ -506,8 +513,15 @@ onMounted(load)
 .cta-btn.rally {
   width: 100%;
   margin-top: 12px;
+  margin-bottom: 6px;
   border-color: rgba(230, 162, 60, 0.45);
   color: #ffd591;
+}
+.rally-hint {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  color: rgba(126, 184, 255, 0.9);
+  text-align: center;
 }
 
 .goal-progress {

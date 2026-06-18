@@ -763,6 +763,14 @@ class ReferralService:
         self._notify_milestone_rewards(
             binding, key, inviter, invitee, inv_coins, inv_battalion, inv_points, inv_coins_i, inv_battalion_i
         )
+        try:
+            from app.services.collectible_service import CollectibleService
+
+            CollectibleService(self.db).referral_milestone_drop(invitee, key, binding.id)
+            if key in ("profile", "first_action"):
+                CollectibleService(self.db).referral_inviter_drop(inviter, key, binding.id)
+        except Exception:
+            logger.exception("Collectible referral drop failed binding=%s key=%s", binding.id, key)
         if key in ("profile", "first_action"):
             self._sync_recruitment_tiers(inviter)
         cache_delete_prefix("referral:weekly:")

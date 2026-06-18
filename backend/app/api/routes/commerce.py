@@ -248,6 +248,15 @@ def notifications_unread_count(
         return {"count": 0}
 
 
+@router_game.get("/notifications/badge")
+def notifications_badge(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    try:
+        counts = NotificationService(db).unread_badge(user.id)
+        return {"counts": counts, "total": sum(counts.values())}
+    except SQLAlchemyError:
+        return {"counts": {}, "total": 0}
+
+
 @router_game.post("/notifications/read")
 def mark_notifications_read(
     body: MarkNotificationsReadRequest,

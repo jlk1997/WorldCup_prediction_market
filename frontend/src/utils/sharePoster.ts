@@ -1,7 +1,7 @@
 import QRCode from 'qrcode'
 import { posterDisplayName, posterInitial } from './sharePosterDisplayName'
 
-export type SharePosterVariant = 'invite' | 'predict' | 'profile'
+export type SharePosterVariant = 'invite' | 'predict' | 'profile' | 'card' | 'set_complete'
 
 export interface SharePosterOptions {
   variant?: SharePosterVariant
@@ -55,6 +55,8 @@ export async function generateSharePosterBlob(opts: SharePosterOptions): Promise
     await drawPredictLayout(ctx, opts, name)
   } else if (variant === 'profile') {
     await drawProfileLayout(ctx, opts, name)
+  } else if (variant === 'card' || variant === 'set_complete') {
+    await drawCardLayout(ctx, opts, name, variant)
   } else {
     await drawInviteLayout(ctx, opts, name)
   }
@@ -152,6 +154,38 @@ async function drawProfileLayout(ctx: CanvasRenderingContext2D, opts: SharePoste
   await drawQrCard(ctx, opts.qrUrl, 580, '扫码看我的球迷名片')
 
   drawFooter(ctx, opts.footer ?? '一起来猜世界杯 · 最后一舞')
+}
+
+async function drawCardLayout(
+  ctx: CanvasRenderingContext2D,
+  opts: SharePosterOptions,
+  name: string,
+  variant: 'card' | 'set_complete',
+) {
+  const title = opts.title || (variant === 'set_complete' ? `${name} 集齐套组` : `${name} 的球星卡`)
+  setFont(ctx, 'bold 30px', C.gold)
+  ctx.textAlign = 'center'
+  ctx.fillText(title, 300, 220)
+
+  setFont(ctx, '22px', C.text)
+  wrapText(ctx, opts.subtitle, 300, 280, 520, 30)
+
+  const cardLabel = variant === 'set_complete' ? '套组成就 · 典藏收藏家' : '数字藏品 · 虚拟收藏'
+  drawHighlightCard(ctx, 300, 380, cardLabel, opts.statsLine || '猜中掉落 · 无金钱价值 · 不可交易')
+
+  setFont(ctx, '16px', C.muted)
+  wrapText(
+    ctx,
+    '平台内虚拟收藏，不可提现、不可转赠。仅供娱乐收集与炫耀。',
+    300,
+    480,
+    520,
+    24,
+  )
+
+  await drawQrCard(ctx, opts.qrUrl, 620, variant === 'set_complete' ? '扫码一起收集' : '扫码打开收藏册')
+
+  drawFooter(ctx, opts.footer ?? '数字藏品 · 最后一舞 · 非金融属性')
 }
 
 function drawBackground(ctx: CanvasRenderingContext2D) {

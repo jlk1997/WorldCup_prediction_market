@@ -1,4 +1,5 @@
 import type { UserNotification } from '@/api/notifications'
+import type { CollectibleDropResult } from '@/api/collectible'
 
 export interface ResolvedPredictPayload {
   status: string
@@ -17,6 +18,7 @@ export interface ResolvedPredictPayload {
   voidReason?: string
   seasonRank?: number
   detailLine: string
+  collectibleDrop?: CollectibleDropResult | null
 }
 
 const MATCH_BODY = /^(.+?)\s+vs\s+(.+?)\s+比分\s*(\d+:\d+)/i
@@ -91,6 +93,7 @@ export function resolvePredictPayload(note: UserNotification | null): ResolvedPr
     voidReason: str(payload.void_reason) || undefined,
     seasonRank: payload.season_rank != null ? Number(payload.season_rank) : undefined,
     detailLine: note.body || '',
+    collectibleDrop: (payload.collectible_drop as CollectibleDropResult | null | undefined) ?? null,
   }
 }
 

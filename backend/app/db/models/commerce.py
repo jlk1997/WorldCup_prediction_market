@@ -449,3 +449,112 @@ class SystemUiConfig(Base):
     config_key: Mapped[str] = mapped_column(String(64), nullable=False)
     config: Mapped[dict] = mapped_column(JSONB, nullable=False)
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class CollectibleCard(Base):
+    __tablename__ = "collectible_cards"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    code: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
+    player_id: Mapped[int | None] = mapped_column(ForeignKey("players_detailed.id", ondelete="SET NULL"))
+    team_id: Mapped[int | None] = mapped_column(ForeignKey("teams.id", ondelete="SET NULL"))
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    rarity: Mapped[str] = mapped_column(String(20), nullable=False)
+    series: Mapped[str] = mapped_column(String(40), nullable=False)
+    image_url: Mapped[str | None] = mapped_column(Text)
+    attributes_json: Mapped[dict | None] = mapped_column(JSONB)
+    is_limited: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    available_from: Mapped[datetime | None] = mapped_column(DateTime)
+    available_until: Mapped[datetime | None] = mapped_column(DateTime)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class UserCollectibleCard(Base):
+    __tablename__ = "user_collectible_cards"
+    __table_args__ = (UniqueConstraint("user_id", "card_id", name="uq_user_collectible_card"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    card_id: Mapped[int] = mapped_column(ForeignKey("collectible_cards.id", ondelete="CASCADE"), nullable=False)
+    star: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    count: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    source: Mapped[str] = mapped_column(String(30), nullable=False)
+    highlight_json: Mapped[list | dict | None] = mapped_column(JSONB)
+    obtained_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+    chain_status: Mapped[str] = mapped_column(String(20), default="none", nullable=False)
+    chain_operation_id: Mapped[str | None] = mapped_column(String(64))
+    chain_class_id: Mapped[str | None] = mapped_column(String(128))
+    chain_nft_id: Mapped[str | None] = mapped_column(String(128))
+    chain_tx_hash: Mapped[str | None] = mapped_column(String(128))
+    chain_minted_at: Mapped[datetime | None] = mapped_column(DateTime)
+    chain_error: Mapped[str | None] = mapped_column(Text)
+
+    card: Mapped["CollectibleCard"] = relationship("CollectibleCard")
+
+
+class UserChainAccount(Base):
+    __tablename__ = "user_chain_accounts"
+    __table_args__ = (UniqueConstraint("user_id", name="uq_user_chain_account_user"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    native_address: Mapped[str | None] = mapped_column(String(128))
+    hex_address: Mapped[str | None] = mapped_column(String(128))
+    provider: Mapped[str] = mapped_column(String(20), default="avata", nullable=False)
+    chain_name: Mapped[str] = mapped_column(String(40), default="文昌链", nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
+    operation_id: Mapped[str | None] = mapped_column(String(64))
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class CollectibleShard(Base):
+    __tablename__ = "collectible_shards"
+    __table_args__ = (UniqueConstraint("user_id", "rarity", name="uq_collectible_shard_user_rarity"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    rarity: Mapped[str] = mapped_column(String(20), nullable=False)
+    amount: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class CardSetDefinition(Base):
+    __tablename__ = "card_set_definitions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    code: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    card_codes: Mapped[list] = mapped_column(JSONB, nullable=False)
+    reward_json: Mapped[dict | None] = mapped_column(JSONB)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+
+class CardSetProgress(Base):
+    __tablename__ = "card_set_progress"
+    __table_args__ = (UniqueConstraint("user_id", "set_id", name="uq_card_set_progress_user_set"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    set_id: Mapped[int] = mapped_column(ForeignKey("card_set_definitions.id", ondelete="CASCADE"), nullable=False)
+    claimed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    claimed_at: Mapped[datetime | None] = mapped_column(DateTime)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class CollectibleDropLog(Base):
+    __tablename__ = "collectible_drop_logs"
+    __table_args__ = (UniqueConstraint("user_id", "source", "ref_type", "ref_id", name="uq_collectible_drop_idempotent"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    source: Mapped[str] = mapped_column(String(30), nullable=False)
+    ref_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    ref_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    result_json: Mapped[dict | None] = mapped_column(JSONB)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())

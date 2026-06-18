@@ -19,6 +19,13 @@ export async function getNotifications(params?: {
   return data
 }
 
+export async function getNotificationBadge() {
+  const { data } = await apiClient.get<{ counts: Record<string, number>; total: number }>(
+    '/api/game/notifications/badge',
+  )
+  return data
+}
+
 export async function getUnreadNotificationCount(category?: string) {
   const { data } = await apiClient.get<{ count: number }>('/api/game/notifications/unread-count', {
     params: category ? { category } : undefined,

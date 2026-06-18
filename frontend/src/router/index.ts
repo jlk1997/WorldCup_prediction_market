@@ -106,6 +106,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/collection',
+      name: 'Collection',
+      component: () => import('../views/Collection.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/leaderboard',
       name: 'Leaderboard',
       component: () => import('../views/Leaderboard.vue'),

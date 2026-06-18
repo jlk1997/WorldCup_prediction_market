@@ -18,6 +18,8 @@
 <script setup lang="ts" generic="T">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
+const emit = defineEmits<{ scroll: [HTMLElement] }>()
+
 const props = withDefaults(
   defineProps<{
     items: T[]
@@ -63,6 +65,7 @@ const visibleItems = computed(() =>
 function onScroll() {
   if (!rootEl.value) return
   scrollTop.value = rootEl.value.scrollTop
+  emit('scroll', rootEl.value)
 }
 
 function measure() {
