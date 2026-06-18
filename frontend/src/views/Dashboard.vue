@@ -49,6 +49,12 @@
       </div>
 
       <StreakRiskBanner :status="dailyStatus" class="dashboard-streak-banner" />
+
+      <GrowthPrimaryCard :status="dailyStatus" />
+      <MatchDayShareBar
+        v-if="dailyStatus?.match_day && dailyStatus?.activation_segment === 'active'"
+        :status="dailyStatus"
+      />
     </div>
 
     <!-- 核心聚焦区 -->
@@ -143,6 +149,7 @@
               </el-button>
               <el-button type="primary" class="cyber-btn" @click.stop="goAgentAnalysis(focusMatch)">
                 {{ focusMatch.is_live ? '赛中 AI 分析' : '启动 AI 分析' }}
+                <span v-if="needsPredictBeforeAi" class="ai-hint-badge">先猜</span>
               </el-button>
             </div>
             <FocusInsightCard
@@ -298,13 +305,16 @@ import { useScheduleInsights } from '../composables/useScheduleInsights'
 import { authState } from '../stores/authStore'
 import { fetchRecommendations, profileState } from '../stores/profileStore'
 import { getMatchArena, type MatchArena } from '../api/arena'
-import { getDailyStatus, getWinFeed, type DailyStatus, type WinFeedItem } from '../api/commerce'
+import { getWinFeed, type WinFeedItem } from '../api/commerce'
+import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
 import TeamLineupColumn from '../components/TeamLineupColumn.vue'
 import MobileLineupDrawer from '../components/MobileLineupDrawer.vue'
 import MobileScheduleDrawer from '../components/MobileScheduleDrawer.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
 import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
 import StreakRiskBanner from '../components/StreakRiskBanner.vue'
+import GrowthPrimaryCard from '../components/GrowthPrimaryCard.vue'
+import MatchDayShareBar from '../components/MatchDayShareBar.vue'
 import WinFeedBar from '../components/WinFeedBar.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
 import { usePageMeta } from '../composables/usePageMeta'
@@ -347,9 +357,14 @@ const scheduleExpanded = ref(false)
 const scheduleDrawerOpen = ref(false)
 let teamFetchGeneration = 0
 const arenaMini = ref<MatchArena | null>(null)
-const dailyStatus = ref<DailyStatus | null>(null)
+const dailyStatus = useDailyStatusRef()
 const winFeed = ref<WinFeedItem[]>([])
 const winFeedRecentCount = ref(0)
+
+const needsPredictBeforeAi = computed(() => {
+  const seg = dailyStatus.value?.activation_segment
+  return seg === 'never_predicted' || seg === 'profile_only'
+})
 
 function toggleSchedule() {
   if (isMobile.value) {
@@ -583,6 +598,12 @@ const fetchSchedule = async () => {
 }
 
 function goAgentAnalysis(match: ScheduleItem) {
+  if (needsPredictBeforeAi.value) {
+    ElMessage.info('先完成首猜，再解锁 AI 分析')
+    const path = dailyStatus.value?.activation_nudge?.path || dailyStatus.value?.next_action?.path || '/predict'
+    router.push(path.startsWith('/') ? path : '/predict')
+    return
+  }
   goAgentFromMatch(match, { auto: true })
 }
 
@@ -637,7 +658,7 @@ onMounted(async () => {
       if (mid) {
         arenaMini.value = await getMatchArena(mid)
       }
-      dailyStatus.value = await getDailyStatus().catch(() => null)
+      await fetchDailyStatus(true)
     } catch {
       /* ignore */
     }
@@ -759,7 +780,9 @@ onMounted(async () => {
 }
 
 .dashboard-top-stack :deep(.dashboard-streak-banner),
-.dashboard-top-stack :deep(.streak-risk-banner) {
+.dashboard-top-stack :deep(.streak-risk-banner),
+.dashboard-top-stack :deep(.growth-primary),
+.dashboard-top-stack :deep(.match-day-share-bar) {
   margin-bottom: 0;
 }
 
@@ -1520,6 +1543,20 @@ onMounted(async () => {
   overflow: hidden;
   transition: all 0.3s;
 }
+
+.ai-hint-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  background: rgba(230, 162, 60, 0.25);
+  color: #e6a23c;
+  vertical-align: middle;
+}
+
 .cyber-btn::before {
   content: '';
   position: absolute;

@@ -110,6 +110,8 @@ import StadiumModeSelector from './StadiumModeSelector.vue'
 
 import { isLoggedIn, logout as doLogout } from '../stores/authStore'
 
+import { needsFirstPredict } from '../stores/dailyStatusStore'
+
 import { profileState } from '../stores/profileStore'
 
 
@@ -144,7 +146,7 @@ const navItems = computed(() => {
 
   const items = [
 
-    { path: '/agent', label: 'AI 工作台' },
+    { path: '/agent', label: needsFirstPredict.value ? 'AI 工作台 · 先猜' : 'AI 工作台' },
 
     { path: '/leaderboard', label: '排行榜' },
 

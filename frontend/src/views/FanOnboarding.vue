@@ -61,6 +61,9 @@
 
         <template v-if="recs?.cta?.length">
           <p class="cta-heading">为你推荐的下一步</p>
+          <el-button type="primary" size="large" class="predict-hero-btn" @click="go(finishPath)">
+            立即猜第一场
+          </el-button>
           <div class="cta-cards">
             <button
               v-for="c in recs.cta.slice(0, 3)"
@@ -76,6 +79,9 @@
           </div>
         </template>
         <p v-else class="cta-empty">档案已保存，进入首页开始探索吧</p>
+        <el-button v-if="step === 3 && !recs?.cta?.length" type="primary" size="large" class="predict-hero-btn" @click="go(finishPath)">
+          立即猜第一场
+        </el-button>
       </div>
 
       <div class="footer">
@@ -342,11 +348,19 @@ onMounted(async () => {
 }
 
 .cta-heading {
-  margin: 0 0 12px;
+  margin: 16px 0 10px;
   font-size: 0.9rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.65);
   letter-spacing: 0.5px;
+}
+
+.predict-hero-btn {
+  width: 100%;
+  margin-bottom: 14px;
+  min-height: 44px;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .cta-cards {

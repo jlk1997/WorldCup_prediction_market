@@ -60,7 +60,14 @@
       <div class="actions">
         <div class="actions-primary">
           <el-button
-            v-if="resolved.status === 'won' && (resolved.winStreak ?? 0) >= 2"
+            v-if="resolved.status === 'lost'"
+            type="primary"
+            @click="goLostRetry"
+          >
+            免费再猜一场翻本
+          </el-button>
+          <el-button
+            v-else-if="resolved.status === 'won' && (resolved.winStreak ?? 0) >= 2"
             type="primary"
             @click="goStreakProtect"
           >
@@ -73,6 +80,9 @@
             继续猜下一场
           </el-button>
         </div>
+        <div v-if="resolved.status === 'lost'" class="actions-row">
+          <el-button plain @click="goAiInsight">看 AI 复盘</el-button>
+        </div>
         <div v-if="resolved.status === 'won'" class="actions-row">
           <el-button type="primary" plain @click="shareWin">晒预测 · 海报</el-button>
           <el-button plain @click="goAiInsight">AI 洞察</el-button>
@@ -84,7 +94,7 @@
           <button type="button" class="link-btn" @click="goFanCard">{{ btnShare }}</button>
         </div>
         <el-button v-if="resolved.status === 'lost'" plain @click="goRecords">{{ btnRecords }}</el-button>
-        <el-button plain @click="close">{{ btnDismiss }}</el-button>
+        <el-button plain @click="() => close()">{{ btnDismiss }}</el-button>
       </div>
 
       <p v-if="showCarousel" class="swipe-hint">左右滑动可切换多条结算</p>
@@ -96,6 +106,8 @@
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { getDailyStatus, type DailyStatus } from '@/api/commerce'
+import { fetchDailyStatus } from '@/stores/dailyStatusStore'
 import {
   currentPredictNotification,
   goPredictReveal,
@@ -116,8 +128,27 @@ const router = useRouter()
 const confettiActive = ref(false)
 const slideDir = ref<'left' | 'right' | ''>('')
 const touchStartX = ref(0)
+const settlementDaily = ref<DailyStatus | null>(null)
 
 void ensurePredictRevealConfig()
+
+watch(
+  () => predictReveal.visible,
+  async (open) => {
+    if (open && authState.accessToken) {
+      settlementDaily.value = await getDailyStatus().catch(() => null)
+    }
+  },
+)
+
+const lostRetryPath = computed(() => {
+  const mid =
+    settlementDaily.value?.next_predictable_match?.match_id ||
+    resolved.value?.nextMatchId ||
+    null
+  if (mid) return `/predict?highlight=${mid}`
+  return '/predict'
+})
 
 const visible = computed({
   get: () => predictReveal.visible,
@@ -249,11 +280,17 @@ function onTouchEnd(e: TouchEvent) {
   else if (delta < -threshold && canNext.value) next()
 }
 
-async function close() {
+async function close(options?: { skipCoach?: boolean }) {
   await markPredictRead(async () => {
     await fetchMe()
     window.dispatchEvent(new CustomEvent('predict-records-refresh'))
   })
+  const daily = await fetchDailyStatus(true)
+  settlementDaily.value = daily
+  if (options?.skipCoach) return
+  if (daily?.activation_segment === 'one_and_done' && (daily?.predict_count_total ?? 0) === 1) {
+    window.dispatchEvent(new CustomEvent('second-predict-coach'))
+  }
 }
 
 function onClosed() {
@@ -263,13 +300,19 @@ function onClosed() {
 
 function goNext() {
   const id = resolved.value?.nextMatchId
-  close()
+  void close({ skipCoach: true })
   if (id) router.push({ path: '/predict', query: { highlight: String(id) } })
+}
+
+function goLostRetry() {
+  const path = lostRetryPath.value
+  void close({ skipCoach: true })
+  router.push(path)
 }
 
 function goStreakProtect() {
   const id = resolved.value?.nextMatchId
-  close()
+  void close({ skipCoach: true })
   if (id) router.push({ path: '/predict', query: { highlight: String(id) } })
   else router.push('/predict')
 }

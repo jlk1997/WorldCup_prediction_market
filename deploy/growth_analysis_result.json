@@ -1,0 +1,379 @@
+{
+  "queries": {
+    "01_user_overview": {
+      "active_users": 48,
+      "total_users": 48,
+      "first_registered": "2026-06-11T05:14:22.494181",
+      "last_registered": "2026-06-16T22:09:52.906613",
+      "registered_7d": 48,
+      "registered_14d": 48,
+      "registered_30d": 48
+    },
+    "02_registration_by_day": [
+      {
+        "day": "2026-06-11",
+        "cnt": 8
+      },
+      {
+        "day": "2026-06-12",
+        "cnt": 4
+      },
+      {
+        "day": "2026-06-14",
+        "cnt": 1
+      },
+      {
+        "day": "2026-06-15",
+        "cnt": 20
+      },
+      {
+        "day": "2026-06-16",
+        "cnt": 15
+      }
+    ],
+    "03_zombie_users": {
+      "active_users": 48,
+      "no_profile": 22,
+      "profile_done": 26,
+      "never_signed_in": 34,
+      "never_predicted": 26,
+      "zombie_no_signin_no_predict": 18
+    },
+    "04_activation_funnel": {
+      "registered": 48,
+      "profile_completed": 26,
+      "first_predict_users": 22,
+      "first_predict_within_24h": 22,
+      "users_2plus_predictions": 3,
+      "profile_but_no_predict": 7,
+      "no_profile_no_predict": 19,
+      "median_hours_to_first_predict": 0.0
+    },
+    "05_auth_codes": {
+      "codes_sent": 72,
+      "codes_used": 58,
+      "distinct_emails": 59,
+      "emails_converted": 48
+    },
+    "06_sessions": [
+      {
+        "users": 48,
+        "users_with_session": 48,
+        "total_sessions": 67
+      }
+    ],
+    "07_retention_signin": {
+      "ever_signed_in": 14,
+      "streak_2plus": 1,
+      "streak_7plus": 0,
+      "max_signin_streak": 2,
+      "avg_signin_streak": "1.0714285714285714"
+    },
+    "08_prediction_distribution": [
+      {
+        "pred_count": 0,
+        "users": 26
+      },
+      {
+        "pred_count": 1,
+        "users": 19
+      },
+      {
+        "pred_count": 2,
+        "users": 1
+      },
+      {
+        "pred_count": 7,
+        "users": 1
+      },
+      {
+        "pred_count": 11,
+        "users": 1
+      }
+    ],
+    "09_quiz_participation": [
+      {
+        "users": 48,
+        "quiz_users": 5,
+        "quiz_attempts": 6
+      }
+    ],
+    "10_d7_proxy": [
+      {
+        "d7_cohort_size": 0,
+        "d7_signin_proxy": 0,
+        "d7_predict_proxy": 0
+      }
+    ],
+    "11_referral": {
+      "users": 48,
+      "referred_signups": 14,
+      "bindings": 14,
+      "inviters": 5,
+      "milestone_profile": 11,
+      "milestone_first_action": 8
+    },
+    "12_top_inviters": [
+      {
+        "id": 23,
+        "nickname": "7zcshdvbre",
+        "email": "7zcshdvbre@wnbaldwy.com",
+        "bindings": 5,
+        "effective_bindings": 5
+      },
+      {
+        "id": 34,
+        "nickname": "351531542",
+        "email": "351531542@qq.com",
+        "bindings": 3,
+        "effective_bindings": 3
+      },
+      {
+        "id": 21,
+        "nickname": "2705359260",
+        "email": "2705359260@qq.com",
+        "bindings": 3,
+        "effective_bindings": 1
+      },
+      {
+        "id": 1,
+        "nickname": "1055207634",
+        "email": "1055207634@qq.com",
+        "bindings": 2,
+        "effective_bindings": 1
+      },
+      {
+        "id": 19,
+        "nickname": "1053915462",
+        "email": "1053915462@qq.com",
+        "bindings": 1,
+        "effective_bindings": 1
+      }
+    ],
+    "13_paid_orders": [
+      {
+        "status": "cancelled",
+        "cnt": 1,
+        "total_fen": 600
+      },
+      {
+        "status": "paid",
+        "cnt": 4,
+        "total_fen": 4
+      },
+      {
+        "status": "pending",
+        "cnt": 1,
+        "total_fen": 600
+      }
+    ],
+    "14_paid_users_skus": [
+      {
+        "status": "cancelled",
+        "sku": "coins_small",
+        "name": "球迷币·小包",
+        "orders": 1,
+        "buyers": 1
+      },
+      {
+        "status": "paid",
+        "sku": "coins_small",
+        "name": "球迷币·小包",
+        "orders": 4,
+        "buyers": 2
+      },
+      {
+        "status": "pending",
+        "sku": "coins_small",
+        "name": "球迷币·小包",
+        "orders": 1,
+        "buyers": 1
+      }
+    ],
+    "15_redeem": {
+      "redeem_orders": 0,
+      "redeem_users": 0,
+      "users_with_redeem_pts": 1,
+      "users_with_season_pts": 1,
+      "max_redeem_pts": 35,
+      "median_redeem_pts": 0.0
+    },
+    "16_feature_ai": {
+      "ai_users": 11,
+      "ai_runs": 15,
+      "ai_daily_users": 12,
+      "cheer_users": 3,
+      "activity_logs": 67
+    },
+    "17_predict_vs_features": [
+      {
+        "segment": "has_predict",
+        "users": 22,
+        "profile_done": 19,
+        "used_ai": 4
+      },
+      {
+        "segment": "no_predict",
+        "users": 26,
+        "profile_done": 7,
+        "used_ai": 7
+      }
+    ],
+    "18_matches_schedule": {
+      "total_matches": 104,
+      "finished_or_scored": 16,
+      "not_finished": 88,
+      "future_by_date_str": 104,
+      "earliest_date": "2026年06月12日",
+      "latest_date": "2026年07月20日"
+    },
+    "19_predictions_by_match": [
+      {
+        "id": 46,
+        "team1_name": "乌拉圭",
+        "team2_name": "沙特阿拉伯",
+        "match_date": "2026年06月16日",
+        "status": "finished",
+        "predictions": 16
+      },
+      {
+        "id": 45,
+        "team1_name": "西班牙",
+        "team2_name": "佛得角",
+        "match_date": "2026年06月16日",
+        "status": "finished",
+        "predictions": 4
+      },
+      {
+        "id": 63,
+        "team1_name": "葡萄牙",
+        "team2_name": "刚果（金）",
+        "match_date": "2026年06月18日",
+        "status": "scheduled",
+        "predictions": 2
+      },
+      {
+        "id": 49,
+        "team1_name": "法国",
+        "team2_name": "塞内加尔",
+        "match_date": "2026年06月17日",
+        "status": "scheduled",
+        "predictions": 2
+      },
+      {
+        "id": 1,
+        "team1_name": "墨西哥",
+        "team2_name": "韩国",
+        "match_date": "2026年06月19日",
+        "status": "scheduled",
+        "predictions": 2
+      },
+      {
+        "id": 44,
+        "team1_name": "西班牙",
+        "team2_name": "沙特阿拉伯",
+        "match_date": "2026年06月22日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 41,
+        "team1_name": "伊朗",
+        "team2_name": "新西兰",
+        "match_date": "2026年06月16日",
+        "status": "finished",
+        "predictions": 1
+      },
+      {
+        "id": 43,
+        "team1_name": "西班牙",
+        "team2_name": "乌拉圭",
+        "match_date": "2026年06月27日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 7,
+        "team1_name": "加拿大",
+        "team2_name": "瑞士",
+        "match_date": "2026年06月25日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 38,
+        "team1_name": "比利时",
+        "team2_name": "埃及",
+        "match_date": "2026年06月16日",
+        "status": "finished",
+        "predictions": 1
+      },
+      {
+        "id": 61,
+        "team1_name": "葡萄牙",
+        "team2_name": "哥伦比亚",
+        "match_date": "2026年06月28日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 3,
+        "team1_name": "墨西哥",
+        "team2_name": "捷克",
+        "match_date": "2026年06月25日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 56,
+        "team1_name": "阿根廷",
+        "team2_name": "阿尔及利亚",
+        "match_date": "2026年06月17日",
+        "status": "scheduled",
+        "predictions": 1
+      },
+      {
+        "id": 5,
+        "team1_name": "韩国",
+        "team2_name": "捷克",
+        "match_date": "2026年06月12日",
+        "status": "finished",
+        "predictions": 1
+      },
+      {
+        "id": 54,
+        "team1_name": "挪威",
+        "team2_name": "伊拉克",
+        "match_date": "2026年06月17日",
+        "status": "scheduled",
+        "predictions": 1
+      }
+    ],
+    "20_game_predictions_summary": [
+      {
+        "status": "lost",
+        "cnt": 22,
+        "users": 18
+      },
+      {
+        "status": "pending",
+        "cnt": 15,
+        "users": 6
+      },
+      {
+        "status": "won",
+        "cnt": 2,
+        "users": 1
+      }
+    ],
+    "21_recent_active_users": [
+      {
+        "active_7d": 31
+      }
+    ]
+  },
+  "connection": {
+    "db_now": "2026-06-17 00:57:16.906155+08:00",
+    "pg_version": "PostgreSQL 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit"
+  }
+}

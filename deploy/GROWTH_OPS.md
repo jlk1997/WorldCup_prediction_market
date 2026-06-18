@@ -77,7 +77,15 @@ curl -X POST -H "X-Admin-Secret: YOUR_SECRET" \
 - **6 元小包推荐** → 质押或 AI 币不足时弹窗推荐 `coins_small`
 - **通行证价值条** → 竞猜页 / 商城显示「今日已省 X 币」
 - **官方 QQ 群条** → 未领群福利时首页 / 竞猜页展示
-- **登录后默认** → 建档完成用户登录后跳转 `/predict`
+- **登录后默认** → 建档完成用户登录后跳转 `/predict`；本会话首次进首页且未竞猜也会导向竞猜页
+- **GrowthPrimaryCard** → 合并首猜/第二猜/推荐场次为一张主行动卡，减少横幅堆叠
+- **激活分群引擎** → `daily-status` 返回 `activation_segment` / `next_predictable_match` / `activation_nudge`
+- **SecondPredictCoach** → 首猜成功 / 猜错关闭后底部引导（全局挂载）
+- **MatchDayShareBar** → 比赛日一键复制 `?ref=&highlight=` 深链
+- **手机底栏** → 未首猜时「竞猜」Tab 显示「猜」提示点
+- **召友中心** → 比赛日显示 MatchDayShareBar 一键复制深链
+- **AI 先猜门槛** → 未首猜时导航 / 首页 AI 按钮显示「先猜」；AI 工作台软引导
+- **增长埋点** → `activation_recovery_*` / `comeback_banner_*` / `second_predict_coach_*` 供周报复盘
 - **竞猜教练聚光灯** → 首次进竞猜页逐步高亮选胜负 / 免费 / 提交
 - **提交后分享海报** → PredictShareSheet 文案 + 新版球场风海报（三步引导 + 白底二维码）
 - **开赛前 2h 提醒** → 浏览器通知（需用户授权 + HTTPS）
@@ -93,13 +101,40 @@ curl -X POST -H "X-Admin-Secret: YOUR_SECRET" \
 - **排行榜差距 CTA** → 差 X 分超上一名时显示「去竞猜赚积分 / 邀友冲榜」
 - **分享海报三步指引** → 邀友弹窗 + 提交后 PredictShareSheet 均提示「微信里先保存海报再长按发群」
 
-## 五、收录与 SEO（并行，不替代产品漏斗）
+## 五、激活分群与深链（2026-06 诊断落地）
+
+基于 [GROWTH_ANALYSIS_REPORT.md](./GROWTH_ANALYSIS_REPORT.md) 的 48 用户诊断，产品内已按 **activation_segment** 分群推送：
+
+| 分群 | 含义 | 产品触点 | 运营话术 |
+|------|------|----------|----------|
+| `never_predicted` | 注册但未猜 | 首页/竞猜页 **ActivationRecoveryBar** · 首次进首页跳 `/predict` | 「免费猜一场 · 30 秒 · 猜中得积分」 |
+| `profile_only` | 已建档未猜 | 同上，文案强调「档案已就绪」 | 「你已选主队，还差一步完成首猜」 |
+| `one_and_done` | 只猜过 1 次 | **SecondPredictCoach** · 每日 next_action 推第二猜 | 「再猜一场 · 离换徽章更近」 |
+| `active` | 猜≥2 次 | 常规每日任务 / 连胜 / 兑换进度 | 维持习惯与比赛日动员 |
+
+**深链参数：**
+
+- `https://loveaibaby.cn/predict?highlight={matchId}` — 直达场次卡片
+- `https://loveaibaby.cn/predict?ref={invite_code}&highlight={matchId}` — 比赛日裂变（首页 **MatchDayShareBar** 一键复制）
+- 未首猜用户进 **AI 工作台** → 软引导先去竞猜（不封禁）
+
+**2 周验收目标（复盘时对照）：**
+
+| 指标 | 诊断基线 | 目标 |
+|------|----------|------|
+| 猜≥2 次用户占比 | 6%（3/48） | **20%** |
+| ever 签到占比 | 29% | **40%** |
+| 比赛日 DAU | — | **≥15** |
+
+**复盘 SQL：** 复用 [analyze_growth_readonly.sql](./analyze_growth_readonly.sql) 第 3、4 组；或本地 `python backend/scripts/analyze_growth.py`（只读，勿提交含邮箱的 JSON）。
+
+## 六、收录与 SEO（并行，不替代产品漏斗）
 
 - Google Search Console：每周看索引量、点击、CTR
 - 百度：`site:loveaibaby.cn` 抽查收录
 - 外链按计划发知乎 / 小红书软文（见 SEO_CONTENT_OUTREACH.md）
 
-## 六、不建议现在做
+## 七、不建议现在做
 
 - 买量投放（漏斗数据不足）
 - 复杂好友 Feed / 私信

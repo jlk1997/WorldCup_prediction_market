@@ -1,5 +1,5 @@
 <template>
-  <div v-if="status" class="daily-ritual">
+  <div v-if="status" class="daily-ritual" :class="{ 'needs-signin': showSignin && !status.signed_today }">
     <div class="ritual-head glass-inner">
       <div class="progress-ring">
         <el-progress
@@ -14,9 +14,13 @@
       <div class="ritual-main">
         <div class="ritual-title">
           <span v-if="status.match_day" class="match-day-tag">比赛日</span>
+          <span v-if="!status.signed_today && showSignin" class="signin-pulse">签到领币</span>
           <span v-if="status.signin_streak >= 1">🔥 连签 {{ status.signin_streak }} 天</span>
           <span v-if="status.win_streak >= 2"> · 连胜 {{ status.win_streak }}</span>
         </div>
+        <p v-if="!status.signed_today && status.today_signin_count" class="signin-social">
+          今日已有 {{ status.today_signin_count }} 人签到
+        </p>
         <button
           v-if="status.next_action"
           type="button"
@@ -32,6 +36,7 @@
         v-if="showSignin && !status.signed_today"
         size="small"
         type="warning"
+        class="signin-cta-btn"
         :loading="signing"
         @click="$emit('signin')"
       >
@@ -255,6 +260,55 @@ function onCheckItem(item: { key: string; done: boolean }) {
 .ritual-alert--click {
   margin: 0;
   pointer-events: none;
+}
+
+.daily-ritual.needs-signin .ritual-head {
+  border: 1px solid rgba(230, 162, 60, 0.45);
+  box-shadow: 0 0 0 1px rgba(230, 162, 60, 0.12);
+}
+
+.signin-pulse {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  margin-right: 6px;
+  border-radius: 999px;
+  background: rgba(230, 162, 60, 0.2);
+  color: #e6a23c;
+  font-size: 12px;
+  font-weight: 600;
+  animation: signinPulse 1.6s ease-in-out infinite;
+}
+
+.signin-social {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--wc-text-muted, #9a94a8);
+}
+
+@keyframes signinPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.signin-cta-btn {
+  animation: signinBtnPulse 1.8s ease-in-out infinite;
+  font-weight: 600;
+}
+
+@keyframes signinBtnPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(230, 162, 60, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(230, 162, 60, 0);
+  }
 }
 
 .checklist {

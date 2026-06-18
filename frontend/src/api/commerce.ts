@@ -262,6 +262,21 @@ export interface DailyStatus {
     extra_ai_free_total: number
     extra_ai_free_used: number
   } | null
+  activation_segment?: 'never_predicted' | 'profile_only' | 'one_and_done' | 'active' | null
+  predict_count_total?: number
+  next_predictable_match?: {
+    match_id: number
+    label: string
+    kickoff_at?: string | null
+    is_home_team?: boolean
+    hours_until?: number | null
+  } | null
+  activation_nudge?: {
+    title: string
+    body: string
+    cta_label: string
+    path: string
+  } | null
 }
 
 export interface PickStats {

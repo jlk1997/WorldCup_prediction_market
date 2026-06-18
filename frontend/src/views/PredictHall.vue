@@ -51,14 +51,22 @@
 
     <StreakRiskBanner :status="dailyStatus" />
 
+    <GrowthPrimaryCard :status="dailyStatus" />
+
+    <MatchDayShareBar v-if="dailyStatus?.match_day && dailyStatus?.activation_segment === 'active'" :status="dailyStatus" />
+
     <OfficialQqGroupBar
       :match-day="!!dailyStatus?.match_day"
       :today-signin-count="dailyStatus?.today_signin_count ?? 0"
     />
 
-    <InvitePromptBar v-if="authState.user" scene="predict" :match-day="!!dailyStatus?.match_day" />
+    <InvitePromptBar
+      v-if="authState.user && !showGrowthFocus"
+      scene="predict"
+      :match-day="!!dailyStatus?.match_day"
+    />
 
-    <PredictFirstCoach v-if="authState.user && sortedMatches.length" />
+    <PredictFirstCoach v-if="authState.user && activeMatches.length" />
 
     <el-alert
       v-if="showProfileBindHint"
@@ -80,7 +88,7 @@
       <button type="button" class="pass-link" @click="$router.push('/shop')">查看权益</button>
     </div>
 
-    <FanRecommendationsBar :daily-status="dailyStatus" />
+    <FanRecommendationsBar v-if="!showGrowthFocus" :daily-status="dailyStatus" />
 
     <div
       v-if="dailyStatus?.pending_predictions && dailyStatus.next_pending_match"
@@ -115,11 +123,13 @@
 
       <VirtualList
 
-        v-else-if="sortedMatches.length"
+        v-else-if="activeMatches.length"
+
+        ref="virtualListRef"
 
         class="predict-virtual-list"
 
-        :items="sortedMatches"
+        :items="activeMatches"
 
         :item-height="cardItemHeight"
 
@@ -134,6 +144,8 @@
           <div
 
             class="match-card glass-panel"
+
+            :data-match-id="m.id"
 
             :class="{ highlight: m.is_main_team || m.id === highlightId, predicted: m.user_predicted }"
 
@@ -351,7 +363,16 @@
 
       </VirtualList>
 
-      <el-empty v-else-if="!loading && !sortedMatches.length">
+      <details v-if="historyMatches.length" class="history-matches glass-panel">
+        <summary>已结束 / 不可竞猜（{{ historyMatches.length }} 场）</summary>
+        <div v-for="m in historyMatches" :key="m.id" class="history-match-row">
+          <span class="history-label">{{ m.team1 }} vs {{ m.team2 }}</span>
+          <span v-if="m.user_predicted" class="history-tag">已参与</span>
+          <span class="history-meta">{{ m.date }} {{ m.time }}</span>
+        </div>
+      </details>
+
+      <el-empty v-else-if="!loading && !activeMatches.length">
         <template #description>
           <p>暂无可竞猜比赛</p>
           <p class="empty-hint">{{ emptyStateHint }}</p>
@@ -381,7 +402,7 @@
 
 <script setup lang="ts">
 
-import { computed, onMounted, ref, shallowReactive, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, shallowReactive, watch } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -391,7 +412,7 @@ import { authState, fetchMe } from '../stores/authStore'
 
 import { fetchRecommendations, profileState } from '../stores/profileStore'
 
-import { getPredictableMatches, submitPrediction, raisePredictionStake, getDailyStatus, getWinFeed, signin, type GameMatch, type DailyStatus } from '../api/commerce'
+import { getPredictableMatches, submitPrediction, raisePredictionStake, getWinFeed, signin, type GameMatch } from '../api/commerce'
 
 import { calcPredictPreview, formatPredictPreviewText } from '../utils/predictPreview'
 
@@ -402,6 +423,11 @@ import FanRecommendationsBar from '../components/FanRecommendationsBar.vue'
 import DailyRitualPanel from '../components/DailyRitualPanel.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
 import PredictFirstCoach from '../components/PredictFirstCoach.vue'
+import GrowthPrimaryCard from '../components/GrowthPrimaryCard.vue'
+import MatchDayShareBar from '../components/MatchDayShareBar.vue'
+import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
+import { usePredictHighlightScroll } from '../composables/usePredictHighlightScroll'
+import { isMatchPredictable } from '../utils/matchKickoff'
 import PassDailyClaimBar from '../components/PassDailyClaimBar.vue'
 import VirtualList from '../components/VirtualList.vue'
 import { useBreakpoint } from '../composables/useBreakpoint'
@@ -534,10 +560,16 @@ const raiseAmounts = shallowReactive<Record<number, number>>({})
 const submittingId = ref<number | null>(null)
 const raisingId = ref<number | null>(null)
 
-const dailyStatus = ref<DailyStatus | null>(null)
+const dailyStatus = useDailyStatusRef()
+
+const showGrowthFocus = computed(() => {
+  const seg = dailyStatus.value?.activation_segment
+  return seg === 'never_predicted' || seg === 'profile_only' || seg === 'one_and_done'
+})
 
 async function refreshDailyStatus() {
-  dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
+  await fetchDailyStatus(true)
+  window.dispatchEvent(new CustomEvent('daily-status-refresh'))
 }
 
 const signingIn = ref(false)
@@ -548,6 +580,8 @@ const activePreviewId = ref<number | null>(null)
 
 /** 虚拟列表行高：移动端选项纵向堆叠需更高行 */
 const cardItemHeight = computed(() => (isMobile.value ? 460 : 288))
+
+const virtualListRef = ref<{ scrollToItem?: (index: number) => void } | null>(null)
 
 
 
@@ -609,8 +643,19 @@ const sortedMatches = computed(() => {
 
 })
 
+const activeMatches = computed(() =>
+  sortedMatches.value.filter((m) => {
+    if (m.can_predict === false) return false
+    return isMatchPredictable({ date: m.date, time: m.time })
+  }),
+)
+
+const historyMatches = computed(() =>
+  sortedMatches.value.filter((m) => !activeMatches.value.some((a) => a.id === m.id)),
+)
+
 function isFirstOpenMatch(m: GameMatch) {
-  const first = sortedMatches.value.find((x) => !x.user_predicted)
+  const first = activeMatches.value.find((x) => !x.user_predicted)
   return first?.id === m.id
 }
 
@@ -622,11 +667,17 @@ const highlightScrollIndex = computed(() => {
 
   if (!id) return null
 
-  const idx = sortedMatches.value.findIndex((m) => m.id === id)
+  const idx = activeMatches.value.findIndex((m) => m.id === id)
 
   return idx >= 0 ? idx : null
 
 })
+
+const { scrollToHighlight } = usePredictHighlightScroll(highlightId, highlightScrollIndex, virtualListRef)
+
+function onPredictScrollHighlight() {
+  void scrollToHighlight()
+}
 
 const freeRemaining = computed(() => dailyStatus.value?.free_predict.remaining ?? 0)
 const fanCoins = computed(() => authState.user?.fan_coins ?? 0)
@@ -747,7 +798,7 @@ async function doSignin() {
   try {
     const res = await signin()
     await fetchMe()
-    dailyStatus.value = await getDailyStatus().catch(() => null)
+    await fetchDailyStatus(true)
     syncQqGroupClaimed(dailyStatus.value?.qq_group_claimed)
     ElMessage.success(`签到成功 +${res.added} 币${res.streak_bonus ? ` · 连签奖励 +${res.streak_bonus}` : ''}`)
   } catch (e) {
@@ -780,7 +831,7 @@ async function load(options: { silent?: boolean } = {}) {
 
       await fetchRecommendations()
 
-      dailyStatus.value = await getDailyStatus().catch(() => null)
+      await fetchDailyStatus(true)
       syncQqGroupClaimed(dailyStatus.value?.qq_group_claimed)
 
     }
@@ -897,7 +948,23 @@ async function submit(matchId: number) {
     if (matchRow && submittedPick) {
       openPredictShareForMatch(matchRow, submittedPick)
     }
-    if (authState.user && shouldShowPredictShareNudge()) {
+    delete submitErrors[matchId]
+    await fetchDailyStatus(true)
+    const total = dailyStatus.value?.predict_count_total ?? 0
+    if (total === 1) {
+      window.dispatchEvent(new CustomEvent('second-predict-coach'))
+      const nextPath =
+        dailyStatus.value?.activation_nudge?.path ||
+        dailyStatus.value?.next_action?.path ||
+        '/predict'
+      ElNotification({
+        title: '首猜完成',
+        message: '再猜一场 · 养成习惯 · 离兑换更近',
+        type: 'success',
+        duration: 8000,
+        onClick: () => router.push(nextPath.startsWith('/') ? nextPath : '/predict'),
+      })
+    } else if (authState.user && shouldShowPredictShareNudge()) {
       markPredictShareNudge()
       ElNotification({
         title: '竞猜已提交',
@@ -907,8 +974,6 @@ async function submit(matchId: number) {
         onClick: () => openShareSheet(),
       })
     }
-    delete submitErrors[matchId]
-    dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
     await load({ silent: true })
   } catch (e) {
     showApiError(e)
@@ -927,7 +992,7 @@ async function submit(matchId: number) {
     }
     if (msg.includes('免费竞猜')) {
       useFree[matchId] = false
-      dailyStatus.value = await getDailyStatus().catch(() => dailyStatus.value)
+      await fetchDailyStatus(true)
       syncFreeCheckboxDefaults()
     }
   } finally {
@@ -938,10 +1003,26 @@ async function submit(matchId: number) {
 
 
 onMounted(() => {
-  void load()
+  void load().then(() => scrollToHighlight())
   void ensureMe()
   maybeOpenGameplayGuide()
+  window.addEventListener('predict-scroll-highlight', onPredictScrollHighlight)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('predict-scroll-highlight', onPredictScrollHighlight)
+})
+
+watch(highlightId, () => {
+  void scrollToHighlight()
+})
+
+watch(
+  () => activeMatches.value.length,
+  () => {
+    void scrollToHighlight()
+  },
+)
 
 watch(
   () => [route.path, route.query.guide] as const,
@@ -1070,6 +1151,81 @@ watch(
 
   flex-shrink: 0;
 
+}
+
+.next-match-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  transition: border-color 0.15s ease;
+}
+
+.next-match-card:hover {
+  border-color: rgba(212, 165, 116, 0.55);
+}
+
+.next-match-tag {
+  font-size: 0.72rem;
+  color: var(--wc-accent-gold, #d4a574);
+}
+
+.next-match-card strong {
+  font-size: 0.95rem;
+  color: #f5f0e8;
+}
+
+.next-match-hint {
+  font-size: 0.78rem;
+  color: var(--wc-text-muted);
+}
+
+.history-matches {
+  margin-top: 12px;
+  padding: 12px 16px;
+}
+
+.history-matches summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--wc-text-muted);
+  user-select: none;
+}
+
+.history-match-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+}
+
+.history-match-row:last-child {
+  border-bottom: none;
+}
+
+.history-label {
+  flex: 1;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.history-tag {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--wc-text-muted);
+}
+
+.history-meta {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .balance-grid {
@@ -1339,6 +1495,13 @@ watch(
 
   box-shadow: 0 0 20px rgba(212, 165, 116, 0.12);
 
+  animation: highlightGlow 2.2s ease-in-out 2;
+
+}
+
+@keyframes highlightGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(212, 165, 116, 0.1); }
+  50% { box-shadow: 0 0 24px rgba(212, 165, 116, 0.28); }
 }
 
 .match-card.predicted {

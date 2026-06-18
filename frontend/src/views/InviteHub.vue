@@ -21,6 +21,7 @@
 
     <div v-if="me" class="invite-card glass-panel">
       <h2>我的邀请</h2>
+      <MatchDayShareBar :status="inviteDailyStatus" class="invite-match-day-bar" />
       <div class="hero-share">
         <p v-if="me.next_tier" class="hero-hint">
           再邀 <strong>{{ me.next_tier.remaining }}</strong> 位有效好友解锁「{{ me.next_tier.title }}」
@@ -147,6 +148,8 @@ import {
 import { showApiError } from '../utils/errorHandler'
 import { formatMilestoneReward, milestoneLabel } from '../utils/referralRules'
 import { useInviteShare } from '../composables/useInviteShare'
+import MatchDayShareBar from '../components/MatchDayShareBar.vue'
+import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
 
 const { openShareSheet } = useInviteShare()
 
@@ -158,6 +161,7 @@ const me = ref<ReferralMe | null>(null)
 const invites = ref<ReferralInvite[]>([])
 const rules = ref<ReferralRules | null>(null)
 const rankMoveHint = ref<string | null>(null)
+const inviteDailyStatus = useDailyStatusRef()
 
 const countdownLabel = computed(() => {
   const sec = me.value?.seconds_until_weekly_settle
@@ -188,6 +192,7 @@ async function load() {
       getReferralMe(),
       getReferralInvites(),
       getReferralRules().catch(() => null),
+      fetchDailyStatus(true).catch(() => null),
     ])
     me.value = meData
     invites.value = inviteList
@@ -235,6 +240,12 @@ onMounted(load)
   padding: 20px;
   margin-top: 16px;
 }
+
+.invite-match-day-bar {
+  margin: 0 0 14px;
+  width: 100%;
+}
+
 .hero-share {
   display: flex;
   flex-direction: column;

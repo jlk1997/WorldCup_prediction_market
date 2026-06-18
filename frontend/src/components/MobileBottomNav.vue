@@ -10,6 +10,7 @@
     >
       <el-icon :size="20"><component :is="item.icon" /></el-icon>
       <span class="nav-label">{{ item.label }}</span>
+      <span v-if="item.hint" class="nav-hint-dot" aria-label="先完成首猜">猜</span>
     </button>
   </nav>
 </template>
@@ -19,16 +20,17 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { HomeFilled, Trophy, Coin, Flag, User } from '@element-plus/icons-vue'
 import { isLoggedIn } from '../stores/authStore'
+import { needsFirstPredict } from '../stores/dailyStatusStore'
 
 const router = useRouter()
 const route = useRoute()
 
 const tabs = computed(() => [
-  { path: '/', label: '首页', icon: HomeFilled, auth: false },
-  { path: '/live', label: '赛事', icon: Trophy, auth: false },
-  { path: '/predict', label: '竞猜', icon: Coin, auth: true },
-  { path: '/arena', label: '擂台', icon: Flag, auth: true },
-  { path: '/me', label: '我的', icon: User, auth: true },
+  { path: '/', label: '首页', icon: HomeFilled, auth: false, hint: false },
+  { path: '/live', label: '赛事', icon: Trophy, auth: false, hint: false },
+  { path: '/predict', label: '竞猜', icon: Coin, auth: true, hint: needsFirstPredict.value },
+  { path: '/arena', label: '擂台', icon: Flag, auth: true, hint: false },
+  { path: '/me', label: '我的', icon: User, auth: true, hint: false },
 ])
 
 function isActive(path: string) {
@@ -64,6 +66,7 @@ function go(item: { path: string; auth: boolean }) {
 }
 
 .nav-item {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -91,5 +94,21 @@ function go(item: { path: string; auth: boolean }) {
 
 .nav-label {
   line-height: 1.1;
+}
+
+.nav-hint-dot {
+  position: absolute;
+  top: 2px;
+  right: calc(50% - 20px);
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: #e6a23c;
+  color: #1a1a1a;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
 }
 </style>

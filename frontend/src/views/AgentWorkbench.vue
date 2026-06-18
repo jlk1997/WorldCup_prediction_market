@@ -71,7 +71,17 @@
             <router-link to="/login">登录</router-link>
           </el-alert>
 
-          <div v-else-if="billingStatus" class="billing-chips">
+          <div v-else-if="predictGateVisible" class="predict-gate glass-inner">
+            <h3>先完成首猜，再解锁完整 AI 分析</h3>
+            <p>每天 1 次免费竞猜 · 约 30 秒 · 猜中得积分冲榜</p>
+            <div class="predict-gate-actions">
+              <el-button type="primary" @click="goFirstPredict">去竞猜大厅</el-button>
+              <el-button text @click="predictGateDismissed = true">我先看看示例</el-button>
+            </div>
+          </div>
+
+          <div v-else-if="authState.accessToken">
+          <div v-if="billingStatus" class="billing-chips">
             <div class="bill-chip">
               <span class="label">今日免费</span>
               <span class="value">{{ billingStatus.free_remaining }}/{{ billingStatus.daily_free_limit }}</span>
@@ -149,6 +159,8 @@
             本次消耗 {{ lastBilling.charge_coins ?? 0 }} 球迷币
             <span v-if="lastBilling.used_free_quota">（使用免费额度）</span>
           </p>
+
+          </div>
 
         </div>
 
@@ -358,6 +370,7 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 
 import { apiClient, getErrorMessage, isRateLimitError } from '@/api/client'
+import { getDailyStatus, type DailyStatus } from '@/api/commerce'
 import { showApiError } from '@/utils/errorHandler'
 import { usePageMeta } from '@/composables/usePageMeta'
 import {
@@ -434,6 +447,23 @@ const PHASE_WEIGHT: Record<string, number> = {
 const route = useRoute()
 
 const router = useRouter()
+
+const predictGateDismissed = ref(false)
+const agentDailyStatus = ref<DailyStatus | null>(null)
+
+const predictGateVisible = computed(() => {
+  if (!authState.accessToken || predictGateDismissed.value) return false
+  const seg = agentDailyStatus.value?.activation_segment
+  return seg === 'never_predicted' || seg === 'profile_only'
+})
+
+function goFirstPredict() {
+  const path =
+    agentDailyStatus.value?.activation_nudge?.path ||
+    agentDailyStatus.value?.next_action?.path ||
+    '/predict'
+  router.push(path.startsWith('/') ? path : '/predict')
+}
 
 const { setAnalyzing, setHeatmap } = useStadiumScene()
 
@@ -1082,6 +1112,10 @@ onBeforeUnmount(() => {
 
 onMounted(async () => {
 
+  if (authState.accessToken) {
+    agentDailyStatus.value = await getDailyStatus().catch(() => null)
+  }
+
   await Promise.all([fetchTeams(), fetchHistory(), fetchLiveContext(), loadBillingStatus()])
   await refreshBillingPreview()
 
@@ -1112,6 +1146,28 @@ onMounted(async () => {
 
 <style scoped>
 .agent-page { padding: 16px 20px 24px; max-width: 1200px; margin: 0 auto; min-height: min-content; background: transparent; }
+.predict-gate {
+  padding: 20px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 165, 116, 0.4);
+  background: rgba(212, 165, 116, 0.08);
+  margin-bottom: 12px;
+}
+.predict-gate h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #f5f0e8;
+}
+.predict-gate p {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--wc-text-muted);
+}
+.predict-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .page-head h2 {
   margin: 0 0 6px;
   font-size: 1.75rem;

@@ -112,7 +112,10 @@
             <el-menu-item index="/predict">竞猜</el-menu-item>
             <el-menu-item index="/arena">擂台</el-menu-item>
             <el-menu-item index="/leaderboard">排行榜</el-menu-item>
-            <el-menu-item index="/agent">AI 工作台</el-menu-item>
+            <el-menu-item index="/agent">
+              AI 工作台
+              <span v-if="aiNeedsPredictFirst" class="nav-hint-badge">先猜</span>
+            </el-menu-item>
             <el-menu-item index="/news">资讯</el-menu-item>
             <el-menu-item index="/teams">球队库</el-menu-item>
             <el-menu-item v-if="isLoggedIn" index="/invite">召友</el-menu-item>
@@ -131,7 +134,9 @@
                 <el-dropdown-item command="/predict">竞猜</el-dropdown-item>
                 <el-dropdown-item command="/arena">擂台</el-dropdown-item>
                 <el-dropdown-item command="/leaderboard">排行榜</el-dropdown-item>
-                <el-dropdown-item command="/agent">AI 工作台</el-dropdown-item>
+                <el-dropdown-item command="/agent">
+                  AI 工作台<span v-if="aiNeedsPredictFirst"> · 先猜</span>
+                </el-dropdown-item>
                 <el-dropdown-item command="/news">资讯</el-dropdown-item>
                 <el-dropdown-item command="/teams">球队库</el-dropdown-item>
                 <el-dropdown-item command="/shop">商城</el-dropdown-item>
@@ -176,6 +181,7 @@
     <InviteShareSheet />
     <PredictShareSheet />
     <PredictSettlementReveal />
+    <SecondPredictCoach v-if="isLoggedIn" :status="lastDailyStatus" />
     <GuideModal />
     <OfficialQqGroupFab />
     <OfficialQqGroupModal />
@@ -222,7 +228,8 @@ import {
   openOfficialQqGroupModal,
   syncQqGroupClaimed,
 } from './composables/useOfficialQqGroup'
-import { getDailyStatus, type DailyStatus } from './api/commerce'
+import { fetchDailyStatus, clearDailyStatus, needsFirstPredict, useDailyStatusRef } from './stores/dailyStatusStore'
+import SecondPredictCoach from './components/SecondPredictCoach.vue'
 import { syncMatchKickoffReminders } from './composables/useMatchKickoffReminders'
 import { useUserPredictWs } from './composables/useUserPredictWs'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
@@ -236,7 +243,7 @@ const { setUiOverlay } = useStadiumStore()
 const { isAuthFlow, showProfileBanner, showProfileHeaderChip, showFeatureTour } = useGuideVisibility()
 const { showRewardDialog } = useLeaderboardRewardPrompt({ blocked: showFeatureTour })
 const { maybePromptForNotify, showNotification } = useBrowserNotify()
-const lastDailyStatus = ref<DailyStatus | null>(null)
+const lastDailyStatus = useDailyStatusRef()
 
 const showProfileBannerVisible = computed(
   () => showProfileBanner.value && !profileBannerHidden.value,
@@ -264,6 +271,8 @@ const mobileDisplayNick = computed(() => {
 })
 
 const passActive = computed(() => hasActiveSeasonPass(authState.user))
+
+const aiNeedsPredictFirst = needsFirstPredict
 
 useUserPredictWs()
 
@@ -326,10 +335,10 @@ watch(
 async function refreshQqGroupClaimState() {
   if (!isLoggedIn.value) {
     syncQqGroupClaimed(false)
-    lastDailyStatus.value = null
+    clearDailyStatus()
     return
   }
-  const daily = await getDailyStatus().catch(() => null)
+  const daily = await fetchDailyStatus(true).catch(() => null)
   syncQqGroupClaimed(daily?.qq_group_claimed)
   if (daily) {
     const prevPending = lastDailyStatus.value?.pending_predictions ?? 0
@@ -339,7 +348,6 @@ async function refreshQqGroupClaimState() {
     if (daily.streak_risk?.message && !lastDailyStatus.value?.streak_risk) {
       void maybePromptForNotify('开启后可收到待开奖与连胜提醒')
     }
-    lastDailyStatus.value = daily
   }
 }
 
@@ -465,6 +473,19 @@ function onNav(path: string) {
   border-bottom: none !important;
   font-size: 15px;
   flex: 1;
+}
+
+.nav-hint-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  background: rgba(230, 162, 60, 0.25);
+  color: #e6a23c;
+  vertical-align: middle;
 }
 
 .header-right {

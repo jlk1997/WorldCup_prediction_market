@@ -1112,19 +1112,139 @@ class GameService:
             "hours_until": hours,
         }
 
-    def _next_predictable_match(self, user: User, after_match_id: int | None = None) -> dict | None:
+    def _lifetime_predict_count(self, user_id: int) -> int:
+        return (
+            self.db.query(func.count(GamePrediction.id))
+            .filter(GamePrediction.user_id == user_id)
+            .scalar()
+            or 0
+        )
+
+    def _predicted_match_ids(self, user_id: int) -> set[int]:
+        rows = (
+            self.db.query(GamePrediction.match_id)
+            .filter(GamePrediction.user_id == user_id, GamePrediction.match_id.isnot(None))
+            .all()
+        )
+        return {r[0] for r in rows if r[0] is not None}
+
+    def _activation_segment(self, user: User, predict_count: int) -> str:
+        if predict_count >= 2:
+            return "active"
+        if predict_count == 1:
+            return "one_and_done"
+        if user.profile_completed:
+            return "profile_only"
+        return "never_predicted"
+
+    def _next_predictable_match_for_user(
+        self, user: User, *, after_match_id: int | None = None
+    ) -> dict | None:
         now = _utcnow()
+        predicted = self._predicted_match_ids(user.id)
+        main_id = user.favorite_team_id
+        sub_id = user.secondary_team_id
+        candidates: list[tuple[int, Match]] = []
         for m in self.list_predictable_matches():
             if after_match_id and m.id == after_match_id:
                 continue
-            kick = parse_kickoff(m)
-            hours = round((kick - now).total_seconds() / 3600, 1) if kick else None
+            if m.id in predicted:
+                continue
+            t1 = self._team_id_by_name(m.team1_name)
+            t2 = self._team_id_by_name(m.team2_name)
+            team_ids = {x for x in (t1, t2) if x}
+            score = 0
+            if main_id and main_id in team_ids:
+                score += 100
+            if sub_id and sub_id in team_ids:
+                score += 50
+            candidates.append((score, m))
+        if not candidates:
+            return None
+        candidates.sort(key=lambda x: (-x[0], x[1].match_date or "", x[1].match_time or ""))
+        m = candidates[0][1]
+        kick = parse_kickoff(m)
+        hours = round((kick - now).total_seconds() / 3600, 1) if kick else None
+        t1 = self._team_id_by_name(m.team1_name)
+        t2 = self._team_id_by_name(m.team2_name)
+        team_ids = {x for x in (t1, t2) if x}
+        return {
+            "match_id": m.id,
+            "label": f"{m.team1_name} vs {m.team2_name}",
+            "kickoff_at": kick.isoformat() if kick else None,
+            "is_home_team": bool(main_id and main_id in team_ids),
+            "hours_until": hours,
+        }
+
+    def _activation_nudge(
+        self,
+        segment: str,
+        next_match: dict | None,
+        redeem_progress: dict | None,
+    ) -> dict | None:
+        if segment not in ("never_predicted", "profile_only", "one_and_done"):
+            return None
+        if not next_match:
+            if segment == "one_and_done":
+                return {
+                    "title": "再来一场",
+                    "body": "暂无可猜场次 · 先去赛程看看下一场",
+                    "cta_label": "去竞猜大厅",
+                    "path": "/predict",
+                }
+            if segment == "profile_only":
+                return {
+                    "title": "档案已就绪",
+                    "body": "还差一步完成首猜 · 免费 · 约 30 秒",
+                    "cta_label": "去竞猜大厅",
+                    "path": "/predict",
+                }
             return {
-                "id": m.id,
-                "label": f"{m.team1_name} vs {m.team2_name}",
-                "hours_until": hours,
+                "title": "完成你的首猜",
+                "body": "免费 · 约 30 秒 · 猜中得积分",
+                "cta_label": "去竞猜大厅",
+                "path": "/predict",
             }
-        return None
+        mid = next_match["match_id"]
+        path = f"/predict?highlight={mid}"
+        label = next_match.get("label") or "下一场"
+        if segment == "profile_only":
+            return {
+                "title": "档案已就绪",
+                "body": "还差一步完成首猜 · 免费 · 约 30 秒",
+                "cta_label": "立即开猜",
+                "path": path,
+            }
+        if segment == "never_predicted":
+            return {
+                "title": "完成你的首猜",
+                "body": f"{label} · 免费 · 猜中得积分",
+                "cta_label": "去猜第一场",
+                "path": path,
+            }
+        gap = (redeem_progress or {}).get("gap") or 0
+        next_name = (redeem_progress or {}).get("next_name") or "兑换好礼"
+        body = f"再猜一场 · 离「{next_name}」"
+        if gap > 0:
+            body += f"还差 {gap} 分"
+        else:
+            body += "更近一步"
+        return {
+            "title": "再来一场",
+            "body": body,
+            "cta_label": f"猜 {label}",
+            "path": path,
+        }
+
+    def _next_predictable_match(self, user: User, after_match_id: int | None = None) -> dict | None:
+        nxt = self._next_predictable_match_for_user(user, after_match_id=after_match_id)
+        if not nxt:
+            return None
+        return {
+            "id": nxt["match_id"],
+            "label": nxt["label"],
+            "hours_until": nxt.get("hours_until"),
+        }
 
     def _pass_benefits_today(self, user: User) -> dict | None:
         if not user.has_season_pass or not user.season_pass_until or user.season_pass_until <= _utcnow():
@@ -1170,11 +1290,27 @@ class GameService:
         pending_count = self.pending_predictions_count(user.id)
         match_day = RecommendationService(self.db).is_match_day_for_user(user, today)
         qq_claimed = self.qq_group_claimed(user.id)
+        predict_count_total = self._lifetime_predict_count(user.id)
+        activation_segment = self._activation_segment(user, predict_count_total)
+        redeem_progress = self._redeem_progress(user)
+        next_predictable_match = None
+        if activation_segment in ("never_predicted", "profile_only", "one_and_done"):
+            next_predictable_match = self._next_predictable_match_for_user(user)
+        activation_nudge = self._activation_nudge(
+            activation_segment, next_predictable_match, redeem_progress
+        )
         checklist = self._daily_checklist(
             signed_today, quiz_answered, free_remaining, free_limit, pending_count, match_day, qq_claimed
         )
         next_action = self._daily_next_action(
-            user, checklist, free_remaining, pending_count, match_day, qq_claimed
+            user,
+            checklist,
+            free_remaining,
+            pending_count,
+            match_day,
+            qq_claimed,
+            activation_segment=activation_segment,
+            next_predictable_match=next_predictable_match,
         )
         return {
             "signed_today": signed_today,
@@ -1193,7 +1329,11 @@ class GameService:
             "streak_risk": streak_risk,
             "win_streak": user.win_streak or 0,
             "loss_streak": user.loss_streak or 0,
-            "redeem_progress": self._redeem_progress(user),
+            "redeem_progress": redeem_progress,
+            "activation_segment": activation_segment,
+            "predict_count_total": predict_count_total,
+            "next_predictable_match": next_predictable_match,
+            "activation_nudge": activation_nudge,
             "match_day": match_day,
             "match_day_message": (
                 "比赛日加成已开启 · 签到 +10 币 · 去擂台动员可为军团加分"
@@ -1391,6 +1531,9 @@ class GameService:
         pending_count: int,
         match_day: bool,
         qq_claimed: bool = True,
+        *,
+        activation_segment: str = "active",
+        next_predictable_match: dict | None = None,
     ) -> dict:
         by_key = {c["key"]: c for c in checklist}
         if not by_key["signin"]["done"]:
@@ -1406,6 +1549,39 @@ class GameService:
                 "label": "加入官方 QQ 群领球迷币",
                 "path": "/predict?qq=1",
                 "hint": by_key["qq_group"]["reward"],
+            }
+        if activation_segment in ("never_predicted", "profile_only") and next_predictable_match:
+            label = next_predictable_match.get("label") or "下一场"
+            mid = next_predictable_match["match_id"]
+            hint = "免费 · 约 30 秒" if activation_segment == "profile_only" else "猜中得积分"
+            return {
+                "key": "first_predict",
+                "label": f"完成首猜 · {label}",
+                "path": f"/predict?highlight={mid}",
+                "hint": hint,
+            }
+        if activation_segment == "one_and_done" and next_predictable_match:
+            label = next_predictable_match.get("label") or "下一场"
+            mid = next_predictable_match["match_id"]
+            return {
+                "key": "second_predict",
+                "label": f"再猜一场 · {label}",
+                "path": f"/predict?highlight={mid}",
+                "hint": "养成习惯 · 离兑换更近",
+            }
+        if activation_segment == "one_and_done":
+            return {
+                "key": "second_predict",
+                "label": "再猜一场 · 去竞猜大厅",
+                "path": "/predict",
+                "hint": "养成习惯 · 离兑换更近",
+            }
+        if activation_segment in ("never_predicted", "profile_only") and not next_predictable_match:
+            return {
+                "key": "first_predict",
+                "label": "完成首猜 · 去竞猜大厅",
+                "path": "/predict",
+                "hint": "免费 · 约 30 秒",
             }
         if not by_key["quiz"]["done"]:
             return {

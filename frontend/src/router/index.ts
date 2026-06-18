@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { authState } from '../stores/authStore'
+import { fetchDailyStatus } from '../stores/dailyStatusStore'
+
+const HOME_PREDICT_REDIRECT_KEY = 'wc_home_predict_redirect_done'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -153,7 +156,7 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   if (to.meta.requiresAuth && !authState.accessToken) {
     return { path: '/login', query: { redirect: to.fullPath } }
   }
@@ -163,6 +166,21 @@ router.beforeEach((to) => {
     }
     const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/'
     return redirect.startsWith('/login') ? { path: '/' } : redirect
+  }
+  if (to.name === 'Dashboard' && authState.accessToken) {
+    try {
+      if (!sessionStorage.getItem(HOME_PREDICT_REDIRECT_KEY)) {
+        const daily = await fetchDailyStatus(true)
+        if (daily) {
+          sessionStorage.setItem(HOME_PREDICT_REDIRECT_KEY, '1')
+          if ((daily.predict_count_total ?? 0) === 0) {
+            return { path: '/predict', query: to.query }
+          }
+        }
+      }
+    } catch {
+      /* ignore — stay on dashboard */
+    }
   }
   return true
 })

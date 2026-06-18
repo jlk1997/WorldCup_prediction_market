@@ -86,8 +86,15 @@ export function logout() {
   authState.refreshToken = null
   authState.user = null
   localStorage.removeItem(STORAGE_KEY)
+  try {
+    sessionStorage.removeItem('wc_home_predict_redirect_done')
+    sessionStorage.removeItem('wc_second_predict_coach_shown')
+  } catch {
+    /* ignore */
+  }
   import('./profileStore').then((m) => m.clearProfileCache())
   import('../composables/useInviteShare').then((m) => m.resetInviteShareState())
+  import('./dailyStatusStore').then((m) => m.clearDailyStatus())
 }
 
 export function patchUserFields(fields: Partial<AuthUser>) {
