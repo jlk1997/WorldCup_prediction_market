@@ -30,9 +30,9 @@
     <el-tabs v-model="activeTab" class="collection-tabs">
       <el-tab-pane label="图鉴" name="album">
         <div class="filters">
-          <el-radio-group v-model="rarityFilter" size="small" @change="onFilterChange">
-            <el-radio-button label="">全部</el-radio-button>
-            <el-radio-button v-for="r in rarities" :key="r" :label="r">
+          <el-radio-group v-model="rarityFilter" size="small" class="rarity-filter" @change="onFilterChange">
+            <el-radio-button value="">全部</el-radio-button>
+            <el-radio-button v-for="r in rarities" :key="r" :value="r">
               {{ RARITY_LABELS[r] }}
             </el-radio-button>
           </el-radio-group>
@@ -52,7 +52,20 @@
               :value="s.value"
             />
           </el-select>
-          <el-checkbox v-model="ownedOnly" size="small" @change="onFilterChange">仅已拥有</el-checkbox>
+          <button
+            type="button"
+            class="owned-toggle"
+            :class="{ active: ownedOnly }"
+            :aria-pressed="ownedOnly"
+            @click="toggleOwnedOnly"
+          >
+            <span class="owned-toggle-box" aria-hidden="true">
+              <svg v-if="ownedOnly" viewBox="0 0 12 12" class="owned-toggle-check">
+                <path d="M2 6.2 L5 9.2 L10 3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            仅已拥有
+          </button>
         </div>
         <div v-loading="albumLoading" class="album-wrap">
           <AlbumGrid
@@ -217,7 +230,7 @@ const synthOptions = ref<SynthesisOption[]>([])
 const activeTab = ref('album')
 const rarityFilter = ref('')
 const seriesFilter = ref('')
-const ownedOnly = ref(true)
+const ownedOnly = ref(false)
 const activity = ref<CollectibleActivityItem[]>([])
 const detailOpen = ref(false)
 const selectedCard = ref<CollectibleCardBrief | null>(null)
@@ -278,6 +291,11 @@ function loadMoreAlbum() {
 function onFilterChange() {
   if (filterDebounce) clearTimeout(filterDebounce)
   filterDebounce = setTimeout(() => void loadAlbum(true), 300)
+}
+
+function toggleOwnedOnly() {
+  ownedOnly.value = !ownedOnly.value
+  onFilterChange()
 }
 
 async function loadSetsTab() {
@@ -533,8 +551,73 @@ onMounted(async () => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.rarity-filter :deep(.el-radio-button__inner) {
+  border-color: rgba(212, 165, 116, 0.25) !important;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  box-shadow: none !important;
+}
+
+.rarity-filter :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background: rgba(212, 165, 116, 0.22) !important;
+  border-color: rgba(212, 165, 116, 0.55) !important;
+  color: var(--wc-gold) !important;
+}
+
+.owned-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+  min-height: 32px;
+}
+
+.owned-toggle:hover {
+  border-color: rgba(212, 165, 116, 0.4);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.owned-toggle.active {
+  border-color: rgba(212, 165, 116, 0.55);
+  background: rgba(212, 165, 116, 0.16);
+  color: var(--wc-gold);
+  box-shadow: 0 0 0 1px rgba(212, 165, 116, 0.15);
+}
+
+.owned-toggle-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  background: rgba(8, 10, 18, 0.55);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.owned-toggle.active .owned-toggle-box {
+  border-color: var(--wc-gold);
+  background: rgba(212, 165, 116, 0.35);
+}
+
+.owned-toggle-check {
+  width: 12px;
+  height: 12px;
+  color: #fff7e8;
 }
 .series-select {
   width: 110px;

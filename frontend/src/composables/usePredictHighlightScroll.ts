@@ -1,10 +1,9 @@
 import { nextTick, type Ref } from 'vue'
 
-/** Scroll predict hall virtual list so highlighted match card is visible. */
+/** Scroll predict hall so highlighted match card is visible (page-level scroll). */
 export function usePredictHighlightScroll(
   highlightId: Ref<number | null>,
-  scrollToIndex: Ref<number | null>,
-  listRootRef: Ref<{ scrollToItem?: (index: number) => void } | null>,
+  scrollToIndex?: Ref<number | null>,
 ) {
   async function scrollToHighlight() {
     const id = highlightId.value
@@ -12,20 +11,25 @@ export function usePredictHighlightScroll(
     await nextTick()
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
 
-    const idx = scrollToIndex.value
-    if (idx != null && idx >= 0) {
-      listRootRef.value?.scrollToItem?.(idx)
+    const card = document.querySelector(`[data-match-id="${id}"]`) as HTMLElement | null
+    if (!card) return
+
+    const scrollRoot =
+      (card.closest('.main-content') as HTMLElement | null) ??
+      (document.scrollingElement as HTMLElement | null)
+
+    if (scrollRoot && scrollRoot !== document.documentElement) {
+      const rootRect = scrollRoot.getBoundingClientRect()
+      const cardRect = card.getBoundingClientRect()
+      const targetTop =
+        scrollRoot.scrollTop + cardRect.top - rootRect.top - Math.max(0, (rootRect.height - cardRect.height) / 2)
+      scrollRoot.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
       return
     }
 
-    const card = document.querySelector(`[data-match-id="${id}"]`) as HTMLElement | null
-    if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      const root = card.closest('.virtual-list') as HTMLElement | null
-      if (root && card.offsetTop) {
-        root.scrollTop = Math.max(0, card.offsetTop - 80)
-      }
-    }
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+    void scrollToIndex?.value
   }
 
   return { scrollToHighlight }

@@ -15,7 +15,7 @@
       </header>
 
       <div v-if="authState.user" class="balance-grid">
-        <div class="balance-chip">
+        <div class="balance-chip" :class="{ 'coin-pulse': coinPulse }">
           <span class="chip-label">球迷币</span>
           <span class="chip-value gold">{{ authState.user.fan_coins }}</span>
           <button type="button" class="chip-action" @click="$router.push('/shop')">充值</button>
@@ -123,37 +123,19 @@
         </div>
       </div>
 
-      <VirtualList
-
-        v-else-if="activeMatches.length"
-
-        ref="virtualListRef"
-
-        class="predict-virtual-list"
-
-        :items="activeMatches"
-
-        :item-height="cardItemHeight"
-
-        :item-key="(m) => m.id"
-
-        :scroll-to-index="highlightScrollIndex"
-
-      >
-
-        <template #default="{ item: m }">
-
-          <div
-
-            class="match-card glass-panel"
-
-            :data-match-id="m.id"
-
-            :class="{ highlight: m.is_main_team || m.id === highlightId, predicted: m.user_predicted }"
-
-            @mouseenter="onCardFocus(m.id)"
-
-          >
+      <div v-else-if="activeMatches.length" class="match-cards-stack">
+        <div
+          v-for="m in activeMatches"
+          :key="m.id"
+          class="match-card glass-panel"
+          :data-match-id="m.id"
+          :class="{
+            highlight: m.is_main_team || m.id === highlightId,
+            predicted: m.user_predicted,
+            'raise-success-card': raiseSuccessId === m.id,
+          }"
+          @mouseenter="onCardFocus(m.id)"
+        >
 
             <div class="badges">
 
@@ -189,10 +171,20 @@
 
               <div class="predicted-stake">
                 <span v-if="m.user_is_free" class="stake-tag free">免费竞猜</span>
-                <span v-else class="stake-tag paid">已质押 {{ m.user_stake_coins ?? 0 }} 球迷币</span>
+                <span
+                  v-else
+                  class="stake-tag paid"
+                  :class="{ 'stake-flash': stakeFlashId === m.id }"
+                >
+                  已质押 {{ m.user_stake_coins ?? 0 }} 球迷币
+                </span>
               </div>
 
-              <div v-if="canRaiseStake(m)" class="raise-row">
+              <div
+                v-if="canRaiseStake(m)"
+                class="raise-row"
+                :class="{ 'raise-row-success': raiseSuccessId === m.id }"
+              >
                 <p class="raise-hint">可在截止前追加质押，提高猜中返币（总额上限 500 币）</p>
                 <div class="raise-controls">
                   <el-input-number
@@ -200,18 +192,20 @@
                     :min="10"
                     :max="raiseMax(m)"
                     size="small"
-                    style="width: 120px"
+                    class="raise-input"
                   />
                   <el-button
-                    type="primary"
+                    :type="raiseSuccessId === m.id ? 'success' : 'primary'"
                     size="small"
+                    class="raise-btn"
                     :loading="raisingId === m.id"
                     :disabled="!authState.user || raisingId === m.id"
                     @click="raiseStake(m.id)"
                   >
-                    追加质押
+                    {{ raiseSuccessId === m.id ? '追加成功 ✓' : '追加质押' }}
                   </el-button>
                 </div>
+                <p v-if="raiseSuccessText[m.id]" class="raise-success">{{ raiseSuccessText[m.id] }}</p>
                 <p v-if="raiseErrors[m.id]" class="submit-error">{{ raiseErrors[m.id] }}</p>
               </div>
 
@@ -360,10 +354,7 @@
             </div>
 
           </div>
-
-        </template>
-
-      </VirtualList>
+      </div>
 
       <details v-if="historyMatches.length" class="history-matches glass-panel">
         <summary>已结束 / 不可竞猜（{{ historyMatches.length }} 场）</summary>
@@ -431,8 +422,6 @@ import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
 import { usePredictHighlightScroll } from '../composables/usePredictHighlightScroll'
 import { isMatchPredictable } from '../utils/matchKickoff'
 import PassDailyClaimBar from '../components/PassDailyClaimBar.vue'
-import VirtualList from '../components/VirtualList.vue'
-import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
 import { openPredictShareSheet } from '../composables/usePredictShareSheet'
 import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
@@ -459,7 +448,6 @@ usePageMeta({
 
 const route = useRoute()
 const router = useRouter()
-const { isMobile } = useBreakpoint()
 const { openShareSheet, cachedMe, ensureMe } = useInviteShare()
 
 const passBenefitsLine = computed(() => passBenefitsSummary(dailyStatus.value?.pass_benefits ?? null))
@@ -560,10 +548,15 @@ const useFree = shallowReactive<Record<number, boolean>>({})
 
 const submitErrors = shallowReactive<Record<number, string>>({})
 const raiseErrors = shallowReactive<Record<number, string>>({})
+const raiseSuccessText = shallowReactive<Record<number, string>>({})
 const raiseAmounts = shallowReactive<Record<number, number>>({})
 
 const submittingId = ref<number | null>(null)
 const raisingId = ref<number | null>(null)
+const stakeFlashId = ref<number | null>(null)
+const raiseSuccessId = ref<number | null>(null)
+const coinPulse = ref(false)
+let raiseFeedbackTimer: ReturnType<typeof setTimeout> | null = null
 
 const dailyStatus = useDailyStatusRef()
 
@@ -582,13 +575,6 @@ const previewText = shallowReactive<Record<number, string>>({})
 const winFeed = ref<{ nickname: string; team1: string; team2: string; points_awarded: number }[]>([])
 const winFeedRecentCount = ref(0)
 const activePreviewId = ref<number | null>(null)
-
-/** 虚拟列表行高：移动端选项纵向堆叠需更高行 */
-const cardItemHeight = computed(() => (isMobile.value ? 460 : 288))
-
-const virtualListRef = ref<{ scrollToItem?: (index: number) => void } | null>(null)
-
-
 
 const highlightId = computed(
 
@@ -667,18 +653,13 @@ function isFirstOpenMatch(m: GameMatch) {
 
 
 const highlightScrollIndex = computed(() => {
-
   const id = highlightId.value
-
   if (!id) return null
-
   const idx = activeMatches.value.findIndex((m) => m.id === id)
-
   return idx >= 0 ? idx : null
-
 })
 
-const { scrollToHighlight } = usePredictHighlightScroll(highlightId, highlightScrollIndex, virtualListRef)
+const { scrollToHighlight } = usePredictHighlightScroll(highlightId, highlightScrollIndex)
 
 function onPredictScrollHighlight() {
   void scrollToHighlight()
@@ -763,8 +744,24 @@ function raiseMax(m: GameMatch): number {
   return Math.max(10, STAKE_MAX - current)
 }
 
+function showRaiseFeedback(matchId: number, amount: number, newTotal: number) {
+  if (raiseFeedbackTimer) clearTimeout(raiseFeedbackTimer)
+  stakeFlashId.value = matchId
+  raiseSuccessId.value = matchId
+  raiseSuccessText[matchId] = `+${amount} 球迷币 · 当前共 ${newTotal} 币`
+  coinPulse.value = true
+  raiseFeedbackTimer = setTimeout(() => {
+    stakeFlashId.value = null
+    raiseSuccessId.value = null
+    delete raiseSuccessText[matchId]
+    coinPulse.value = false
+    raiseFeedbackTimer = null
+  }, 3200)
+}
+
 async function raiseStake(matchId: number) {
   delete raiseErrors[matchId]
+  delete raiseSuccessText[matchId]
   const amount = raiseAmounts[matchId] ?? 10
   const m = matches.value.find((x) => x.id === matchId)
   if (!m || !canRaiseStake(m)) return
@@ -779,8 +776,15 @@ async function raiseStake(matchId: number) {
   raisingId.value = matchId
   try {
     await raisePredictionStake(matchId, amount)
+    const newTotal = (m.user_stake_coins ?? 0) + amount
+    m.user_stake_coins = newTotal
     await fetchMe()
-    ElMessage.success(`已追加质押 ${amount} 币，当前共 ${(m.user_stake_coins ?? 0) + amount} 币`)
+    showRaiseFeedback(matchId, amount, newTotal)
+    ElMessage.success({
+      message: `追加成功 · 已质押 ${newTotal} 球迷币`,
+      duration: 2800,
+      showClose: true,
+    })
     await load({ silent: true })
   } catch (e) {
     showApiError(e)
@@ -1024,6 +1028,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('predict-scroll-highlight', onPredictScrollHighlight)
+  if (raiseFeedbackTimer) clearTimeout(raiseFeedbackTimer)
 })
 
 watch(highlightId, () => {
@@ -1109,12 +1114,6 @@ watch(
   max-width: 920px;
 
   margin: 0 auto;
-
-  min-height: calc(100dvh - var(--wc-header-height) - 48px);
-
-  display: flex;
-
-  flex-direction: column;
 
   background: transparent;
 
@@ -1377,9 +1376,15 @@ watch(
   font-size: 0.95rem;
 }
 
-.predict-virtual-list :deep(.virtual-item) {
-  overflow: visible;
-  padding-bottom: 4px;
+.match-list {
+  position: relative;
+}
+
+.match-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  touch-action: pan-y;
 }
 
 .win-feed {
@@ -1404,16 +1409,6 @@ watch(
 @keyframes scroll-feed {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
-}
-
-.match-list {
-
-  flex: 1;
-
-  min-height: 0;
-
-  position: relative;
-
 }
 
 .match-skeletons {
@@ -1480,12 +1475,6 @@ watch(
 @keyframes skeleton-fade {
   from { opacity: 0.4; }
   to { opacity: 1; }
-}
-
-.predict-virtual-list {
-
-  height: 100%;
-
 }
 
 .match-card {
@@ -1605,6 +1594,28 @@ watch(
 .stake-tag.paid {
   color: var(--wc-accent-gold);
   background: rgba(212, 165, 116, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.stake-tag.stake-flash {
+  animation: stakePulse 0.65s ease 2;
+  background: rgba(103, 194, 58, 0.22);
+  color: #8fd48a;
+  box-shadow: 0 0 0 2px rgba(103, 194, 58, 0.35);
+}
+
+@keyframes stakePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.balance-chip.coin-pulse .chip-value.gold {
+  animation: coinPulse 0.55s ease 2;
+}
+
+@keyframes coinPulse {
+  0%, 100% { transform: scale(1); color: var(--wc-accent-gold); }
+  50% { transform: scale(1.12); color: #8fd48a; }
 }
 
 .won-tag { color: #8fd48a; }
@@ -1618,6 +1629,42 @@ watch(
   border-radius: 10px;
   border: 1px dashed rgba(212, 165, 116, 0.35);
   background: rgba(212, 165, 116, 0.06);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.raise-row-success {
+  border-color: rgba(103, 194, 58, 0.55);
+  background: rgba(103, 194, 58, 0.1);
+}
+
+.raise-success {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8fd48a;
+  background: rgba(103, 194, 58, 0.12);
+  animation: raiseFadeIn 0.35s ease;
+}
+
+@keyframes raiseFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.raise-input {
+  width: 120px;
+}
+
+.raise-btn {
+  min-width: 96px;
+  font-weight: 700;
+}
+
+.match-card.raise-success-card {
+  border-color: rgba(103, 194, 58, 0.4);
+  box-shadow: 0 0 18px rgba(103, 194, 58, 0.12);
 }
 
 .raise-hint {
@@ -1815,8 +1862,22 @@ watch(
     min-width: 0;
   }
 
+  .raise-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .raise-input {
+    width: 100% !important;
+  }
+
+  .raise-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
   .match-card {
-    min-height: 320px;
+    min-height: 0;
   }
 }
 
