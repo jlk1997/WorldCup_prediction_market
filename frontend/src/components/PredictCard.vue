@@ -102,14 +102,18 @@ async function submit() {
   errorMsg.value = ''
   loading.value = true
   try {
-    await submitPrediction({
+    const res = await submitPrediction({
       match_id: props.matchId,
       pick: pick.value,
       stake_coins: useFree.value ? 0 : stake.value,
       use_free: useFree.value,
     })
     await fetchMe()
-    ElMessage.success('竞猜已提交')
+    let msg = '竞猜已提交'
+    if (res.arena_battalion_bonus && res.arena_battalion_bonus > 0) {
+      msg += ` · 连击 +${res.arena_battalion_bonus} 军团贡献`
+    }
+    ElMessage.success(msg)
     userPredicted.value = true
     userPick.value = pick.value
     userStake.value = useFree.value ? 0 : stake.value

@@ -79,3 +79,12 @@ def test_client_ip_websocket_uses_forwarded_for(monkeypatch):
     ws.headers = {"x-forwarded-for": "203.0.113.10, 127.0.0.1", "x-real-ip": "203.0.113.10"}
     ws.client = MagicMock(host="127.0.0.1")
     assert client_ip_websocket(ws) == "203.0.113.10"
+
+
+def test_rate_limit_arena_spend_user():
+    from app.core.rate_limit import rate_limit_arena_spend
+
+    for _ in range(30):
+        rate_limit_arena_spend(99)
+    with pytest.raises(RateLimitError):
+        rate_limit_arena_spend(99)

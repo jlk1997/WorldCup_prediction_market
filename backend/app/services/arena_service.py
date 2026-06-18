@@ -48,6 +48,18 @@ BOOST_CHEER_EXTRA_BATTALION = 20
 MATCHDAY_RALLY_COST = 20
 MATCHDAY_RALLY_BATTALION = 30
 
+CHEER_POINTS_LOYAL = 10
+CHEER_POINTS_NEUTRAL = 5
+CHEER_BATTALION_LOYAL = 10
+CHEER_BATTALION_NEUTRAL = 5
+
+UNDERDOG_BATTALION_BONUS = 3
+PREDICT_CHEER_COMBO_BATTALION = 5
+SPOT_CHEER_COST = 1
+SPOT_CHEER_BATTALION = 2
+SPOT_CHEER_DAILY_LIMIT = 3
+SPOT_CHEER_SLOGANS = ["加油！", "冲啊！", "必胜！", "燃起来！", "我们相信你！"]
+
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
@@ -62,6 +74,31 @@ def _date_ref(d: date) -> int:
 
 def _player_date_ref(player_id: int, d: date) -> int:
     return player_id * 100000 + _date_ref(d)
+
+
+def _team_date_ref(team_id: int, d: date) -> int:
+    return team_id * 100000000 + _date_ref(d)
+
+
+def _spot_slot_ref(d: date, slot: int) -> int:
+    return _date_ref(d) * 100 + slot
+
+
+def cheer_affiliation(user: User | None, team_id: int | None) -> str:
+    if not user or not team_id:
+        return "neutral"
+    if team_id == user.favorite_team_id:
+        return "primary"
+    if team_id == user.secondary_team_id:
+        return "secondary"
+    return "neutral"
+
+
+def cheer_rewards_for_affiliation(affiliation: str) -> tuple[int, int]:
+    """Return (cheer_points, battalion_delta)."""
+    if affiliation in ("primary", "secondary"):
+        return CHEER_POINTS_LOYAL, CHEER_BATTALION_LOYAL
+    return CHEER_POINTS_NEUTRAL, CHEER_BATTALION_NEUTRAL
 
 
 class ArenaService:
@@ -112,7 +149,11 @@ class ArenaService:
             ref_id=ref_id,
         )
         self.db.add(log)
-        self.db.flush()
+        try:
+            with self.db.begin_nested():
+                self.db.flush()
+        except IntegrityError:
+            return False
 
         if battalion_delta:
             user.battalion_points_season = (user.battalion_points_season or 0) + battalion_delta
@@ -152,9 +193,13 @@ class ArenaService:
         return {"battalion_added": battalion if recorded else 0, "star_heat_added": star_bonus}
 
     def on_cheer(self, user: User, match_id: int, team_id: int) -> dict:
+        affiliation = cheer_affiliation(user, team_id)
+        cheer_pts, battalion = cheer_rewards_for_affiliation(affiliation)
+        underdog = self._underdog_battalion_bonus(match_id, team_id)
+        battalion += underdog
         star_player_id = None
         star_heat = 0
-        if team_id in {user.favorite_team_id, user.secondary_team_id}:
+        if affiliation in ("primary", "secondary"):
             star_heat = 10
             for fp in self._fav_players(user.id):
                 player = self.db.get(PlayerDetailed, fp.player_id)
@@ -166,15 +211,75 @@ class ArenaService:
             "cheer",
             team_id=team_id,
             player_id=star_player_id,
-            battalion_delta=10,
+            battalion_delta=battalion,
             star_heat_delta=star_heat,
             ref_type="match",
             ref_id=match_id,
         )
         return {
-            "battalion_added": 10 if recorded else 0,
+            "battalion_added": battalion if recorded else 0,
             "star_heat_added": star_heat if recorded else 0,
+            "cheer_points": cheer_pts,
+            "affiliation": affiliation,
+            "underdog_bonus": underdog if recorded else 0,
         }
+
+    def try_predict_cheer_combo(self, user: User, match_id: int) -> dict:
+        pred = (
+            self.db.query(GamePrediction)
+            .filter(GamePrediction.user_id == user.id, GamePrediction.match_id == match_id)
+            .first()
+        )
+        cheer = (
+            self.db.query(UserCheer)
+            .filter(UserCheer.user_id == user.id, UserCheer.match_id == match_id)
+            .first()
+        )
+        if not pred or not cheer:
+            return {"battalion_added": 0, "combo_unlocked": False}
+        recorded = self.record_activity(
+            user,
+            "predict_cheer_combo",
+            team_id=cheer.team_id,
+            battalion_delta=PREDICT_CHEER_COMBO_BATTALION,
+            ref_type="match",
+            ref_id=match_id,
+        )
+        return {
+            "battalion_added": PREDICT_CHEER_COMBO_BATTALION if recorded else 0,
+            "combo_unlocked": bool(recorded),
+        }
+
+    def _underdog_battalion_bonus(self, match_id: int, team_id: int) -> int:
+        arena = self.get_match_arena(match_id, None, use_cache=False)
+        home = arena["home"]
+        away = arena["away"]
+        if not home.get("team_id") or not away.get("team_id"):
+            return 0
+        hp, ap = int(home["power"] or 0), int(away["power"] or 0)
+        if team_id == home["team_id"] and hp < ap:
+            return UNDERDOG_BATTALION_BONUS
+        if team_id == away["team_id"] and ap < hp:
+            return UNDERDOG_BATTALION_BONUS
+        return 0
+
+    def underdog_bonus_for_team(self, match_id: int, team_id: int | None) -> int:
+        if not team_id:
+            return 0
+        return self._underdog_battalion_bonus(match_id, team_id)
+
+    def _combo_already_done(self, user_id: int, match_id: int) -> bool:
+        return (
+            self.db.query(FanActivityLog.id)
+            .filter(
+                FanActivityLog.user_id == user_id,
+                FanActivityLog.activity_type == "predict_cheer_combo",
+                FanActivityLog.ref_type == "match",
+                FanActivityLog.ref_id == match_id,
+            )
+            .first()
+            is not None
+        )
 
     def on_quiz_correct(self, user: User, today: date) -> dict:
         recorded = self.record_activity(
@@ -237,11 +342,32 @@ class ArenaService:
                 next_arena = self.get_match_arena(nxt.id, user.id)
         star_summary = self.get_star_heat_board(user, scope="my", limit=3)
         goal = self.get_matchday_goal(user)
+        goal_secondary = (
+            self.get_matchday_goal(user, user.secondary_team_id)
+            if user.secondary_team_id and user.secondary_team_id != user.favorite_team_id
+            else {"active": False, "progress": 0, "goals": MATCHDAY_GOALS, "tier_reached": 0}
+        )
+        spot = self.get_spot_cheer_status(user)
+        today_rows = self.get_today_matches(user)
+        cheerable = sum(1 for m in today_rows if m.get("can_cheer") and not m.get("user_cheered"))
+        combo_ops = sum(
+            1
+            for m in today_rows
+            if m.get("predict_combo_pending") or m.get("predict_combo_after_cheer")
+        )
         out = {
             "standing": standing,
             "next_match_arena": next_arena,
             "my_stars": star_summary.get("rows", [])[:3],
             "matchday_goal": goal,
+            "matchday_goal_secondary": goal_secondary,
+            "spot_cheer": spot,
+            "quick_stats": {
+                "today_matches": len(today_rows),
+                "today_cheerable": cheerable,
+                "spot_remaining": spot.get("remaining", 0),
+                "combo_opportunities": combo_ops,
+            },
         }
         cache_set(cache_key, out, self.CACHE_TTL)
         return out
@@ -307,9 +433,135 @@ class ArenaService:
         cache_set(cache_key, out, self.CACHE_TTL)
         return out
 
-    def get_match_arena(self, match_id: int, user_id: int | None = None) -> dict:
-        cache_key = f"arena:match:{match_id}"
+    def get_team_supporter_leaderboard(
+        self, team_id: int | None, period: str = "season", limit: int = 30
+    ) -> list[dict]:
+        """Rank users by battalion contributed *to* a team (not by favorite_team_id)."""
+        if not team_id:
+            return []
+        cache_key = f"arena:supporter_rank:{team_id}:{period}:{limit}"
         cached = cache_get(cache_key)
+        if cached:
+            return cached
+        sub_q = self.db.query(
+            FanActivityLog.user_id,
+            func.sum(FanActivityLog.battalion_delta).label("pts"),
+        ).filter(
+            FanActivityLog.team_id == team_id,
+            FanActivityLog.battalion_delta > 0,
+        )
+        if period == "daily":
+            cutoff = datetime.combine(_utcnow().date(), datetime.min.time())
+            sub_q = sub_q.filter(FanActivityLog.created_at >= cutoff)
+        elif period == "weekly":
+            cutoff = _utcnow() - timedelta(days=7)
+            sub_q = sub_q.filter(FanActivityLog.created_at >= cutoff)
+        sub = sub_q.group_by(FanActivityLog.user_id).subquery()
+        rows = (
+            self.db.query(User, sub.c.pts)
+            .join(sub, User.id == sub.c.user_id)
+            .filter(User.status == "active")
+            .order_by(desc(sub.c.pts))
+            .limit(limit)
+            .all()
+        )
+        out = [
+            {
+                "user_id": u.id,
+                "nickname": u.nickname,
+                "battalion_points": int(pts or 0),
+                "favorite_team_id": u.favorite_team_id,
+                "arena_tier": u.arena_tier,
+                "tier_label": TIER_LABELS.get(u.arena_tier, u.arena_tier),
+            }
+            for u, pts in rows
+        ]
+        cache_set(cache_key, out, self.CACHE_TTL)
+        return out
+
+    def get_spot_cheer_status(self, user: User) -> dict:
+        today = _utcnow().date()
+        used = self._count_spot_cheers_today(user.id, today)
+        teams = self._teams_playing_on(today)
+        return {
+            "daily_limit": SPOT_CHEER_DAILY_LIMIT,
+            "used_today": used,
+            "remaining": max(0, SPOT_CHEER_DAILY_LIMIT - used),
+            "cost": SPOT_CHEER_COST,
+            "battalion_per_cheer": SPOT_CHEER_BATTALION,
+            "slogans": SPOT_CHEER_SLOGANS,
+            "teams_today": teams,
+        }
+
+    def spot_cheer(self, user: User, team_id: int, slogan_index: int = 0) -> dict:
+        from app.services.profile_service import ProfileService
+
+        ProfileService(self.db).require_profile(user)
+        today = _utcnow().date()
+        if not RecommendationService(self.db).is_match_day_for_team(team_id, today):
+            raise BadRequestError("所选球队今日无比赛")
+        used = self._count_spot_cheers_today(user.id, today)
+        if used >= SPOT_CHEER_DAILY_LIMIT:
+            raise BadRequestError("今日临场口号次数已用完")
+        if slogan_index < 0 or slogan_index >= len(SPOT_CHEER_SLOGANS):
+            raise BadRequestError("无效口号")
+        locked = self.db.query(User).filter(User.id == user.id).with_for_update().first()
+        if not locked:
+            raise NotFoundError("用户不存在")
+        user = locked
+        used = self._count_spot_cheers_today(user.id, today)
+        if used >= SPOT_CHEER_DAILY_LIMIT:
+            raise BadRequestError("今日临场口号次数已用完")
+        ref_id = _spot_slot_ref(today, used)
+        self.wallet.deduct_coins(user, SPOT_CHEER_COST, "arena_spot_cheer", "team", team_id)
+        ok = self.record_activity(
+            user,
+            "spot_cheer",
+            team_id=team_id,
+            battalion_delta=SPOT_CHEER_BATTALION,
+            coins_spent=SPOT_CHEER_COST,
+            ref_type="spot_slot",
+            ref_id=ref_id,
+        )
+        if not ok:
+            raise BadRequestError("今日临场口号次数已用完")
+        self.db.commit()
+        status = self.get_spot_cheer_status(user)
+        return {
+            "fan_coins": user.fan_coins,
+            "battalion_added": SPOT_CHEER_BATTALION,
+            "slogan": SPOT_CHEER_SLOGANS[slogan_index],
+            "spot_cheer": status,
+        }
+
+    def _count_spot_cheers_today(self, user_id: int, today: date) -> int:
+        day_base = _date_ref(today) * 100
+        return (
+            self.db.query(FanActivityLog.id)
+            .filter(
+                FanActivityLog.user_id == user_id,
+                FanActivityLog.activity_type == "spot_cheer",
+                FanActivityLog.ref_type == "spot_slot",
+                FanActivityLog.ref_id >= day_base,
+                FanActivityLog.ref_id < day_base + 100,
+            )
+            .count()
+        )
+
+    def _teams_playing_on(self, today: date) -> list[dict]:
+        today_str = today.isoformat()
+        matches = self.db.query(Match).filter(Match.match_date == today_str).all()
+        seen: dict[int, str] = {}
+        for m in matches:
+            for name in (m.team1_name, m.team2_name):
+                tid = self._team_id_by_name(name)
+                if tid and tid not in seen:
+                    seen[tid] = name
+        return [{"team_id": tid, "team_name": name} for tid, name in sorted(seen.items(), key=lambda x: x[1])]
+
+    def get_match_arena(self, match_id: int, user_id: int | None = None, *, use_cache: bool = True) -> dict:
+        cache_key = f"arena:match:{match_id}"
+        cached = cache_get(cache_key) if use_cache else None
         match = self.db.get(Match, match_id)
         if not match:
             raise NotFoundError("比赛不存在")
@@ -352,7 +604,7 @@ class ArenaService:
             "user_contributed": user_contributed,
             "frozen": snap is not None,
         }
-        if not snap:
+        if not snap and use_cache:
             cache_set(cache_key, out, self.CACHE_TTL)
         return out
 
@@ -519,14 +771,21 @@ class ArenaService:
         cache_set(cache_key, ranked, self.CACHE_TTL)
         return ranked
 
-    def get_matchday_goal(self, user: User) -> dict:
+    def get_matchday_goal(self, user: User, team_id: int | None = None) -> dict:
         today = _utcnow().date()
-        team_id = user.favorite_team_id
-        if not team_id or not RecommendationService(self.db).is_match_day_for_user(user, today):
-            return {"active": False, "progress": 0, "goals": MATCHDAY_GOALS, "tier_reached": 0}
+        tid = team_id or user.favorite_team_id
+        if team_id is not None and team_id not in {user.favorite_team_id, user.secondary_team_id}:
+            raise BadRequestError("只能查看主/副队的比赛日目标")
+        inactive = {"active": False, "progress": 0, "goals": MATCHDAY_GOALS, "tier_reached": 0}
+        if not tid:
+            return inactive
+        rec = RecommendationService(self.db)
+        if not rec.is_match_day_for_team(tid, today):
+            return {**inactive, "team_id": tid}
+        team = self.db.get(Team, tid)
         row = (
             self.db.query(TeamPowerDaily)
-            .filter(TeamPowerDaily.team_id == team_id, TeamPowerDaily.stat_date == today)
+            .filter(TeamPowerDaily.team_id == tid, TeamPowerDaily.stat_date == today)
             .first()
         )
         progress = row.power_total if row else 0
@@ -537,19 +796,33 @@ class ArenaService:
             for b in self.db.query(UserBadge)
             .filter(
                 UserBadge.user_id == user.id,
-                UserBadge.badge_code.like(f"matchday_rally_{team_id}_{day_ref}_%"),
+                UserBadge.badge_code.like(f"matchday_rally_{tid}_{day_ref}_%"),
             )
             .all()
         ]
+        rally_ref = _team_date_ref(tid, today)
+        rally_done = (
+            self.db.query(FanActivityLog.id)
+            .filter(
+                FanActivityLog.user_id == user.id,
+                FanActivityLog.activity_type == "matchday_rally",
+                FanActivityLog.ref_type == "team_date",
+                FanActivityLog.ref_id == rally_ref,
+            )
+            .first()
+            is not None
+        )
         return {
             "active": True,
-            "team_id": team_id,
+            "team_id": tid,
+            "team_name": team.name if team else None,
             "progress": progress,
             "goals": MATCHDAY_GOALS,
             "goal_titles": MATCHDAY_TIER_TITLES,
             "tier_reached": tier,
             "rewards_coins": MATCHDAY_REWARDS[:tier],
             "my_titles": my_rewards,
+            "rally_done_today": rally_done,
         }
 
     def get_my_standing(self, user: User) -> dict:
@@ -621,6 +894,7 @@ class ArenaService:
         if not self._can_boost_star(user.id, player_id):
             raise BadRequestError("该球星今日已应援过")
         today = _utcnow().date()
+        self.wallet.deduct_coins(user, BOOST_STAR_COST, "arena_boost_star", "player", player_id)
         ok = self.record_activity(
             user,
             "boost_star",
@@ -634,11 +908,24 @@ class ArenaService:
         )
         if not ok:
             raise BadRequestError("今日已应援过该球星")
-        self.wallet.deduct_coins(user, BOOST_STAR_COST, "arena_boost_star", "player", player_id)
         self.db.commit()
         return {"fan_coins": user.fan_coins, "star_heat_added": BOOST_STAR_HEAT, "battalion_added": BOOST_STAR_BATTALION}
 
     def boost_cheer_extra(self, user: User, match_id: int) -> dict:
+        match = self.db.get(Match, match_id)
+        if not match:
+            raise NotFoundError("比赛不存在")
+        kick = parse_kickoff(match)
+        now = _utcnow()
+        if not kick:
+            raise BadRequestError("该比赛缺少开球时间，暂不可助威加码")
+        from app.core.config import get_settings
+
+        close_minutes = get_settings().predict_close_minutes_before
+        if kick - timedelta(minutes=close_minutes) <= now:
+            raise BadRequestError("该比赛已停止助威加码")
+        if match.status not in (None, "scheduled"):
+            raise BadRequestError("比赛已开始或结束")
         locked = self.db.query(User).filter(User.id == user.id).with_for_update().first()
         if not locked:
             raise NotFoundError("用户不存在")
@@ -673,13 +960,18 @@ class ArenaService:
         self.db.commit()
         return {"fan_coins": user.fan_coins, "battalion_added": BOOST_CHEER_EXTRA_BATTALION}
 
-    def matchday_rally(self, user: User) -> dict:
+    def matchday_rally(self, user: User, team_id: int | None = None) -> dict:
         today = _utcnow().date()
-        if not user.favorite_team_id:
+        tid = team_id or user.favorite_team_id
+        if not tid:
             raise BadRequestError("请先设置主队")
-        if not RecommendationService(self.db).is_match_day_for_user(user, today):
-            raise BadRequestError("今日非主队比赛日")
-        ref_id = _date_ref(today)
+        allowed = {user.favorite_team_id, user.secondary_team_id}
+        if tid not in allowed:
+            raise BadRequestError("只能为主队或副队动员")
+        rec = RecommendationService(self.db)
+        if not rec.is_match_day_for_team(tid, today):
+            raise BadRequestError("所选球队今日无比赛")
+        ref_id = _team_date_ref(tid, today)
         locked = self.db.query(User).filter(User.id == user.id).with_for_update().first()
         if not locked:
             raise NotFoundError("用户不存在")
@@ -689,21 +981,21 @@ class ArenaService:
             .filter(
                 FanActivityLog.user_id == user.id,
                 FanActivityLog.activity_type == "matchday_rally",
-                FanActivityLog.ref_type == "date",
+                FanActivityLog.ref_type == "team_date",
                 FanActivityLog.ref_id == ref_id,
             )
             .first()
         )
         if exists:
-            raise BadRequestError("今日已动员过")
-        self.wallet.deduct_coins(user, MATCHDAY_RALLY_COST, "arena_matchday_rally", "team", user.favorite_team_id)
+            raise BadRequestError("该队今日已动员过")
+        self.wallet.deduct_coins(user, MATCHDAY_RALLY_COST, "arena_matchday_rally", "team", tid)
         ok = self.record_activity(
             user,
             "matchday_rally",
-            team_id=user.favorite_team_id,
+            team_id=tid,
             battalion_delta=MATCHDAY_RALLY_BATTALION,
             coins_spent=MATCHDAY_RALLY_COST,
-            ref_type="date",
+            ref_type="team_date",
             ref_id=ref_id,
         )
         if not ok:
@@ -712,15 +1004,57 @@ class ArenaService:
         try:
             from app.services.collectible_service import CollectibleService
 
-            collectible_drop = CollectibleService(self.db).matchday_drop(user, user.favorite_team_id)
+            collectible_drop = CollectibleService(self.db).matchday_drop(user, tid)
         except Exception:
             logger.exception("Collectible matchday drop failed user=%s", user.id)
         self.db.commit()
         return {
             "fan_coins": user.fan_coins,
             "battalion_added": MATCHDAY_RALLY_BATTALION,
+            "team_id": tid,
             "collectible_drop": collectible_drop,
         }
+
+    def get_today_matches(self, user: User) -> list[dict]:
+        from app.services.game_service import GameService
+
+        today_str = _utcnow().date().isoformat()
+        matches = (
+            self.db.query(Match)
+            .filter(Match.match_date == today_str, or_(Match.status.is_(None), Match.status == "scheduled"))
+            .order_by(Match.match_time)
+            .all()
+        )
+        gs = GameService(self.db)
+        out: list[dict] = []
+        for m in matches:
+            status = gs.get_cheer_status(m.id, user.id)
+            t1_id = status["team1"]["id"]
+            t2_id = status["team2"]["id"]
+            out.append(
+                {
+                    "match_id": m.id,
+                    "match_date": m.match_date,
+                    "match_time": m.match_time,
+                    "team1_name": m.team1_name,
+                    "team2_name": m.team2_name,
+                    "team1_id": t1_id,
+                    "team2_id": t2_id,
+                    "team1_affiliation": cheer_affiliation(user, t1_id),
+                    "team2_affiliation": cheer_affiliation(user, t2_id),
+                    "team1_underdog_bonus": status["team1"].get("underdog_bonus", 0),
+                    "team2_underdog_bonus": status["team2"].get("underdog_bonus", 0),
+                    "can_cheer": status["can_cheer"],
+                    "user_cheered": status["user_cheered"],
+                    "user_cheer_team_id": status.get("user_cheer_team_id"),
+                    "has_prediction": status.get("has_prediction", False),
+                    "predict_combo_pending": status.get("predict_combo_pending", False),
+                    "predict_combo_after_cheer": status.get("predict_combo_after_cheer", False),
+                    "cheer_block_reason": status.get("cheer_block_reason"),
+                    "arena": status["arena"],
+                }
+            )
+        return out
 
     def recalc_arena_tiers(self, team_id: int | None = None) -> int:
         q = self.db.query(User).filter(User.status == "active", User.favorite_team_id.isnot(None))

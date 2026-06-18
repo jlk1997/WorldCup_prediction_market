@@ -25,6 +25,12 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 }
 
 import { initAuth } from './stores/authStore'
+import './stores/profileStore'
+import './stores/dailyStatusStore'
+import './composables/useInviteShare'
+import './stores/headerNotificationsStore'
+import './stores/collectibleRevealStore'
+import './stores/agentAnalyzeStore'
 import { warmLegendBackdropImages } from './utils/legendsImageCache'
 import { initAnalytics, trackEvent } from './utils/analytics'
 

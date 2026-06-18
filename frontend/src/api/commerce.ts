@@ -17,6 +17,9 @@ export interface GameMatch {
   is_sub_team?: boolean
   has_star_player?: boolean
   user_predicted?: boolean
+  user_cheered?: boolean
+  predict_combo_pending?: boolean
+  predict_combo_after_cheer?: boolean
   user_pick?: string | null
   user_prediction_status?: string | null
   user_stake_coins?: number | null
@@ -157,7 +160,10 @@ export async function submitPrediction(payload: {
   stake_coins?: number
   use_free?: boolean
 }) {
-  const { data } = await apiClient.post<GamePrediction>('/api/game/predict', payload)
+  const { data } = await apiClient.post<{ prediction: GamePrediction; arena_battalion_bonus?: number }>(
+    '/api/game/predict',
+    payload,
+  )
   return data
 }
 

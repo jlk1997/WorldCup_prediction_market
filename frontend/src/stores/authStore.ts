@@ -1,6 +1,7 @@
 import { computed, reactive } from 'vue'
 import { apiClient } from '../api/client'
 import type { ReferralLoginInfo } from '../api/referral'
+import { runLogoutCleanups } from './logoutRegistry'
 
 export interface AuthUser {
   id: number
@@ -92,9 +93,7 @@ export function logout() {
   } catch {
     /* ignore */
   }
-  import('./profileStore').then((m) => m.clearProfileCache())
-  import('../composables/useInviteShare').then((m) => m.resetInviteShareState())
-  import('./dailyStatusStore').then((m) => m.clearDailyStatus())
+  runLogoutCleanups()
 }
 
 export function patchUserFields(fields: Partial<AuthUser>) {

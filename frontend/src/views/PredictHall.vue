@@ -119,6 +119,18 @@
     </details>
 
     <section class="match-list" id="predict-matches">
+      <div
+        v-if="comboOpportunityCount > 0"
+        class="combo-banner glass-panel"
+        role="button"
+        tabindex="0"
+        @click="scrollToFirstCombo"
+        @keydown.enter="scrollToFirstCombo"
+      >
+        ⚡ {{ comboOpportunityCount }} 场可解锁「竞猜+助威连击」· 额外 +5 军团贡献
+        <span class="combo-banner-link">去完成 →</span>
+      </div>
+
       <div class="match-list-head">
         <h2 class="match-list-title">可竞猜比赛</h2>
         <span v-if="activeMatches.length" class="match-list-count">{{ activeMatches.length }} 场</span>
@@ -348,12 +360,32 @@
             <div class="cheer-row">
 
               <button
-                v-if="m.can_cheer && authState.user?.profile_completed"
+                v-if="m.can_cheer && authState.user?.profile_completed && !m.user_cheered"
                 type="button"
                 class="cheer-link"
+                :class="{ combo: m.predict_combo_pending }"
                 @click="$router.push(`/cheer/${m.id}`)"
               >
                 📣 去助威
+                <span v-if="m.predict_combo_pending" class="cheer-badge">连击+5</span>
+              </button>
+
+              <button
+                v-else-if="m.user_cheered && m.predict_combo_after_cheer && m.can_predict"
+                type="button"
+                class="cheer-link combo"
+                @click="focusMatchPredict(m.id)"
+              >
+                ✅ 已助威 · 去竞猜连击
+              </button>
+
+              <button
+                v-else-if="m.user_cheered"
+                type="button"
+                class="cheer-link done"
+                disabled
+              >
+                已助威
               </button>
 
               <button
@@ -409,7 +441,7 @@
 
 <script setup lang="ts">
 
-import { computed, onMounted, onUnmounted, ref, shallowReactive, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, shallowReactive, watch } from 'vue'
 
 import { useRoute, useRouter } from 'vue-router'
 
@@ -666,6 +698,26 @@ const activeMatches = computed(() =>
   }),
 )
 
+const comboOpportunityCount = computed(
+  () =>
+    activeMatches.value.filter(
+      (m) => m.predict_combo_pending || m.predict_combo_after_cheer,
+    ).length,
+)
+
+const firstComboMatchId = computed(() => {
+  const m = activeMatches.value.find(
+    (x) => x.predict_combo_pending || x.predict_combo_after_cheer,
+  )
+  return m?.id ?? null
+})
+
+function scrollToFirstCombo() {
+  const id = firstComboMatchId.value
+  if (!id) return
+  focusMatchPredict(id)
+}
+
 const historyMatches = computed(() =>
   sortedMatches.value.filter((m) => !activeMatches.value.some((a) => a.id === m.id)),
 )
@@ -688,6 +740,11 @@ const { scrollToHighlight } = usePredictHighlightScroll(highlightId, highlightSc
 
 function onPredictScrollHighlight() {
   void scrollToHighlight()
+}
+
+function focusMatchPredict(matchId: number) {
+  router.replace({ path: '/predict', query: { ...route.query, highlight: String(matchId) } })
+  nextTick(() => scrollToHighlight())
 }
 
 const freeRemaining = computed(() => dailyStatus.value?.free_predict.remaining ?? 0)
@@ -973,7 +1030,7 @@ async function submit(matchId: number) {
   const submittedPick = picks[matchId]
   const matchRow = matches.value.find((x) => x.id === matchId)
   try {
-    await submitPrediction({
+    const res = await submitPrediction({
       match_id: matchId,
       pick: submittedPick,
       stake_coins: free ? 0 : stakes[matchId],
@@ -985,7 +1042,10 @@ async function submit(matchId: number) {
       use_free: free,
       has_profile: !!authState.user?.profile_completed,
     })
-    const msg = free ? '免费竞猜已提交，猜中得积分！' : `已质押 ${stakes[matchId]} 币，祝你好运！`
+    let msg = free ? '免费竞猜已提交，猜中得积分！' : `已质押 ${stakes[matchId]} 币，祝你好运！`
+    if (res.arena_battalion_bonus && res.arena_battalion_bonus > 0) {
+      msg += ` · 竞猜+助威连击 +${res.arena_battalion_bonus} 军团贡献`
+    }
     ElMessage.success(msg)
     if (matchRow && submittedPick) {
       openPredictShareForMatch(matchRow, submittedPick)
@@ -1446,6 +1506,32 @@ watch(
   font-size: 12px;
 }
 
+.combo-banner {
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid rgba(103, 194, 58, 0.35);
+  background: rgba(103, 194, 58, 0.08);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.combo-banner:hover {
+  background: rgba(103, 194, 58, 0.12);
+  border-color: rgba(103, 194, 58, 0.5);
+}
+
+.combo-banner-link {
+  margin-left: auto;
+  color: #b7eb8f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .empty-hint {
   font-size: 13px;
   color: var(--wc-text-muted, #9a94a8);
@@ -1821,9 +1907,30 @@ watch(
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.cheer-link:hover {
+.cheer-link.combo {
+  color: #b7eb8f;
+}
+
+.cheer-link.done {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.cheer-badge {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(103, 194, 58, 0.15);
+  border: 1px solid rgba(103, 194, 58, 0.35);
+  color: #b7eb8f;
+}
+
+.cheer-link:hover:not(.done) {
   text-decoration: underline;
 }
 

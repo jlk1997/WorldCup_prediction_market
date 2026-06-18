@@ -36,7 +36,12 @@ BOARD_RULES = {
     "battalion": {
         "daily": "今日军团贡献",
         "weekly": "本周军团贡献",
-        "season": "赛季军团贡献总榜",
+        "season": "赛季军团贡献总榜（按主队队内排名）",
+    },
+    "supporter": {
+        "daily": "今日对该球队的应援贡献",
+        "weekly": "本周对该球队的应援贡献",
+        "season": "赛季对该球队的累计应援贡献（含中立球迷）",
     },
     "predict_accuracy": {
         "season": "至少 5 场已结算竞猜，按猜中率排序",

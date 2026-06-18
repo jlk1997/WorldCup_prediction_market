@@ -98,6 +98,11 @@ class GamePredictionOut(BaseModel):
     created_at: datetime | None = None
 
 
+class PredictSubmitResponse(BaseModel):
+    prediction: GamePredictionOut
+    arena_battalion_bonus: int = 0
+
+
 class GameMatchCardOut(BaseModel):
     id: int
     group: str | None = None

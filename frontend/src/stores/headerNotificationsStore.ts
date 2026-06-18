@@ -8,6 +8,7 @@ import {
 } from '@/api/notifications'
 import { enrichNotificationPayload } from '@/utils/predictRevealPayload'
 import { isLoggedIn } from '@/stores/authStore'
+import { registerLogoutCleanup } from '@/stores/logoutRegistry'
 import { predictRevealConfig } from '@/stores/predictRevealConfigStore'
 import { notifyIfHidden } from '@/composables/useBrowserNotify'
 
@@ -239,6 +240,23 @@ export function goPredictReveal(delta: number) {
   predictReveal.index = next
 }
 
+export function resetHeaderNotifications() {
+  referralNotify.unread = 0
+  referralNotify.latest = null
+  predictNotify.unread = 0
+  predictNotify.latest = null
+  collectibleNotify.unread = 0
+  collectibleNotify.latest = null
+  predictReveal.visible = false
+  predictReveal.queue = []
+  predictReveal.index = 0
+  shownPredictIds.clear()
+  if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
+}
+
 /** Called from WebSocket when predict_settled arrives. */
 export function handlePredictSettledPush(payload: Record<string, unknown>) {
   const status = String(payload.status || '')
@@ -256,3 +274,5 @@ export function handlePredictSettledPush(payload: Record<string, unknown>) {
   predictNotify.latest = synthetic
   mergePredictQueue([synthetic])
 }
+
+registerLogoutCleanup(resetHeaderNotifications)

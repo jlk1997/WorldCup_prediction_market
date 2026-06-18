@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { getDailyStatus, type DailyStatus } from '@/api/commerce'
 import { authState } from '@/stores/authStore'
+import { registerLogoutCleanup } from '@/stores/logoutRegistry'
 
 const dailyStatus = ref<DailyStatus | null>(null)
 let lastFetchAt = 0
@@ -54,6 +55,8 @@ export function clearDailyStatus() {
   lastFetchAt = 0
   inflight = null
 }
+
+registerLogoutCleanup(clearDailyStatus)
 
 export function setDailyStatus(data: DailyStatus | null) {
   dailyStatus.value = data

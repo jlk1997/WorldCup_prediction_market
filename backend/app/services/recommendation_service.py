@@ -172,10 +172,8 @@ class RecommendationService:
                 )
         return out
 
-    def is_match_day_for_user(self, user: User, today) -> bool:
-        if not user.favorite_team_id:
-            return False
-        team = self.db.get(Team, user.favorite_team_id)
+    def is_match_day_for_team(self, team_id: int, today) -> bool:
+        team = self.db.get(Team, team_id)
         if not team:
             return False
         today_str = today.isoformat() if hasattr(today, "isoformat") else str(today)
@@ -188,3 +186,8 @@ class RecommendationService:
             .first()
         )
         return row is not None
+
+    def is_match_day_for_user(self, user: User, today) -> bool:
+        if not user.favorite_team_id:
+            return False
+        return self.is_match_day_for_team(user.favorite_team_id, today)

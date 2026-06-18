@@ -3,6 +3,8 @@
  * Uses localStorage + heartbeat so stale locks expire after ~2 min without updates.
  */
 
+import { registerLogoutCleanup } from './logoutRegistry'
+
 const LOCK_KEY = 'wc_ai_analyze_lock'
 const LOCK_TTL_MS = 120_000
 const HEARTBEAT_MS = 5_000
@@ -63,3 +65,5 @@ export function releaseAnalyzeLock() {
     localStorage.removeItem(LOCK_KEY)
   }
 }
+
+registerLogoutCleanup(releaseAnalyzeLock)

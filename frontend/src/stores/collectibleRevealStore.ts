@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import type { CollectibleDropResult } from '@/api/collectible'
+import { registerLogoutCleanup } from '@/stores/logoutRegistry'
 
 export const collectibleRevealState = reactive({
   visible: false,
@@ -32,3 +33,9 @@ export function closeCollectibleReveal() {
   collectibleRevealState.drop = null
   collectibleRevealState.subtitle = ''
 }
+
+export function resetCollectibleReveal() {
+  closeCollectibleReveal()
+}
+
+registerLogoutCleanup(resetCollectibleReveal)

@@ -82,6 +82,7 @@
         <el-radio-button value="redeem_points">可用积分榜</el-radio-button>
         <el-radio-button value="predict_accuracy">竞猜准度</el-radio-button>
         <el-radio-button value="battalion">军团榜</el-radio-button>
+        <el-radio-button value="supporter">应援榜</el-radio-button>
         <el-radio-button value="star_heat">球星热力</el-radio-button>
         <el-radio-button value="star_accuracy">球星准度</el-radio-button>
         <el-radio-button value="contribution">主队贡献</el-radio-button>
@@ -90,7 +91,7 @@
         </el-radio-group>
       </div>
 
-      <div v-if="board === 'points' || board === 'redeem_points' || board === 'battalion'" class="board-tabs mobile-segment">
+      <div v-if="board === 'points' || board === 'redeem_points' || board === 'battalion' || board === 'supporter'" class="board-tabs mobile-segment">
         <el-radio-group
           v-model="period"
           @change="load"
@@ -115,6 +116,12 @@
         <el-button plain @click="$router.push('/invite')">召友中心</el-button>
       </div>
 
+      <div v-if="board === 'supporter'" class="supporter-team-pick">
+        <el-select v-model="supporterTeamId" size="small" placeholder="选择球队" @change="load">
+          <el-option v-for="t in teamOptions" :key="t.id" :label="t.name" :value="t.id" />
+        </el-select>
+      </div>
+
       <el-alert v-if="boardDescription" :title="boardDescription" type="info" show-icon :closable="false" class="rule-hint" />
     </div>
 
@@ -122,7 +129,7 @@
       <div class="board glass-panel" v-loading="loading">
         <h2>{{ boardTitle }}<span v-if="periodLabel" class="period-label"> · {{ periodLabel }}</span></h2>
 
-        <template v-if="board === 'points' || board === 'redeem_points' || board === 'predict_accuracy' || board === 'battalion'">
+        <template v-if="board === 'points' || board === 'redeem_points' || board === 'predict_accuracy' || board === 'battalion' || board === 'supporter'">
           <div
             v-for="row in unifiedRows"
             :key="row.user_id"
@@ -214,7 +221,7 @@ import {
   type MyLeaderboardSummary,
 } from '../api/commerce'
 import { getStarAccuracy, getStarHeat, type StarHeatRow } from '../api/arena'
-import { getTeamContribution } from '../api/profile'
+import { getTeamContribution, getTeams } from '../api/profile'
 import { authState, fetchMe, isLoggedIn } from '../stores/authStore'
 import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/referral'
 import { showApiError } from '../utils/errorHandler'
@@ -248,6 +255,8 @@ const fanRank = ref<{ team: string; fans: number }[]>([])
 const contribution = ref<{ user_id: number; nickname: string; season_points: number; battalion_points?: number }[]>([])
 const loading = ref(false)
 const rewardTiers = ref<{ tiers: LeaderboardRewardTier[] } | null>(null)
+const teamOptions = ref<{ id: number; name: string }[]>([])
+const supporterTeamId = ref<number | null>(null)
 
 const showSeasonRewards = computed(() => board.value === 'points' && period.value === 'season')
 
@@ -262,6 +271,7 @@ const boardTitle = computed(() => {
     redeem_points: '可用积分榜',
     predict_accuracy: '竞猜准度榜',
     battalion: '铁粉军团榜',
+    supporter: '球队应援榜',
     star_heat: '球星热力榜',
     star_accuracy: '球星竞猜准度榜',
     contribution: '主队贡献榜',
@@ -276,7 +286,7 @@ function formatPoints(row: LeaderboardEntry) {
     return `${row.win_rate ?? 0}% (${row.wins}/${row.settled})`
   }
   const pts = row.points ?? row.season_points ?? row.redeem_points ?? row.battalion_points ?? 0
-  const unit = board.value === 'battalion' ? '贡献' : '分'
+  const unit = board.value === 'battalion' || board.value === 'supporter' ? '贡献' : '分'
   return `${pts} ${unit}`
 }
 
@@ -308,11 +318,17 @@ async function load() {
     boardDescription.value = ''
     periodLabel.value = ''
 
-    if (board.value === 'points' || board.value === 'redeem_points' || board.value === 'predict_accuracy' || board.value === 'battalion') {
+    if (board.value === 'points' || board.value === 'redeem_points' || board.value === 'predict_accuracy' || board.value === 'battalion' || board.value === 'supporter') {
+      const tid =
+        board.value === 'battalion'
+          ? authState.user?.favorite_team_id ?? undefined
+          : board.value === 'supporter'
+            ? supporterTeamId.value ?? undefined
+            : undefined
       const data = await getLeaderboardBoard({
         board: board.value,
         period: period.value,
-        team_id: board.value === 'battalion' ? authState.user?.favorite_team_id ?? undefined : undefined,
+        team_id: tid,
       })
       unifiedRows.value = data.rows
       boardDescription.value = data.description
@@ -354,9 +370,23 @@ function onLeaderboardRefresh() {
   load()
 }
 
-onMounted(() => {
-  if (route.query.board === 'referral') {
+onMounted(async () => {
+  const qBoard = route.query.board
+  if (qBoard === 'referral') {
     board.value = 'referral'
+  } else if (qBoard === 'supporter') {
+    board.value = 'supporter'
+  }
+  try {
+    const teams = await getTeams()
+    teamOptions.value = teams.map((t) => ({ id: t.id, name: t.name }))
+    supporterTeamId.value =
+      authState.user?.favorite_team_id ??
+      authState.user?.secondary_team_id ??
+      teamOptions.value[0]?.id ??
+      null
+  } catch {
+    teamOptions.value = []
   }
   load()
   void getLeaderboardRewardTiers()
@@ -510,6 +540,11 @@ onUnmounted(() => {
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.supporter-team-pick {
+  margin: 12px 0 4px;
+  max-width: 220px;
 }
 
 .ref-countdown {

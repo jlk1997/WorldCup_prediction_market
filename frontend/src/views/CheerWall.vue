@@ -43,33 +43,45 @@
       <p class="rule">
         开赛前 {{ status.cheer_close_minutes ?? 30 }} 分钟截止助威 ·
         <template v-if="status.free_cheer_tickets">你有 {{ status.free_cheer_tickets }} 张免费助威券（本次 0 币）</template>
-        <template v-else>5 球迷币 = +10 助威值 +10 军团贡献</template>
-        · 每场 1 次 · 只能为主队或副队助威
+        <template v-else>5 球迷币起</template>
+        · 每场 1 次 · {{ status.cheer_reward_hint || '铁杆助威 +10 · 中立助阵 +5' }}
       </p>
+
+      <p v-if="status.predict_combo_pending" class="combo-hint">
+        你已竞猜本场 · 完成助威可解锁连击 +5 军团贡献
+      </p>
+
+      <div v-if="status.can_cheer && !status.user_cheered && authState.user?.profile_completed" class="reward-preview">
+        <span class="preview-chip">主队/副队 +10</span>
+        <span class="preview-chip">中立 +5</span>
+        <span class="preview-chip accent">冷门 +3</span>
+        <span class="preview-chip accent">连击 +5</span>
+      </div>
 
       <!-- 可助威 -->
       <div v-if="status.can_cheer && !status.user_cheered && authState.user?.profile_completed" class="action-zone">
         <button
-          v-if="canCheerTeam(status.team1.id)"
+          v-if="status.team1.id"
           type="button"
           class="cheer-btn"
+          :class="{ neutral: status.team1.affiliation === 'neutral', underdog: (status.team1.underdog_bonus ?? 0) > 0 }"
           @click="cheer(status.team1.id)"
         >
           <span class="btn-icon">📣</span>
           为 {{ status.team1.name }} 助威
+          <span class="aff-tag">{{ affiliationLabel(status.team1) }}</span>
         </button>
         <button
-          v-if="canCheerTeam(status.team2.id)"
+          v-if="status.team2.id"
           type="button"
           class="cheer-btn alt"
+          :class="{ neutral: status.team2.affiliation === 'neutral', underdog: (status.team2.underdog_bonus ?? 0) > 0 }"
           @click="cheer(status.team2.id)"
         >
           <span class="btn-icon">📣</span>
           为 {{ status.team2.name }} 助威
+          <span class="aff-tag">{{ affiliationLabel(status.team2) }}</span>
         </button>
-        <p v-if="!hasCheerTarget" class="status-box warn">
-          你的主队/副队不在本场对阵中，无法助威。可在「球迷档案」调整副队。
-        </p>
       </div>
 
       <!-- 未完善档案 -->
@@ -80,7 +92,15 @@
 
       <!-- 已助威 -->
       <div v-else-if="status.user_cheered" class="status-box success">
-        <p>✅ 你已为本场助威，+10 军团贡献</p>
+        <p>✅ 你已为本场助威，+{{ status.user_cheer_battalion ?? 10 }} 军团贡献</p>
+        <button
+          v-if="status.predict_combo_after_cheer"
+          type="button"
+          class="link-cta"
+          @click="$router.push({ path: '/predict', query: { highlight: String(route.params.matchId) } })"
+        >
+          去竞猜解锁连击 +5 →
+        </button>
         <button
           v-if="!status.user_cheer_extra_done"
           type="button"
@@ -113,21 +133,51 @@ import { authState, fetchMe } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
 import { showApiError } from '../utils/errorHandler'
 
-const route = useRoute()
-const loading = ref(false)
-const status = ref<any>(null)
-
-function canCheerTeam(teamId: number | null | undefined) {
-  if (!teamId) return false
-  const u = authState.user
-  if (!u) return false
-  return teamId === u.favorite_team_id || teamId === u.secondary_team_id
+interface CheerTeam {
+  id: number | null
+  name: string
+  cheers: number
+  affiliation?: 'primary' | 'secondary' | 'neutral'
+  cheer_reward?: number
+  underdog_bonus?: number
 }
 
-const hasCheerTarget = computed(() => {
-  if (!status.value) return false
-  return canCheerTeam(status.value.team1.id) || canCheerTeam(status.value.team2.id)
-})
+interface CheerStatus {
+  team1: CheerTeam
+  team2: CheerTeam
+  match_date?: string
+  match_time?: string
+  can_cheer: boolean
+  user_cheered: boolean
+  user_cheer_battalion?: number
+  user_cheer_extra_done?: boolean
+  cheer_close_minutes?: number
+  cheer_block_reason?: string
+  free_cheer_tickets?: number
+  cheer_reward_hint?: string
+  predict_combo_pending?: boolean
+  predict_combo_after_cheer?: boolean
+  combo_battalion_added?: number
+  underdog_bonus?: number
+  arena: {
+    home_power: number
+    away_power: number
+    leader_name: string | null
+    lead_points: number
+  }
+}
+
+const route = useRoute()
+const loading = ref(false)
+const status = ref<CheerStatus | null>(null)
+
+function affiliationLabel(team: CheerTeam) {
+  const pts = team.cheer_reward ?? (team.affiliation === 'neutral' ? 5 : 10)
+  const underdog = team.underdog_bonus ? ` · 冷门+${team.underdog_bonus}` : ''
+  if (team.affiliation === 'primary') return `我的主队 · +${pts}${underdog}`
+  if (team.affiliation === 'secondary') return `我的副队 · +${pts}${underdog}`
+  return `中立助阵 · +${pts}${underdog}`
+}
 
 const blockReasonText = computed(() => {
   const s = status.value
@@ -151,7 +201,7 @@ async function load() {
   loading.value = true
   try {
     if (authState.accessToken) await fetchProfileStatus()
-    status.value = await getCheerStatus(id)
+    status.value = await getCheerStatus(id) as CheerStatus
   } catch (e) {
     showApiError(e)
   } finally {
@@ -161,10 +211,16 @@ async function load() {
 
 async function cheer(teamId: number) {
   try {
-    status.value = await submitCheer(Number(route.params.matchId), teamId)
+    status.value = await submitCheer(Number(route.params.matchId), teamId) as CheerStatus
     await fetchMe()
     await fetchProfileStatus(true)
-    ElMessage.success('助威成功！+10 助威值 · +10 军团贡献')
+    const team = status.value?.team1.id === teamId ? status.value.team1 : status.value?.team2
+    const pts = team?.cheer_reward ?? 10
+    const battalion = status.value?.user_cheer_battalion ?? pts
+    let msg = `助威成功！+${pts} 助威值 · +${battalion} 军团贡献`
+    if (status.value?.underdog_bonus) msg += ` · 冷门加成 +${status.value.underdog_bonus}`
+    if (status.value?.combo_battalion_added) msg += ` · 连击 +${status.value.combo_battalion_added}`
+    ElMessage.success(msg)
   } catch (e) {
     showApiError(e)
   }
@@ -173,7 +229,7 @@ async function cheer(teamId: number) {
 async function cheerExtra() {
   try {
     await boostCheerExtra(Number(route.params.matchId))
-    status.value = await getCheerStatus(Number(route.params.matchId))
+    status.value = await getCheerStatus(Number(route.params.matchId)) as CheerStatus
     await fetchMe()
     ElMessage.success('助威加码成功 +20 军团贡献')
   } catch (e) {
@@ -266,6 +322,39 @@ onMounted(load)
   line-height: 1.5;
 }
 
+.combo-hint {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(103, 194, 58, 0.1);
+  border: 1px solid rgba(103, 194, 58, 0.3);
+  font-size: 0.82rem;
+  color: #b7eb8f;
+  text-align: center;
+}
+
+.reward-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.preview-chip {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.preview-chip.accent {
+  color: #b7eb8f;
+  border-color: rgba(103, 194, 58, 0.35);
+  background: rgba(103, 194, 58, 0.08);
+}
+
 .action-zone {
   display: flex;
   flex-direction: column;
@@ -283,9 +372,10 @@ onMounted(load)
   color: #1a1208;
   cursor: pointer;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 4px;
   background: linear-gradient(135deg, #f0d9b5 0%, var(--wc-accent-gold) 45%, #e8b86d 100%);
   box-shadow:
     0 0 0 1px rgba(255, 220, 160, 0.5),
@@ -301,6 +391,19 @@ onMounted(load)
     0 4px 18px rgba(201, 120, 138, 0.35);
 }
 
+.cheer-btn.neutral {
+  background: linear-gradient(135deg, rgba(180, 190, 210, 0.9) 0%, rgba(120, 140, 170, 0.85) 100%);
+  box-shadow:
+    0 0 0 1px rgba(160, 180, 210, 0.4),
+    0 4px 16px rgba(120, 140, 170, 0.3);
+}
+
+.cheer-btn.underdog {
+  box-shadow:
+    0 0 0 2px rgba(103, 194, 58, 0.45),
+    0 4px 20px rgba(103, 194, 58, 0.25);
+}
+
 .cheer-btn:hover {
   transform: translateY(-2px) scale(1.01);
 }
@@ -311,6 +414,12 @@ onMounted(load)
 
 .btn-icon {
   font-size: 1.2rem;
+}
+
+.aff-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 .status-box {

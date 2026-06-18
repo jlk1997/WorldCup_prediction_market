@@ -5,6 +5,12 @@
       <p>军团贡献 · 球星热力 · 助威对决 · 虚拟娱乐不可提现</p>
     </header>
 
+    <ArenaPlaybook
+      v-if="overview"
+      :stats="overview.quick_stats"
+      :default-open="(overview.quick_stats?.today_cheerable ?? 0) > 0"
+    />
+
     <div v-if="overview" class="arena-layout">
       <div class="col-main">
         <section class="glass-panel block standing-card" v-if="overview.standing.team_id">
@@ -33,8 +39,12 @@
           </div>
         </section>
         <section v-else class="glass-panel block empty-team">
-          <p>设置主队后即可参与军团榜</p>
-          <el-button type="primary" @click="$router.push('/onboarding')">去设置主队</el-button>
+          <p>设置主队后可参与队内军团榜</p>
+          <p class="empty-sub">未设主队也能：今日场次助威 · 临场口号 · 中立助阵 · 球队应援榜</p>
+          <div class="empty-actions">
+            <el-button type="primary" @click="$router.push('/onboarding')">去设置主队</el-button>
+            <el-button plain @click="$router.push('/leaderboard?board=supporter')">看应援榜</el-button>
+          </div>
         </section>
 
         <section class="glass-panel block" v-if="overview.next_match_arena">
@@ -68,11 +78,12 @@
         <section class="glass-panel block" v-if="overview.matchday_goal.active">
           <div class="block-head">
             <h2>比赛日动员</h2>
+            <span v-if="overview.matchday_goal.team_name" class="block-tag">{{ overview.matchday_goal.team_name }}</span>
           </div>
           <p class="block-desc">全队今日军团贡献进度（达标发虚拟称号与球迷币）</p>
-          <el-progress :percentage="goalPct" :stroke-width="12" status="success" />
+          <el-progress :percentage="goalPct(overview.matchday_goal)" :stroke-width="12" status="success" />
           <p class="goal-progress">
-            当前 <strong>{{ overview.matchday_goal.progress }}</strong> / 下一目标 <strong>{{ nextGoal }}</strong>
+            当前 <strong>{{ overview.matchday_goal.progress }}</strong> / 下一目标 <strong>{{ nextGoalFor(overview.matchday_goal) }}</strong>
           </p>
           <ul v-if="overview.matchday_goal.goal_titles" class="goal-tiers">
             <li v-for="(g, i) in overview.matchday_goal.goals" :key="g" :class="{ done: overview.matchday_goal.progress >= g }">
@@ -83,9 +94,139 @@
           <p v-if="overview.matchday_goal.my_titles?.length" class="my-titles">
             已获得：{{ overview.matchday_goal.my_titles.join('、') }}
           </p>
-          <button type="button" class="cta-btn rally" @click="doRally">比赛日动员 · 20 币 +30 贡献</button>
-          <p class="rally-hint">有机会获得主队球星数字藏品</p>
+          <button
+            v-if="!overview.matchday_goal.rally_done_today"
+            type="button"
+            class="cta-btn rally"
+            @click="doRally(overview.matchday_goal.team_id)"
+          >
+            比赛日动员 · 20 币 +30 贡献
+          </button>
+          <p v-else class="rally-done">今日已为该队动员过</p>
+          <p class="rally-hint">有机会获得该队球星数字藏品</p>
           <span class="legal-hint">虚拟道具，不可提现</span>
+        </section>
+
+        <section class="glass-panel block" v-if="overview.matchday_goal_secondary?.active">
+          <div class="block-head">
+            <h2>副队比赛日动员</h2>
+            <span v-if="overview.matchday_goal_secondary.team_name" class="block-tag sub">{{ overview.matchday_goal_secondary.team_name }}</span>
+          </div>
+          <p class="block-desc">副队今日军团贡献进度</p>
+          <el-progress :percentage="goalPct(overview.matchday_goal_secondary)" :stroke-width="12" status="success" />
+          <p class="goal-progress">
+            当前 <strong>{{ overview.matchday_goal_secondary.progress }}</strong> / 下一目标 <strong>{{ nextGoalFor(overview.matchday_goal_secondary) }}</strong>
+          </p>
+          <button
+            v-if="!overview.matchday_goal_secondary.rally_done_today"
+            type="button"
+            class="cta-btn rally sub"
+            @click="doRally(overview.matchday_goal_secondary.team_id)"
+          >
+            副队动员 · 20 币 +30 贡献
+          </button>
+          <p v-else class="rally-done">今日已为副队动员过</p>
+          <span class="legal-hint">虚拟道具，不可提现</span>
+        </section>
+
+        <section class="glass-panel block today-matches" v-if="todayMatches.length">
+          <div class="block-head">
+            <h2>今日助威场次</h2>
+            <button type="button" class="toggle-btn" @click="todayExpanded = !todayExpanded">
+              {{ todayExpanded ? '收起' : '展开' }} ({{ todayMatches.length }})
+            </button>
+          </div>
+          <div v-show="todayExpanded" class="today-list">
+            <div v-for="m in todayMatches" :key="m.match_id" class="today-row">
+              <div class="today-meta">
+                <span class="today-teams">{{ m.team1_name }} VS {{ m.team2_name }}</span>
+                <span v-if="m.match_time" class="today-time">{{ m.match_time }}</span>
+              </div>
+              <div v-if="m.predict_combo_pending || m.predict_combo_after_cheer" class="today-tags">
+                <span v-if="m.predict_combo_pending" class="tag combo">竞猜后助威 · 连击+5</span>
+                <span v-else-if="m.predict_combo_after_cheer" class="tag combo">助威后竞猜 · 连击+5</span>
+              </div>
+              <CheerProgressBar
+                :team1-name="m.team1_name"
+                :team2-name="m.team2_name"
+                :team1-cheers="m.arena.home_power"
+                :team2-cheers="m.arena.away_power"
+              />
+              <div class="today-actions">
+                <button
+                  v-if="m.user_cheered"
+                  type="button"
+                  class="mini-btn done"
+                  disabled
+                >
+                  已助威
+                </button>
+                <button
+                  v-else-if="m.can_cheer"
+                  type="button"
+                  class="mini-btn"
+                  @click="$router.push(`/cheer/${m.match_id}`)"
+                >
+                  去助威
+                </button>
+                <span v-else class="mini-muted">已截止</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="glass-panel block spot-cheer"
+          v-if="overview.spot_cheer?.teams_today?.length"
+        >
+          <div class="block-head">
+            <h2>临场口号</h2>
+            <span class="block-tag live">轻量应援</span>
+          </div>
+          <p class="block-desc">
+            今日剩余 {{ overview.spot_cheer.remaining }}/{{ overview.spot_cheer.daily_limit }} 次 ·
+            {{ overview.spot_cheer.cost }} 币 +{{ overview.spot_cheer.battalion_per_cheer }} 贡献/次
+          </p>
+          <div class="spot-dots" aria-hidden="true">
+            <span
+              v-for="i in overview.spot_cheer.daily_limit"
+              :key="i"
+              class="dot"
+              :class="{ used: i <= overview.spot_cheer.used_today }"
+            />
+          </div>
+          <div class="spot-row">
+            <label class="spot-label">选择球队</label>
+            <el-select v-model="spotTeamId" size="small" placeholder="今日参赛队">
+              <el-option
+                v-for="t in overview.spot_cheer.teams_today"
+                :key="t.team_id"
+                :label="t.team_name"
+                :value="t.team_id"
+              />
+            </el-select>
+          </div>
+          <div class="slogan-chips">
+            <button
+              v-for="(s, i) in overview.spot_cheer.slogans"
+              :key="i"
+              type="button"
+              class="slogan-chip"
+              :class="{ active: spotSloganIndex === i }"
+              @click="spotSloganIndex = i"
+            >
+              {{ s }}
+            </button>
+          </div>
+          <button
+            type="button"
+            class="cta-btn rally"
+            :disabled="!spotTeamId || overview.spot_cheer.remaining <= 0 || spotSubmitting"
+            @click="doSpotCheer"
+          >
+            喊口号 · {{ overview.spot_cheer.cost }} 币
+          </button>
+          <span class="legal-hint">任意今日参赛队均可 · 非主队也能参与</span>
         </section>
       </div>
 
@@ -151,20 +292,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { usePageMeta } from '../composables/usePageMeta'
 
 usePageMeta({ title: '球迷擂台 — 最后一舞', path: '/arena', noIndex: true })
 
 import CheerProgressBar from '../components/CheerProgressBar.vue'
+import ArenaPlaybook from '../components/ArenaPlaybook.vue'
 import {
   boostStar,
   getArenaOverview,
   getStarAccuracy,
   getStarHeat,
+  getTodayMatches,
   matchdayRally,
+  submitSpotCheer,
+  type MatchdayGoal,
   type StarHeatRow,
+  type TodayMatchRow,
 } from '../api/arena'
 import { fetchMe } from '../stores/authStore'
 import { showApiError } from '../utils/errorHandler'
@@ -173,29 +319,37 @@ import type { CollectibleDropResult } from '../api/collectible'
 
 const loading = ref(false)
 const overview = ref<Awaited<ReturnType<typeof getArenaOverview>> | null>(null)
+const todayMatches = ref<TodayMatchRow[]>([])
+const todayExpanded = ref(true)
+const spotTeamId = ref<number | null>(null)
+const spotSloganIndex = ref(0)
+const spotSubmitting = ref(false)
 const starScope = ref<'my' | 'global'>('my')
 const starRows = ref<StarHeatRow[]>([])
 const accuracyRows = ref<any[]>([])
 
-const nextGoal = computed(() => {
-  const g = overview.value?.matchday_goal
+function nextGoalFor(g: MatchdayGoal | undefined) {
   if (!g?.active) return 0
   for (const t of g.goals) {
     if (g.progress < t) return t
   }
   return g.goals[g.goals.length - 1]
-})
+}
 
-const goalPct = computed(() => {
-  const g = overview.value?.matchday_goal
-  if (!g?.active || !nextGoal.value) return 0
-  return Math.min(100, Math.round((g.progress / nextGoal.value) * 100))
-})
+function goalPct(g: MatchdayGoal | undefined) {
+  const target = nextGoalFor(g)
+  if (!g?.active || !target) return 0
+  return Math.min(100, Math.round((g.progress / target) * 100))
+}
 
 async function load() {
   loading.value = true
   try {
     overview.value = await getArenaOverview()
+    todayMatches.value = await getTodayMatches().catch(() => [])
+    if (overview.value?.spot_cheer?.teams_today?.length && !spotTeamId.value) {
+      spotTeamId.value = overview.value.spot_cheer.teams_today[0].team_id
+    }
     await loadStars()
     accuracyRows.value = await getStarAccuracy()
   } catch (e) {
@@ -221,9 +375,25 @@ async function doBoostStar(playerId: number) {
   }
 }
 
-async function doRally() {
+async function doSpotCheer() {
+  if (!spotTeamId.value) return
+  spotSubmitting.value = true
   try {
-    const res = await matchdayRally()
+    const res = await submitSpotCheer(spotTeamId.value, spotSloganIndex.value)
+    await fetchMe()
+    ElMessage.success(`「${res.slogan}」+${res.battalion_added} 军团贡献`)
+    if (overview.value) overview.value.spot_cheer = res.spot_cheer
+    await load()
+  } catch (e) {
+    showApiError(e)
+  } finally {
+    spotSubmitting.value = false
+  }
+}
+
+async function doRally(teamId?: number) {
+  try {
+    const res = await matchdayRally(teamId)
     await fetchMe()
     ElMessage.success('动员成功')
     const drop = res.collectible_drop as CollectibleDropResult | null | undefined
@@ -317,10 +487,67 @@ onMounted(load)
   border-color: rgba(212, 165, 116, 0.35);
 }
 
+.block-tag.sub {
+  background: rgba(120, 160, 200, 0.15);
+  color: #a8c8e8;
+  border-color: rgba(120, 160, 200, 0.35);
+}
+
 .block-desc {
   margin: 0 0 12px;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.65);
+}
+
+.empty-team {
+  text-align: center;
+}
+
+.empty-sub {
+  margin: 8px 0 14px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.5;
+}
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.today-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.today-tags .tag {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(103, 194, 58, 0.12);
+  color: #b7eb8f;
+  border: 1px solid rgba(103, 194, 58, 0.3);
+}
+
+.spot-dots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spot-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(212, 165, 116, 0.25);
+  border: 1px solid rgba(212, 165, 116, 0.4);
+}
+
+.spot-dots .dot.used {
+  background: var(--wc-accent-gold);
 }
 
 .standing-head {
@@ -517,6 +744,125 @@ onMounted(load)
   border-color: rgba(230, 162, 60, 0.45);
   color: #ffd591;
 }
+.cta-btn.rally.sub {
+  border-color: rgba(120, 160, 200, 0.45);
+  color: #a8c8e8;
+}
+
+.rally-done {
+  margin: 12px 0 6px;
+  font-size: 0.85rem;
+  color: rgba(143, 212, 138, 0.9);
+  text-align: center;
+}
+
+.today-matches .toggle-btn {
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.today-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.today-row {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(12, 14, 28, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.today-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.today-teams {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f5f0e8;
+}
+
+.today-time {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.today-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mini-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 165, 116, 0.45);
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--wc-accent-gold);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mini-btn.done {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.mini-muted {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.spot-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spot-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.slogan-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.slogan-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.slogan-chip.active {
+  border-color: rgba(212, 165, 116, 0.55);
+  background: rgba(212, 165, 116, 0.15);
+  color: var(--wc-accent-gold);
+}
+
 .rally-hint {
   margin: 0 0 12px;
   font-size: 0.72rem;

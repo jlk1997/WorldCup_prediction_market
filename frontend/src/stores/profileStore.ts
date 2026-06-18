@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 import { getProfileStatus, getRecommendations, type ProfileStatus, type Recommendations } from '../api/profile'
 import { authState, patchUserFields } from './authStore'
+import { registerLogoutCleanup } from './logoutRegistry'
 
 export const profileState = reactive({
   status: null as ProfileStatus | null,
@@ -52,3 +53,5 @@ export function clearProfileCache() {
   profileState.recommendations = null
   profileState.loadedAt = 0
 }
+
+registerLogoutCleanup(clearProfileCache)

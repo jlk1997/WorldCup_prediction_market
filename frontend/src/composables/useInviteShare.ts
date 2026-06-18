@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getReferralMe, type ReferralMe } from '../api/referral'
 import { authState } from '../stores/authStore'
+import { registerLogoutCleanup } from '../stores/logoutRegistry'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { downloadSharePoster, generateSharePosterObjectUrl } from '../utils/sharePoster'
 import { posterDisplayName } from '../utils/sharePosterDisplayName'
@@ -95,6 +96,8 @@ export function resetInviteShareState() {
   posterLoading.value = false
   revokePosterPreview()
 }
+
+registerLogoutCleanup(resetInviteShareState)
 
 watch(sheetOpen, (open) => {
   if (!open) revokePosterPreview()

@@ -12,11 +12,11 @@ from app.core.config import Settings, get_settings
 from app.core.exceptions import BadRequestError, NotFoundError
 from app.core.match_scores import result_pick_from_team_scores
 from app.db.models import Match, Team
-from app.db.models.commerce import FanQuizLog, GamePrediction, TeamCheer, User, UserBadge, UserCheer
+from app.db.models.commerce import FanActivityLog, FanQuizLog, GamePrediction, TeamCheer, User, UserBadge, UserCheer
 from app.db.repositories.user_repository import UserRepository, WalletRepository
 from app.services.profile_service import ProfileService
 from app.services.recommendation_service import RecommendationService
-from app.services.arena_service import ArenaService
+from app.services.arena_service import ArenaService, cheer_affiliation, cheer_rewards_for_affiliation
 from app.services.notification_service import NotificationService
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,7 @@ class GameService:
     PICKS = {"home", "draw", "away"}
     CHEER_COST = 5
     CHEER_POINTS = 10
+    CHEER_POINTS_NEUTRAL = 5
     QUIZ_REWARD = 15
     MATCH_DAY_SIGNIN_BONUS = 10
     QQ_GROUP_REASON = "qq_group_join"
@@ -94,6 +95,8 @@ class GameService:
                 star_ids.add(s["match_id"])
         cards: list[dict] = []
         user_preds: dict[int, GamePrediction] = {}
+        user_cheers: set[int] = set()
+        combo_done: set[int] = set()
         if user:
             for p in (
                 self.db.query(GamePrediction)
@@ -101,12 +104,26 @@ class GameService:
                 .all()
             ):
                 user_preds[p.match_id] = p
+            for uc in self.db.query(UserCheer).filter(UserCheer.user_id == user.id).all():
+                user_cheers.add(uc.match_id)
+            for log in (
+                self.db.query(FanActivityLog.ref_id)
+                .filter(
+                    FanActivityLog.user_id == user.id,
+                    FanActivityLog.activity_type == "predict_cheer_combo",
+                    FanActivityLog.ref_type == "match",
+                )
+                .all()
+            ):
+                combo_done.add(int(log.ref_id))
         for m in rows:
             brief = match_to_brief(m, self.settings)
             t1 = self._team_id_by_name(m.team1_name)
             t2 = self._team_id_by_name(m.team2_name)
             team_ids = {x for x in (t1, t2) if x}
             pred = user_preds.get(m.id)
+            cheered = m.id in user_cheers
+            combo = m.id in combo_done
             cards.append(
                 {
                     **brief,
@@ -115,6 +132,11 @@ class GameService:
                     "is_sub_team": bool(sub_id and sub_id in team_ids),
                     "has_star_player": m.id in star_ids,
                     "user_predicted": pred is not None,
+                    "user_cheered": cheered,
+                    "predict_combo_pending": bool(
+                        pred is not None and not cheered and not combo and brief.get("can_cheer")
+                    ),
+                    "predict_combo_after_cheer": bool(cheered and pred is None and not combo),
                     "user_pick": pred.pick if pred else None,
                     "user_prediction_status": pred.status if pred else None,
                     "user_stake_coins": pred.stake_coins if pred else None,
@@ -203,10 +225,12 @@ class GameService:
             self.db.rollback()
             raise BadRequestError("您已竞猜过该场比赛") from None
         ArenaService(self.db).on_predict_submit(user, match_id)
+        combo_result = ArenaService(self.db).try_predict_cheer_combo(user, match_id)
         self.db.commit()
         self.db.refresh(pred)
         cache_delete_prefix("game:pick_stats:")
         self._referral_first_action(user)
+        pred._arena_combo_battalion = combo_result.get("battalion_added", 0)  # type: ignore[attr-defined]
         return pred
 
     def raise_prediction_stake(
@@ -819,21 +843,65 @@ class GameService:
         user_row = self.db.get(User, user_id) if user_id else None
         free_tickets = (user_row.free_cheer_tickets or 0) if user_row else 0
         arena = ArenaService(self.db).get_match_arena(match_id, user_id)
+        aff1 = cheer_affiliation(user_row, t1)
+        aff2 = cheer_affiliation(user_row, t2)
+        pts1, _ = cheer_rewards_for_affiliation(aff1)
+        pts2, _ = cheer_rewards_for_affiliation(aff2)
+        user_aff = cheer_affiliation(user_row, user_team_id) if user_team_id else None
+        _, user_battalion = cheer_rewards_for_affiliation(user_aff or "neutral")
+        arena_svc = ArenaService(self.db)
+        ud1 = arena_svc.underdog_bonus_for_team(match_id, t1)
+        ud2 = arena_svc.underdog_bonus_for_team(match_id, t2)
+        has_prediction = False
+        combo_done = False
+        if user_id:
+            has_prediction = (
+                self.db.query(GamePrediction.id)
+                .filter(GamePrediction.user_id == user_id, GamePrediction.match_id == match_id)
+                .first()
+                is not None
+            )
+            combo_done = arena_svc._combo_already_done(user_id, match_id)
+        predict_combo_pending = bool(has_prediction and not user_cheered and not combo_done)
+        predict_combo_after_cheer = bool(user_cheered and not has_prediction and not combo_done)
         return {
             "match_id": match_id,
             "match_date": match.match_date,
             "match_time": match.match_time,
-            "team1": {"id": t1, "name": match.team1_name, "cheers": cheers.get(t1, 0) if t1 else 0},
-            "team2": {"id": t2, "name": match.team2_name, "cheers": cheers.get(t2, 0) if t2 else 0},
+            "team1": {
+                "id": t1,
+                "name": match.team1_name,
+                "cheers": cheers.get(t1, 0) if t1 else 0,
+                "affiliation": aff1,
+                "cheer_reward": pts1,
+                "underdog_bonus": ud1,
+            },
+            "team2": {
+                "id": t2,
+                "name": match.team2_name,
+                "cheers": cheers.get(t2, 0) if t2 else 0,
+                "affiliation": aff2,
+                "cheer_reward": pts2,
+                "underdog_bonus": ud2,
+            },
             "user_cheered": user_cheered,
             "user_cheer_team_id": user_team_id,
+            "user_cheer_affiliation": user_aff,
+            "user_cheer_battalion": user_battalion if user_cheered else 0,
             "user_cheer_extra_done": cheer_extra_done,
             "can_cheer": bool(can_cheer),
+            "team1_can_cheer": bool(can_cheer and t1),
+            "team2_can_cheer": bool(can_cheer and t2),
             "cheer_block_reason": cheer_block_reason,
             "kickoff_at": kick.isoformat() if kick else None,
             "cheer_close_minutes": close_min,
             "free_cheer_tickets": free_tickets,
             "cheer_cost": 0 if free_tickets > 0 else self.CHEER_COST,
+            "cheer_reward_hint": "铁杆 +10 · 中立 +5 · 冷门球队助威额外 +3 · 竞猜+助威连击 +5",
+            "has_prediction": has_prediction,
+            "predict_combo_pending": predict_combo_pending,
+            "predict_combo_after_cheer": predict_combo_after_cheer,
+            "predict_combo_done": combo_done,
             "arena": {
                 "home_power": arena["home"]["power"],
                 "away_power": arena["away"]["power"],
@@ -850,10 +918,7 @@ class GameService:
         t1 = self._team_id_by_name(match.team1_name)
         t2 = self._team_id_by_name(match.team2_name)
         if team_id not in {t1, t2}:
-            raise BadRequestError("只能为主队或客队助威")
-        allowed = {user.favorite_team_id, user.secondary_team_id}
-        if team_id not in allowed:
-            raise BadRequestError("只能为您的主队或副队助威")
+            raise BadRequestError("只能为该场参赛球队助威")
 
         kick = parse_kickoff(match)
         now = _utcnow()
@@ -873,12 +938,30 @@ class GameService:
         if existing:
             raise BadRequestError("您已为该场比赛助威过")
 
+        affiliation = cheer_affiliation(user, team_id)
+        cheer_pts, _ = cheer_rewards_for_affiliation(affiliation)
+
+        uc_row = UserCheer(
+            user_id=user.id,
+            match_id=match_id,
+            team_id=team_id,
+            coins_spent=0,
+            cheer_points=cheer_pts,
+        )
+        self.db.add(uc_row)
+        try:
+            with self.db.begin_nested():
+                self.db.flush()
+        except IntegrityError:
+            raise BadRequestError("您已为该场比赛助威过") from None
+
         used_ticket = False
         if (user.free_cheer_tickets or 0) > 0:
             user.free_cheer_tickets -= 1
             used_ticket = True
         else:
             self.wallet.deduct_coins(user, self.CHEER_COST, "cheer", "match", match_id)
+        uc_row.coins_spent = 0 if used_ticket else self.CHEER_COST
 
         tc = (
             self.db.query(TeamCheer)
@@ -890,22 +973,18 @@ class GameService:
             tc = TeamCheer(match_id=match_id, team_id=team_id, total_cheers=0)
             self.db.add(tc)
             self.db.flush()
-        tc.total_cheers += self.CHEER_POINTS
-        user.fan_cheers_total = (user.fan_cheers_total or 0) + self.CHEER_POINTS
-        self.db.add(
-            UserCheer(
-                user_id=user.id,
-                match_id=match_id,
-                team_id=team_id,
-                coins_spent=0 if used_ticket else self.CHEER_COST,
-                cheer_points=self.CHEER_POINTS,
-            )
-        )
+        tc.total_cheers += cheer_pts
+        user.fan_cheers_total = (user.fan_cheers_total or 0) + cheer_pts
         self._recalc_fan_level(user)
-        ArenaService(self.db).on_cheer(user, match_id, team_id)
+        arena_svc = ArenaService(self.db)
+        cheer_result = arena_svc.on_cheer(user, match_id, team_id)
+        combo_result = arena_svc.try_predict_cheer_combo(user, match_id)
         self.db.commit()
         self._referral_first_action(user)
-        return self.get_cheer_status(match_id, user.id)
+        status = self.get_cheer_status(match_id, user.id)
+        status["underdog_bonus"] = cheer_result.get("underdog_bonus", 0)
+        status["combo_battalion_added"] = combo_result.get("battalion_added", 0)
+        return status
 
     def get_quiz_today(self, user: User) -> dict:
         today = _utcnow().date()

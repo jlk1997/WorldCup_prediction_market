@@ -14,6 +14,7 @@ from app.api.schemas.commerce import (
     OrderOut,
     PredictRaiseStakeRequest,
     PredictSubmitRequest,
+    PredictSubmitResponse,
     ProductOut,
     RedeemProductOut,
     RedeemProductAdminCreate,
@@ -37,6 +38,7 @@ from app.api.schemas.commerce import (
 from app.core.exceptions import BadRequestError, ServiceUnavailableError
 from app.core.rate_limit import (
     client_ip,
+    rate_limit_arena_spend,
     rate_limit_pay,
     rate_limit_pay_sync,
     rate_limit_redeem,
@@ -152,7 +154,7 @@ def game_matches(
     return GameService(db).list_predictable_match_cards(user)
 
 
-@router_game.post("/predict", response_model=GamePredictionOut)
+@router_game.post("/predict", response_model=PredictSubmitResponse)
 def submit_predict(
     body: PredictSubmitRequest,
     user: User = Depends(get_current_user),
@@ -161,7 +163,11 @@ def submit_predict(
     pred = GameService(db).submit_prediction(
         user, body.match_id, body.pick, body.stake_coins, body.use_free
     )
-    return GamePredictionOut.model_validate(pred)
+    bonus = getattr(pred, "_arena_combo_battalion", 0)
+    return PredictSubmitResponse(
+        prediction=GamePredictionOut.model_validate(pred),
+        arena_battalion_bonus=bonus,
+    )
 
 
 @router_game.post("/predict/raise-stake", response_model=GamePredictionOut)
@@ -406,6 +412,31 @@ def leaderboard_board(
             "description": BOARD_RULES["battalion"].get(p, BOARD_RULES["battalion"]["season"]),
             "rows": rows,
         }
+    elif board == "supporter":
+        if not team_id:
+            raise HTTPException(status_code=400, detail="应援榜需指定 team_id")
+        rows_raw = ArenaService(db).get_team_supporter_leaderboard(team_id, period, limit)
+        from app.services.leaderboard_service import BOARD_RULES, PERIOD_LABELS
+
+        rows = []
+        for idx, r in enumerate(rows_raw):
+            rows.append(
+                {
+                    **r,
+                    "rank": idx + 1,
+                    "points": r["battalion_points"],
+                    "is_me": viewer is not None and r["user_id"] == viewer,
+                }
+            )
+        p = period if period in PERIOD_LABELS else "season"
+        data = {
+            "board": "supporter",
+            "period": p,
+            "period_label": PERIOD_LABELS.get(p, p),
+            "metric": "battalion_points",
+            "description": BOARD_RULES["supporter"].get(p, BOARD_RULES["supporter"]["season"]),
+            "rows": rows,
+        }
     else:
         data = svc.get_points_board(period, limit, viewer)
     return LeaderboardBoardOut.model_validate(data)
@@ -442,6 +473,7 @@ def cheer_status(
 
 @router_game.post("/cheer")
 def submit_cheer(body: CheerSubmitRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    rate_limit_arena_spend(user.id)
     return GameService(db).submit_cheer(user, body.match_id, body.team_id)
 
 
