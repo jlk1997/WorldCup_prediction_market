@@ -112,7 +112,8 @@ def main():
     print("可选下一步:")
     print("  python -m scripts.sync_teams --source all")
     print("  python -m scripts.update_starters")
-    print("  python -m scripts.build_team_api_mapping")
+    print("  python -m scripts.fetch_collectible_images  # 队旗+传奇卡图")
+    print("  python -m scripts.sync_collectible_catalog")
     print("  （BSD 场次关联会在 ingest 首次同步时自动完成，无需手动 link）")
 
 
