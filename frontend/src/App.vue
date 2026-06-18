@@ -427,8 +427,24 @@ function onNav(path: string) {
   padding: 0 !important;
   flex: 1;
   min-height: 0;
+}
+
+/* 竞猜/收藏等长页：单页滚动，避免 flex 子项被压成「小窗滚动」 */
+.el-main.main-content:not(.is-dashboard) {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.el-main.main-content.is-dashboard {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 .logo {
@@ -866,28 +882,16 @@ function onNav(path: string) {
   padding: 30px;
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
   pointer-events: none;
+}
+
+.main-content:not(.is-dashboard):not(.is-auth-flow) {
+  padding: 30px;
 }
 
 .page-shell,
 .main-content > * {
   pointer-events: auto;
-}
-
-.main-content.is-dashboard {
-  padding: 0 !important;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-  -webkit-overflow-scrolling: touch;
-}
-
-.main-content.is-auth-flow {
-  padding: 0 !important;
 }
 
 @media (max-width: 960px) {

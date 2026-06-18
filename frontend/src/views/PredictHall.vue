@@ -51,6 +51,13 @@
 
 
 
+    <details class="predict-extras" :open="extrasExpanded">
+      <summary class="predict-extras-summary">
+        <span>每日任务 · 成长推荐</span>
+        <span class="predict-extras-toggle">{{ extrasExpanded ? '收起' : '展开' }}</span>
+      </summary>
+      <div class="predict-extras-body">
+
     <StreakRiskBanner :status="dailyStatus" />
 
     <GrowthPrimaryCard :status="dailyStatus" />
@@ -108,7 +115,14 @@
       <span class="pending-link">去个人中心查看 →</span>
     </div>
 
-    <div class="match-list">
+      </div>
+    </details>
+
+    <section class="match-list" id="predict-matches">
+      <div class="match-list-head">
+        <h2 class="match-list-title">可竞猜比赛</h2>
+        <span v-if="activeMatches.length" class="match-list-count">{{ activeMatches.length }} 场</span>
+      </div>
 
       <div v-if="loading && !matches.length" class="match-skeletons">
         <div v-for="n in 4" :key="n" class="skeleton-card glass-panel">
@@ -378,7 +392,7 @@
         <el-button v-else plain @click="$router.push('/me')">球迷中心</el-button>
       </el-empty>
 
-    </div>
+    </section>
 
     <WinFeedBar
       :items="winFeed"
@@ -422,6 +436,7 @@ import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
 import { usePredictHighlightScroll } from '../composables/usePredictHighlightScroll'
 import { isMatchPredictable } from '../utils/matchKickoff'
 import PassDailyClaimBar from '../components/PassDailyClaimBar.vue'
+import { useBreakpoint } from '../composables/useBreakpoint'
 import { useInviteShare } from '../composables/useInviteShare'
 import { openPredictShareSheet } from '../composables/usePredictShareSheet'
 import { openGuideModalByKey, tryAutoOpenGuide } from '../composables/useGuideModal'
@@ -448,7 +463,17 @@ usePageMeta({
 
 const route = useRoute()
 const router = useRouter()
+const { isMobile } = useBreakpoint()
 const { openShareSheet, cachedMe, ensureMe } = useInviteShare()
+
+const extrasExpanded = ref(true)
+watch(
+  isMobile,
+  (mob) => {
+    extrasExpanded.value = mob
+  },
+  { immediate: true },
+)
 
 const passBenefitsLine = computed(() => passBenefitsSummary(dailyStatus.value?.pass_benefits ?? null))
 
@@ -1111,18 +1136,95 @@ watch(
 
 .predict-hall {
 
-  max-width: 920px;
+  max-width: 960px;
 
   margin: 0 auto;
 
   background: transparent;
 
+  width: 100%;
+
+  height: auto;
+
+  min-height: unset;
+
+  overflow: visible;
+
 }
 
 @media (min-width: 769px) {
   .predict-hall {
-    padding: 16px 20px 24px;
+    padding: 16px 20px 32px;
+    max-width: 1080px;
   }
+}
+
+.predict-extras {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 165, 116, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.predict-extras-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  list-style: none;
+  user-select: none;
+}
+
+.predict-extras-summary::-webkit-details-marker {
+  display: none;
+}
+
+.predict-extras-toggle {
+  font-size: 0.75rem;
+  color: var(--wc-accent-gold, #d4a574);
+}
+
+.predict-extras-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 12px 12px;
+}
+
+.match-list {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  scroll-margin-top: 88px;
+}
+
+.match-list-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+
+.match-list-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--wc-gold, #d4a574);
+}
+
+.match-list-count {
+  font-size: 0.78rem;
+  color: var(--wc-text-muted);
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .page-head h1 {
@@ -1376,15 +1478,11 @@ watch(
   font-size: 0.95rem;
 }
 
-.match-list {
-  position: relative;
-}
-
 .match-cards-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  touch-action: pan-y;
+  gap: 12px;
+  overflow: visible;
 }
 
 .win-feed {
@@ -1807,6 +1905,16 @@ watch(
 
 .coin-hint-action.inline {
   margin-left: auto;
+}
+
+@media (min-width: 960px) {
+  .predict-extras:not([open]) .predict-extras-body {
+    display: none;
+  }
+
+  .match-card {
+    min-height: 0;
+  }
 }
 
 @media (max-width: 768px) {
