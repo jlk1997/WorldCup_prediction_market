@@ -1007,6 +1007,11 @@ class ArenaService:
             collectible_drop = CollectibleService(self.db).matchday_drop(user, tid)
         except Exception:
             logger.exception("Collectible matchday drop failed user=%s", user.id)
+        from app.services.collection_pass_service import CollectionPassService
+
+        CollectionPassService.hook_award(
+            user, self.db, "matchday_rally", "team_date", ref_id, action="cheer"
+        )
         self.db.commit()
         return {
             "fan_coins": user.fan_coins,

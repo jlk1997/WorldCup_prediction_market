@@ -65,6 +65,12 @@ export function buildProductGrantPreview(product: Product): string[] {
   if (product.product_type === 'season_pass' && !product.grant_season_pass_days) {
     lines.push(...seasonPassBenefitLines())
   }
+  if (product.product_type === 'collection_pass' || product.sku === 'collection_pass') {
+    lines.push('解锁尊享手册轨道', '限定球星卡 · 确定性奖励（非盲盒）')
+  }
+  if (product.sku === 'collection_pass_plus') {
+    lines.push('解锁尊享手册轨道', '直升 10 级', '限定球星卡 · 确定性奖励（非盲盒）')
+  }
   return lines
 }
 

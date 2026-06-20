@@ -18,7 +18,10 @@
             <path class="check-mark" fill="none" d="M14 27l8 8 16-18" />
           </svg>
         </div>
-        <h1>支付成功</h1>
+        <h1>{{ isPassOrder ? '尊享手册已解锁' : '支付成功' }}</h1>
+        <p v-if="isPassOrder" class="pass-success-lead">
+          尊享轨道已开启 · 已达等级奖励可一键领取（确定性发放，非盲盒）
+        </p>
         <p class="amount">¥{{ (order.amount_fen / 100).toFixed(2) }}</p>
 
         <div class="summary glass-inner">
@@ -53,7 +56,22 @@
         </div>
 
         <div class="actions">
-          <el-button type="primary" class="action-btn" @click="goMe">查看我的权益</el-button>
+          <el-button
+            v-if="isPassOrder"
+            type="primary"
+            class="action-btn"
+            @click="goCollectionPass"
+          >
+            领取手册奖励
+          </el-button>
+          <el-button v-else type="primary" class="action-btn" @click="goMe">查看我的权益</el-button>
+          <el-button
+            v-if="order.product_type === 'collection_pass' && !isPassOrder"
+            class="action-btn"
+            @click="goCollectionPass"
+          >
+            打开藏品手册
+          </el-button>
           <el-button v-if="order.product_type === 'cosmetic'" class="action-btn" @click="goFanCard">
             查看球迷名片
           </el-button>
@@ -121,6 +139,7 @@ const refreshing = ref(false)
 const balancePulse = ref(false)
 
 const grantLines = computed(() => (order.value ? buildOrderGrantSummary(order.value) : []))
+const isPassOrder = computed(() => order.value?.product_type === 'collection_pass')
 const showEntitlementPreview = computed(
   () => order.value?.product_type === 'season_pass' || order.value?.product_type === 'cosmetic',
 )
@@ -272,6 +291,10 @@ function goFanCard() {
   router.push('/me/card')
 }
 
+function goCollectionPass() {
+  router.push('/collection?tab=pass')
+}
+
 function retryPay() {
   router.push('/shop')
 }
@@ -349,6 +372,13 @@ h1 {
   margin: 0 0 8px;
   font-size: 1.35rem;
   color: #f5f0e8;
+}
+
+.pass-success-lead {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: #7eb8ff;
+  line-height: 1.5;
 }
 
 .amount {

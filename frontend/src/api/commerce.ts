@@ -284,6 +284,19 @@ export interface DailyStatus {
     cta_label: string
     path: string
   } | null
+  collection_pass_nudge?: {
+    level: number
+    next_level: number
+    xp?: number
+    xp_to_next: number
+    xp_level_progress_pct?: number
+    premium_unlocked: boolean
+    next_premium_card?: string | null
+    claimable_count?: number
+    title: string
+    body: string
+    path: string
+  } | null
 }
 
 export interface PickStats {

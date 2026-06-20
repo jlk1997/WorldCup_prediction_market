@@ -1,7 +1,9 @@
 <template>
   <div class="synth-panel glass-panel">
     <h3>碎片合成</h3>
-    <p class="hint">消耗碎片 + 可用积分合成指定卡牌（传奇卡不可合成）</p>
+    <p class="hint">
+      消耗碎片 + 可用积分合成指定卡牌（传奇卡不可合成）。碎片不足时可「球迷币补碎片」——按稀有度单价补足缺口，计入每日上限（确定性消耗，非随机）。
+    </p>
     <div class="shard-bar">
       <span v-for="r in rarities" :key="r" class="shard-chip">
         {{ RARITY_LABELS[r] }} {{ shards[r] ?? 0 }}
@@ -18,13 +20,23 @@
           </span>
         </div>
         <el-button
+          v-if="opt.can_synthesize"
           size="small"
           type="primary"
-          :disabled="!opt.can_synthesize"
           :loading="loadingCode === opt.code"
-          @click="$emit('synthesize', opt.code)"
+          @click="$emit('synthesize', opt.code, false)"
         >
           合成
+        </el-button>
+        <el-button
+          v-else
+          size="small"
+          type="warning"
+          plain
+          :loading="loadingCode === opt.code"
+          @click="$emit('synthesize', opt.code, true)"
+        >
+          球迷币补碎片
         </el-button>
       </div>
     </div>
@@ -42,7 +54,7 @@ defineProps<{
   loadingCode?: string | null
 }>()
 
-defineEmits<{ synthesize: [string] }>()
+defineEmits<{ synthesize: [string, boolean] }>()
 
 const rarities: CardRarity[] = ['common', 'rare', 'epic', 'legend']
 </script>

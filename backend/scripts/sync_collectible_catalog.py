@@ -9,7 +9,7 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.data.collectible_catalog import build_card_catalog
+from app.data.collectible_catalog import build_card_catalog, pass_and_event_cards
 from app.db.models.commerce import CardSetDefinition, CollectibleCard
 from app.db.session import SessionLocal
 
@@ -18,6 +18,9 @@ def main():
     db = SessionLocal()
     try:
         card_defs, set_defs = build_card_catalog(db)
+        pass_cards, event_sets = pass_and_event_cards()
+        card_defs.extend(pass_cards)
+        set_defs.extend(event_sets)
         added_cards = 0
         added_sets = 0
         for cdef in card_defs:

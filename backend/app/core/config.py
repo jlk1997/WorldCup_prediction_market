@@ -165,6 +165,16 @@ class Settings(BaseSettings):
     # NFT 元数据 URI 前缀（须公网可访问；留空则从 CORS/端口推导）
     public_api_base_url_env: str = Field(default="", validation_alias="PUBLIC_API_BASE_URL")
 
+    # Collection Pass (藏品赛季手册)
+    collection_pass_premium_price_fen: int = 4500
+    collection_pass_xp_boost_coin_cost: int = 30
+    collection_pass_xp_boost_hours: int = 24
+    collection_pass_xp_boost_multiplier: float = 1.5
+    collection_pass_daily_coin_shard_cap: int = 200
+    collection_pass_event_cheer_cost: int = 15
+    collection_pass_max_level_skip: int = 10
+    collection_pass_max_shard_deficit: int = 500
+
     @property
     def avata_configured(self) -> bool:
         key_ok = bool(self.avata_api_key) and not str(self.avata_api_key).startswith("请填写")

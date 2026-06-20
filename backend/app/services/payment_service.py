@@ -50,6 +50,8 @@ class PaymentService:
         if product.pay_currency == "redeem":
             raise BadRequestError("该商品请使用积分兑换")
 
+        self._assert_cash_product_eligible(user_id, product)
+
         channel = resolve_pay_channel(pay_channel, user_agent)
 
         reuse_cutoff = _utcnow() - timedelta(minutes=self.settings.order_pending_reuse_minutes)
@@ -86,6 +88,33 @@ class PaymentService:
 
         pay_url = self._build_pay_url(order, product, channel)
         return order, pay_url, channel
+
+    def _assert_cash_product_eligible(self, user_id: int, product: Product) -> None:
+        limit = product.per_user_limit or 0
+        if limit > 0:
+            paid_count = (
+                self.db.query(Order)
+                .filter(
+                    Order.user_id == user_id,
+                    Order.product_id == product.id,
+                    Order.status == "paid",
+                )
+                .count()
+            )
+            if paid_count >= limit:
+                raise BadRequestError("已达该商品购买上限")
+
+        payload = product.grant_payload or {}
+        if payload.get("collection_pass_premium") or product.product_type == "collection_pass":
+            from app.services.collection_pass_service import CollectionPassService
+
+            user = self.db.get(User, user_id)
+            if user:
+                progress = CollectionPassService(self.db)._get_or_create_progress(
+                    user, CollectionPassService(self.db)._get_active_season()
+                )
+                if progress.premium_unlocked:
+                    raise BadRequestError("已解锁藏品赛季手册尊享版，无需重复购买")
 
     def _build_alipay_client(self):
         from alipay import DCAliPay
@@ -330,6 +359,14 @@ class PaymentService:
 
         pass_svc = SeasonPassService(self.db)
         pass_svc.apply_cosmetic_purchase(user, product)
+        payload = product.grant_payload or {}
+        if payload.get("collection_pass_premium") or product.product_type == "collection_pass":
+            from app.services.collection_pass_service import CollectionPassService
+
+            pass_collection = CollectionPassService(self.db)
+            if skip := payload.get("collection_pass_level_skip"):
+                pass_collection.grant_level_skip(user, int(skip))
+            pass_collection.unlock_premium(user)
         if product.grant_season_pass_days > 0:
             pass_svc.grant_daily_if_eligible(user, commit=False)
 

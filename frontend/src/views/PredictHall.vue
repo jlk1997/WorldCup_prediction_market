@@ -61,6 +61,8 @@
     <StreakRiskBanner :status="dailyStatus" />
 
     <GrowthPrimaryCard :status="dailyStatus" />
+    <CollectionPassMiniCard v-if="authState.user" />
+    <CollectionPassNudgeBar :status="dailyStatus" />
 
     <MatchDayShareBar v-if="dailyStatus?.match_day && dailyStatus?.activation_segment === 'active'" :status="dailyStatus" />
 
@@ -463,6 +465,8 @@ import DailyRitualPanel from '../components/DailyRitualPanel.vue'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
 import PredictFirstCoach from '../components/PredictFirstCoach.vue'
 import GrowthPrimaryCard from '../components/GrowthPrimaryCard.vue'
+import CollectionPassNudgeBar from '../components/collectible/CollectionPassNudgeBar.vue'
+import CollectionPassMiniCard from '../components/collectible/CollectionPassMiniCard.vue'
 import MatchDayShareBar from '../components/MatchDayShareBar.vue'
 import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
 import { usePredictHighlightScroll } from '../composables/usePredictHighlightScroll'

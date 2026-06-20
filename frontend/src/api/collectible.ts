@@ -192,13 +192,19 @@ export async function getSynthesisOptions() {
   return data.options
 }
 
-export async function synthesizeCard(cardCode: string) {
-  const { data } = await apiClient.post('/api/collectible/synthesize', { card_code: cardCode })
+export async function synthesizeCard(cardCode: string, useCoinFill = false) {
+  const { data } = await apiClient.post('/api/collectible/synthesize', {
+    card_code: cardCode,
+    use_coin_fill: useCoinFill,
+  })
   return data
 }
 
-export async function upgradeCollectibleCard(cardCode: string) {
-  const { data } = await apiClient.post('/api/collectible/upgrade', { card_code: cardCode })
+export async function upgradeCollectibleCard(cardCode: string, useCoinFill = false) {
+  const { data } = await apiClient.post('/api/collectible/upgrade', {
+    card_code: cardCode,
+    use_coin_fill: useCoinFill,
+  })
   return data
 }
 

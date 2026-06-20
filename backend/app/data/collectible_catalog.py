@@ -62,6 +62,8 @@ DROP_WEIGHTS_BY_SOURCE: dict[str, dict[str, float]] = {
     "matchday": {"common": 0.25, "rare": 0.45, "epic": 0.25, "legend": 0.05},
     "referral": {"common": 0.20, "rare": 0.40, "epic": 0.30, "legend": 0.10},
     "synthesis": {"common": 1.0, "rare": 0.0, "epic": 0.0, "legend": 0.0},
+    "event_cheer": {"common": 0.20, "rare": 0.35, "epic": 0.35, "legend": 0.10},
+    "collection_pass": {"common": 0.0, "rare": 0.0, "epic": 0.5, "legend": 0.5},
 }
 
 
@@ -232,3 +234,9 @@ def build_card_catalog(db: Session) -> tuple[list[dict], list[dict]]:
         )
 
     return cards, set_defs
+
+
+def pass_and_event_cards() -> tuple[list[dict], list[dict]]:
+    from app.data.collection_pass_catalog import EVENT_SET_DEFS, PASS_LIMITED_CARD_DEFS
+
+    return list(PASS_LIMITED_CARD_DEFS), list(EVENT_SET_DEFS)

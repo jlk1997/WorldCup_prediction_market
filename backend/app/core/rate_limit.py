@@ -220,6 +220,16 @@ def rate_limit_arena_spend(user_id: int) -> None:
     )
 
 
+def rate_limit_collection_pass_spend(user_id: int) -> None:
+    """Coin-spend collection pass actions (xp boost, event cheer)."""
+    check_rate_limit(
+        f"rl:collection_pass:spend:{user_id}",
+        limit=20,
+        window_sec=60,
+        message="操作过于频繁，请稍后再试",
+    )
+
+
 def rate_limit_refresh(request: Request, refresh_token: str | None = None) -> None:
     check_rate_limit(f"rl:refresh:ip:{client_ip(request)}", limit=30, window_sec=60)
     if refresh_token:

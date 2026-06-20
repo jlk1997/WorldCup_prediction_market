@@ -12,6 +12,7 @@ export const activationSegment = computed(() => dailyStatus.value?.activation_se
 export const predictCountTotal = computed(() => dailyStatus.value?.predict_count_total ?? 0)
 export const nextPredictableMatch = computed(() => dailyStatus.value?.next_predictable_match ?? null)
 export const activationNudge = computed(() => dailyStatus.value?.activation_nudge ?? null)
+export const collectionPassNudge = computed(() => dailyStatus.value?.collection_pass_nudge ?? null)
 export const needsFirstPredict = computed(
   () =>
     activationSegment.value === 'never_predicted' || activationSegment.value === 'profile_only',

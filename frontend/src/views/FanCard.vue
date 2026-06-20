@@ -28,6 +28,9 @@
         <div class="wall-grid">
           <div v-for="c in topCards" :key="c.code" class="wall-card" :class="`rarity-${c.rarity}`">
             <span class="wall-name">{{ c.name }}</span>
+            <span v-if="c.series === 'pass_limited' || c.series === 'event_limited'" class="wall-series">
+              {{ c.series === 'pass_limited' ? '手册限定' : '活动限定' }}
+            </span>
             <span class="wall-rarity">{{ rarityLabel(c.rarity) }}</span>
           </div>
         </div>
@@ -368,6 +371,10 @@ onMounted(async () => {
 .wall-rarity {
   color: var(--wc-text-muted);
   font-size: 0.65rem;
+}
+.wall-series {
+  color: var(--wc-gold);
+  font-size: 0.62rem;
 }
 .actions { display: flex; flex-direction: column; gap: 10px; }
 

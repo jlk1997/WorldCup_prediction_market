@@ -36,6 +36,8 @@
       :daily-status="dailyStatus"
     />
 
+    <CollectionPassNudgeBar :status="dailyStatus" />
+
     <TodayTasksCard
       :status="dailyStatus"
       :quiz="quiz"
@@ -57,6 +59,10 @@
       <button type="button" class="quick-btn" @click="$router.push('/arena')">
         <span class="quick-icon">🏟</span>
         <span>球迷擂台</span>
+      </button>
+      <button type="button" class="quick-btn" @click="$router.push('/collection?tab=pass')">
+        <span class="quick-icon">📖</span>
+        <span>藏品手册</span>
       </button>
       <button type="button" class="quick-btn" @click="$router.push('/shop')">
         <span class="quick-icon">🛒</span>
@@ -93,6 +99,7 @@
 import { computed } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import FanRecommendationsBar from '../FanRecommendationsBar.vue'
+import CollectionPassNudgeBar from '../collectible/CollectionPassNudgeBar.vue'
 import TodayTasksCard from './TodayTasksCard.vue'
 import AssetSummaryRow from './AssetSummaryRow.vue'
 import type { AuthUser } from '../../stores/authStore'

@@ -324,6 +324,8 @@ class NotificationService:
             "matchday": "比赛日",
             "referral": "召友",
             "synthesis": "合成",
+            "collection_pass": "手册",
+            "event_cheer": "活动应援",
         }
         src_label = source_labels.get(source, "玩法")
         if card.get("is_duplicate"):
@@ -351,6 +353,29 @@ class NotificationService:
             )
         except Exception:
             logger.exception("notify_collectible_drop failed user=%s log=%s", user_id, drop_log_id)
+
+    def notify_collection_pass_level_up(
+        self,
+        user_id: int,
+        level: int,
+        season_code: str,
+    ) -> None:
+        try:
+            self._upsert(
+                user_id,
+                "collection_pass",
+                f"手册升至 Lv.{level}",
+                "前往收藏册手册页领取对应等级奖励",
+                ref_type="collection_pass_season",
+                ref_id=level,
+                payload={"action": "/collection?tab=pass", "level": level, "season_code": season_code},
+            )
+        except Exception:
+            logger.exception(
+                "notify_collection_pass_level_up failed user=%s level=%s",
+                user_id,
+                level,
+            )
 
     def notify_collectible_set_claimed(
         self,

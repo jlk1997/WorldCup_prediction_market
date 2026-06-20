@@ -1,8 +1,22 @@
 <template>
   <div class="collection-page page-shell mobile-page">
     <header class="page-header">
-      <h1>球星收藏册</h1>
-      <p class="subtitle">猜中 · 签到 · 比赛日获得数字藏品</p>
+      <div class="header-row">
+        <div>
+          <h1>球星收藏册</h1>
+          <p class="subtitle">猜中 · 签到 · 比赛日获得数字藏品</p>
+        </div>
+        <button
+          v-if="passSummary && authState.accessToken"
+          type="button"
+          class="pass-quick-chip"
+          @click="goPassTab"
+        >
+          <span class="chip-lv">Lv.{{ passSummary.level }}</span>
+          <span class="chip-label">手册</span>
+          <span v-if="passClaimableCount" class="chip-badge">{{ passClaimableCount }}</span>
+        </button>
+      </div>
     </header>
 
     <div v-if="album" class="stats-bar glass-panel">
@@ -26,6 +40,14 @@
       <span v-if="chainStatus.pending_mints"> · {{ chainStatus.pending_mints }} 张上链中</span>
       <span v-if="chainStatus.minted_count"> · 已铸造 {{ chainStatus.minted_count }} 张</span>
     </p>
+
+    <CollectibleEventBanner
+      v-if="passSummary?.events?.length && activeTab !== 'pass'"
+      :events="passSummary.events"
+      :loading="eventCheerLoading"
+      class="page-event-banner"
+      @cheer="onEventCheer"
+    />
 
     <el-tabs v-model="activeTab" class="collection-tabs">
       <el-tab-pane label="图鉴" name="album">
@@ -98,7 +120,49 @@
             :shards="album?.shards ?? {}"
             :redeem-points="album?.redeem_points ?? 0"
             :loading-code="synthLoading"
-            @synthesize="onSynthesize"
+            @synthesize="(code, useCoin) => onSynthesize(code, useCoin)"
+          />
+        </div>
+      </el-tab-pane>
+
+      <el-tab-pane name="pass">
+        <template #label>
+          <span class="pass-tab-label">
+            手册
+            <el-badge v-if="passClaimableCount" :value="passClaimableCount" class="pass-tab-badge" />
+          </span>
+        </template>
+        <div v-loading="passLoading">
+          <p class="pass-compliance">{{ passSummary?.compliance_notice }}</p>
+          <div v-if="passSummary" class="pass-xp-tips glass-inner">
+            <span class="tips-label">获得经验</span>
+            <div class="tips-chips">
+              <span>竞猜 +10/猜中 +25</span>
+              <span>签到 +15</span>
+              <span>助威 +5</span>
+              <span>任务 +50</span>
+            </div>
+          </div>
+          <CollectibleEventBanner
+            :events="passSummary?.events"
+            :loading="eventCheerLoading"
+            @cheer="onEventCheer"
+          />
+          <CollectionPassTrack
+            v-if="passSummary"
+            :summary="passSummary"
+            :claiming="passClaiming"
+            :claiming-all="passClaimAllLoading"
+            @claim="onPassClaim"
+            @claim-all="onPassClaimAll"
+            @buy-premium="goBuyPass"
+            @buy-premium-plus="goBuyPassPlus"
+            @buy-xp-boost="onXpBoost"
+          />
+          <CollectionQuestList
+            v-if="passSummary"
+            :daily="passSummary.quests.daily"
+            :weekly="passSummary.quests.weekly"
           />
         </div>
       </el-tab-pane>
@@ -118,6 +182,13 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+
+    <CollectionPassStickyBar
+      :claimable-count="passClaimableCount"
+      :level="passSummary?.level"
+      :active-tab="activeTab"
+      @open-pass="goPassTab"
+    />
 
     <el-drawer v-model="detailOpen" :title="selectedCard?.name" size="88%" direction="btt">
       <div v-if="selectedCard" class="card-detail">
@@ -159,15 +230,24 @@
         </div>
         <div v-if="selectedCard.owned && (selectedCard.star ?? 0) < 3" class="detail-actions">
           <el-button
+            v-if="selectedCard.can_upgrade !== false"
             type="primary"
             :loading="upgradeLoading"
-            :disabled="selectedCard.can_upgrade === false"
-            @click="onUpgrade"
+            @click="onUpgrade(false)"
           >
             升星至 ★{{ (selectedCard.star ?? 1) + 1 }}
             <span v-if="selectedCard.upgrade_cost" class="upgrade-cost">
               （{{ selectedCard.upgrade_cost.shards }}碎片 · {{ selectedCard.upgrade_cost.redeem_points }}分）
             </span>
+          </el-button>
+          <el-button
+            v-else
+            type="warning"
+            plain
+            :loading="upgradeLoading"
+            @click="onUpgrade(true)"
+          >
+            球迷币补碎片升星
           </el-button>
         </div>
         <el-button plain @click="shareSelectedCard">分享卡牌</el-button>
@@ -177,12 +257,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { ElMessage } from 'element-plus'
+import { onMounted, ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import AlbumGrid from '@/components/collectible/AlbumGrid.vue'
 import CardItem from '@/components/collectible/CardItem.vue'
 import SetProgressCard from '@/components/collectible/SetProgressCard.vue'
 import SynthesizePanel from '@/components/collectible/SynthesizePanel.vue'
+import CollectionPassStickyBar from '@/components/collectible/CollectionPassStickyBar.vue'
+import CollectionPassTrack from '@/components/collectible/CollectionPassTrack.vue'
+import CollectionQuestList from '@/components/collectible/CollectionQuestList.vue'
+import CollectibleEventBanner from '@/components/collectible/CollectibleEventBanner.vue'
+import {
+  buyPassXpBoost,
+  claimAllPassRewards,
+  claimPassReward,
+  eventCheerDrop,
+  getCollectionPassSummary,
+  getCollectionPassSummaryLite,
+  type CollectionPassSummary,
+} from '@/api/collectionPass'
 import {
   claimCollectibleSet,
   getCollectibleActivity,
@@ -228,6 +322,8 @@ const albumHasMore = ref(false)
 const chainStatus = ref<CollectibleChainStatus | null>(null)
 const sets = ref<CardSetProgress[]>([])
 const synthOptions = ref<SynthesisOption[]>([])
+const router = useRouter()
+const route = useRoute()
 const activeTab = ref('album')
 const rarityFilter = ref('')
 const seriesFilter = ref('')
@@ -239,6 +335,64 @@ const claimingSet = ref<string | null>(null)
 const synthLoading = ref<string | null>(null)
 const upgradeLoading = ref(false)
 const retryLoading = ref(false)
+const passLoading = ref(false)
+const passSummary = ref<CollectionPassSummary | null>(null)
+const passClaimableCount = computed(() => passSummary.value?.claimable_count ?? 0)
+
+async function ensurePassSummary(force = false, needFull = false) {
+  const wantFull = needFull || activeTab.value === 'pass'
+  if (!force && passSummary.value) {
+    if (!wantFull || (passSummary.value.tracks?.length ?? 0) > 0) {
+      return passSummary.value
+    }
+  }
+  passLoading.value = wantFull && activeTab.value === 'pass'
+  try {
+    if (wantFull) {
+      passSummary.value = await getCollectionPassSummary(force)
+      loadedTabs.add('pass')
+    } else {
+      const lite = await getCollectionPassSummaryLite(force)
+      passSummary.value = {
+        ...lite,
+        tracks: passSummary.value?.tracks?.length ? passSummary.value.tracks : [],
+      }
+    }
+    return passSummary.value
+  } catch (e: unknown) {
+    if (activeTab.value === 'pass') {
+      ElMessage.error((e as Error)?.message || '手册加载失败')
+    }
+    return null
+  } finally {
+    passLoading.value = false
+  }
+}
+
+function patchPassClaimLocal(level: number, track: 'free' | 'premium') {
+  if (!passSummary.value) return
+  const row = passSummary.value.tracks.find((t) => t.level === level)
+  if (row) {
+    if (track === 'free') {
+      row.free_claimed = true
+      row.free_claimable = false
+    } else {
+      row.premium_claimed = true
+      row.premium_claimable = false
+    }
+  }
+  if (track === 'free') {
+    if (!passSummary.value.claimed_free_levels.includes(level)) {
+      passSummary.value.claimed_free_levels.push(level)
+    }
+  } else if (!passSummary.value.claimed_premium_levels.includes(level)) {
+    passSummary.value.claimed_premium_levels.push(level)
+  }
+  passSummary.value.claimable_count = Math.max(0, (passSummary.value.claimable_count ?? 1) - 1)
+}
+const passClaiming = ref<string | null>(null)
+const passClaimAllLoading = ref(false)
+const eventCheerLoading = ref(false)
 
 const loadedTabs = new Set<string>()
 let filterDebounce: ReturnType<typeof setTimeout> | null = null
@@ -340,7 +494,7 @@ async function loadActivityTab() {
   }
 }
 
-async function refreshAfterMutation() {
+async function refreshAfterMutation(reloadPass = false) {
   loadedTabs.delete('sets')
   loadedTabs.delete('synth')
   loadedTabs.delete('activity')
@@ -348,6 +502,9 @@ async function refreshAfterMutation() {
   if (activeTab.value === 'sets') await loadSetsTab()
   if (activeTab.value === 'synth') await loadSynthTab()
   if (activeTab.value === 'activity') await loadActivityTab()
+  if (reloadPass || activeTab.value === 'pass') {
+    await ensurePassSummary(true)
+  }
   chainStatus.value = await getCollectibleChainStatus().catch(() => null)
 }
 
@@ -355,7 +512,138 @@ watch(activeTab, (tab) => {
   if (tab === 'sets') void loadSetsTab()
   if (tab === 'synth') void loadSynthTab()
   if (tab === 'activity') void loadActivityTab()
+  if (tab === 'pass') void loadPassTab()
 })
+
+async function loadPassTab() {
+  if (loadedTabs.has('pass') && (passSummary.value?.tracks?.length ?? 0) > 0) {
+    await maybeClaimAllFromQuery()
+    return
+  }
+  await ensurePassSummary(false, true)
+  await maybeClaimAllFromQuery()
+}
+
+async function maybeClaimAllFromQuery() {
+  if (route.query.claim !== 'all') return
+  if (!passSummary.value?.claimable_count) {
+    router.replace({ path: '/collection', query: { tab: 'pass' } })
+    return
+  }
+  router.replace({ path: '/collection', query: { tab: 'pass' } })
+  if (!passClaimAllLoading.value) await onPassClaimAll()
+}
+
+async function onPassClaimAll() {
+  passClaimAllLoading.value = true
+  try {
+    const res = await claimAllPassRewards()
+    if (!res.claimed_count) {
+      ElMessage.info('暂无可领取奖励')
+      return
+    }
+    let cardShown = false
+    let coinTotal = 0
+    let pointTotal = 0
+    for (const item of res.claims) {
+      const g = item.grants as Record<string, unknown>
+      if (typeof g.fan_coins === 'number') coinTotal += g.fan_coins
+      if (typeof g.redeem_points === 'number') pointTotal += g.redeem_points
+      const drop = g.collectible_drop as { dropped?: boolean; cards?: unknown[] } | undefined
+      if (!cardShown && drop?.dropped && drop.cards?.length) {
+        openCollectibleReveal(drop as import('@/api/collectible').CollectibleDropResult, {
+          subtitle: item.track === 'premium' ? '手册尊享奖励' : '手册免费奖励',
+        })
+        cardShown = true
+      }
+    }
+    const parts: string[] = [`已领取 ${res.claimed_count} 项`]
+    if (coinTotal) parts.push(`+${coinTotal} 球迷币`)
+    if (pointTotal) parts.push(`+${pointTotal} 可用积分`)
+    if (!cardShown) ElMessage.success(parts.join(' · '))
+    await fetchMe()
+    await ensurePassSummary(true, true)
+  } catch (e: unknown) {
+    ElMessage.error((e as Error)?.message || '一键领取失败')
+  } finally {
+    passClaimAllLoading.value = false
+    passClaiming.value = null
+  }
+}
+
+async function onPassClaim(level: number, track: 'free' | 'premium') {
+  passClaiming.value = `${level}-${track}`
+  try {
+    const res = await claimPassReward(level, track)
+    const drop = res.grants?.collectible_drop as { dropped?: boolean; cards?: unknown[] } | undefined
+    if (drop?.dropped && drop.cards?.length) {
+      openCollectibleReveal(drop as import('@/api/collectible').CollectibleDropResult, {
+        subtitle: track === 'premium' ? '手册尊享奖励' : '手册免费奖励',
+      })
+    } else {
+      const parts: string[] = []
+      const g = res.grants as Record<string, unknown>
+      if (g.fan_coins) parts.push(`+${g.fan_coins} 球迷币`)
+      if (g.redeem_points) parts.push(`+${g.redeem_points} 可用积分`)
+      if (g.badge) parts.push('徽章已发放')
+      ElMessage.success(parts.length ? `已领取 · ${parts.join(' · ')}` : '奖励已领取')
+    }
+    patchPassClaimLocal(level, track)
+    await fetchMe()
+    void ensurePassSummary(true)
+  } catch (e: unknown) {
+    ElMessage.error((e as Error)?.message || '领取失败')
+  } finally {
+    passClaiming.value = null
+  }
+}
+
+function goPassTab() {
+  activeTab.value = 'pass'
+  void loadPassTab()
+}
+
+function goBuyPass() {
+  router.push('/shop?highlight=collection_pass')
+}
+
+function goBuyPassPlus() {
+  router.push('/shop?highlight=collection_pass_plus')
+}
+
+async function onXpBoost() {
+  try {
+    await ElMessageBox.confirm(
+      '消耗 30 球迷币激活 24 小时手册经验 +50%？',
+      '经验加成',
+      { confirmButtonText: '确认购买', cancelButtonText: '取消', type: 'info' },
+    )
+    await buyPassXpBoost()
+    ElMessage.success('经验加成已激活（24h · XP +50%）')
+    await ensurePassSummary(true)
+  } catch (e: unknown) {
+    if (e === 'cancel' || (e as { message?: string })?.message === 'cancel') return
+    ElMessage.error((e as Error)?.message || '购买失败')
+  }
+}
+
+async function onEventCheer(teamId: number) {
+  eventCheerLoading.value = true
+  try {
+    const res = await eventCheerDrop(teamId)
+    if (res.collectible_drop?.dropped) {
+      openCollectibleReveal(res.collectible_drop, { subtitle: '活动应援掉落' })
+    } else {
+      ElMessage.info('本次未掉落，继续加油')
+    }
+    await fetchMe()
+    await ensurePassSummary(true)
+  } catch (e: unknown) {
+    ElMessage.error((e as Error)?.message || '活动应援失败')
+  } finally {
+    eventCheerLoading.value = false
+  }
+}
 
 async function openCardDetail(card: CollectibleCardBrief) {
   try {
@@ -392,10 +680,21 @@ async function onClaimSet(code: string) {
   }
 }
 
-async function onSynthesize(code: string) {
+async function onSynthesize(code: string, useCoinFill = false) {
+  if (useCoinFill) {
+    try {
+      await ElMessageBox.confirm(
+        '将使用球迷币按上限补足缺口碎片（确定性消耗，非随机抽卡）。确认继续？',
+        '球迷币补碎片',
+        { confirmButtonText: '确认合成', cancelButtonText: '取消', type: 'warning' },
+      )
+    } catch {
+      return
+    }
+  }
   synthLoading.value = code
   try {
-    const result = await synthesizeCard(code) as { card: CollectibleCardBrief }
+    const result = await synthesizeCard(code, useCoinFill) as { card: CollectibleCardBrief; coins_spent?: number }
     await fetchMe()
     await refreshAfterMutation()
     openCollectibleReveal(buildSynthesisDrop(result.card), { subtitle: '碎片合成' })
@@ -406,13 +705,25 @@ async function onSynthesize(code: string) {
   }
 }
 
-async function onUpgrade() {
+async function onUpgrade(useCoinFill = false) {
   if (!selectedCard.value?.code) return
+  if (useCoinFill) {
+    try {
+      await ElMessageBox.confirm(
+        '将使用球迷币按上限补足缺口碎片（确定性消耗）。确认升星？',
+        '球迷币补碎片升星',
+        { confirmButtonText: '确认升星', cancelButtonText: '取消', type: 'warning' },
+      )
+    } catch {
+      return
+    }
+  }
   upgradeLoading.value = true
   try {
-    const result = await upgradeCollectibleCard(selectedCard.value.code)
+    const result = await upgradeCollectibleCard(selectedCard.value.code, useCoinFill)
     selectedCard.value = result.card
-    ElMessage.success(`升星成功 · ★${result.new_star}`)
+    const coinNote = result.coins_spent ? ` · 消耗 ${result.coins_spent} 球迷币补碎片` : ''
+    ElMessage.success(`升星成功 · ★${result.new_star}${coinNote}`)
     await fetchMe()
     await refreshAfterMutation()
   } catch (e: unknown) {
@@ -480,12 +791,67 @@ async function onRetryMint() {
 }
 
 onMounted(async () => {
+  const tab = route.query.tab
+  if (typeof tab === 'string' && ['album', 'sets', 'synth', 'activity', 'pass'].includes(tab)) {
+    activeTab.value = tab
+  }
   await loadAlbum(true)
+  if (activeTab.value === 'pass') {
+    await ensurePassSummary(false, true)
+    await maybeClaimAllFromQuery()
+  } else {
+    void ensurePassSummary(false, false)
+  }
   getCollectibleChainStatus().then((s) => { chainStatus.value = s }).catch(() => {})
 })
 </script>
 
 <style scoped>
+.pass-compliance {
+  font-size: 0.72rem;
+  color: var(--wc-text-muted);
+  line-height: 1.45;
+  margin: 0 0 10px;
+}
+.pass-xp-tips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+.tips-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--wc-gold);
+  flex-shrink: 0;
+}
+.tips-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tips-chips span {
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--wc-text-muted);
+}
+.page-event-banner {
+  margin-bottom: 12px;
+}
+.pass-tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pass-tab-badge :deep(.el-badge__content) {
+  transform: none;
+  position: static;
+}
 .collection-page {
   max-width: 960px;
   margin: 0 auto;
@@ -495,6 +861,36 @@ onMounted(async () => {
   margin: 0 0 4px;
   font-size: 1.5rem;
   color: var(--wc-gold);
+}
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pass-quick-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  background: rgba(212, 165, 116, 0.1);
+  color: var(--wc-gold);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pass-quick-chip:hover {
+  background: rgba(212, 165, 116, 0.18);
+  border-color: rgba(212, 165, 116, 0.55);
+}
+.pass-quick-chip :deep(.el-badge__content) {
+  transform: none;
+  position: static;
 }
 .subtitle {
   margin: 0 0 16px;

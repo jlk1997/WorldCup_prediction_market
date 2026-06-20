@@ -9,11 +9,13 @@ _FRAME_LABELS = {
     "gold_wc": "头像金框",
     "silver_wc": "头像银框",
     "referral_squad": "召友头像框",
+    "pass_silver": "手册银框",
 }
 
 _THEME_LABELS = {
     "team_spirit": "全站主题色",
     "gold_wc": "世界杯金主题",
+    "pass_gold": "手册金主题",
 }
 
 
@@ -59,6 +61,10 @@ def build_product_grant_summary(product: Product, settings: Settings | None = No
             lines.append(label)
     if extra := payload.get("extra_free_predict_daily"):
         lines.append(f"每日免费竞猜 +{int(extra)}")
+    if payload.get("collection_pass_premium"):
+        lines.extend(["解锁尊享手册轨道", "限定球星卡 · 确定性奖励（非盲盒）"])
+    if payload.get("collection_pass_level_skip"):
+        lines.append(f"手册直升 +{int(payload['collection_pass_level_skip'])} 级")
     if badge_title := payload.get("badge_title"):
         lines.append(f"徽章「{badge_title}」")
     elif product.product_type == "cosmetic" and not payload:

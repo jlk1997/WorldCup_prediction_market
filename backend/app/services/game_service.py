@@ -226,6 +226,11 @@ class GameService:
             raise BadRequestError("您已竞猜过该场比赛") from None
         ArenaService(self.db).on_predict_submit(user, match_id)
         combo_result = ArenaService(self.db).try_predict_cheer_combo(user, match_id)
+        from app.services.collection_pass_service import CollectionPassService
+
+        CollectionPassService.hook_award(
+            user, self.db, "predict_submit", "game_prediction", pred.id, action="predict_submit"
+        )
         self.db.commit()
         self.db.refresh(pred)
         cache_delete_prefix("game:pick_stats:")
@@ -335,6 +340,15 @@ class GameService:
             collectible_drop = CollectibleService(self.db).signin_drop_if_milestone(user, streak)
         except Exception:
             logger.exception("Collectible signin drop failed")
+        from app.services.collection_pass_service import CollectionPassService
+
+        CollectionPassService.hook_award(
+            user, self.db, "signin", "signin_day", streak, action="signin"
+        )
+        if streak in (3, 7, 14):
+            CollectionPassService.hook_award(
+                user, self.db, "signin_milestone", "signin_streak", streak
+            )
         self.db.commit()
         cache_delete("stats:signin_today")
         self.db.refresh(user)
@@ -714,6 +728,11 @@ class GameService:
                 self._award_badge(user, f"streak_{user.win_streak}", f"{user.win_streak} 连胜")
             ArenaService(self.db).on_predict_settle(user, pred, match)
             collectible_drop = self._drop_collectible_on_win(user, pred, match)
+            from app.services.collection_pass_service import CollectionPassService
+
+            CollectionPassService.hook_award(
+                user, self.db, "predict_win", "game_prediction", pred.id, action="predict_win"
+            )
         else:
             pred.status = "lost"
             user.win_streak = 0
@@ -979,6 +998,11 @@ class GameService:
         arena_svc = ArenaService(self.db)
         cheer_result = arena_svc.on_cheer(user, match_id, team_id)
         combo_result = arena_svc.try_predict_cheer_combo(user, match_id)
+        from app.services.collection_pass_service import CollectionPassService
+
+        CollectionPassService.hook_award(
+            user, self.db, "cheer", "match", match_id, action="cheer"
+        )
         self.db.commit()
         self._referral_first_action(user)
         status = self.get_cheer_status(match_id, user.id)
@@ -1378,6 +1402,15 @@ class GameService:
             "extra_ai_free_used": extra_ai_used,
         }
 
+    def _collection_pass_nudge(self, user: User) -> dict | None:
+        try:
+            from app.services.collection_pass_service import CollectionPassService
+
+            return CollectionPassService(self.db).pass_nudge(user)
+        except Exception:
+            logger.exception("collection pass nudge failed")
+            return None
+
     def get_daily_status(self, user: User) -> dict:
         today = _utcnow().date()
         free_used = self.wallet.count_free_predictions_today(user.id, today)
@@ -1454,6 +1487,7 @@ class GameService:
             "ritual_progress": self._ritual_progress(checklist),
             "qq_group_claimed": qq_claimed,
             "pass_benefits": self._pass_benefits_today(user),
+            "collection_pass_nudge": self._collection_pass_nudge(user),
         }
 
     def get_match_pick_stats(self, match_id: int) -> dict:

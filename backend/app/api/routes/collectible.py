@@ -15,10 +15,12 @@ router = APIRouter(prefix="/api/collectible", tags=["collectible"])
 
 class SynthesizeRequest(BaseModel):
     card_code: str = Field(..., min_length=2, max_length=80)
+    use_coin_fill: bool = False
 
 
 class UpgradeRequest(BaseModel):
     card_code: str = Field(..., min_length=2, max_length=80)
+    use_coin_fill: bool = False
 
 
 @router.get("/summary")
@@ -91,14 +93,14 @@ def get_card(card_code: str, user: User = Depends(get_current_user), db: Session
 
 @router.post("/synthesize")
 def synthesize(body: SynthesizeRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    result = CollectibleService(db).synthesize(user, body.card_code)
+    result = CollectibleService(db).synthesize(user, body.card_code, use_coin_fill=body.use_coin_fill)
     db.commit()
     return result
 
 
 @router.post("/upgrade")
 def upgrade_star(body: UpgradeRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    result = CollectibleService(db).upgrade_star(user, body.card_code)
+    result = CollectibleService(db).upgrade_star(user, body.card_code, use_coin_fill=body.use_coin_fill)
     db.commit()
     return result
 

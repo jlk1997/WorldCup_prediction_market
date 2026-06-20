@@ -56,6 +56,7 @@ class CollectibleService:
     def __init__(self, db: Session):
         self.db = db
         self.wallet = WalletRepository(db)
+        self._event_boost_cached: dict | None = None
 
     def drop_cards(
         self,
@@ -119,6 +120,12 @@ class CollectibleService:
         }
         log_id = self._save_drop_log(user.id, source, ref_type, ref_id, result)
         self._notify_drop(user, result, log_id)
+        if result.get("dropped"):
+            from app.services.collection_pass_service import CollectionPassService
+
+            CollectionPassService.hook_award(
+                user, self.db, "card_drop", ref_type, ref_id or 0, action=None
+            )
         return result
 
     def signin_drop_if_milestone(self, user: User, streak: int) -> dict[str, Any] | None:
@@ -184,7 +191,12 @@ class CollectibleService:
             team_boost_id=team_id,
         )
 
-    def synthesize(self, user: User, card_code: str) -> dict[str, Any]:
+    def add_shards(self, user: User, shards: dict[str, int]) -> None:
+        for rarity, amount in shards.items():
+            if amount and int(amount) > 0:
+                self._add_shards(user.id, str(rarity), int(amount))
+
+    def synthesize(self, user: User, card_code: str, *, use_coin_fill: bool = False) -> dict[str, Any]:
         card = self.db.query(CollectibleCard).filter(CollectibleCard.code == card_code, CollectibleCard.active.is_(True)).first()
         if not card:
             raise NotFoundError("卡牌不存在")
@@ -199,8 +211,17 @@ class CollectibleService:
             raise BadRequestError("你已拥有该卡牌")
 
         shard_row = self._get_shard_row(user.id, card.rarity, for_update=True)
-        if (shard_row.amount or 0) < cost["shards"]:
-            raise BadRequestError(f"碎片不足，需要 {cost['shards']} 个{card.rarity}碎片")
+        coins_spent = 0
+        shard_need = cost["shards"]
+        shard_have = shard_row.amount or 0
+        if shard_have < shard_need:
+            deficit = shard_need - shard_have
+            if not use_coin_fill:
+                raise BadRequestError(f"碎片不足，需要 {shard_need} 个{card.rarity}碎片")
+            coins_spent = self._buy_shards_with_coins(user, card.rarity, deficit)
+            shard_row = self._get_shard_row(user.id, card.rarity, for_update=True)
+        if (shard_row.amount or 0) < shard_need:
+            raise BadRequestError(f"碎片不足，需要 {shard_need} 个{card.rarity}碎片")
         if (user.redeem_points or 0) < cost["redeem_points"]:
             raise BadRequestError(f"可用积分不足，需要 {cost['redeem_points']} 分")
 
@@ -214,11 +235,12 @@ class CollectibleService:
             "card": self._card_brief(card, grant),
             "shards_spent": cost["shards"],
             "redeem_points_spent": cost["redeem_points"],
+            "coins_spent": coins_spent,
             "shard_balance": shard_row.amount,
             "redeem_points": user.redeem_points,
         }
 
-    def upgrade_star(self, user: User, card_code: str) -> dict[str, Any]:
+    def upgrade_star(self, user: User, card_code: str, *, use_coin_fill: bool = False) -> dict[str, Any]:
         card = self.db.query(CollectibleCard).filter(CollectibleCard.code == card_code).first()
         if not card:
             raise NotFoundError("卡牌不存在")
@@ -239,8 +261,17 @@ class CollectibleService:
             raise BadRequestError("无法继续升星")
 
         shard_row = self._get_shard_row(user.id, card.rarity, for_update=True)
-        if (shard_row.amount or 0) < cost["shards"]:
-            raise BadRequestError(f"碎片不足，需要 {cost['shards']} 个{card.rarity}碎片")
+        coins_spent = 0
+        shard_need = cost["shards"]
+        shard_have = shard_row.amount or 0
+        if shard_have < shard_need:
+            deficit = shard_need - shard_have
+            if not use_coin_fill:
+                raise BadRequestError(f"碎片不足，需要 {shard_need} 个{card.rarity}碎片")
+            coins_spent = self._buy_shards_with_coins(user, card.rarity, deficit)
+            shard_row = self._get_shard_row(user.id, card.rarity, for_update=True)
+        if (shard_row.amount or 0) < shard_need:
+            raise BadRequestError(f"碎片不足，需要 {shard_need} 个{card.rarity}碎片")
         if (user.redeem_points or 0) < cost["redeem_points"]:
             raise BadRequestError(f"可用积分不足，需要 {cost['redeem_points']} 分")
 
@@ -256,9 +287,114 @@ class CollectibleService:
             "new_star": next_star,
             "shards_spent": cost["shards"],
             "redeem_points_spent": cost["redeem_points"],
+            "coins_spent": coins_spent,
             "shard_balance": shard_row.amount,
             "redeem_points": user.redeem_points,
         }
+
+    def event_cheer_drop(self, user: User, team_id: int) -> dict[str, Any]:
+        from app.db.models import Team
+        from app.services.arena_service import _team_date_ref
+        from app.services.collection_pass_service import CollectionPassService
+
+        if not self.db.get(Team, team_id):
+            raise NotFoundError("球队不存在")
+        if not user.favorite_team_id:
+            raise BadRequestError("请先在个人资料设置主队")
+        if team_id != user.favorite_team_id:
+            raise BadRequestError("活动应援仅支持为你的主队应援")
+
+        events = CollectionPassService(self.db).get_active_events()
+        if not events:
+            raise BadRequestError("当前无进行中的藏品活动")
+        event = events[0]
+        today = _utcnow().date()
+        ref_id = _team_date_ref(team_id, today)
+
+        locked = self.db.query(User).filter(User.id == user.id).with_for_update().first()
+        if not locked:
+            raise NotFoundError("用户不存在")
+        user = locked
+
+        existing = (
+            self.db.query(CollectibleDropLog)
+            .filter(
+                CollectibleDropLog.user_id == user.id,
+                CollectibleDropLog.source == "event_cheer",
+                CollectibleDropLog.ref_type == "team_date",
+                CollectibleDropLog.ref_id == ref_id,
+            )
+            .first()
+        )
+        if existing and existing.result_json:
+            return existing.result_json
+
+        self.wallet.deduct_coins(user, event.coin_action_cost, "event_cheer", "team", team_id)
+        boost = event.boost_json or {}
+        forced_code = None
+        if boost.get("forced_card_code"):
+            forced_code = str(boost["forced_card_code"])
+        elif random.random() < float(boost.get("forced_card_chance", 0.35)):
+            card = (
+                self.db.query(CollectibleCard)
+                .filter(
+                    CollectibleCard.active.is_(True),
+                    CollectibleCard.series == event.event_series,
+                )
+                .first()
+            )
+            if card:
+                forced_code = card.code
+        if forced_code:
+            return self.drop_cards(
+                user,
+                "event_cheer",
+                "team_date",
+                ref_id,
+                card_code=forced_code,
+                team_boost_id=team_id,
+            )
+        return self.drop_cards(
+            user,
+            "event_cheer",
+            "team_date",
+            ref_id,
+            team_boost_id=team_id,
+        )
+
+    def _buy_shards_with_coins(self, user: User, rarity: str, deficit: int) -> int:
+        from app.core.config import get_settings
+        from app.data.collection_pass_catalog import COIN_SHARD_FILL_COST, DAILY_COIN_SHARD_FILL_CAP
+        from app.db.models.commerce import CollectionPassProgress
+        from app.services.collection_pass_service import CollectionPassService
+
+        settings = get_settings()
+        deficit = max(1, min(int(deficit), settings.collection_pass_max_shard_deficit))
+        unit = COIN_SHARD_FILL_COST.get(rarity, 5)
+        cost = unit * deficit
+
+        cp_svc = CollectionPassService(self.db)
+        season = cp_svc._get_active_season()
+        progress = cp_svc._get_or_create_progress(user, season)
+        progress = (
+            self.db.query(CollectionPassProgress)
+            .filter(CollectionPassProgress.id == progress.id)
+            .with_for_update()
+            .one()
+        )
+        today = _utcnow().date()
+        if progress.coin_shard_fill_date != today:
+            progress.coin_shard_fill_date = today
+            progress.coin_shard_fill_today = 0
+        cap = DAILY_COIN_SHARD_FILL_CAP
+        if (progress.coin_shard_fill_today or 0) + cost > cap:
+            raise BadRequestError(f"今日球迷币补碎片已达上限（{cap} 币）")
+        if (user.fan_coins or 0) < cost:
+            raise BadRequestError(f"球迷币不足，补碎片需要 {cost} 币")
+        progress.coin_shard_fill_today = (progress.coin_shard_fill_today or 0) + cost
+        self.wallet.deduct_coins(user, cost, "collectible_shard_fill", "shard", hash(rarity) % 100000)
+        self._add_shards(user.id, rarity, deficit)
+        return cost
 
     def get_album(
         self,
@@ -378,6 +514,11 @@ class CollectibleService:
 
         min_idx = RARITY_ORDER.index(min_rarity) if min_rarity in RARITY_ORDER else 1
         allowed = RARITY_ORDER[min_idx:]
+        series_rank = case(
+            (CollectibleCard.series == "pass_limited", 0),
+            (CollectibleCard.series == "event_limited", 1),
+            else_=2,
+        )
         rarity_rank = case(
             (CollectibleCard.rarity == "legend", 0),
             (CollectibleCard.rarity == "epic", 1),
@@ -393,7 +534,7 @@ class CollectibleService:
                 CollectibleCard.active.is_(True),
                 CollectibleCard.rarity.in_(allowed),
             )
-            .order_by(rarity_rank, CollectibleCard.sort_order, CollectibleCard.id)
+            .order_by(series_rank, rarity_rank, CollectibleCard.sort_order, CollectibleCard.id)
             .limit(min(max(1, limit), 12))
             .all()
         )
@@ -492,6 +633,11 @@ class CollectibleService:
         progress.claimed_at = _utcnow()
         self.db.flush()
         self._notify_set_claimed(user, sdef)
+        from app.services.collection_pass_service import CollectionPassService
+
+        CollectionPassService.hook_award(
+            user, self.db, "set_complete", "card_set", sdef.id, action="set_complete"
+        )
         return {
             "set_code": set_code,
             "reward": reward,
@@ -525,20 +671,25 @@ class CollectibleService:
         return out
 
     def get_summary(self, user: User) -> dict[str, Any]:
-        owned_count = (
-            self.db.query(UserCollectibleCard)
+        from sqlalchemy import case, func
+
+        owned_count, failed_mints = (
+            self.db.query(
+                func.count(UserCollectibleCard.id),
+                func.coalesce(
+                    func.sum(case((UserCollectibleCard.chain_status == "failed", 1), else_=0)),
+                    0,
+                ),
+            )
             .filter(UserCollectibleCard.user_id == user.id)
-            .count()
+            .one()
         )
-        total_active = self.db.query(CollectibleCard).filter(CollectibleCard.active.is_(True)).count()
+        total_active = self._total_active_cards()
         streak = int(user.signin_streak or 0)
         milestone_map = {3: "rare", 7: "epic", 14: "legend"}
         next_day = next((d for d in (3, 7, 14) if d > streak), None)
-        failed_mints = (
-            self.db.query(UserCollectibleCard)
-            .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.chain_status == "failed")
-            .count()
-        )
+        owned_count = int(owned_count or 0)
+        failed_mints = int(failed_mints or 0)
         return {
             "owned_count": owned_count,
             "total_cards": total_active,
@@ -711,7 +862,9 @@ class CollectibleService:
                 ids.add(team.id)
         return ids
 
-    def _is_card_available(self, card: CollectibleCard, source: str) -> bool:
+    def _is_card_available(
+        self, card: CollectibleCard, source: str, *, event_boost: dict | None = None
+    ) -> bool:
         now = _utcnow()
         if card.available_from and now < card.available_from:
             return False
@@ -721,7 +874,22 @@ class CollectibleService:
             return False
         if card.series == "matchday_limited" and source != "matchday":
             return False
+        if card.series == "pass_limited" and source != "collection_pass":
+            return False
+        if card.series == "event_limited" and source not in ("event_cheer", "matchday"):
+            return False
+        if card.series == "event_limited" and source == "matchday":
+            boost = event_boost if event_boost is not None else self._active_event_boost()
+            if not boost:
+                return False
         return True
+
+    def _apply_source_series_sql(self, q, source: str):
+        if source == "collection_pass":
+            return q.filter(CollectibleCard.series == "pass_limited")
+        if source == "matchday":
+            return q.filter(CollectibleCard.series != "pass_limited")
+        return q.filter(CollectibleCard.series.notin_(["pass_limited", "matchday_limited"]))
 
     def _series_options(self) -> list[dict[str, str]]:
         if _catalog_cache["series_options"] is not None:
@@ -739,6 +907,8 @@ class CollectibleService:
             "team_squad": "球星",
             "group": "小组",
             "matchday_limited": "比赛日限定",
+            "pass_limited": "手册限定",
+            "event_limited": "活动限定",
         }
         options = [{"value": r[0], "label": labels.get(r[0], r[0])} for r in rows if r[0]]
         _catalog_cache["series_options"] = options
@@ -778,6 +948,35 @@ class CollectibleService:
             "compliance_notice": "文昌链数字藏品由 AVATA 平台托管，仅限平台内展示，不可转赠交易。",
         }
 
+    def _total_active_cards(self) -> int:
+        if _catalog_cache["total_active"] is not None:
+            return int(_catalog_cache["total_active"])
+        total = self.db.query(CollectibleCard).filter(CollectibleCard.active.is_(True)).count()
+        _catalog_cache["total_active"] = total
+        return total
+
+    def _active_event_boost(self) -> dict:
+        if self._event_boost_cached is not None:
+            return self._event_boost_cached
+        try:
+            from app.core.cache import cache_get
+            from app.services.collection_pass_service import EVENTS_CACHE_KEY, CollectionPassService
+
+            cached = cache_get(EVENTS_CACHE_KEY)
+            if cached and isinstance(cached, list) and cached:
+                boost = cached[0].get("boost_json") or {}
+                self._event_boost_cached = boost
+                return boost
+            events = CollectionPassService(self.db).get_active_events()
+            if events:
+                boost = events[0].boost_json or {}
+                self._event_boost_cached = boost
+                return boost
+        except Exception:
+            pass
+        self._event_boost_cached = {}
+        return {}
+
     def _roll_rarity(self, source: str) -> str:
         weights = DROP_WEIGHTS_BY_SOURCE.get(source, DROP_WEIGHTS_BY_SOURCE["predict_win"])
         roll = random.random()
@@ -795,12 +994,16 @@ class CollectibleService:
         match_team_ids: set[int],
         source: str,
     ) -> CollectibleCard | None:
-        q = self.db.query(CollectibleCard).filter(
-            CollectibleCard.active.is_(True),
-            CollectibleCard.rarity == rarity,
+        q = self._apply_source_series_sql(
+            self.db.query(CollectibleCard).filter(
+                CollectibleCard.active.is_(True),
+                CollectibleCard.rarity == rarity,
+            ),
+            source,
         )
         if source == "signin" and rarity == "legend":
             q = q.filter(CollectibleCard.series == "legend")
+        event_boost = self._active_event_boost()
         if source == "matchday" and boost_team_id:
             limited = (
                 self.db.query(CollectibleCard)
@@ -812,10 +1015,10 @@ class CollectibleService:
                 )
                 .first()
             )
-            if limited and self._is_card_available(limited, source):
+            if limited and self._is_card_available(limited, source, event_boost=event_boost):
                 return limited
-        candidates = q.all()
-        candidates = [c for c in candidates if self._is_card_available(c, source)]
+        candidates = q.limit(300).all()
+        candidates = [c for c in candidates if self._is_card_available(c, source, event_boost=event_boost)]
         if not candidates:
             return None
 
@@ -830,6 +1033,10 @@ class CollectibleService:
                 weight *= 0.5
             if source == "matchday" and card.series == "matchday_limited":
                 weight *= 3.0
+            if source == "event_cheer" and card.series == "event_limited":
+                weight *= float(event_boost.get("series_weight", 3.0))
+            if source == "matchday" and card.series == "event_limited" and event_boost:
+                weight *= float(event_boost.get("matchday_series_weight", 2.0))
             weighted.append((card, weight))
 
         total = sum(w for _, w in weighted)

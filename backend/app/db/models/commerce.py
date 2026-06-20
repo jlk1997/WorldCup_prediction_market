@@ -558,3 +558,82 @@ class CollectibleDropLog(Base):
     ref_id: Mapped[int] = mapped_column(Integer, nullable=False)
     result_json: Mapped[dict | None] = mapped_column(JSONB)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class CollectionPassSeason(Base):
+    __tablename__ = "collection_pass_seasons"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    code: Mapped[str] = mapped_column(String(40), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    starts_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    ends_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    max_level: Mapped[int] = mapped_column(Integer, default=40, nullable=False)
+    config_json: Mapped[dict | None] = mapped_column(JSONB)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class CollectionPassProgress(Base):
+    __tablename__ = "collection_pass_progress"
+    __table_args__ = (UniqueConstraint("user_id", "season_id", name="uq_collection_pass_progress_user_season"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    season_id: Mapped[int] = mapped_column(ForeignKey("collection_pass_seasons.id", ondelete="CASCADE"), nullable=False)
+    xp: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    level: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    premium_unlocked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    claimed_free_json: Mapped[list | None] = mapped_column(JSONB, default=list)
+    claimed_premium_json: Mapped[list | None] = mapped_column(JSONB, default=list)
+    xp_boost_until: Mapped[datetime | None] = mapped_column(DateTime)
+    coin_shard_fill_today: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    coin_shard_fill_date: Mapped[date | None] = mapped_column(Date)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    season: Mapped["CollectionPassSeason"] = relationship("CollectionPassSeason")
+
+
+class CollectionPassXpLog(Base):
+    __tablename__ = "collection_pass_xp_logs"
+    __table_args__ = (UniqueConstraint("user_id", "season_id", "source", "ref_type", "ref_id", name="uq_collection_pass_xp_idempotent"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    season_id: Mapped[int] = mapped_column(ForeignKey("collection_pass_seasons.id", ondelete="CASCADE"), nullable=False)
+    source: Mapped[str] = mapped_column(String(40), nullable=False)
+    ref_type: Mapped[str] = mapped_column(String(40), nullable=False)
+    ref_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    amount: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class CollectionQuestProgress(Base):
+    __tablename__ = "collection_quest_progress"
+    __table_args__ = (UniqueConstraint("user_id", "quest_key", "period_key", name="uq_collection_quest_progress"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    quest_key: Mapped[str] = mapped_column(String(40), nullable=False)
+    period_key: Mapped[str] = mapped_column(String(20), nullable=False)
+    progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    target: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    completed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    xp_awarded: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class CollectibleEvent(Base):
+    __tablename__ = "collectible_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    code: Mapped[str] = mapped_column(String(40), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    starts_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    ends_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    event_series: Mapped[str] = mapped_column(String(40), default="event_limited", nullable=False)
+    boost_json: Mapped[dict | None] = mapped_column(JSONB)
+    coin_action_cost: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
+    active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())

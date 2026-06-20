@@ -25,8 +25,21 @@
         </div>
 
         <div v-loading="loadingCash" class="products">
+          <div v-if="hasPassProducts" class="pass-shop-intro glass-panel">
+            <div class="intro-head">
+              <span class="intro-tag">藏品赛季手册</span>
+              <strong>玩法升级 · 确定性奖励</strong>
+            </div>
+            <p class="intro-desc">
+              付费仅解锁尊享轨道，限定卡按等级固定发放，非随机盲盒。购买前可先查看当前手册进度。
+            </p>
+            <div class="intro-milestones">
+              <span v-for="m in passMilestones" :key="m.level">Lv.{{ m.level }} {{ m.label }}</span>
+            </div>
+            <router-link to="/collection?tab=pass" class="intro-link">查看我的手册进度 ›</router-link>
+          </div>
           <div
-            v-for="p in cashProducts"
+            v-for="p in sortedCashProducts"
             :key="p.id"
             class="product glass-panel"
             :class="{ featured: p.featured, [`type-${p.product_type}`]: true, 'sku-highlight': p.sku === highlightSku }"
@@ -34,13 +47,14 @@
           >
             <div class="product-head">
               <h3>{{ p.name }}</h3>
-              <span v-if="p.featured || p.product_type === 'season_pass'" class="rec-tag">推荐</span>
+              <span v-if="p.featured || p.product_type === 'season_pass' || p.product_type === 'collection_pass'" class="rec-tag">推荐</span>
             </div>
             <p class="desc">{{ p.description }}</p>
+            <span v-if="p.product_type === 'collection_pass'" class="pass-compliance-tag">确定性奖励 · 非盲盒</span>
             <div class="price">¥{{ (p.price_fen / 100).toFixed(2) }}</div>
             <div class="grant" v-if="p.coins_grant && p.product_type !== 'season_pass'">+{{ p.coins_grant }} 球迷币</div>
             <EntitlementPreview
-              v-if="p.product_type === 'season_pass' || p.product_type === 'cosmetic'"
+              v-if="p.product_type === 'season_pass' || p.product_type === 'cosmetic' || p.product_type === 'collection_pass'"
               :avatar-frame="cosmeticPreviewFromProduct(p).avatarFrame"
               :theme-key="cosmeticPreviewFromProduct(p).themeKey"
               :grants="buildProductGrantPreview(p)"
@@ -161,6 +175,7 @@ import PurchaseConfirmDialog from '../components/PurchaseConfirmDialog.vue'
 import PayProcessingOverlay from '../components/PayProcessingOverlay.vue'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildProductGrantPreview, cosmeticPreviewFromProduct } from '../utils/entitlements'
+import { PASS_MILESTONE_CARDS } from '../utils/passRewardLabels'
 import {
   isWeChatBrowser,
   clearPendingOrder,
@@ -200,6 +215,21 @@ const cashBuyLabel = computed(() => {
 
 watch(purchaseDialogOpen, (open) => setUiOverlay('shop-purchase', open))
 watch(payProcessing, (open) => setUiOverlay('shop-pay-processing', open))
+
+const passMilestones = PASS_MILESTONE_CARDS
+
+const sortedCashProducts = computed(() => {
+  return [...cashProducts.value].sort((a, b) => {
+    const aPass = a.product_type === 'collection_pass' ? 1 : 0
+    const bPass = b.product_type === 'collection_pass' ? 1 : 0
+    if (aPass !== bPass) return bPass - aPass
+    return a.price_fen - b.price_fen
+  })
+})
+
+const hasPassProducts = computed(() =>
+  cashProducts.value.some((p) => p.product_type === 'collection_pass'),
+)
 
 const sortedRedeemProducts = computed(() => {
   const pts = authState.user?.redeem_points ?? 0
@@ -469,6 +499,82 @@ onMounted(load)
   color: var(--wc-accent-rose, #e8a0bf);
   text-decoration: underline;
 }
+.product.type-collection_pass {
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  background: linear-gradient(160deg, rgba(212, 165, 116, 0.08), rgba(126, 184, 255, 0.04));
+}
+
+.pass-compliance-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(126, 184, 255, 0.12);
+  color: #7eb8ff;
+  width: fit-content;
+}
+
+.pass-shop-intro {
+  grid-column: 1 / -1;
+  padding: 16px 18px;
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 14px;
+  margin-bottom: 4px;
+}
+
+.intro-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.intro-tag {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(212, 165, 116, 0.2);
+  color: var(--wc-accent-gold);
+  font-weight: 600;
+}
+
+.intro-head strong {
+  font-size: 0.95rem;
+  color: #f5f0e8;
+}
+
+.intro-desc {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  color: var(--wc-text-muted);
+  line-height: 1.5;
+}
+
+.intro-milestones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.intro-milestones span {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--wc-gold);
+}
+
+.intro-link {
+  font-size: 0.8rem;
+  color: #7eb8ff;
+  text-decoration: none;
+}
+
+.intro-link:hover {
+  text-decoration: underline;
+}
+
 .product.sku-highlight {
   border: 2px solid rgba(212, 165, 116, 0.65);
   box-shadow: 0 0 24px rgba(212, 165, 116, 0.2);
