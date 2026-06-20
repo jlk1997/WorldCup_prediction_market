@@ -205,6 +205,7 @@ import {
   SOURCE_LABELS,
 } from '@/api/collectible'
 import { fetchMe } from '@/stores/authStore'
+import { buildSynthesisDrop, openCollectibleReveal } from '@/stores/collectibleRevealStore'
 import { downloadSharePoster } from '@/utils/sharePoster'
 import { authState } from '@/stores/authStore'
 import { usePageMeta } from '@/composables/usePageMeta'
@@ -394,10 +395,10 @@ async function onClaimSet(code: string) {
 async function onSynthesize(code: string) {
   synthLoading.value = code
   try {
-    await synthesizeCard(code)
-    ElMessage.success('合成成功')
+    const result = await synthesizeCard(code) as { card: CollectibleCardBrief }
     await fetchMe()
     await refreshAfterMutation()
+    openCollectibleReveal(buildSynthesisDrop(result.card), { subtitle: '碎片合成' })
   } catch (e: unknown) {
     ElMessage.error((e as Error)?.message || '合成失败')
   } finally {

@@ -1,7 +1,16 @@
 <template>
   <div
     class="card-item"
-    :class="[`rarity-${card.rarity}`, { owned: card.owned !== false, dim: card.owned === false }]"
+    :class="[
+      `rarity-${card.rarity}`,
+      {
+        owned: card.owned !== false,
+        dim: card.owned === false,
+        'reveal-enter': reveal,
+        'reveal-shard': reveal && revealDuplicate,
+      },
+    ]"
+    :style="reveal ? { animationDelay: `${revealDelay}ms` } : undefined"
     @click="$emit('select', card)"
   >
     <div class="card-frame">
@@ -38,7 +47,12 @@ import { computed } from 'vue'
 import type { CollectibleCardBrief } from '@/api/collectible'
 import { RARITY_LABELS } from '@/api/collectible'
 
-const props = defineProps<{ card: CollectibleCardBrief }>()
+const props = defineProps<{
+  card: CollectibleCardBrief
+  reveal?: boolean
+  revealDelay?: number
+  revealDuplicate?: boolean
+}>()
 defineEmits<{ select: [CollectibleCardBrief] }>()
 
 const rarityLabel = computed(() => RARITY_LABELS[props.card.rarity] || props.card.rarity)
@@ -57,6 +71,47 @@ const rarityLabel = computed(() => RARITY_LABELS[props.card.rarity] || props.car
 
 .card-item:active {
   transform: scale(0.98);
+}
+
+.card-item.reveal-enter {
+  animation: card-reveal-pop 0.62s cubic-bezier(0.34, 1.35, 0.64, 1) both;
+}
+
+.card-item.reveal-enter.reveal-shard {
+  animation: card-reveal-shard 0.72s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+@keyframes card-reveal-pop {
+  0% {
+    transform: perspective(800px) scale(0.35) rotateY(-88deg);
+    opacity: 0;
+  }
+  55% {
+    transform: perspective(800px) scale(1.08) rotateY(6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(800px) scale(1) rotateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes card-reveal-shard {
+  0% {
+    transform: scale(0.5) rotate(-8deg);
+    opacity: 0;
+    filter: grayscale(1) brightness(0.6);
+  }
+  40% {
+    transform: scale(1.05) rotate(2deg);
+    opacity: 1;
+    filter: grayscale(0.4) brightness(0.85);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+    filter: grayscale(0.75) brightness(0.72);
+  }
 }
 
 .card-frame {

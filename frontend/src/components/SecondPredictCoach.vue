@@ -21,6 +21,19 @@ import { useRouter } from 'vue-router'
 import { trackEvent } from '@/utils/analytics'
 import type { DailyStatus } from '@/api/commerce'
 import { fetchDailyStatus, useDailyStatusRef } from '@/stores/dailyStatusStore'
+import {
+  GuidePriority,
+  flushGuideQueue,
+  isGuideBlocked,
+  notifyGuideClosed,
+  notifyGuideOpened,
+  registerGuide,
+  requestGuide,
+  unregisterGuide,
+} from '@/composables/useGuideOrchestrator'
+import { isFeatureTourPending } from '@/composables/useGuideModal'
+import { guideModalState } from '@/composables/useGuideModal'
+import { predictReveal } from '@/stores/headerNotificationsStore'
 
 const props = defineProps<{
   status?: DailyStatus | null
@@ -33,6 +46,7 @@ const visible = ref(false)
 const effectiveStatus = computed(() => props.status ?? storeStatus.value)
 
 const SESSION_KEY = 'wc_second_predict_coach_shown'
+const COACH_ID = 'second-predict-coach'
 
 const title = computed(() => effectiveStatus.value?.activation_nudge?.title || '再来一场')
 const body = computed(() => {
@@ -55,6 +69,10 @@ const targetPath = computed(
 
 function shouldOpen() {
   if (effectiveStatus.value?.activation_segment !== 'one_and_done') return false
+  if (isFeatureTourPending()) return false
+  if (guideModalState.open) return false
+  if (predictReveal.visible) return false
+  if (isGuideBlocked(GuidePriority.SecondPredictCoach)) return false
   try {
     return sessionStorage.getItem(SESSION_KEY) !== '1'
   } catch {
@@ -62,9 +80,13 @@ function shouldOpen() {
   }
 }
 
-function open() {
-  if (!shouldOpen()) return
+function openCoach() {
+  if (!shouldOpen()) {
+    requestGuide(COACH_ID)
+    return
+  }
   visible.value = true
+  notifyGuideOpened(COACH_ID, GuidePriority.SecondPredictCoach)
   trackEvent('second_predict_coach_show')
 }
 
@@ -78,31 +100,42 @@ function markShown() {
 
 function dismiss() {
   visible.value = false
+  notifyGuideClosed(COACH_ID)
+  flushGuideQueue()
   markShown()
 }
 
 function goPredict() {
   markShown()
   visible.value = false
+  notifyGuideClosed(COACH_ID)
+  flushGuideQueue()
   trackEvent('second_predict_coach_click')
   router.push(targetPath.value)
 }
 
 async function onCoachRequest() {
   await fetchDailyStatus(true)
-  open()
+  openCoach()
 }
 
 onMounted(() => {
+  registerGuide(COACH_ID, {
+    priority: GuidePriority.SecondPredictCoach,
+    isActive: () => visible.value,
+    open: openCoach,
+  })
   window.addEventListener('second-predict-coach', onCoachRequest)
   if (effectiveStatus.value?.activation_segment === 'one_and_done') void onCoachRequest()
 })
 
 onUnmounted(() => {
   window.removeEventListener('second-predict-coach', onCoachRequest)
+  unregisterGuide(COACH_ID)
+  notifyGuideClosed(COACH_ID)
 })
 
-defineExpose({ open })
+defineExpose({ open: openCoach })
 </script>
 
 <style scoped>

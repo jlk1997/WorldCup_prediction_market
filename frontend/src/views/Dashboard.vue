@@ -1068,7 +1068,7 @@ onMounted(async () => {
   flex-direction: column;
   gap: 10px;
   pointer-events: auto;
-  max-height: calc(100vh - 220px);
+  max-height: calc(var(--app-height, 100dvh) - 220px);
 }
 
 .left-column { justify-self: end; }
@@ -1844,10 +1844,23 @@ onMounted(async () => {
 
 @media (max-width: 768px) {
   .dashboard-fullscreen {
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 100%;
-    -webkit-overflow-scrolling: touch;
+    overflow: visible;
+    min-height: 0;
+  }
+
+  .match-grid-wrap {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .match-grid,
+  .match-grid-preview {
+    overflow: visible;
+    max-height: none;
+  }
+
+  .scroll-fade {
+    display: none;
   }
 
   .dashboard-top-stack {

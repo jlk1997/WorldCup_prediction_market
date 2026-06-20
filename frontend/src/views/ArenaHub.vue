@@ -1,5 +1,5 @@
 <template>
-  <div class="arena-hub" v-loading="loading">
+  <div class="arena-hub mobile-page page-shell" v-loading="loading">
     <header class="page-header">
       <h1>球迷擂台</h1>
       <p>军团贡献 · 球星热力 · 助威对决 · 虚拟娱乐不可提现</p>

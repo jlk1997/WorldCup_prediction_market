@@ -5,6 +5,7 @@
     align-center
     :show-close="true"
     :close-on-click-modal="false"
+    :lock-scroll="false"
     class="guide-modal-dialog"
     @closed="onClosed"
   >

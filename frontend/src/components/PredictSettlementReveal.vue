@@ -3,6 +3,7 @@
     v-model="visible"
     :show-close="false"
     :close-on-click-modal="false"
+    :lock-scroll="false"
     width="92%"
     class="predict-reveal-dialog"
     align-center
@@ -59,7 +60,8 @@
       </div>
 
       <div v-if="resolved.status === 'won' && resolved.collectibleDrop?.dropped" class="card-drop-cta">
-        <el-button type="primary" plain size="small" @click="openCardReveal">查看新卡</el-button>
+        <p v-if="cardChainPending" class="card-drop-hint">球星卡即将揭晓…</p>
+        <el-button type="primary" plain size="small" @click="openCardReveal">立即查看新卡</el-button>
       </div>
 
       <p v-if="resolved.status === 'lost' && comfortHint" class="comfort">{{ comfortHint }}</p>
@@ -107,16 +109,11 @@
 
       <p v-if="showCarousel" class="swipe-hint">左右滑动可切换多条结算</p>
     </div>
-
-    <CardRevealDialog
-      v-model="cardRevealOpen"
-      :drop="resolved?.collectibleDrop ?? null"
-    />
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getDailyStatus, type DailyStatus } from '@/api/commerce'
@@ -136,14 +133,26 @@ import { isWeChatBrowser, WECHAT_PAY_HINT } from '@/utils/payEnv'
 import { ElMessageBox } from 'element-plus'
 import { hasActiveSeasonPass } from '@/utils/entitlements'
 import { authState } from '@/stores/authStore'
-import CardRevealDialog from '@/components/collectible/CardRevealDialog.vue'
+import { openCollectibleReveal } from '@/stores/collectibleRevealStore'
+import {
+  GuidePriority,
+  notifyGuideClosed,
+  notifyGuideOpened,
+  registerGuide,
+  unregisterGuide,
+} from '@/composables/useGuideOrchestrator'
+import { cleanupElementScrollLock } from '@/utils/scrollRoot'
 
+const SETTLEMENT_ID = 'predict-settlement-reveal'
+const CARD_CHAIN_DELAY_MS = 2200
 const router = useRouter()
 const confettiActive = ref(false)
-const cardRevealOpen = ref(false)
 const slideDir = ref<'left' | 'right' | ''>('')
 const touchStartX = ref(0)
 const settlementDaily = ref<DailyStatus | null>(null)
+const cardChainPending = ref(false)
+const cardRevealShown = ref(false)
+let cardChainTimer: ReturnType<typeof setTimeout> | null = null
 
 void ensurePredictRevealConfig()
 
@@ -253,24 +262,70 @@ const btnRecords = computed(() => predictRevealConfig.buttons?.view_records || '
 const btnDismiss = computed(() => predictRevealConfig.buttons?.dismiss || '知道了')
 
 watch(
-  () => [visible.value, predictReveal.index, resolved.value?.status, resolved.value?.collectibleDrop?.dropped] as const,
-  ([open, , status, cardDropped]) => {
+  () => [visible.value, predictReveal.index, resolved.value?.status] as const,
+  ([open, , status]) => {
     if (open && status === 'won' && showConfetti.value) {
       confettiActive.value = true
       setTimeout(() => {
         confettiActive.value = false
       }, 2800)
     }
-    if (open && status === 'won' && cardDropped) {
-      setTimeout(() => {
-        cardRevealOpen.value = true
-      }, 900)
-    }
   },
 )
 
+function clearCardChainTimer() {
+  if (cardChainTimer) {
+    clearTimeout(cardChainTimer)
+    cardChainTimer = null
+  }
+  cardChainPending.value = false
+}
+
+function scheduleCardRevealChain() {
+  clearCardChainTimer()
+  if (!visible.value || resolved.value?.status !== 'won') return
+  if (!resolved.value?.collectibleDrop?.dropped) return
+  cardChainPending.value = true
+  cardChainTimer = setTimeout(() => {
+    cardChainTimer = null
+    cardChainPending.value = false
+    if (visible.value && resolved.value?.collectibleDrop?.dropped) {
+      void chainToCardReveal()
+    }
+  }, CARD_CHAIN_DELAY_MS)
+}
+
+watch(
+  () =>
+    [
+      visible.value,
+      predictReveal.index,
+      resolved.value?.status,
+      resolved.value?.collectibleDrop?.dropped,
+    ] as const,
+  ([open, , status, hasDrop]) => {
+    if (open) cardRevealShown.value = false
+    if (open && status === 'won' && hasDrop) scheduleCardRevealChain()
+    else clearCardChainTimer()
+  },
+)
+
+async function chainToCardReveal() {
+  const drop = resolved.value?.collectibleDrop
+  if (!drop?.dropped || cardRevealShown.value) return
+  cardRevealShown.value = true
+  clearCardChainTimer()
+  await close({ skipCoach: true, skipCard: true })
+  await nextTick()
+  await new Promise<void>((resolve) => {
+    window.setTimeout(resolve, 320)
+  })
+  cleanupElementScrollLock()
+  openCollectibleReveal(drop, { subtitle: '猜中掉落' })
+}
+
 function openCardReveal() {
-  cardRevealOpen.value = true
+  void chainToCardReveal()
 }
 
 function prev() {
@@ -304,7 +359,18 @@ function onTouchEnd(e: TouchEvent) {
   else if (delta < -threshold && canNext.value) next()
 }
 
-async function close(options?: { skipCoach?: boolean }) {
+async function close(options?: { skipCoach?: boolean; skipCard?: boolean }) {
+  clearCardChainTimer()
+  const drop = resolved.value?.collectibleDrop
+  if (
+    !options?.skipCard &&
+    drop?.dropped &&
+    !cardRevealShown.value &&
+    resolved.value?.status === 'won'
+  ) {
+    void chainToCardReveal()
+    return
+  }
   await markPredictRead(async () => {
     await fetchMe()
     window.dispatchEvent(new CustomEvent('predict-records-refresh'))
@@ -320,7 +386,31 @@ async function close(options?: { skipCoach?: boolean }) {
 function onClosed() {
   confettiActive.value = false
   slideDir.value = ''
+  notifyGuideClosed(SETTLEMENT_ID)
+  cleanupElementScrollLock()
 }
+
+watch(visible, (open) => {
+  if (open) notifyGuideOpened(SETTLEMENT_ID, GuidePriority.SettlementReveal)
+  else notifyGuideClosed(SETTLEMENT_ID)
+})
+
+onMounted(() => {
+  registerGuide(SETTLEMENT_ID, {
+    priority: GuidePriority.SettlementReveal,
+    isActive: () => visible.value,
+    open: () => {
+      predictReveal.visible = true
+    },
+  })
+  if (visible.value) notifyGuideOpened(SETTLEMENT_ID, GuidePriority.SettlementReveal)
+})
+
+onUnmounted(() => {
+  clearCardChainTimer()
+  unregisterGuide(SETTLEMENT_ID)
+  notifyGuideClosed(SETTLEMENT_ID)
+})
 
 function goNext() {
   const id = resolved.value?.nextMatchId
@@ -551,6 +641,27 @@ function goRecords() {
   width: 100%;
   font-size: 0.9rem;
   color: #ffb347;
+}
+.card-drop-cta {
+  margin: -4px 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.card-drop-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #7eb8ff;
+  animation: card-hint-pulse 1.4s ease-in-out infinite;
+}
+@keyframes card-hint-pulse {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+.reward-item.card-drop {
+  border-color: rgba(126, 184, 255, 0.45);
+  background: rgba(126, 184, 255, 0.1);
 }
 .comfort {
   font-size: 0.85rem;

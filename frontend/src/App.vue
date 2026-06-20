@@ -164,7 +164,6 @@
         }"
       >
         <ProfileIncompleteBanner v-if="showProfileBannerVisible" @dismiss="profileBannerHidden = true" />
-        <OnboardingTour v-if="showFeatureTour" />
         <router-view></router-view>
       </el-main>
 
@@ -187,6 +186,7 @@
     <PredictSettlementReveal />
     <CollectibleDropHost />
     <SecondPredictCoach v-if="isLoggedIn" :status="lastDailyStatus" />
+    <OnboardingTour v-if="showFeatureTour" />
     <GuideModal />
     <OfficialQqGroupFab />
     <OfficialQqGroupModal />
@@ -375,8 +375,8 @@ function onNav(path: string) {
 <style>
 .app-wrapper {
   width: 100vw;
-  height: 100vh;
-  height: 100dvh;
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 0%, var(--wc-glow-rose) 0%, transparent 50%),
@@ -384,8 +384,8 @@ function onNav(path: string) {
 }
 
 .layout-container {
-  height: 100vh;
-  height: 100dvh;
+  height: var(--app-height, 100vh);
+  height: var(--app-height, 100dvh);
   width: 100vw;
   background: transparent;
   color: var(--wc-text-primary);
@@ -434,7 +434,8 @@ function onNav(path: string) {
   display: block;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -443,6 +444,8 @@ function onNav(path: string) {
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
   position: relative;
   -webkit-overflow-scrolling: touch;
 }
@@ -882,7 +885,7 @@ function onNav(path: string) {
   padding: 30px;
   flex: 1;
   min-height: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .main-content:not(.is-dashboard):not(.is-auth-flow) {

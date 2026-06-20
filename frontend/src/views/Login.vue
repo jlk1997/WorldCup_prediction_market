@@ -265,7 +265,7 @@ async function onVerify() {
   align-items: center;
   justify-content: center;
   gap: 28px;
-  min-height: calc(100vh - var(--wc-header-height));
+  min-height: calc(var(--app-height, 100dvh) - var(--wc-header-height));
   padding: 24px;
   background: transparent;
 }
@@ -356,7 +356,7 @@ async function onVerify() {
     flex-direction: column;
     padding: 16px;
     gap: 12px;
-    min-height: calc(100dvh - var(--wc-mobile-header-height));
+    min-height: calc(var(--app-height, 100dvh) - var(--wc-mobile-header-height));
   }
 
   .login-card {

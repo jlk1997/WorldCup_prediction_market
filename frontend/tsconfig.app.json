@@ -15,5 +15,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/auto-imports.d.ts", "src/components.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/auto-imports.d.ts", "src/components.d.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

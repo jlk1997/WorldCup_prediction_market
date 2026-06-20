@@ -255,7 +255,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - var(--wc-header-height));
+  min-height: calc(var(--app-height, 100dvh) - var(--wc-header-height));
   padding: 20px;
   background: transparent;
 }

@@ -141,7 +141,7 @@ function ratingClass(rating?: number) {
   flex-direction: column;
   gap: 10px;
   pointer-events: auto;
-  max-height: calc(100vh - 240px);
+  max-height: calc(var(--app-height, 100dvh) - 240px);
   min-width: 0;
 }
 

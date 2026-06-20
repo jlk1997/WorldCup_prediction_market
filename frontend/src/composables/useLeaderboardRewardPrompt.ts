@@ -1,12 +1,23 @@
-import { onUnmounted, ref, watch, type Ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { shouldShowLeaderboardRewardPrompt } from '../utils/leaderboardRewardPrompt'
 import { isFeatureTourPending } from './useGuideModal'
+import {
+  GuidePriority,
+  isGuideBlocked,
+  notifyGuideClosed,
+  notifyGuideOpened,
+  registerGuide,
+  requestGuide,
+  unregisterGuide,
+} from './useGuideOrchestrator'
 
 /** 进入这些页面时展示「冲榜神秘大礼」弹窗 */
 export const REWARD_PROMPT_ROUTES = ['/', '/predict', '/leaderboard'] as const
 
 export type RewardPromptRoute = (typeof REWARD_PROMPT_ROUTES)[number]
+
+const REWARD_GUIDE_ID = 'leaderboard-reward'
 
 export function isRewardPromptRoute(path: string): path is RewardPromptRoute {
   return (REWARD_PROMPT_ROUTES as readonly string[]).includes(path)
@@ -33,24 +44,60 @@ export function useLeaderboardRewardPrompt(options?: {
     if (!isRewardPromptRoute(route.path)) return
     if (options?.blocked?.value) return
     if (isFeatureTourPending()) return
+    if (isGuideBlocked(GuidePriority.LeaderboardReward)) {
+      requestGuide(REWARD_GUIDE_ID)
+      return
+    }
     if (!shouldShowLeaderboardRewardPrompt()) return
 
     timer = setTimeout(() => {
       if (!isRewardPromptRoute(route.path)) return
       if (options?.blocked?.value) return
       if (isFeatureTourPending()) return
+      if (isGuideBlocked(GuidePriority.LeaderboardReward)) {
+        requestGuide(REWARD_GUIDE_ID)
+        return
+      }
       if (!shouldShowLeaderboardRewardPrompt()) return
       showRewardDialog.value = true
+      notifyGuideOpened(REWARD_GUIDE_ID, GuidePriority.LeaderboardReward)
       timer = null
     }, 450)
   }
 
-  watch(() => route.path, tryOpen, { immediate: true })
+  function closeRewardDialog() {
+    showRewardDialog.value = false
+    notifyGuideClosed(REWARD_GUIDE_ID)
+  }
+
+  onMounted(() => {
+    registerGuide(REWARD_GUIDE_ID, {
+      priority: GuidePriority.LeaderboardReward,
+      isActive: () => showRewardDialog.value,
+      open: () => {
+        if (shouldShowLeaderboardRewardPrompt() && isRewardPromptRoute(route.path)) {
+          showRewardDialog.value = true
+          notifyGuideOpened(REWARD_GUIDE_ID, GuidePriority.LeaderboardReward)
+        }
+      },
+    })
+    tryOpen()
+  })
+
+  watch(() => route.path, tryOpen)
   if (options?.blocked) {
     watch(options.blocked, tryOpen)
   }
 
-  onUnmounted(clearTimer)
+  watch(showRewardDialog, (open) => {
+    if (!open) notifyGuideClosed(REWARD_GUIDE_ID)
+  })
 
-  return { showRewardDialog }
+  onUnmounted(() => {
+    clearTimer()
+    unregisterGuide(REWARD_GUIDE_ID)
+    notifyGuideClosed(REWARD_GUIDE_ID)
+  })
+
+  return { showRewardDialog, closeRewardDialog }
 }

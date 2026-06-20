@@ -1,5 +1,5 @@
 <template>
-  <div class="leaderboard page-shell">
+  <div class="leaderboard page-shell mobile-page">
     <div class="header glass-panel">
       <h1>球迷排行榜</h1>
       <p>竞猜积分 · 军团贡献 · 猜中率 — 纯娱乐数值排行</p>

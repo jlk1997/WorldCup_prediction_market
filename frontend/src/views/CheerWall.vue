@@ -1,5 +1,5 @@
 <template>
-  <div class="cheer-page" v-loading="loading">
+  <div class="cheer-page mobile-page" v-loading="loading">
     <div class="cheer-shell glass-panel" v-if="status">
       <header class="page-header">
         <h1>助威墙</h1>

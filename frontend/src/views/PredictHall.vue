@@ -75,7 +75,7 @@
       :match-day="!!dailyStatus?.match_day"
     />
 
-    <PredictFirstCoach v-if="authState.user && activeMatches.length" />
+    <PredictFirstCoach v-if="authState.user && !loading && firstOpenMatchId" />
 
     <el-alert
       v-if="showProfileBindHint"
@@ -726,6 +726,11 @@ function isFirstOpenMatch(m: GameMatch) {
   const first = activeMatches.value.find((x) => !x.user_predicted)
   return first?.id === m.id
 }
+
+const firstOpenMatchId = computed(() => {
+  const first = activeMatches.value.find((x) => !x.user_predicted)
+  return first?.id ?? null
+})
 
 
 

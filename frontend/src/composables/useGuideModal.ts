@@ -1,6 +1,14 @@
 import { reactive, ref } from 'vue'
 import { getUiConfig, type GuideModalConfig } from '@/api/uiConfig'
 import { authState, isLoggedIn } from '@/stores/authStore'
+import {
+  GuidePriority,
+  flushGuideQueue,
+  isGuideBlocked,
+  notifyGuideClosed,
+  notifyGuideOpened,
+} from '@/composables/useGuideOrchestrator'
+import { cleanupElementScrollLock } from '@/utils/scrollRoot'
 
 /** Suppress intro modals while the 6-step product tour is still pending. */
 export function isFeatureTourPending(): boolean {
@@ -86,21 +94,30 @@ export function shouldAutoOpenGuide(
 }
 
 export function openGuideModal(key: string, cfg: GuideModalConfig, forced = false) {
+  if (!forced && isGuideBlocked(GuidePriority.GuideModal)) {
+    if (!pendingKeys.value.includes(key)) pendingKeys.value.push(key)
+    return
+  }
   guideModalState.configKey = key
   guideModalState.config = cfg
   guideModalState.step = 0
   guideModalState.forced = forced
   guideModalState.open = true
+  notifyGuideOpened(`guide-modal-${key}`, GuidePriority.GuideModal)
 }
 
 export function closeGuideModal(markSeen = true) {
   const cfg = guideModalState.config
+  const key = guideModalState.configKey
   if (markSeen && cfg && !guideModalState.forced) {
     markGuideSeen(cfg)
   }
   guideModalState.open = false
   guideModalState.step = 0
   guideModalState.forced = false
+  if (key) notifyGuideClosed(`guide-modal-${key}`)
+  cleanupElementScrollLock()
+  flushGuideQueue()
 }
 
 const pendingKeys = ref<string[]>([])
@@ -111,6 +128,10 @@ export async function tryAutoOpenGuide(
   query: Record<string, unknown>,
 ) {
   if (isFeatureTourPending() && (key === 'site_intro' || key === 'gameplay_guide')) return
+  if (isGuideBlocked(GuidePriority.GuideModal)) {
+    if (!pendingKeys.value.includes(key)) pendingKeys.value.push(key)
+    return
+  }
   const cfg = await loadGuideConfig(key)
   if (!cfg) return
   if (!shouldAutoOpenGuide(cfg, path, query)) return

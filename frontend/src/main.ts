@@ -25,6 +25,7 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
 }
 
 import { initAuth } from './stores/authStore'
+import { initMobileViewport } from './composables/useMobileViewport'
 import './stores/profileStore'
 import './stores/dailyStatusStore'
 import './composables/useInviteShare'
@@ -38,6 +39,8 @@ const app = createApp(App)
 const head = createHead()
 
 registerGlobalErrorHandlers(app)
+
+initMobileViewport()
 
 app.use(head)
 app.use(router)

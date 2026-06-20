@@ -5,6 +5,7 @@
     align-center
     :show-close="true"
     :close-on-click-modal="false"
+    :lock-scroll="false"
     class="onboarding-dialog"
     @closed="onDialogClosed"
   >
@@ -66,14 +67,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Component } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, type Component } from 'vue'
 import { useRouter } from 'vue-router'
 import { DataBoard, Trophy, MagicStick, View, Share, Coin } from '@element-plus/icons-vue'
 import { trackEvent } from '@/utils/analytics'
 import { fetchRecommendations, profileState } from '@/stores/profileStore'
+import {
+  GuidePriority,
+  flushGuideQueue,
+  notifyGuideClosed,
+  notifyGuideOpened,
+  registerGuide,
+  unregisterGuide,
+} from '@/composables/useGuideOrchestrator'
+import { cleanupElementScrollLock } from '@/utils/scrollRoot'
 
 const STORAGE_KEY = 'wc2026_onboarded'
 const STEP_KEY = 'wc2026_tour_step'
+const TOUR_ID = 'onboarding-tour'
+const PREDICT_STEP_INDEX = 4
 const router = useRouter()
 const visible = ref(true)
 
@@ -155,6 +167,9 @@ function finish() {
   sessionStorage.removeItem(STEP_KEY)
   localStorage.setItem(STORAGE_KEY, '1')
   trackEvent('tour_finish')
+  notifyGuideClosed(TOUR_ID)
+  cleanupElementScrollLock()
+  flushGuideQueue()
 }
 
 function skip() {
@@ -163,18 +178,32 @@ function skip() {
   finish()
 }
 
+async function navigateForStep(i: number) {
+  const path = routes[i] || '/'
+  if (i === PREDICT_STEP_INDEX) {
+    visible.value = false
+    await router.push(path)
+    await nextTick()
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())))
+    visible.value = true
+    notifyGuideOpened(TOUR_ID, GuidePriority.OnboardingTour)
+    return
+  }
+  await router.push(path)
+}
+
 function prev() {
   if (step.value > 0) {
     step.value -= 1
     saveStep(step.value)
-    router.push(routes[step.value] || '/')
+    void navigateForStep(step.value)
   }
 }
 
 function goStep(i: number) {
   step.value = i
   saveStep(i)
-  router.push(routes[i] || '/')
+  void navigateForStep(i)
 }
 
 function next() {
@@ -186,7 +215,7 @@ function next() {
   }
   step.value += 1
   saveStep(step.value)
-  router.push(routes[step.value] || '/')
+  void navigateForStep(step.value)
 }
 
 async function goPredictAfterTour() {
@@ -206,6 +235,23 @@ async function goPredictAfterTour() {
 function onDialogClosed() {
   finish()
 }
+
+onMounted(() => {
+  registerGuide(TOUR_ID, {
+    priority: GuidePriority.OnboardingTour,
+    isActive: () => visible.value,
+    open: () => {
+      visible.value = true
+    },
+  })
+  notifyGuideOpened(TOUR_ID, GuidePriority.OnboardingTour)
+  void navigateForStep(step.value)
+})
+
+onUnmounted(() => {
+  unregisterGuide(TOUR_ID)
+  notifyGuideClosed(TOUR_ID)
+})
 </script>
 
 <style scoped>
