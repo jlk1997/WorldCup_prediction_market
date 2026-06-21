@@ -192,6 +192,59 @@ body, html {
   z-index: 10050 !important;
 }
 
+/* ================= MessageBox（ElMessageBox 程序化调用） ================= */
+.is-message-box.el-overlay {
+  backdrop-filter: blur(6px);
+}
+
+.is-message-box .el-overlay-message-box {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--app-offset-top, 0px) + 16px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+
+.is-message-box .el-overlay-message-box::after {
+  display: none;
+}
+
+.el-message-box.wc-message-box {
+  background: rgba(14, 16, 32, 0.98) !important;
+  border: 1px solid rgba(212, 165, 116, 0.28);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+  padding: 18px 20px 16px;
+  vertical-align: initial;
+}
+
+.wc-message-box .el-message-box__title {
+  color: #f5f0e8;
+  font-weight: 700;
+}
+
+.wc-message-box .el-message-box__message,
+.wc-message-box .el-message-box__message p {
+  color: var(--wc-text-secondary);
+  line-height: 1.55;
+}
+
+.wc-message-box .el-message-box__headerbtn .el-message-box__close {
+  color: var(--wc-text-muted);
+}
+
+.wc-message-box .el-message-box__headerbtn:hover .el-message-box__close {
+  color: var(--wc-accent-gold);
+}
+
+.wc-message-box .el-message-box__btns {
+  gap: 10px;
+  padding-top: 16px;
+}
+
+.wc-message-box .el-message-box__btns .el-button {
+  min-height: 40px;
+}
+
 /* ================= Loading 暗色遮罩 ================= */
 .el-loading-mask {
   background-color: rgba(8, 10, 20, 0.78) !important;
@@ -577,5 +630,20 @@ body, html {
 
   .el-input__wrapper {
     min-height: 36px;
+  }
+
+  .el-message-box.wc-message-box {
+    width: min(420px, 92vw) !important;
+    max-width: 92vw !important;
+  }
+
+  .wc-message-box .el-message-box__btns {
+    flex-direction: column-reverse;
+  }
+
+  .wc-message-box .el-message-box__btns .el-button {
+    width: 100%;
+    margin: 0 !important;
+    min-height: 44px;
   }
 }

@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createHead } from '@unhead/vue/client'
 import App from './App.vue'
+import 'element-plus/es/components/message-box/style/css'
 import './styles/theme.css'
 import './styles/responsive.css'
 import router from './router'

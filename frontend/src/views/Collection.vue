@@ -190,7 +190,7 @@
       @open-pass="goPassTab"
     />
 
-    <el-drawer v-model="detailOpen" :title="selectedCard?.name" size="88%" direction="btt">
+    <el-drawer v-model="detailOpen" :title="selectedCard?.name" size="88%" direction="btt" append-to-body>
       <div v-if="selectedCard" class="card-detail">
         <CardItem :card="selectedCard" />
         <div class="detail-meta">
@@ -310,6 +310,21 @@ usePageMeta({
   path: '/collection',
   noIndex: true,
 })
+
+async function confirmCollectibleAction(
+  message: string,
+  title: string,
+  confirmButtonText: string,
+  type: 'warning' | 'info' = 'warning',
+) {
+  await ElMessageBox.confirm(message, title, {
+    customClass: 'wc-message-box',
+    roundButton: true,
+    confirmButtonText,
+    cancelButtonText: '取消',
+    type,
+  })
+}
 
 const albumLoading = ref(false)
 const albumLoadingMore = ref(false)
@@ -613,10 +628,11 @@ function goBuyPassPlus() {
 
 async function onXpBoost() {
   try {
-    await ElMessageBox.confirm(
+    await confirmCollectibleAction(
       '消耗 30 球迷币激活 24 小时手册经验 +50%？',
       '经验加成',
-      { confirmButtonText: '确认购买', cancelButtonText: '取消', type: 'info' },
+      '确认购买',
+      'info',
     )
     await buyPassXpBoost()
     ElMessage.success('经验加成已激活（24h · XP +50%）')
@@ -693,10 +709,10 @@ async function onClaimSet(code: string) {
 async function onSynthesize(code: string, useCoinFill = false) {
   if (useCoinFill) {
     try {
-      await ElMessageBox.confirm(
+      await confirmCollectibleAction(
         '将使用球迷币按上限补足缺口碎片（确定性消耗，非随机抽卡）。确认继续？',
         '球迷币补碎片',
-        { confirmButtonText: '确认合成', cancelButtonText: '取消', type: 'warning' },
+        '确认合成',
       )
     } catch {
       return
@@ -719,10 +735,10 @@ async function onUpgrade(useCoinFill = false) {
   if (!selectedCard.value?.code) return
   if (useCoinFill) {
     try {
-      await ElMessageBox.confirm(
+      await confirmCollectibleAction(
         '将使用球迷币按上限补足缺口碎片（确定性消耗）。确认升星？',
         '球迷币补碎片升星',
-        { confirmButtonText: '确认升星', cancelButtonText: '取消', type: 'warning' },
+        '确认升星',
       )
     } catch {
       return
