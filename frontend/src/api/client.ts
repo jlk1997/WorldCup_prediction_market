@@ -33,7 +33,11 @@ apiClient.interceptors.response.use(
     const status = error.response?.status
     const original = error.config
 
-    const rateLimitErr = handleRateLimitResponse(error.response?.data, status)
+    const rateLimitErr = handleRateLimitResponse(
+      error.response?.data,
+      status,
+      error.response?.headers?.['retry-after'],
+    )
     if (rateLimitErr) {
       return Promise.reject(rateLimitErr)
     }

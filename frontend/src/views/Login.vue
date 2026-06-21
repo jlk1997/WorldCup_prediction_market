@@ -41,6 +41,19 @@
         </div>
       </div>
 
+      <el-alert
+        v-if="rateLimitAlert"
+        type="warning"
+        :closable="false"
+        show-icon
+        class="rate-limit-alert"
+        :title="rateLimitAlert"
+      >
+        <template v-if="sendCooldownSec > 0" #default>
+          请等待 <strong>{{ sendCooldownSec }}</strong> 秒后再发送验证码
+        </template>
+      </el-alert>
+
       <el-form label-position="top" @submit.prevent>
         <el-form-item label="邮箱">
           <el-input v-model="email" type="email" placeholder="your@email.com" :disabled="step === 'code'" />
@@ -59,8 +72,14 @@
         <p v-if="ageHintVisible && !ageAgreed" class="age-hint">请先勾选协议，才能发送验证码或登录</p>
 
         <div class="actions">
-          <el-button v-if="step === 'email'" type="primary" :loading="loading" @click="onSendCode">
-            发送验证码
+          <el-button
+            v-if="step === 'email'"
+            type="primary"
+            :loading="loading"
+            :disabled="sendCooldownSec > 0"
+            @click="onSendCode"
+          >
+            {{ sendCooldownSec > 0 ? `${sendCooldownSec}s 后可重发` : '发送验证码' }}
           </el-button>
           <template v-else>
             <el-button plain @click="step = 'email'">换邮箱</el-button>
@@ -75,12 +94,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { authState, isLoggedIn, sendCode, verifyCode } from '../stores/authStore'
 import { fetchProfileStatus } from '../stores/profileStore'
-import { showApiError } from '../utils/errorHandler'
+import { isRateLimitError } from '../api/client'
+import { showRateLimitError, showApiError } from '../utils/errorHandler'
 
 import { previewReferralCode, type ReferralPreview } from '../api/referral'
 import { usePageMeta } from '../composables/usePageMeta'
@@ -107,6 +127,34 @@ const refInvalid = ref(false)
 const showManualRef = ref(false)
 const manualCode = ref('')
 const previewLoading = ref(false)
+const rateLimitAlert = ref('')
+const sendCooldownSec = ref(0)
+let sendCooldownTimer: ReturnType<typeof setInterval> | null = null
+
+function clearSendCooldown() {
+  if (sendCooldownTimer) {
+    clearInterval(sendCooldownTimer)
+    sendCooldownTimer = null
+  }
+  sendCooldownSec.value = 0
+}
+
+function startSendCooldown(retryAfterMs: number, message: string) {
+  clearSendCooldown()
+  rateLimitAlert.value = message
+  sendCooldownSec.value = Math.max(1, Math.ceil(retryAfterMs / 1000))
+  sendCooldownTimer = setInterval(() => {
+    sendCooldownSec.value -= 1
+    if (sendCooldownSec.value <= 0) {
+      clearSendCooldown()
+      rateLimitAlert.value = ''
+    }
+  }, 1000)
+}
+
+onUnmounted(() => {
+  clearSendCooldown()
+})
 
 const REF_STORAGE_KEY = 'wc2026_ref'
 
@@ -197,13 +245,23 @@ async function onSendCode() {
   }
   email.value = addr
   loading.value = true
+  rateLimitAlert.value = ''
   try {
     await sendCode(addr, ageAgreed.value)
     step.value = 'code'
     code.value = ''
+    clearSendCooldown()
     ElMessage.success('验证码已发送到邮箱，请查收（含垃圾箱）')
   } catch (e) {
-    showApiError(e)
+    if (isRateLimitError(e)) {
+      const msg = showRateLimitError(
+        e,
+        '验证码发送过于频繁，请稍后再试',
+      )
+      startSendCooldown(e.retryAfterMs, msg)
+    } else {
+      showApiError(e, '验证码发送失败，请稍后再试')
+    }
   } finally {
     loading.value = false
   }
@@ -251,7 +309,11 @@ async function onVerify() {
     }
     await redirectAfterAuth(!!data.referral?.bound)
   } catch (e) {
-    showApiError(e)
+    if (isRateLimitError(e)) {
+      showRateLimitError(e, '登录尝试过于频繁，请稍后再试')
+    } else {
+      showApiError(e)
+    }
   } finally {
     loading.value = false
     verifying.value = false
@@ -294,6 +356,12 @@ async function onVerify() {
   color: var(--wc-text-muted);
   margin-bottom: 20px;
   font-size: 0.9rem;
+}
+.rate-limit-alert {
+  margin-bottom: 16px;
+}
+.rate-limit-alert strong {
+  color: var(--wc-accent-gold);
 }
 .ref-banner {
   margin-bottom: 16px;

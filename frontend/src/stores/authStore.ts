@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { apiClient } from '../api/client'
+import { apiClient, isRateLimitError } from '../api/client'
 import type { ReferralLoginInfo } from '../api/referral'
 import { runLogoutCleanups } from './logoutRegistry'
 
@@ -102,20 +102,32 @@ export function patchUserFields(fields: Partial<AuthUser>) {
   persist()
 }
 
+let fetchMeInflight: Promise<AuthUser | null> | null = null
+
 export async function fetchMe(): Promise<AuthUser | null> {
   if (!authState.accessToken) return null
-  authState.loading = true
-  try {
-    const { data } = await apiClient.get<AuthUser>('/api/auth/me')
-    authState.user = data
-    persist()
-    return data
-  } catch {
-    logout()
-    return null
-  } finally {
-    authState.loading = false
-  }
+  if (fetchMeInflight) return fetchMeInflight
+
+  fetchMeInflight = (async () => {
+    authState.loading = true
+    try {
+      const { data } = await apiClient.get<AuthUser>('/api/auth/me')
+      authState.user = data
+      persist()
+      return data
+    } catch (e) {
+      if (isRateLimitError(e)) {
+        return authState.user
+      }
+      logout()
+      return null
+    } finally {
+      authState.loading = false
+      fetchMeInflight = null
+    }
+  })()
+
+  return fetchMeInflight
 }
 
 export async function sendCode(email: string, ageConfirmed = true) {

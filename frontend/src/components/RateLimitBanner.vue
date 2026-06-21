@@ -2,14 +2,18 @@
   <div v-if="visible" class="rate-limit-banner" role="status" aria-live="polite">
     <span class="rate-limit-banner-icon" aria-hidden="true">⏳</span>
     <span class="rate-limit-banner-text">
-      操作过于频繁，请 <strong>{{ remainingSec }}</strong> 秒后再试
+      <template v-if="detailMessage">{{ detailMessage }}</template>
+      <template v-else>
+        操作过于频繁，请 <strong>{{ remainingSec }}</strong> 秒后再试
+      </template>
+      <span v-if="detailMessage" class="countdown">（{{ remainingSec }} 秒后可继续）</span>
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { getRateLimitRemainingMs, isRateLimited } from '../api/rateLimitGuard'
+import { getLastRateLimitMessage, getRateLimitRemainingMs, isRateLimited } from '../api/rateLimitGuard'
 
 const tick = ref(0)
 let timer: ReturnType<typeof setInterval> | null = null
@@ -17,6 +21,11 @@ let timer: ReturnType<typeof setInterval> | null = null
 const remainingSec = computed(() => {
   void tick.value
   return Math.max(1, Math.ceil(getRateLimitRemainingMs() / 1000))
+})
+
+const detailMessage = computed(() => {
+  void tick.value
+  return getLastRateLimitMessage()
 })
 
 const visible = computed(() => {
@@ -62,5 +71,11 @@ onUnmounted(() => {
   min-width: 1.5em;
   display: inline-block;
   text-align: center;
+}
+
+.countdown {
+  opacity: 0.85;
+  margin-left: 4px;
+  white-space: nowrap;
 }
 </style>

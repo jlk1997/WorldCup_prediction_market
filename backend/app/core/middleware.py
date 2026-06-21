@@ -15,6 +15,20 @@ from app.core.rate_limit import client_ip, rate_limit_global_ip
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 
 _SKIP_GLOBAL_RL = frozenset({"/health", "/docs", "/redoc", "/openapi.json"})
+_SKIP_GLOBAL_RL_PREFIXES = (
+    "/api/auth/me",
+    "/api/ui-config/",
+    "/api/game/daily-status",
+)
+
+
+def _skip_global_rate_limit(request: Request) -> bool:
+    path = request.url.path
+    if path in _SKIP_GLOBAL_RL:
+        return True
+    if request.method == "GET" and path.startswith(_SKIP_GLOBAL_RL_PREFIXES):
+        return True
+    return False
 
 
 def setup_logging(level: str = "INFO") -> None:
@@ -63,7 +77,7 @@ class GlobalRateLimitMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         path = request.url.path
-        if path.startswith("/api") and path not in _SKIP_GLOBAL_RL:
+        if path.startswith("/api") and not _skip_global_rate_limit(request):
             try:
                 await asyncio.to_thread(rate_limit_global_ip, request)
             except RateLimitError as exc:
