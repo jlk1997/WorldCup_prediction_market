@@ -4,7 +4,7 @@ from typing import Sequence, Union
 
 from alembic import op
 
-revision: str = "035_collectible_cards_active_rarity_idx"
+revision: str = "035_card_active_rarity_idx"
 down_revision: Union[str, None] = "034_collection_pass_enrich"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
