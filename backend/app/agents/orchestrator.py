@@ -191,6 +191,8 @@ class MatchAnalysisOrchestrator:
 
 
         def _cache_lookup() -> dict | None:
+            if force_refresh:
+                return None
             run = self.agent_runs.find_recent(
                 team1_name,
                 team2_name,
@@ -222,13 +224,15 @@ class MatchAnalysisOrchestrator:
             raise BadRequestError("你已有分析任务进行中，请等待完成后再试")
 
         lock_key = inflight_key(team1_name, team2_name, mode, live_fp if mode == "live" else None)
+        if force_refresh:
+            lock_key = f"{lock_key}:force"
         inflight_token: str | None = None
 
         def _on_inflight_wait(elapsed: float) -> None:
             depth = llm_queue_depth()
             self._emit(progress, {
                 "type": "waiting",
-                "message": "相同对阵分析进行中，排队等待共享结果…",
+                "message": "强制刷新分析进行中，请稍候…" if force_refresh else "相同对阵分析进行中，排队等待共享结果…",
                 "elapsed_sec": int(elapsed),
                 "queue": depth,
             })
@@ -254,7 +258,7 @@ class MatchAnalysisOrchestrator:
             llm: LLMClient | None = None
             try:
                 inner = _cache_lookup()
-                if inner:
+                if inner and not force_refresh:
                     self._emit(progress, {"type": "cached", "message": "命中缓存"})
                     return inner
 

@@ -218,6 +218,28 @@ export async function getCollectibleChainStatus() {
   return data
 }
 
+export interface CollectibleShareUrlResponse {
+  url: string
+  share_text: string
+  owned: boolean
+  card: {
+    code: string
+    name: string
+    rarity: CardRarity
+    star: number
+    image_url: string | null
+    chain_minted?: boolean
+    chain_hash_short?: string | null
+  }
+}
+
+export async function getCollectibleShareUrl(code: string) {
+  const { data } = await apiClient.get<CollectibleShareUrlResponse>('/api/collectible/share-url', {
+    params: { code },
+  })
+  return data
+}
+
 export const SOURCE_LABELS: Record<string, string> = {
   predict_win: '猜中',
   signin: '连签',

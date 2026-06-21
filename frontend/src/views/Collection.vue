@@ -300,7 +300,7 @@ import {
 } from '@/api/collectible'
 import { fetchMe } from '@/stores/authStore'
 import { buildSynthesisDrop, openCollectibleReveal } from '@/stores/collectibleRevealStore'
-import { downloadSharePoster } from '@/utils/sharePoster'
+import { openCollectibleShare } from '@/composables/useCollectibleShareSheet'
 import { authState } from '@/stores/authStore'
 import { usePageMeta } from '@/composables/usePageMeta'
 
@@ -662,13 +662,23 @@ async function onClaimSet(code: string) {
     await claimCollectibleSet(code)
     ElMessage.success('套组奖励已领取')
     if (setInfo) {
-      await downloadSharePoster({
+      const repCode = setInfo.owned_codes?.[0] || setInfo.card_codes[0]
+      const repCard = album.value?.cards.find((c) => c.code === repCode) || {
+        code: repCode,
+        name: setInfo.name,
+        rarity: 'rare' as const,
+        series: 'set',
+        image_url: null,
+        attributes: {},
+        player_id: null,
+        team_id: null,
+        owned: true,
+      }
+      openCollectibleShare({
+        card: repCard,
         variant: 'set_complete',
-        displayName: authState.user?.nickname,
-        title: `集齐「${setInfo.name}」`,
-        subtitle: '最后一舞 · 球星收藏册成就',
-        statsLine: `${setInfo.total_count}/${setInfo.total_count} 张 · 虚拟数字藏品`,
-        badge: '套组成就',
+        setName: setInfo.name,
+        subtitleOverride: `集齐 ${setInfo.total_count} 张 · 套组成就`,
       })
     }
     await fetchMe()
@@ -733,17 +743,10 @@ async function onUpgrade(useCoinFill = false) {
   }
 }
 
-async function shareSelectedCard() {
+function shareSelectedCard() {
   const card = selectedCard.value
   if (!card) return
-  await downloadSharePoster({
-    variant: 'card',
-    displayName: authState.user?.nickname,
-    title: `我的 ${card.name}`,
-    subtitle: `${RARITY_LABELS[card.rarity]} · 最后一舞收藏册`,
-    statsLine: `★${card.star ?? 1} · 虚拟数字藏品`,
-    badge: '收藏册',
-  })
+  openCollectibleShare({ card })
 }
 
 function chainStatusLabel(status: string) {

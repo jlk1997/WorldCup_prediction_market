@@ -28,7 +28,6 @@ import {
   notifyGuideClosed,
   notifyGuideOpened,
   registerGuide,
-  requestGuide,
   unregisterGuide,
 } from '@/composables/useGuideOrchestrator'
 import { isFeatureTourPending } from '@/composables/useGuideModal'
@@ -82,7 +81,6 @@ function shouldOpen() {
 
 function openCoach() {
   if (!shouldOpen()) {
-    requestGuide(COACH_ID)
     return
   }
   visible.value = true

@@ -98,7 +98,13 @@
 
           <div v-if="billingPreview && authState.accessToken" class="cost-preview">
             <span class="cost-label">本次预计</span>
-            <span v-if="billingPreview.cache_hit" class="cost-value cache">命中缓存 · 不扣币</span>
+            <span v-if="billingPreview.cache_hit && !forceRefresh" class="cost-value cache">命中缓存 · 不扣币</span>
+            <span v-else-if="forceRefresh && billingPreview.data.charge_coins === 0" class="cost-value paid">
+              强制刷新 · 使用免费额度（剩 {{ billingPreview.data.free_remaining }} 次）
+            </span>
+            <span v-else-if="forceRefresh" class="cost-value paid">
+              强制刷新 · 扣 {{ billingPreview.data.charge_coins }} 球迷币
+            </span>
             <span v-else-if="billingPreview.data.charge_coins === 0" class="cost-value free">
               使用免费额度（剩 {{ billingPreview.data.free_remaining }} 次）
             </span>
@@ -154,7 +160,8 @@
 
           </div>
 
-          <p v-if="cached" class="cached-tip">本次结果来自缓存，未扣球迷币</p>
+          <p v-if="cached && !lastRequestedForceRefresh" class="cached-tip">本次结果来自缓存，未扣球迷币</p>
+          <p v-else-if="lastRequestedForceRefresh && !cached" class="cached-tip force">已强制刷新，本次为全新 AI 分析</p>
           <p v-else-if="lastBilling" class="cached-tip">
             本次消耗 {{ lastBilling.charge_coins ?? 0 }} 球迷币
             <span v-if="lastBilling.used_free_quota">（使用免费额度）</span>
@@ -478,6 +485,7 @@ const team2 = ref('')
 const mode = ref('pre_match')
 
 const forceRefresh = ref(false)
+const lastRequestedForceRefresh = ref(false)
 
 const loadingAnalyze = ref(false)
 const loadingHistory = ref(false)
@@ -676,9 +684,22 @@ async function resolvePredictHighlight(): Promise<string | undefined> {
 }
 
 function notifyDone(wasCached: boolean) {
+  if (lastRequestedForceRefresh.value && wasCached) {
+    ElNotification({
+      title: '强制刷新异常',
+      message: '仍返回了缓存结果，请稍后再试或联系反馈',
+      type: 'warning',
+      duration: 4500,
+    })
+    return
+  }
   ElNotification({
-    title: wasCached ? '已加载缓存分析' : 'AI 分析完成',
-    message: wasCached ? '结果来自近期缓存，如需最新可勾选强制刷新' : '报告已生成，已自动滚动到结果区',
+    title: wasCached ? '已加载缓存分析' : lastRequestedForceRefresh.value ? '强制刷新完成' : 'AI 分析完成',
+    message: wasCached
+      ? '结果来自近期缓存，如需最新可勾选强制刷新'
+      : lastRequestedForceRefresh.value
+        ? '已忽略缓存并重新分析，报告已更新'
+        : '报告已生成，已自动滚动到结果区',
     type: 'success',
     duration: 3500,
   })
@@ -735,15 +756,12 @@ function handleStreamEvent(event: AgentStreamEvent) {
   }
 
   if (event.type === 'cached') {
-
     currentPhase.value = 'done'
-
-    progressMessage.value = event.message || '命中缓存，秒级返回'
-
-    progressPercent.value = 100
-
+    progressMessage.value = forceRefresh.value
+      ? '正在重新分析…'
+      : (event.message || '命中缓存，秒级返回')
+    progressPercent.value = forceRefresh.value ? Math.max(progressPercent.value, 20) : 100
     waitingHint.value = ''
-
   }
 
   if (event.type === 'step' && event.step) {
@@ -977,6 +995,7 @@ async function runAnalysis(fromAuto = false) {
   if (!fromAuto) report.value = null
 
   cached.value = false
+  lastRequestedForceRefresh.value = forceRefresh.value
 
   validationWarnings.value = []
 
@@ -1244,6 +1263,7 @@ onMounted(async () => {
 .selector { padding: 20px 22px; margin-bottom: 16px; }
 .form-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
 .cached-tip { color: rgba(255, 255, 255, 0.55); font-size: 0.8rem; margin-top: 8px; }
+.cached-tip.force { color: #8fd48a; }
 .live-banner { margin-bottom: 12px; }
 .progress-panel { padding: 16px 20px; margin-bottom: 16px; }
 .progress-head { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.92rem; }

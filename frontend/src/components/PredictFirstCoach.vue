@@ -117,7 +117,6 @@ async function updateSpotlight() {
 
 async function tryOpen() {
   if (!canShowCoach()) {
-    requestGuide(COACH_ID)
     return
   }
   const el = await waitForElement('[data-coach="pick"]', 2500)

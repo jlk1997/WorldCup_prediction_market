@@ -55,7 +55,7 @@ def _share_html(
 def _render_page(svc: SharePageService, meta: dict | None) -> HTMLResponse:
     settings = svc.settings
     base = settings.frontend_base_url.rstrip("/")
-    image = f"{base}/share-og.png"
+    default_image = f"{base}/share-og.png"
     if not meta:
         meta = {
             "title": "最后一舞：世界杯2026",
@@ -63,6 +63,7 @@ def _render_page(svc: SharePageService, meta: dict | None) -> HTMLResponse:
             "url": f"{base}/",
             "redirect_path": f"{base}/login",
         }
+    image = meta.get("image") or default_image
     return HTMLResponse(
         _share_html(
             title=meta["title"],
@@ -118,3 +119,10 @@ def match_share_page(
     settings = get_settings()
     svc = SharePageService(db, settings)
     return _render_page(svc, svc.match_share_page(match_id, ref))
+
+
+@router.get("/share/collectible/{token}", response_class=HTMLResponse)
+def collectible_share_page(token: str, db: Session = Depends(get_db)):
+    settings = get_settings()
+    svc = SharePageService(db, settings)
+    return _render_page(svc, svc.collectible_share_page(token))

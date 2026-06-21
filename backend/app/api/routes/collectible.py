@@ -6,9 +6,11 @@ from sqlalchemy.orm import Session
 
 from app.api.auth_deps import get_current_user
 from app.api.deps import get_db
+from app.core.config import get_settings
 from app.db.models.commerce import CollectibleCard, User, UserCollectibleCard
 from app.services.collectible_chain_service import CollectibleChainService
 from app.services.collectible_service import CollectibleService
+from app.services.share_page_service import SharePageService
 
 router = APIRouter(prefix="/api/collectible", tags=["collectible"])
 
@@ -126,6 +128,49 @@ def retry_chain_mint(
     result = CollectibleChainService(db).retry_mint(user, user_card_id)
     db.commit()
     return {"chain": result}
+
+
+@router.get("/share-url")
+def get_share_url(
+    code: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    settings = get_settings()
+    detail = CollectibleService(db).get_card_detail(user, code)
+    svc = SharePageService(db, settings)
+    url = svc.build_collectible_share_url(user.id, code)
+    owned = bool(detail.get("owned"))
+    star = int(detail.get("star") or 0)
+    share_text = svc.build_collectible_share_text(
+        nickname=user.nickname,
+        card_name=detail.get("name") or code,
+        rarity=detail.get("rarity") or "common",
+        star=star,
+        owned=owned,
+        share_url=url,
+    )
+    chain = detail.get("chain") or {}
+    return {
+        "url": url,
+        "share_text": share_text,
+        "owned": owned,
+        "card": {
+            "code": detail.get("code"),
+            "name": detail.get("name"),
+            "rarity": detail.get("rarity"),
+            "star": star,
+            "image_url": detail.get("image_url"),
+            "chain_minted": chain.get("status") == "minted",
+            "chain_hash_short": _short_hash(chain.get("tx_hash")),
+        },
+    }
+
+
+def _short_hash(tx_hash: str | None) -> str | None:
+    if not tx_hash or len(tx_hash) < 12:
+        return None
+    return f"{tx_hash[:6]}…{tx_hash[-4:]}"
 
 
 @router.get("/metadata/{user_card_id}.json")

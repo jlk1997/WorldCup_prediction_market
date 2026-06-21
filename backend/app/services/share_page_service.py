@@ -6,13 +6,21 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings
 from app.db.models import Match, User
-from app.db.models.commerce import GamePrediction
+from app.db.models.commerce import CollectibleCard, GamePrediction, UserCollectibleCard
 from app.services.game_service import GameService
 from app.services.referral_service import ReferralService
-from app.services.share_token import make_card_share_token, mask_nickname, parse_card_share_token
+from app.services.share_token import (
+    make_card_share_token,
+    make_collectible_share_token,
+    mask_nickname,
+    parse_card_share_token,
+    parse_collectible_share_token,
+)
 
 
 class SharePageService:
+    RARITY_ZH = {"common": "普通", "rare": "稀有", "epic": "史诗", "legend": "传奇"}
+
     def __init__(self, db: Session, settings: Settings):
         self.db = db
         self.settings = settings
@@ -116,6 +124,81 @@ class SharePageService:
             "redirect_path": redirect,
         }
 
+    def build_collectible_share_url(self, user_id: int, card_code: str) -> str:
+        token = make_collectible_share_token(user_id, card_code, self.settings.jwt_secret)
+        return f"{self.base}/share/collectible/{token}"
+
+    def build_collectible_share_text(
+        self,
+        *,
+        nickname: str | None,
+        card_name: str,
+        rarity: str,
+        star: int,
+        owned: bool,
+        share_url: str,
+    ) -> str:
+        nick = (nickname or "球迷").strip() or "球迷"
+        rarity_zh = self.RARITY_ZH.get(rarity, rarity)
+        if owned and star > 0:
+            line1 = f'我在「最后一舞」收藏了 {card_name} · {rarity_zh}卡 ★{star}'
+        elif owned:
+            line1 = f'我在「最后一舞」收藏了 {card_name} · {rarity_zh}卡'
+        else:
+            line1 = f'我在「最后一舞」正在收集 {card_name} · {rarity_zh}卡'
+        line2 = "免费 AI 赛事分析 + 猜中掉落数字藏品，一起来玩"
+        return f"{line1}\n{line2}\n{share_url}"
+
+    def collectible_share_page(self, token: str) -> dict | None:
+        parsed = parse_collectible_share_token(token, self.settings.jwt_secret)
+        if not parsed:
+            return None
+        user_id, card_code = parsed
+        user = self.db.get(User, user_id)
+        if not user or user.status != "active":
+            return None
+        card = self.db.query(CollectibleCard).filter(CollectibleCard.code == card_code).first()
+        if not card or not card.active:
+            return None
+        row = (
+            self.db.query(UserCollectibleCard)
+            .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.card_id == card.id)
+            .first()
+        )
+        nick = mask_nickname(user.nickname)
+        rarity_zh = self.RARITY_ZH.get(card.rarity or "common", card.rarity or "common")
+        owned = row is not None
+        if owned:
+            star = int(row.star or 1)
+            title = f"{nick} 的 {card.name} · {rarity_zh} 藏品"
+            description = (
+                f"★{star} · 免费 AI 赛事快览 · 猜中掉落数字藏品 · "
+                "虚拟收藏无金钱价值，仅供娱乐炫耀"
+            )
+        else:
+            title = f"{nick} 正在收集 {card.name} · {rarity_zh}"
+            description = (
+                "免费 AI 赛事快览 · 猜中/手册可掉落球星数字藏品 · "
+                "虚拟收藏无金钱价值，仅供娱乐炫耀"
+            )
+        ref = (user.invite_code or "").strip().upper()
+        highlight = f"/collection?highlight={card_code}"
+        redirect = f"{self.base}{highlight}"
+        if ref:
+            redirect = f"{self.base}/login?ref={ref}&redirect={highlight}"
+        image = card.image_url or ""
+        if image.startswith("/"):
+            image = f"{self.base}{image}"
+        elif not image:
+            image = f"{self.base}/share-og.png"
+        return {
+            "title": title,
+            "description": description,
+            "url": f"{self.base}/share/collectible/{token}",
+            "redirect_path": redirect,
+            "image": image,
+        }
+
     def invite_share_page(self, code: str) -> dict:
         redirect_path = f"{self.base}/login?ref={code}" if code else f"{self.base}/login"
         preview = ReferralService(self.db, self.settings).preview_invite_code(code) if code else {"valid": False}
@@ -123,11 +206,14 @@ class SharePageService:
             nick = preview.get("inviter_nickname") or "好友"
             bonus = preview.get("register_invitee_bonus") or 0
             title = f"{nick} 邀请你加入最后一舞"
-            description = f"2026 世界杯球迷互动 · 新用户注册得球迷币（含邀请奖励 +{bonus}）"
+            description = (
+                f"2026 世界杯球迷互动 · 新用户注册得球迷币（含邀请奖励 +{bonus}）"
+                " · 免费 AI 赛事快览 · 猜中掉落数字藏品"
+            )
             url = f"{self.base}/share/invite?ref={code}"
         else:
             title = "最后一舞：世界杯2026"
-            description = "2026 世界杯球迷互动 — 竞猜、AI 分析、擂台与排行榜"
+            description = "2026 世界杯球迷互动 — 免费 AI 赛事快览 · 竞猜 · 数字藏品 · 擂台与排行榜"
             url = f"{self.base}/share/invite"
         return {
             "title": title,

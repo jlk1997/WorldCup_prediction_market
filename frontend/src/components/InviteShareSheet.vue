@@ -14,8 +14,9 @@
     </template>
 
     <div v-loading="loading || posterLoading" class="sheet-body">
-      <p class="share-steps">① 保存海报 → ② 发微信好友/群 → ③ 好友扫码注册得币</p>
-      <p v-if="benefitLine" class="benefit-line">{{ benefitLine }}</p>
+      <p class="share-steps">① 保存海报 → ② 发微信好友/群 → ③ 好友扫码注册（双方得币）</p>
+      <p class="benefit-line">好友注册得 100 球迷币 · 你获有效邀请奖励 · AI 快览 + 猜中掉落数字藏品</p>
+      <p v-if="benefitLine" class="tier-line">{{ benefitLine }}</p>
 
       <el-alert
         v-if="wechatHint"
@@ -113,6 +114,13 @@ const benefitLine = computed(() => {
   color: var(--wc-accent-gold);
   text-align: center;
   line-height: 1.5;
+}
+
+.tier-line {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--wc-text-muted);
+  text-align: center;
 }
 
 .wechat-hint {

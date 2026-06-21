@@ -183,6 +183,7 @@
     <LeaderboardRewardDialog v-model="showRewardDialog" />
     <InviteShareSheet />
     <PredictShareSheet />
+    <CollectibleShareSheet />
     <PredictSettlementReveal />
     <CollectibleDropHost />
     <SecondPredictCoach v-if="isLoggedIn" :status="lastDailyStatus" />
@@ -211,6 +212,7 @@ import PredictShareSheet from './components/PredictShareSheet.vue'
 import ReferralNotifier from './components/ReferralNotifier.vue'
 import CollectibleNotifier from './components/CollectibleNotifier.vue'
 import InviteShareSheet from './components/InviteShareSheet.vue'
+import CollectibleShareSheet from './components/CollectibleShareSheet.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'
 import MobileMoreDrawer from './components/MobileMoreDrawer.vue'
 import RateLimitBanner from './components/RateLimitBanner.vue'

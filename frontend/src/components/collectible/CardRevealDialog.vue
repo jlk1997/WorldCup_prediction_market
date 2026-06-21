@@ -69,8 +69,7 @@ import { useRouter } from 'vue-router'
 import CardItem from './CardItem.vue'
 import type { CollectibleDropResult } from '@/api/collectible'
 import { RARITY_LABELS } from '@/api/collectible'
-import { downloadSharePoster } from '@/utils/sharePoster'
-import { authState } from '@/stores/authStore'
+import { openCollectibleShare } from '@/composables/useCollectibleShareSheet'
 import { cleanupElementScrollLock } from '@/utils/scrollRoot'
 
 const props = defineProps<{
@@ -175,16 +174,14 @@ function goCollection() {
   router.push('/collection')
 }
 
-async function shareCard() {
+function shareCard() {
   const card = cards.value[0]
   if (!card) return
-  await downloadSharePoster({
-    variant: 'card',
-    displayName: authState.user?.nickname,
-    title: `我获得了 ${card.name}`,
-    subtitle: `${RARITY_LABELS[card.rarity]} · 最后一舞收藏册`,
-    statsLine: card.is_duplicate ? `重复卡已转碎片 +${card.shards_gained ?? 0}` : '猜中掉落 · 虚拟收藏',
-    badge: '数字藏品',
+  openCollectibleShare({
+    card: { ...card, owned: !card.is_duplicate },
+    subtitleOverride: card.is_duplicate
+      ? `重复卡已转碎片 +${card.shards_gained ?? 0}`
+      : undefined,
   })
 }
 </script>

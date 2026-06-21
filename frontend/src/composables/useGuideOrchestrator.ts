@@ -25,6 +25,7 @@ export const guideOrchestratorState = reactive({
 
 const registry = new Map<string, GuideEntry>()
 const pending: { id: string; priority: GuidePriorityLevel }[] = []
+const openingIds = new Set<string>()
 
 function sortPending() {
   pending.sort((a, b) => b.priority - a.priority)
@@ -75,7 +76,11 @@ export function requestGuide(id: string): boolean {
     return false
   }
   if (entry.isActive()) return true
-  void entry.open()
+  if (openingIds.has(id)) return false
+  openingIds.add(id)
+  void Promise.resolve(entry.open()).finally(() => {
+    openingIds.delete(id)
+  })
   return true
 }
 
@@ -87,7 +92,12 @@ export function flushGuideQueue() {
     if (!entry || isGuideBlocked(entry.priority)) return
     pending.shift()
     if (entry.isActive()) continue
-    void entry.open()
+    if (openingIds.has(next.id)) return
+    openingIds.add(next.id)
+    void Promise.resolve(entry.open()).finally(() => {
+      openingIds.delete(next.id)
+      flushGuideQueue()
+    })
     return
   }
 }

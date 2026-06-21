@@ -1,7 +1,8 @@
 import QRCode from 'qrcode'
 import { posterDisplayName, posterInitial } from './sharePosterDisplayName'
 
-export type SharePosterVariant = 'invite' | 'predict' | 'profile' | 'card' | 'set_complete'
+export type SharePosterVariant = 'invite' | 'predict' | 'profile' | 'card' | 'set_complete' | 'collectible'
+export type SharePosterRarity = 'common' | 'rare' | 'epic' | 'legend'
 
 export interface SharePosterOptions {
   variant?: SharePosterVariant
@@ -16,7 +17,31 @@ export interface SharePosterOptions {
   badge?: string
   /** predict：我押的内容 */
   pickHighlight?: string
+  /** collectible / card 海报 */
+  cardImageUrl?: string
+  playerName?: string
+  rarity?: SharePosterRarity
+  star?: number
+  owned?: boolean
+  chainMinted?: boolean
+  chainHashShort?: string
+  inviteCode?: string
+  aiHookLine?: string
+  layoutVersion?: 'v1' | 'v2'
+  showAiPill?: boolean
 }
+
+export const RARITY_POSTER_STYLES: Record<
+  SharePosterRarity,
+  { border: string; glow: string; label: string; badgeBg: string }
+> = {
+  common: { border: '#9eb0c8', glow: 'rgba(158,176,200,0.25)', label: '普通', badgeBg: '#6b7d96' },
+  rare: { border: '#4da6ff', glow: 'rgba(77,166,255,0.35)', label: '稀有', badgeBg: '#2d6fbf' },
+  epic: { border: '#b57bff', glow: 'rgba(181,123,255,0.35)', label: '史诗', badgeBg: '#7a45b8' },
+  legend: { border: '#e8c547', glow: 'rgba(232,197,71,0.45)', label: '传奇', badgeBg: '#a8841a' },
+}
+
+export const DEFAULT_AI_HOOK = '免费 AI 赛事快览 · 猜中掉落球星数字藏品'
 
 const W = 600
 const H = 1000
@@ -48,15 +73,17 @@ export async function generateSharePosterBlob(opts: SharePosterOptions): Promise
 
   drawBackground(ctx)
   drawPitchLines(ctx)
-  drawBrandHeader(ctx, opts.badge)
+  drawBrandHeader(ctx, opts.badge, opts.showAiPill ?? (variant === 'collectible' || variant === 'card'))
   drawFootball(ctx, 520, 72, 28)
 
   if (variant === 'predict') {
     await drawPredictLayout(ctx, opts, name)
   } else if (variant === 'profile') {
     await drawProfileLayout(ctx, opts, name)
-  } else if (variant === 'card' || variant === 'set_complete') {
-    await drawCardLayout(ctx, opts, name, variant)
+  } else if (variant === 'collectible' || variant === 'card' || variant === 'set_complete') {
+    await drawCollectibleLayout(ctx, opts, name, variant)
+  } else if (variant === 'invite' && opts.layoutVersion === 'v2') {
+    await drawInviteLayoutV2(ctx, opts, name)
   } else {
     await drawInviteLayout(ctx, opts, name)
   }
@@ -83,9 +110,228 @@ export async function downloadSharePoster(opts: SharePosterOptions, filename = '
   URL.revokeObjectURL(url)
 }
 
+export async function loadImageForCanvas(url: string, timeoutMs = 8000): Promise<HTMLImageElement | null> {
+  if (!url) return null
+  try {
+    const src = url.startsWith('/') ? `${window.location.origin}${url}` : url
+    const img = await Promise.race([
+      loadImage(src),
+      new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('timeout')), timeoutMs)
+      }),
+    ])
+    return img
+  } catch {
+    return null
+  }
+}
+
 function extractNameFromTitle(title?: string): string | undefined {
   if (!title) return undefined
   const m = title.match(/^(.+?)\s*邀/)
+  return m?.[1]?.trim()
+}
+
+async function drawInviteLayoutV2(ctx: CanvasRenderingContext2D, opts: SharePosterOptions, name: string) {
+  drawAvatar(ctx, name, 300, 175, 48)
+  setFont(ctx, 'bold 32px', C.white)
+  ctx.textAlign = 'center'
+  ctx.fillText(`${name} 邀你一起猜世界杯`, 300, 255)
+
+  drawBenefitColumns(ctx, 310)
+
+  const aiLine = opts.aiHookLine || DEFAULT_AI_HOOK
+  drawAiHookBar(ctx, 400, aiLine)
+
+  if (opts.statsLine) {
+    setFont(ctx, '16px', C.gold)
+    ctx.fillText(opts.statsLine, 300, 448)
+  }
+
+  const qrCaption = opts.inviteCode
+    ? `长按识别 · 注册领币`
+    : '长按识别 · 注册领币'
+  await drawQrCard(ctx, opts.qrUrl, 590, qrCaption, opts.inviteCode)
+
+  drawFooter(ctx, opts.footer ?? '虚拟奖励不可提现 · 非博彩 · 最后一舞')
+}
+
+function drawBenefitColumns(ctx: CanvasRenderingContext2D, centerY: number) {
+  const colW = 248
+  const gap = 24
+  const leftX = (W - colW * 2 - gap) / 2
+  const cols = [
+    { title: '好友得', lines: ['注册送 100 球迷币', '免费猜一场'] },
+    { title: '你得', lines: ['有效邀请得币', '冲召友榜'] },
+  ]
+  cols.forEach((col, i) => {
+    const x = leftX + i * (colW + gap)
+    ctx.fillStyle = C.card
+    roundRect(ctx, x, centerY - 52, colW, 104, 12)
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(61, 214, 140, 0.28)'
+    ctx.lineWidth = 1
+    roundRect(ctx, x, centerY - 52, colW, 104, 12)
+    ctx.stroke()
+
+    setFont(ctx, 'bold 17px', C.green)
+    ctx.textAlign = 'center'
+    ctx.fillText(col.title, x + colW / 2, centerY - 22)
+    setFont(ctx, '15px', C.text)
+    ctx.fillText(col.lines[0], x + colW / 2, centerY + 8)
+    setFont(ctx, '14px', C.muted)
+    ctx.fillText(col.lines[1], x + colW / 2, centerY + 32)
+  })
+}
+
+function drawAiHookBar(ctx: CanvasRenderingContext2D, y: number, text: string) {
+  const w = 520
+  const h = 44
+  const x = (W - w) / 2
+  ctx.fillStyle = 'rgba(61, 214, 140, 0.12)'
+  roundRect(ctx, x, y - h / 2, w, h, 10)
+  ctx.fill()
+  ctx.strokeStyle = 'rgba(61, 214, 140, 0.45)'
+  ctx.lineWidth = 1
+  roundRect(ctx, x, y - h / 2, w, h, 10)
+  ctx.stroke()
+  setFont(ctx, 'bold 16px', C.green)
+  ctx.textAlign = 'center'
+  ctx.fillText(`▶ ${text}`, W / 2, y + 6)
+}
+
+async function drawCollectibleLayout(
+  ctx: CanvasRenderingContext2D,
+  opts: SharePosterOptions,
+  name: string,
+  variant: 'collectible' | 'card' | 'set_complete',
+) {
+  const rarity = opts.rarity ?? 'common'
+  const style = RARITY_POSTER_STYLES[rarity]
+  const playerName = opts.playerName || extractPlayerFromTitle(opts.title) || '球星卡'
+  const owned = opts.owned !== false
+
+  const headline = owned
+    ? variant === 'set_complete'
+      ? `${name} 集齐套组`
+      : `${name} 收藏了 ${playerName}`
+    : `${name} 正在收集 ${playerName}`
+
+  setFont(ctx, 'bold 26px', C.white)
+  ctx.textAlign = 'center'
+  wrapText(ctx, headline, 300, 148, 520, 32)
+
+  await drawCardFrame(ctx, 300, 340, opts, style, owned)
+
+  setFont(ctx, 'bold 22px', style.border)
+  ctx.fillText(`${playerName} · 最后一舞`, 300, 560)
+
+  const subParts = [style.label]
+  if (owned && (opts.star ?? 0) > 0) subParts.unshift(`★${opts.star}`)
+  if (variant === 'set_complete') subParts.push('套组成就')
+  else if (!owned) subParts.push('猜中/手册可掉落')
+  setFont(ctx, '18px', C.muted)
+  ctx.fillText(subParts.join(' · '), 300, 592)
+
+  if (opts.chainMinted) {
+    drawChainBadge(ctx, 300, 622, opts.chainHashShort)
+  }
+
+  const qrCaption = owned
+    ? variant === 'set_complete'
+      ? '扫码一起收集'
+      : '扫码查看 TA 的藏品'
+    : '扫码一起收集'
+  await drawQrCard(ctx, opts.qrUrl, opts.chainMinted ? 680 : 650, qrCaption)
+
+  drawFooter(ctx, opts.footer ?? '虚拟收藏 · 不可交易 · 仅供炫耀')
+}
+
+async function drawCardFrame(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  opts: SharePosterOptions,
+  style: (typeof RARITY_POSTER_STYLES)[SharePosterRarity],
+  owned: boolean,
+) {
+  const fw = 280
+  const fh = 380
+  const x = cx - fw / 2
+  const y = cy - fh / 2
+
+  ctx.save()
+  ctx.shadowColor = style.glow
+  ctx.shadowBlur = 24
+  ctx.strokeStyle = style.border
+  ctx.lineWidth = 4
+  roundRect(ctx, x, y, fw, fh, 16)
+  ctx.stroke()
+  ctx.shadowBlur = 0
+
+  ctx.fillStyle = 'rgba(0,0,0,0.45)'
+  roundRect(ctx, x + 4, y + 4, fw - 8, fh - 8, 14)
+  ctx.fill()
+
+  const img = opts.cardImageUrl ? await loadImageForCanvas(opts.cardImageUrl) : null
+  if (img) {
+    ctx.save()
+    roundRect(ctx, x + 8, y + 8, fw - 16, fh - 16, 12)
+    ctx.clip()
+    if (!owned) {
+      ctx.filter = 'grayscale(1) brightness(0.55)'
+    }
+    ctx.drawImage(img, x + 8, y + 8, fw - 16, fh - 16)
+    ctx.restore()
+  } else {
+    const initial = posterInitial(opts.playerName || '?')
+    setFont(ctx, `bold ${initial.length === 1 ? '120px' : '72px'}`, style.border)
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(initial, cx, cy - 10)
+    ctx.textBaseline = 'alphabetic'
+  }
+
+  if (!owned) {
+    ctx.fillStyle = 'rgba(0,0,0,0.55)'
+    roundRect(ctx, x + 8, y + fh - 56, fw - 16, 40, 8)
+    ctx.fill()
+    setFont(ctx, 'bold 16px', C.muted)
+    ctx.textAlign = 'center'
+    ctx.fillText('收集中', cx, y + fh - 28)
+  }
+
+  const badgeW = 56
+  const badgeH = 28
+  ctx.fillStyle = style.badgeBg
+  roundRect(ctx, x + 12, y + 12, badgeW, badgeH, 8)
+  ctx.fill()
+  setFont(ctx, 'bold 13px', C.white)
+  ctx.textAlign = 'center'
+  ctx.fillText(style.label, x + 12 + badgeW / 2, y + 32)
+
+  if (owned && (opts.star ?? 0) > 0) {
+    setFont(ctx, 'bold 18px', C.gold)
+    ctx.fillText(`★${opts.star}`, cx, y + fh - 24)
+  }
+
+  ctx.restore()
+}
+
+function drawChainBadge(ctx: CanvasRenderingContext2D, cx: number, y: number, hashShort?: string) {
+  const label = hashShort ? `链上凭证 · ${hashShort}` : '文昌链收藏凭证'
+  setFont(ctx, 'bold 14px', C.bgTop)
+  const tw = Math.min(ctx.measureText(label).width + 32, 480)
+  ctx.fillStyle = C.green
+  roundRect(ctx, cx - tw / 2, y - 14, tw, 28, 14)
+  ctx.fill()
+  ctx.textAlign = 'center'
+  ctx.fillText(label, cx, y + 5)
+}
+
+function extractPlayerFromTitle(title?: string): string | undefined {
+  if (!title) return undefined
+  const m = title.match(/(?:获得了|收藏了|正在收集)\s*(.+?)(?:\s|$|·)/)
   return m?.[1]?.trim()
 }
 
@@ -156,38 +402,6 @@ async function drawProfileLayout(ctx: CanvasRenderingContext2D, opts: SharePoste
   drawFooter(ctx, opts.footer ?? '一起来猜世界杯 · 最后一舞')
 }
 
-async function drawCardLayout(
-  ctx: CanvasRenderingContext2D,
-  opts: SharePosterOptions,
-  name: string,
-  variant: 'card' | 'set_complete',
-) {
-  const title = opts.title || (variant === 'set_complete' ? `${name} 集齐套组` : `${name} 的球星卡`)
-  setFont(ctx, 'bold 30px', C.gold)
-  ctx.textAlign = 'center'
-  ctx.fillText(title, 300, 220)
-
-  setFont(ctx, '22px', C.text)
-  wrapText(ctx, opts.subtitle, 300, 280, 520, 30)
-
-  const cardLabel = variant === 'set_complete' ? '套组成就 · 典藏收藏家' : '数字藏品 · 虚拟收藏'
-  drawHighlightCard(ctx, 300, 380, cardLabel, opts.statsLine || '猜中掉落 · 无金钱价值 · 不可交易')
-
-  setFont(ctx, '16px', C.muted)
-  wrapText(
-    ctx,
-    '平台内虚拟收藏，不可提现、不可转赠。仅供娱乐收集与炫耀。',
-    300,
-    480,
-    520,
-    24,
-  )
-
-  await drawQrCard(ctx, opts.qrUrl, 620, variant === 'set_complete' ? '扫码一起收集' : '扫码打开收藏册')
-
-  drawFooter(ctx, opts.footer ?? '数字藏品 · 最后一舞 · 非金融属性')
-}
-
 function drawBackground(ctx: CanvasRenderingContext2D) {
   const grad = ctx.createLinearGradient(0, 0, 0, H)
   grad.addColorStop(0, C.bgTop)
@@ -225,7 +439,7 @@ function drawPitchLines(ctx: CanvasRenderingContext2D) {
   ctx.restore()
 }
 
-function drawBrandHeader(ctx: CanvasRenderingContext2D, badge?: string) {
+function drawBrandHeader(ctx: CanvasRenderingContext2D, badge?: string, showAiPill = false) {
   ctx.fillStyle = 'rgba(232, 197, 71, 0.12)'
   roundRect(ctx, 28, 28, W - 56, 88, 14)
   ctx.fill()
@@ -237,14 +451,27 @@ function drawBrandHeader(ctx: CanvasRenderingContext2D, badge?: string) {
   setFont(ctx, '16px', C.muted)
   ctx.fillText('2026 世界杯 · 球迷竞猜', 48, 96)
 
+  let rightEdge = W - 48
+  if (showAiPill) {
+    const pill = 'AI 快览'
+    setFont(ctx, 'bold 12px', C.bgTop)
+    const pw = ctx.measureText(pill).width + 16
+    rightEdge -= pw + 8
+    ctx.fillStyle = C.green
+    roundRect(ctx, rightEdge, 48, pw, 26, 13)
+    ctx.fill()
+    ctx.textAlign = 'center'
+    ctx.fillText(pill, rightEdge + pw / 2, 66)
+  }
+
   if (badge) {
     setFont(ctx, 'bold 13px', C.bgTop)
     const tw = ctx.measureText(badge).width + 20
     ctx.fillStyle = C.green
-    roundRect(ctx, W - 48 - tw, 48, tw, 28, 14)
+    roundRect(ctx, rightEdge - tw, 48, tw, 28, 14)
     ctx.fill()
     ctx.textAlign = 'center'
-    ctx.fillText(badge, W - 48 - tw / 2, 67)
+    ctx.fillText(badge, rightEdge - tw / 2, 67)
   }
 }
 
@@ -357,9 +584,10 @@ async function drawQrCard(
   qrUrl: string | undefined,
   centerY: number,
   caption: string,
+  inviteCode?: string,
 ) {
   const cardW = 280
-  const cardH = 300
+  const cardH = inviteCode ? 340 : 300
   const x = (W - cardW) / 2
   const y = centerY - cardH / 2
 
@@ -391,9 +619,17 @@ async function drawQrCard(
     }
   }
 
+  let captionY = y + cardH - 28
+  if (inviteCode) {
+    setFont(ctx, 'bold 15px', '#1a2332')
+    ctx.textAlign = 'center'
+    ctx.fillText(`邀请码 ${inviteCode}`, W / 2, y + cardH - 52)
+    captionY = y + cardH - 24
+  }
+
   setFont(ctx, 'bold 17px', '#1a2332')
   ctx.textAlign = 'center'
-  ctx.fillText(caption, W / 2, y + cardH - 28)
+  ctx.fillText(caption, W / 2, captionY)
 }
 
 function drawFooter(ctx: CanvasRenderingContext2D, text: string) {
@@ -460,6 +696,7 @@ function wrapText(
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
+    img.crossOrigin = 'anonymous'
     img.onload = () => resolve(img)
     img.onerror = reject
     img.src = src

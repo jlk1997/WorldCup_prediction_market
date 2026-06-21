@@ -4,7 +4,7 @@ import { getReferralMe, type ReferralMe } from '../api/referral'
 import { authState } from '../stores/authStore'
 import { registerLogoutCleanup } from '../stores/logoutRegistry'
 import { copyToClipboard } from '../utils/copyToClipboard'
-import { downloadSharePoster, generateSharePosterObjectUrl } from '../utils/sharePoster'
+import { downloadSharePoster, generateSharePosterObjectUrl, DEFAULT_AI_HOOK } from '../utils/sharePoster'
 import { posterDisplayName } from '../utils/sharePosterDisplayName'
 import { trackEvent } from '../utils/analytics'
 
@@ -34,8 +34,9 @@ function revokePosterPreview() {
 export function buildInviteShareText(me: ReferralMe | null) {
   const nick = posterDisplayName(authState.user?.nickname)
   const link = me?.invite_link || ''
-  if (!link) return `${nick} 邀你一起玩世界杯竞猜，注册得球迷币`
-  return `${nick} 邀你一起玩世界杯竞猜，注册得球迷币\n${link}`
+  const hook = '免费 AI 赛事分析 + 猜中掉落数字藏品'
+  if (!link) return `${nick} 邀你一起玩世界杯竞猜\n${hook}`
+  return `${nick} 邀你一起玩世界杯竞猜\n${hook}\n${link}`
 }
 
 function posterOptions(me: ReferralMe) {
@@ -45,12 +46,16 @@ function posterOptions(me: ReferralMe) {
     : `有效邀请 ${me.effective_invites} 人 · 本季已赚 ${me.season_coins_earned} 币`
   return {
     variant: 'invite' as const,
+    layoutVersion: 'v2' as const,
     displayName: nick,
-    subtitle: '猜中冲榜 · 可用积分换头像框',
+    subtitle: '',
     statsLine: tierHint,
     badge: '注册送100币',
     footer: '虚拟奖励不可提现 · 非博彩 · 最后一舞',
     qrUrl: me.invite_link,
+    inviteCode: me.invite_code,
+    aiHookLine: DEFAULT_AI_HOOK,
+    showAiPill: true,
   }
 }
 
@@ -80,6 +85,7 @@ async function refreshPosterPreview(me: ReferralMe) {
     if (gen !== posterGen) return
     revokePosterPreview()
     posterPreviewUrl.value = url
+    trackEvent('invite_poster_v2_impression')
   } finally {
     if (gen === posterGen) posterLoading.value = false
   }
