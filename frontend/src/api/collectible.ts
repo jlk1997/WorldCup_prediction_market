@@ -32,12 +32,14 @@ export interface CardAssetBrief {
   mint_total: number | null
   tradable: boolean
   stack_count?: number
-  lock_state: 'none' | 'listed' | 'staked'
+  lock_state: 'none' | 'listed' | 'staked' | 'duel'
   holding_until: string | null
   cooling_down: boolean
   estimated_value: number
   buyback_quote: number
   currency: string
+  battle_power?: number
+  combat_stats?: Record<string, number> | null
 }
 
 export interface CollectibleChainBrief {

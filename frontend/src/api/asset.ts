@@ -243,7 +243,10 @@ export interface DuelEligibleCard {
   image_url: string | null
   star: number
   rating?: number
+  position?: string
   power: number
+  bp?: number
+  combat_stats?: Record<string, number>
 }
 
 export interface DuelHistoryItem {
