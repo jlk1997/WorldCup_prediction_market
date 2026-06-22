@@ -1,168 +1,237 @@
 <template>
-  <div class="market-page">
-    <div class="page-header">
-      <h1>球星卡交易行</h1>
-      <p class="subtitle">以可用积分流通你的球星资产 · 站内虚拟收藏，无现金价值、不可提现</p>
-    </div>
-
-    <AssetHubBar compact :show-balance="false" />
-
-    <div class="scope-tabs glass-inner" role="tablist" aria-label="挂牌范围">
-      <button
-        v-for="tab in scopeTabs"
-        :key="tab.value"
-        type="button"
-        role="tab"
-        class="scope-tab"
-        :class="{ active: filters.scope === tab.value }"
-        :aria-selected="filters.scope === tab.value"
-        @click="setScope(tab.value)"
-      >
-        <span class="tab-label">{{ tab.label }}</span>
-        <span v-if="tab.hint" class="tab-hint">{{ tab.hint }}</span>
-      </button>
-    </div>
-
-    <div class="market-toolbar glass-inner">
-      <el-select v-model="filters.rarity" placeholder="稀有度" clearable size="small" @change="reload">
-        <el-option label="普通" value="common" />
-        <el-option label="稀有" value="rare" />
-        <el-option label="史诗" value="epic" />
-        <el-option label="传奇" value="legend" />
-      </el-select>
-      <el-select v-model="filters.list_type" placeholder="类型" clearable size="small" @change="reload">
-        <el-option label="一口价" value="fixed" />
-        <el-option label="竞拍" value="auction" />
-      </el-select>
-      <el-select v-model="filters.sort" size="small" @change="reload">
-        <el-option label="最新" value="recent" />
-        <el-option label="价格低→高" value="price_asc" />
-        <el-option label="价格高→低" value="price_desc" />
-        <el-option label="即将结束" value="ending" />
-      </el-select>
-      <div class="spacer" />
-      <span v-if="redeemBalance != null" class="balance-chip">
-        可用 <b>{{ redeemBalance.toLocaleString() }}</b> 积分
-      </span>
-      <el-button size="small" plain :loading="loading" @click="reload">刷新</el-button>
-      <el-button size="small" plain @click="goMyListings">资产管理</el-button>
-    </div>
-
-    <div v-if="loading" class="market-grid">
-      <el-skeleton v-for="i in 6" :key="i" :rows="3" animated class="sk-card" />
-    </div>
-    <div v-else-if="!listings.length" class="empty-state glass-inner">
-      <p>{{ emptyTitle }}</p>
-      <span>{{ emptyHint }}</span>
-      <div class="empty-actions">
-        <template v-if="filters.scope === 'mine'">
-          <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
-          <button type="button" class="empty-btn secondary" @click="setScope('all')">浏览全部挂牌</button>
-        </template>
-        <template v-else>
-          <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
-          <router-link to="/mint" class="empty-btn secondary">首发打新</router-link>
-        </template>
-      </div>
-    </div>
-    <div v-else class="market-grid">
-      <div
-        v-for="item in listings"
-        :key="item.listing_id"
-        class="market-card glass-inner"
-        :class="[
-          item.rarity,
-          {
-            'ending-soon': isEndingSoon(item.expires_at),
-            mine: item.is_mine,
-          },
-        ]"
-        @click="openDetail(item)"
-      >
-        <div class="card-img" :style="item.image_url ? { backgroundImage: `url(${item.image_url})` } : {}">
-          <span class="rarity-badge" :class="item.rarity">{{ rarityLabel(item.rarity) }}</span>
-          <span v-if="item.is_mine" class="owner-badge">我的挂牌</span>
-          <span v-if="item.serial_no" class="serial">
-            #{{ item.serial_no }}<template v-if="item.mint_total">/{{ item.mint_total }}</template>
-          </span>
-          <span class="type-badge" :class="item.list_type">{{ item.list_type === 'auction' ? '竞拍' : '一口价' }}</span>
+  <div class="market-page page-shell mobile-page">
+    <!-- 不透明内容区，避免背景人像干扰阅读 -->
+    <div class="market-shell">
+      <header class="market-hero">
+        <div class="hero-row">
+          <div>
+            <h1>球星卡交易行</h1>
+            <p class="hero-sub">站内积分流通 · 虚拟收藏 · 不可提现</p>
+          </div>
+          <div v-if="redeemBalance != null" class="hero-balance">
+            <span class="hb-label">可用积分</span>
+            <strong class="hb-val tabular-nums">{{ redeemBalance.toLocaleString() }}</strong>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="name">
-            {{ item.card_name }}
-            <span v-if="item.star > 1" class="star">★{{ item.star }}</span>
+      </header>
+
+      <AssetHubBar compact :show-balance="false" />
+
+      <!-- 筛选区：Tab + 芯片，合并为一块 -->
+      <section class="filter-panel" aria-label="筛选与范围">
+        <div class="scope-row" role="tablist">
+          <button
+            v-for="tab in scopeTabs"
+            :key="tab.value"
+            type="button"
+            role="tab"
+            class="scope-pill"
+            :class="{ active: filters.scope === tab.value, mine: tab.value === 'mine' }"
+            :aria-selected="filters.scope === tab.value"
+            @click="setScope(tab.value)"
+          >
+            {{ tab.label }}
+          </button>
+        </div>
+
+        <div class="chip-scroll" aria-label="筛选条件">
+          <button
+            v-for="chip in rarityChips"
+            :key="chip.value"
+            type="button"
+            class="filter-chip"
+            :class="{ active: filters.rarity === chip.value }"
+            @click="toggleFilter('rarity', chip.value)"
+          >
+            {{ chip.label }}
+          </button>
+          <span class="chip-divider" aria-hidden="true" />
+          <button
+            v-for="chip in typeChips"
+            :key="chip.value"
+            type="button"
+            class="filter-chip"
+            :class="{ active: filters.list_type === chip.value }"
+            @click="toggleFilter('list_type', chip.value)"
+          >
+            {{ chip.label }}
+          </button>
+          <span class="chip-divider" aria-hidden="true" />
+          <button
+            v-for="chip in sortChips"
+            :key="chip.value"
+            type="button"
+            class="filter-chip"
+            :class="{ active: filters.sort === chip.value }"
+            @click="toggleFilter('sort', chip.value)"
+          >
+            {{ chip.label }}
+          </button>
+        </div>
+
+        <div class="filter-actions">
+          <span v-if="listings.length" class="result-count">{{ listings.length }} 件在售</span>
+          <button type="button" class="icon-btn" :disabled="loading" aria-label="刷新" @click="reload">
+            <span :class="{ spin: loading }">↻</span>
+          </button>
+          <button type="button" class="text-btn" @click="goMyListings">资产管理</button>
+        </div>
+      </section>
+
+      <!-- 列表 -->
+      <div v-if="loading" class="market-grid">
+        <div v-for="i in 6" :key="i" class="sk-card">
+          <el-skeleton :rows="0" animated />
+          <el-skeleton :rows="2" animated />
+        </div>
+      </div>
+      <div v-else-if="!listings.length" class="empty-state">
+        <div class="empty-icon">🏪</div>
+        <p>{{ emptyTitle }}</p>
+        <span>{{ emptyHint }}</span>
+        <div class="empty-actions">
+          <template v-if="filters.scope === 'mine'">
+            <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
+            <button type="button" class="empty-btn secondary" @click="setScope('all')">浏览全部</button>
+          </template>
+          <template v-else>
+            <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
+            <router-link to="/mint" class="empty-btn secondary">首发打新</router-link>
+          </template>
+        </div>
+      </div>
+      <div v-else class="market-grid">
+        <article
+          v-for="item in listings"
+          :key="item.listing_id"
+          class="listing-card"
+          :class="[
+            `rarity-${item.rarity}`,
+            {
+              mine: item.is_mine,
+              auction: item.list_type === 'auction',
+              'ending-soon': isEndingSoon(item.expires_at),
+            },
+          ]"
+          @click="openDetail(item)"
+        >
+          <div v-if="item.is_mine" class="mine-ribbon">我的</div>
+
+          <div class="card-visual">
+            <img
+              v-if="item.image_url"
+              :src="item.image_url"
+              :alt="item.card_name"
+              class="card-photo"
+              loading="lazy"
+            />
+            <div v-else class="card-photo placeholder">{{ item.card_name.slice(0, 1) }}</div>
+            <div class="card-scrim" aria-hidden="true" />
+
+            <div class="tag-row">
+              <span class="tag rarity" :class="item.rarity">{{ rarityLabel(item.rarity) }}</span>
+              <span class="tag type">{{ item.list_type === 'auction' ? '竞拍' : '一口价' }}</span>
+              <span v-if="item.serial_no" class="tag serial">
+                #{{ item.serial_no }}<template v-if="item.mint_total">/{{ item.mint_total }}</template>
+              </span>
+            </div>
           </div>
-          <div class="price-row">
-            <span class="price">{{ item.current_price }}</span>
-            <span class="unit">可用积分</span>
+
+          <div class="card-foot">
+            <div class="foot-main">
+              <h3 class="card-title">
+                {{ item.card_name }}
+                <span v-if="item.star > 1" class="star">★{{ item.star }}</span>
+              </h3>
+              <div class="price-line">
+                <strong class="price tabular-nums">{{ item.current_price }}</strong>
+                <span class="unit">积分</span>
+              </div>
+            </div>
+            <div class="foot-action" :class="{ mine: item.is_mine }">
+              <template v-if="item.is_mine">管理</template>
+              <template v-else-if="item.list_type === 'auction'">
+                {{ isEndingSoon(item.expires_at) ? '抢拍' : '出价' }}
+              </template>
+              <template v-else>购买</template>
+            </div>
           </div>
-          <div v-if="item.is_mine" class="owner-hint">点击管理 · 不可自购</div>
-          <div v-else-if="item.list_type === 'auction'" class="countdown" :class="{ urgent: isEndingSoon(item.expires_at) }">
+
+          <div v-if="item.is_mine" class="mine-footnote">不可自购</div>
+          <div
+            v-else-if="item.list_type === 'auction'"
+            class="auction-footnote"
+            :class="{ urgent: isEndingSoon(item.expires_at) }"
+          >
             {{ countdown(item.expires_at) }}
           </div>
-        </div>
+        </article>
       </div>
+
+      <div v-if="hasMore && !loading" class="load-more">
+        <button type="button" class="load-btn" :disabled="loadingMore" @click="loadMore">
+          {{ loadingMore ? '加载中…' : '加载更多' }}
+        </button>
+      </div>
+
+      <p class="disclaimer">{{ disclaimer }}</p>
     </div>
 
-    <div v-if="hasMore && !loading" class="load-more">
-      <el-button plain :loading="loadingMore" @click="loadMore">加载更多</el-button>
-    </div>
-
-    <p class="disclaimer">{{ disclaimer }}</p>
-
-    <!-- 挂牌详情 -->
+    <!-- 详情弹窗 -->
     <el-dialog
       v-model="detailOpen"
-      :title="detail?.card_name"
-      width="min(440px, 94vw)"
+      width="min(420px, 92vw)"
       align-center
       append-to-body
       class="market-detail-dialog"
+      :show-close="true"
       @closed="onDetailClosed"
     >
+      <template #header>
+        <div v-if="detail" class="dialog-head">
+          <h2>{{ detail.card_name }}</h2>
+          <div class="dialog-tags">
+            <span class="tag rarity" :class="detail.rarity">{{ rarityLabel(detail.rarity) }}</span>
+            <span v-if="detail.is_mine" class="tag mine">我的挂牌</span>
+          </div>
+        </div>
+      </template>
+
       <div v-if="detail" class="detail-body">
-        <div
-          class="detail-img"
-          :class="{ mine: detail.is_mine }"
-          :style="detail.image_url ? { backgroundImage: `url(${detail.image_url})` } : {}"
-        >
-          <span class="rarity-badge" :class="detail.rarity">{{ rarityLabel(detail.rarity) }}</span>
-          <span v-if="detail.is_mine" class="owner-badge">我的挂牌</span>
-          <span v-if="detail.serial_no" class="serial">
-            #{{ detail.serial_no }}<template v-if="detail.mint_total">/{{ detail.mint_total }}</template>
-          </span>
+        <div class="detail-visual" :class="{ mine: detail.is_mine }">
+          <img v-if="detail.image_url" :src="detail.image_url" :alt="detail.card_name" class="detail-photo" />
+          <div v-else class="detail-photo placeholder">{{ detail.card_name.slice(0, 1) }}</div>
         </div>
 
         <div v-if="detail.is_mine" class="own-banner">
-          <span class="own-icon">📌</span>
-          <div>
-            <strong>这是你的挂牌</strong>
-            <p>无法购买自己的卡牌，可在此下架或前往「我的资产」管理</p>
-          </div>
+          <strong>这是你的挂牌</strong>
+          <p>无法购买自己的卡牌，可下架或前往「我的资产」管理</p>
         </div>
 
-        <div class="detail-meta">
-          <div class="meta-row">
-            <span>卖家</span>
-            <strong :class="{ mine: detail.is_mine }">{{ detail.is_mine ? '我' : '其他球迷' }}</strong>
-          </div>
-          <div class="meta-row">
-            <span>类型</span>
-            <strong>{{ detail.list_type === 'auction' ? '英式竞拍' : '一口价' }}</strong>
-          </div>
-          <div class="meta-row">
-            <span>{{ detail.list_type === 'auction' ? '当前价' : '价格' }}</span>
-            <strong class="gold">{{ detail.current_price }} 可用积分</strong>
-          </div>
-          <div v-if="detail.list_type === 'auction'" class="meta-row">
-            <span>最小加价</span>
-            <strong>{{ detail.min_increment }}</strong>
-          </div>
-          <div v-if="detail.expires_at" class="meta-row">
-            <span>剩余</span>
-            <strong>{{ countdown(detail.expires_at) }}</strong>
-          </div>
+        <div class="price-hero">
+          <span class="ph-label">{{ detail.list_type === 'auction' ? '当前价' : '一口价' }}</span>
+          <strong class="ph-val tabular-nums">{{ detail.current_price }}</strong>
+          <span class="ph-unit">可用积分</span>
         </div>
+
+        <dl class="detail-meta">
+          <div class="meta-item">
+            <dt>卖家</dt>
+            <dd :class="{ mine: detail.is_mine }">{{ detail.is_mine ? '我' : '其他球迷' }}</dd>
+          </div>
+          <div class="meta-item">
+            <dt>类型</dt>
+            <dd>{{ detail.list_type === 'auction' ? '英式竞拍' : '一口价' }}</dd>
+          </div>
+          <div v-if="detail.list_type === 'auction'" class="meta-item">
+            <dt>最小加价</dt>
+            <dd>{{ detail.min_increment }}</dd>
+          </div>
+          <div v-if="detail.expires_at" class="meta-item">
+            <dt>剩余</dt>
+            <dd>{{ countdown(detail.expires_at) }}</dd>
+          </div>
+        </dl>
 
         <div v-if="detail.market" class="market-stats">
           <div class="stat"><span>地板价</span><b>{{ detail.market.floor_price ?? '—' }}</b></div>
@@ -174,17 +243,17 @@
 
         <div class="action-area">
           <template v-if="detail.is_mine">
-            <el-button type="warning" plain :loading="acting" @click="doCancel">下架挂牌</el-button>
+            <el-button type="warning" :loading="acting" @click="doCancel">下架挂牌</el-button>
             <el-button plain @click="goMyListings">我的资产</el-button>
           </template>
           <template v-else-if="detail.list_type === 'fixed'">
-            <el-button type="primary" :loading="acting" @click="doBuy">
+            <el-button type="primary" size="large" :loading="acting" @click="doBuy">
               立即购买 · {{ detail.current_price }} 积分
             </el-button>
           </template>
           <template v-else>
             <el-input-number v-model="bidAmount" :min="minBid" :step="detail.min_increment || 10" size="large" />
-            <el-button type="primary" :loading="acting" @click="doBid">出价</el-button>
+            <el-button type="primary" size="large" :loading="acting" @click="doBid">出价</el-button>
           </template>
         </div>
         <p class="dialog-disclaimer">{{ detail.disclaimer }}</p>
@@ -238,9 +307,30 @@ const filters = reactive({
 })
 
 const scopeTabs = [
-  { value: 'all' as const, label: '全部', hint: '浏览' },
-  { value: 'others' as const, label: '淘货', hint: '可购买' },
-  { value: 'mine' as const, label: '我的挂牌', hint: '管理' },
+  { value: 'all' as const, label: '全部' },
+  { value: 'others' as const, label: '淘货' },
+  { value: 'mine' as const, label: '我的' },
+]
+
+const rarityChips = [
+  { value: '', label: '全部稀有度' },
+  { value: 'common', label: '普通' },
+  { value: 'rare', label: '稀有' },
+  { value: 'epic', label: '史诗' },
+  { value: 'legend', label: '传奇' },
+]
+
+const typeChips = [
+  { value: '', label: '全部类型' },
+  { value: 'fixed', label: '一口价' },
+  { value: 'auction', label: '竞拍' },
+]
+
+const sortChips = [
+  { value: 'recent', label: '最新' },
+  { value: 'price_asc', label: '价低→高' },
+  { value: 'price_desc', label: '价高→低' },
+  { value: 'ending', label: '将结束' },
 ]
 
 const detailOpen = ref(false)
@@ -258,7 +348,7 @@ const emptyTitle = computed(() => {
 
 const emptyHint = computed(() => {
   if (filters.scope === 'mine') return '去收藏册选择卡牌挂牌出售'
-  return '去图鉴挂牌你的第一张资产，或参与首发打新'
+  return '去图鉴挂牌，或参与首发打新'
 })
 
 const RARITY: Record<string, string> = { common: '普通', rare: '稀有', epic: '史诗', legend: '传奇' }
@@ -285,6 +375,17 @@ function isEndingSoon(iso?: string | null): boolean {
 function setScope(scope: 'all' | 'mine' | 'others') {
   if (filters.scope === scope) return
   filters.scope = scope
+  reload()
+}
+
+function toggleFilter(key: 'rarity' | 'list_type' | 'sort', value: string) {
+  if (key === 'sort') {
+    filters.sort = value
+  } else if (filters[key] === value) {
+    filters[key] = ''
+  } else {
+    filters[key] = value
+  }
   reload()
 }
 
@@ -429,216 +530,407 @@ onMounted(reload)
 </script>
 
 <style scoped>
+/* ===== 页面容器：不透明底板 ===== */
 .market-page {
   max-width: 960px;
   margin: 0 auto;
-  padding-bottom: calc(var(--wc-bottom-nav-height, 56px) + 24px);
 }
-.page-header h1 {
-  margin: 0 0 4px;
-  font-size: 1.5rem;
-  color: var(--wc-gold, var(--wc-accent-gold));
+
+.market-shell {
+  background: rgba(8, 10, 22, 0.92);
+  border: 1px solid rgba(212, 165, 116, 0.12);
+  border-radius: 16px;
+  padding: 14px 14px 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
 }
-.subtitle {
-  margin: 0 0 12px;
-  font-size: 0.82rem;
-  color: var(--wc-text-muted);
+
+/* ===== Hero ===== */
+.market-hero {
+  margin-bottom: 12px;
 }
-.scope-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  padding: 6px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-.scope-tab {
+.hero-row {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 10px 8px;
-  border: 1px solid transparent;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.market-hero h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--wc-accent-gold);
+  letter-spacing: 0.02em;
+}
+.hero-sub {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+.hero-balance {
+  flex-shrink: 0;
+  text-align: right;
+  padding: 8px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--wc-text-muted);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid rgba(212, 165, 116, 0.22);
 }
-.scope-tab .tab-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-.scope-tab .tab-hint {
+.hb-label {
+  display: block;
   font-size: 0.62rem;
-  opacity: 0.75;
+  color: rgba(255, 255, 255, 0.5);
 }
-.scope-tab.active {
-  background: linear-gradient(135deg, rgba(231, 175, 92, 0.18), rgba(120, 160, 220, 0.12));
-  border-color: rgba(231, 175, 92, 0.35);
+.hb-val {
+  font-size: 1.1rem;
+  font-weight: 800;
   color: var(--wc-accent-gold);
 }
-.scope-tab.active:nth-child(3) {
-  border-color: rgba(100, 180, 255, 0.4);
-  color: #8ec8ff;
+
+/* ===== 筛选面板 ===== */
+.filter-panel {
+  background: rgba(16, 18, 34, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 14px;
 }
-.market-toolbar {
+.scope-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+.scope-pill {
+  flex: 1;
+  padding: 8px 4px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.scope-pill.active {
+  background: rgba(212, 165, 116, 0.2);
+  color: var(--wc-accent-gold);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.scope-pill.active.mine {
+  background: rgba(80, 150, 230, 0.22);
+  color: #9fd0ff;
+}
+.chip-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.chip-scroll::-webkit-scrollbar {
+  display: none;
+}
+.filter-chip {
+  flex-shrink: 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.filter-chip.active {
+  border-color: rgba(212, 165, 116, 0.5);
+  background: rgba(212, 165, 116, 0.15);
+  color: var(--wc-accent-gold);
+}
+.chip-divider {
+  width: 1px;
+  flex-shrink: 0;
+  align-self: stretch;
+  margin: 4px 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.filter-actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
 }
-.market-toolbar .spacer {
+.result-count {
   flex: 1;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
 }
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn:disabled {
+  opacity: 0.5;
+}
+.icon-btn .spin {
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.text-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  background: rgba(212, 165, 116, 0.1);
+  color: var(--wc-accent-gold);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ===== 卡牌网格 ===== */
 .market-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-.market-card {
-  border-radius: 12px;
+@media (min-width: 640px) {
+  .market-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  }
+}
+
+.listing-card {
+  position: relative;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.2s;
-  border: 1px solid rgba(212, 165, 116, 0.18);
+  background: #12152a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.market-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+.listing-card:active {
+  transform: scale(0.98);
 }
-.market-card.legend {
-  border-color: rgba(231, 175, 92, 0.5);
+.listing-card.rarity-legend {
+  border-color: rgba(231, 175, 92, 0.45);
 }
-.market-card.epic {
-  border-color: rgba(168, 120, 224, 0.45);
+.listing-card.rarity-epic {
+  border-color: rgba(168, 120, 224, 0.4);
 }
-.market-card.mine {
-  border-color: rgba(100, 180, 255, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(100, 180, 255, 0.12);
+.listing-card.rarity-rare {
+  border-color: rgba(100, 160, 220, 0.3);
 }
-.market-card.mine:hover {
-  box-shadow: 0 8px 24px rgba(60, 120, 200, 0.2);
+.listing-card.mine {
+  border-color: rgba(90, 160, 240, 0.55);
+  box-shadow: 0 0 0 1px rgba(90, 160, 240, 0.15), 0 4px 20px rgba(40, 100, 180, 0.15);
 }
-.card-img {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  background: linear-gradient(160deg, rgba(40, 30, 20, 0.6), rgba(20, 16, 30, 0.9));
-  background-size: cover;
-  background-position: center;
+.listing-card.ending-soon {
+  outline: 1px solid rgba(255, 140, 80, 0.4);
 }
-.rarity-badge {
+
+.mine-ribbon {
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: 10px;
+  right: -28px;
+  z-index: 3;
+  width: 96px;
+  padding: 4px 0;
+  text-align: center;
   font-size: 0.62rem;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.55);
-  color: #f0d9b5;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: linear-gradient(90deg, #3a7bd5, #5a9ef0);
+  transform: rotate(36deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
-.rarity-badge.legend {
+
+.card-visual {
+  position: relative;
+  aspect-ratio: 3 / 3.6;
+  background: linear-gradient(165deg, #1a1e38 0%, #0d0f1c 100%);
+  overflow: hidden;
+}
+.card-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.card-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: rgba(212, 165, 116, 0.35);
+  background: linear-gradient(160deg, #222640, #141828);
+}
+.card-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+.tag-row {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  z-index: 2;
+}
+.tag {
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+}
+.tag.rarity.legend {
   background: linear-gradient(90deg, #b8860b, #e7af5c);
   color: #1a1208;
 }
-.rarity-badge.epic {
-  background: rgba(138, 80, 184, 0.85);
-  color: #fff;
+.tag.rarity.epic {
+  background: rgba(138, 80, 184, 0.9);
 }
-.owner-badge {
-  position: absolute;
-  top: 28px;
-  left: 6px;
-  font-size: 0.58rem;
-  padding: 2px 7px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, rgba(40, 100, 180, 0.92), rgba(60, 140, 220, 0.88));
-  color: #e8f4ff;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.tag.rarity.rare {
+  background: rgba(50, 100, 180, 0.85);
 }
-.serial {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  font-size: 0.6rem;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.6);
+.tag.type {
+  color: #f0d9b5;
+}
+.tag.serial {
+  margin-left: auto;
   color: #e8c88a;
   font-variant-numeric: tabular-nums;
 }
-.type-badge {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  font-size: 0.6rem;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: rgba(20, 24, 42, 0.85);
-  color: var(--wc-text-secondary);
+.tag.mine {
+  background: rgba(60, 130, 210, 0.85);
+  color: #fff;
 }
-.type-badge.auction {
-  color: #f0b86c;
+
+.card-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 8px;
+  background: #12152a;
 }
-.card-body {
-  padding: 8px 10px 10px;
+.foot-main {
+  flex: 1;
+  min-width: 0;
 }
-.card-body .name {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--wc-text-secondary);
+.card-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #f0ece4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.card-body .star {
+.card-title .star {
   color: var(--wc-accent-gold);
   font-size: 0.72rem;
+  margin-left: 2px;
 }
-.price-row {
+.price-line {
   display: flex;
   align-items: baseline;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 3px;
+  margin-top: 3px;
 }
-.price-row .price {
-  font-size: 1.05rem;
+.price-line .price {
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--wc-accent-gold);
-  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
-.price-row .unit {
+.price-line .unit {
   font-size: 0.62rem;
-  color: var(--wc-text-muted);
+  color: rgba(255, 255, 255, 0.45);
 }
-.owner-hint {
-  margin-top: 4px;
+.foot-action {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.35), rgba(160, 110, 50, 0.25));
+  color: #fff8ee;
+  border: 1px solid rgba(212, 165, 116, 0.4);
+}
+.foot-action.mine {
+  background: rgba(60, 130, 210, 0.25);
+  border-color: rgba(100, 170, 240, 0.45);
+  color: #b8dcff;
+}
+.mine-footnote,
+.auction-footnote {
+  padding: 0 10px 8px;
   font-size: 0.62rem;
-  color: #7eb8ff;
   font-weight: 600;
+  text-align: center;
+  background: #12152a;
 }
-.countdown {
-  margin-top: 2px;
-  font-size: 0.66rem;
+.mine-footnote {
+  color: #7eb8ff;
+}
+.auction-footnote {
   color: #f0b86c;
 }
+.auction-footnote.urgent {
+  color: #ff9a6c;
+}
+
+/* ===== 空态 / 加载 ===== */
 .empty-state {
   text-align: center;
-  padding: 40px 20px;
+  padding: 36px 16px;
+  background: rgba(16, 18, 34, 0.8);
   border-radius: 12px;
-  color: var(--wc-text-muted);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  opacity: 0.7;
 }
 .empty-state p {
   margin: 0 0 6px;
-  font-size: 1rem;
-  color: var(--wc-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
 }
 .empty-state span {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 .empty-actions {
   display: flex;
@@ -660,106 +952,148 @@ onMounted(reload)
 }
 .empty-btn.secondary {
   background: rgba(255, 255, 255, 0.06);
-  color: var(--wc-text-secondary);
+  color: rgba(255, 255, 255, 0.7);
 }
-.balance-chip {
-  font-size: 0.72rem;
-  color: var(--wc-text-muted);
-  white-space: nowrap;
-}
-.balance-chip b {
-  color: var(--wc-accent-gold);
-  font-variant-numeric: tabular-nums;
-}
-.market-card.ending-soon {
-  outline: 1px solid rgba(240, 184, 108, 0.45);
-  box-shadow: 0 0 12px rgba(240, 184, 108, 0.12);
-}
-.countdown.urgent {
-  color: #ff8a65;
-  font-weight: 600;
+.sk-card {
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(16, 18, 34, 0.8);
 }
 .load-more {
   text-align: center;
-  margin-top: 18px;
+  margin-top: 16px;
+}
+.load-btn {
+  padding: 10px 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.load-btn:disabled {
+  opacity: 0.6;
 }
 .disclaimer {
-  margin-top: 20px;
-  font-size: 0.68rem;
-  color: var(--wc-text-muted);
+  margin-top: 16px;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.35);
   line-height: 1.5;
   text-align: center;
 }
-.sk-card {
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(20, 24, 42, 0.4);
+
+/* ===== 详情弹窗 ===== */
+.dialog-head h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  color: #f0ece4;
+}
+.dialog-tags {
+  display: flex;
+  gap: 6px;
 }
 .detail-body {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
-.detail-img {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-  background: linear-gradient(160deg, rgba(40, 30, 20, 0.6), rgba(20, 16, 30, 0.9));
-  background-size: cover;
-  background-position: center;
-  border: 1px solid rgba(212, 165, 116, 0.2);
+.detail-visual {
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: #12152a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
-.detail-img.mine {
-  border-color: rgba(100, 180, 255, 0.45);
+.detail-visual.mine {
+  border-color: rgba(90, 160, 240, 0.45);
+}
+.detail-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.detail-photo.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: rgba(212, 165, 116, 0.3);
 }
 .own-banner {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
   padding: 12px 14px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgba(40, 90, 160, 0.22), rgba(30, 60, 100, 0.15));
-  border: 1px solid rgba(100, 180, 255, 0.28);
-}
-.own-banner .own-icon {
-  font-size: 1.2rem;
-  line-height: 1;
+  background: rgba(40, 90, 160, 0.2);
+  border: 1px solid rgba(100, 180, 255, 0.3);
 }
 .own-banner strong {
   display: block;
   font-size: 0.88rem;
   color: #9fd0ff;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .own-banner p {
   margin: 0;
   font-size: 0.72rem;
-  color: var(--wc-text-muted);
+  color: rgba(255, 255, 255, 0.55);
   line-height: 1.45;
 }
-.detail-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.price-hero {
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(212, 165, 116, 0.08);
+  border: 1px solid rgba(212, 165, 116, 0.2);
 }
-.meta-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
+.ph-label {
+  display: block;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 4px;
 }
-.meta-row span {
-  color: var(--wc-text-muted);
-}
-.meta-row .gold {
+.ph-val {
+  font-size: 2rem;
+  font-weight: 800;
   color: var(--wc-accent-gold);
+  line-height: 1;
 }
-.meta-row strong.mine {
+.ph-unit {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.detail-meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.meta-item {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+.meta-item dt {
+  margin: 0;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+.meta-item dd {
+  margin: 2px 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+.meta-item dd.mine {
   color: #8ec8ff;
 }
 .market-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 .market-stats .stat {
   text-align: center;
@@ -769,12 +1103,12 @@ onMounted(reload)
 }
 .market-stats .stat span {
   display: block;
-  font-size: 0.62rem;
-  color: var(--wc-text-muted);
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 .market-stats .stat b {
-  font-size: 0.9rem;
-  color: var(--wc-text-secondary);
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
   font-variant-numeric: tabular-nums;
 }
 .action-area {
@@ -786,9 +1120,30 @@ onMounted(reload)
   flex: 1;
 }
 .dialog-disclaimer {
-  font-size: 0.66rem;
-  color: var(--wc-text-muted);
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
   line-height: 1.4;
   margin: 0;
+  text-align: center;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+</style>
+
+<style>
+/* 弹窗全局样式（非 scoped） */
+.market-detail-dialog .el-dialog {
+  background: #12152a !important;
+  border: 1px solid rgba(212, 165, 116, 0.15);
+  border-radius: 16px !important;
+}
+.market-detail-dialog .el-dialog__header {
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.market-detail-dialog .el-dialog__body {
+  padding-top: 12px;
 }
 </style>
