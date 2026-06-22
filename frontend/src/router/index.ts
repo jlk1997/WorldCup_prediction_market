@@ -106,6 +106,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/arena/battle/:duelId',
+      name: 'CardDuelBattle',
+      component: () => import('../views/CardDuelBattle.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/collection',
       name: 'Collection',
       component: () => import('../views/Collection.vue'),

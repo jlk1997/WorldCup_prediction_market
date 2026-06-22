@@ -298,7 +298,7 @@ const shortcuts = computed(() => {
     { to: '/market', label: '交易行', icon: '🏪', badge: s?.active_listings || 0 },
     { to: '/mint', label: '首发打新', icon: '✨', badge: s?.live_mint_events || 0 },
     { to: '/fantasy', label: '数字阵容', icon: '⚽', badge: 0 },
-    { to: '/arena', label: '竞技场', icon: '⚔️', badge: (s?.duel_pending_incoming || 0) + (s?.duel_pending_outgoing || 0) },
+    { to: '/arena#duel', label: '竞技场', icon: '⚔️', badge: (s?.duel_pending_incoming || 0) + (s?.duel_pending_outgoing || 0) },
     { to: '/agent', label: 'AI 分析', icon: '🤖', badge: 0 },
   ]
 })
@@ -317,7 +317,7 @@ const hubAlerts = computed(() => {
   }
   if (s.duel_pending_incoming > 0) {
     out.push({
-      to: '/arena',
+      to: '/arena#duel',
       text: `${s.duel_pending_incoming} 场对决待应战`,
       icon: '⚔️',
       kind: 'duel',
@@ -325,7 +325,7 @@ const hubAlerts = computed(() => {
   }
   if (s.duel_pending_outgoing > 0) {
     out.push({
-      to: '/arena',
+      to: '/arena#duel',
       text: `${s.duel_pending_outgoing} 场对决等待对方应战`,
       icon: '⏳',
       kind: 'pending',

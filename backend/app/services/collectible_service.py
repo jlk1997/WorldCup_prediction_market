@@ -1393,6 +1393,16 @@ class CollectibleService:
             buyback_floor = settings.asset_buyback_floor_map.get(card.rarity, 0)
             buyback_mult = {1: 1.0, 2: 1.4, 3: 2.0}.get(int(row.star or 1), 1.0)
             stack_count = row.count or 1
+            battle_bp = 0
+            combat_stats = None
+            try:
+                from app.services.combat_engine import battle_power, build_combat_card_from_row
+
+                battle_bp = battle_power(build_combat_card_from_row(row, card))
+                attrs = card.attributes_json if isinstance(card.attributes_json, dict) else {}
+                combat_stats = attrs.get("combat_stats")
+            except Exception:
+                pass
             return {
                 "card_id": card.id,
                 "serial_no": row.serial_no,
@@ -1405,6 +1415,8 @@ class CollectibleService:
                 "estimated_value": estimate_card_value(
                     card.rarity, row.star, serial_no=row.serial_no, mint_total=row.mint_total
                 ),
+                "battle_power": battle_bp,
+                "combat_stats": combat_stats,
                 "buyback_quote": int(buyback_floor * buyback_mult),
                 "currency": "redeem_points",
             }

@@ -143,6 +143,11 @@ def run_once():
             duel_exp = CardDuelService(db).expire_pending_pvp_duels()
             if duel_exp.get("expired"):
                 logger.info("Card duel pending expired: %s", duel_exp)
+            from app.services.card_duel_match_service import CardDuelMatchService
+
+            match_res = CardDuelMatchService(db).process_matchmaking()
+            if match_res.get("matched") or match_res.get("expired"):
+                logger.info("Card duel matchmaking: %s", match_res)
         except Exception:
             logger.exception("Card duel expiry failed")
         logger.info(

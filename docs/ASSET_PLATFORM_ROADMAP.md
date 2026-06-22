@@ -94,19 +94,34 @@
 - 收藏册：挂牌弹窗集成建议价；对决锁定态文案
 - 打新：人民币场次「可先参与球迷币」引导文案
 
+## Phase 10 — 竞技场卡牌对战 ✅
+
+- **战斗引擎** `combat_engine.py`：六维属性、位置权重、位置克制、三局两胜
+- **属性回填** `sync_card_combat_stats.py` + catalog 新建卡自动带 `combat_stats`
+- **对决回放** `CardDuelLog.result_json` + `GET /api/card-duel/{id}` /replay
+- **AI 对手** 按卡组 BP 档位从 catalog 生成真实卡面
+- **快速匹配** `CardDuelMatchQueue` + match API + ingest 配对 + WS `duel_matched`
+- **前端** `CardDuelBattle.vue` 全屏三回合动画；Lobby 快速匹配 Tab
+- **生态** 收藏册展示对战战力/六维；对决锁定跳转擂台
+- **Phase 10B** 对决战绩/段位、组牌预览与化学反应、胜场榜、玩法指南、深度链接 `#duel`、全局匹配跳转
+- **Phase 10C** ELO 排位（`users.duel_elo`、PVP/AI 结算）、智能组牌 API、ELO 榜、对战分享、Agent 资产上下文含 `duel_elo`
+- **Phase 10D** Agent 资产工具（组牌/战绩/ELO 榜）、排行榜「对决 ELO / 胜场」专区、我的排名含对决 ELO
+- **Phase 10E** 对决 UX：战绩条、匹配动效、回合揭晓动画、胜败反馈、再来一局；Agent 挂牌参考工具
+- **Phase 10F** 性能与逻辑：三局两胜提前结束、揭晓定时器修复、ELO 榜仅活跃玩家、排行 SQL 优化、组牌预览防抖、后台暂停匹配轮询、收藏册组牌篮、DB 索引
+
 ## Phase 10+（未做）
 
 - 真实 KOL 联名法务、UGC 卡面、用户公会
 - 人民币打新生产接入（支付宝）
 - 海外 Web3 隔离版本
-- Agent 可调用资产工具（挂牌建议等，需严格权限）
+- Agent 挂牌建议等深度资产工具（基础 `get_user_market_hints` 已接入 Agent）
 
 ## 验收清单
 
 | 模块 | 关键验证 |
 |------|----------|
 | Fantasy | 完赛计分、周一发奖幂等、前端明细 |
-| PVP | AI 对决 escrow、军团加分 |
+| PVP | AI 对决 escrow、军团加分、ELO 结算、排行榜 ELO 专区 |
 | Collab | admin seed 后 Mint/收藏册可见 |
 | Battalion | 助威加成与后端一致 |
 | 质量 | pytest + vue-tsc 通过 |

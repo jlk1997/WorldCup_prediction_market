@@ -11,7 +11,15 @@
       :default-open="(overview.quick_stats?.today_cheerable ?? 0) > 0"
     />
 
-    <section class="glass-panel block card-duel-block">
+    <section id="duel" class="glass-panel block card-duel-block">
+      <div class="duel-section-head">
+        <div>
+          <h2 class="duel-section-title">⚔️ 卡牌对决</h2>
+          <p class="duel-section-sub">三局两胜 · ELO 排位 · 智能组牌 · 快速匹配</p>
+        </div>
+        <router-link to="/leaderboard?board=duel_elo" class="duel-lb-link">ELO 排位榜 →</router-link>
+      </div>
+      <DuelPlaybook />
       <CardDuelPanel />
     </section>
 
@@ -311,6 +319,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { usePageMeta } from '../composables/usePageMeta'
 
@@ -319,6 +328,7 @@ usePageMeta({ title: '球迷擂台 — 最后一舞', path: '/arena', noIndex: t
 import CheerProgressBar from '../components/CheerProgressBar.vue'
 import ArenaPlaybook from '../components/ArenaPlaybook.vue'
 import CardDuelPanel from '../components/asset/CardDuelPanel.vue'
+import DuelPlaybook from '../components/asset/DuelPlaybook.vue'
 import {
   boostStar,
   getArenaOverview,
@@ -425,7 +435,16 @@ async function doRally(teamId?: number) {
   }
 }
 
-onMounted(load)
+const route = useRoute()
+
+onMounted(async () => {
+  await load()
+  if (route.hash === '#duel' || route.query.tab === 'duel') {
+    requestAnimationFrame(() => {
+      document.getElementById('duel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+})
 </script>
 
 <style scoped>
@@ -473,6 +492,52 @@ onMounted(load)
 .block {
   padding: 18px 20px;
   margin-bottom: 16px;
+}
+
+.card-duel-block {
+  border: 1px solid rgba(126, 184, 255, 0.28);
+  background: linear-gradient(165deg, rgba(12, 18, 40, 0.95) 0%, rgba(8, 12, 28, 0.88) 100%);
+  box-shadow: 0 8px 32px rgba(30, 60, 120, 0.2);
+}
+
+.duel-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(126, 184, 255, 0.15);
+}
+
+.duel-section-title {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #e8c88a;
+}
+
+.duel-section-sub {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.duel-lb-link {
+  font-size: 0.78rem;
+  color: #9ec8ff;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(126, 184, 255, 0.3);
+  background: rgba(126, 184, 255, 0.08);
+  white-space: nowrap;
+}
+
+.duel-lb-link:hover {
+  color: #e8c88a;
+  border-color: rgba(232, 200, 138, 0.4);
 }
 
 .block h2 {

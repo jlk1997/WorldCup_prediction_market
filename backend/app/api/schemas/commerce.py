@@ -205,6 +205,12 @@ class MyLeaderboardSummaryOut(BaseModel):
     tier_label: str
     predict: dict
     predict_accuracy_rank: int | None = None
+    duel_elo: int | None = None
+    duel_elo_rank: int | None = None
+    duel_wins_rank: int | None = None
+    duel_elo_tier: dict | None = None
+    duel_wins: int | None = None
+    duel_losses: int | None = None
 
 
 class ProductOut(BaseModel):

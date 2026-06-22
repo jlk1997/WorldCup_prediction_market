@@ -106,6 +106,81 @@ def cancel_duel(
     return CardDuelService(db).cancel_duel(user, duel_id)
 
 
+@router.get("/stats")
+def duel_stats(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return CardDuelService(db).duel_stats(user)
+
+
+@router.get("/leaderboard")
+def duel_leaderboard(limit: int = 20, by: str = "wins", db: Session = Depends(get_db)):
+    return {"items": CardDuelService(db).duel_leaderboard(limit=limit, by=by)}
+
+
+@router.get("/recommend-deck")
+def recommend_deck(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return CardDuelService(db).recommend_deck(user)
+
+
+class DeckPreviewRequest(BaseModel):
+    card_ids: list[int] = Field(..., min_length=3, max_length=3)
+
+
+@router.post("/deck-preview")
+def deck_preview(
+    body: DeckPreviewRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return CardDuelService(db).deck_preview(user, body.card_ids)
+
+
 @router.get("/history")
 def history(limit: int = 20, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return {"items": CardDuelService(db).history(user, limit=limit)}
+
+
+@router.get("/{duel_id}")
+def duel_detail(duel_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return CardDuelService(db).get_duel_detail(user, duel_id)
+
+
+@router.get("/{duel_id}/replay")
+def duel_replay(duel_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return CardDuelService(db).get_duel_detail(user, duel_id)
+
+
+class MatchEnterRequest(BaseModel):
+    card_ids: list[int] = Field(..., min_length=3, max_length=3)
+    stake_points: int = Field(default=0, ge=0)
+
+
+@router.post("/match/enter")
+def match_enter(
+    body: MatchEnterRequest,
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    _rate_limit(user, request)
+    from app.services.card_duel_match_service import CardDuelMatchService
+
+    return CardDuelMatchService(db).enter_queue(user, body.card_ids, body.stake_points)
+
+
+@router.post("/match/cancel")
+def match_cancel(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    _rate_limit(user, request)
+    from app.services.card_duel_match_service import CardDuelMatchService
+
+    return CardDuelMatchService(db).cancel_queue(user)
+
+
+@router.get("/match/status")
+def match_status(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.services.card_duel_match_service import CardDuelMatchService
+
+    return CardDuelMatchService(db).queue_status(user)

@@ -255,6 +255,7 @@ export interface DuelHistoryItem {
   challenger_power: number
   defender_power: number
   stake_points: number
+  elo_delta?: number
   at?: string | null
 }
 
@@ -272,6 +273,63 @@ export interface DuelConfig {
   fee_pct: number
   mode: string
   win_battalion: number
+  quick_match_enabled?: boolean
+  match_window_sec?: number
+}
+
+export interface DuelRoundCard {
+  name: string
+  rarity?: string
+  image_url?: string | null
+  position?: string
+  star?: number
+  bp?: number
+  stats?: Record<string, number>
+}
+
+export interface DuelRound {
+  round: number
+  challenger_card: DuelRoundCard
+  defender_card: DuelRoundCard
+  challenger_score: number
+  defender_score: number
+  winner_side: 'challenger' | 'defender'
+  narrative: string
+  stat_comparison?: { key: string; label: string; a: number; b: number; winner: string }[]
+  modifiers?: { type: string; label: string; factor: number }[]
+}
+
+export interface DuelDetail {
+  duel_id: number
+  mode: string
+  status: string
+  won: boolean | null
+  role: string
+  challenger_nickname: string
+  defender_nickname: string
+  challenger_power: number
+  defender_power: number
+  winner_id?: number | null
+  stake_points: number
+  rounds: DuelRound[]
+  replay?: { rounds?: DuelRound[]; winner_side?: string }
+  settled_at?: string | null
+  your_elo_delta?: number | null
+}
+
+export interface DuelSettleResult {
+  ok: boolean
+  duel_id: number
+  won: boolean
+  elo_delta?: number
+  duel_elo?: number
+  notice: string
+  payout_notice?: string
+  battalion_added?: number
+  challenger_power: number
+  defender_power: number
+  rounds?: DuelRound[]
+  replay?: { rounds?: DuelRound[] }
 }
 
 export async function getDuelConfig(): Promise<DuelConfig> {
@@ -308,15 +366,7 @@ export async function cancelDuel(duel_id: number) {
 
 export async function challengeAiDuel(card_ids: number[], stake_points = 0) {
   const { data } = await apiClient.post('/api/card-duel/challenge-ai', { card_ids, stake_points })
-  return data as {
-    ok: boolean
-    won: boolean
-    notice: string
-    payout_notice?: string
-    battalion_added?: number
-    challenger_power: number
-    defender_power: number
-  }
+  return data as DuelSettleResult
 }
 
 export async function challengeUserDuel(
@@ -334,15 +384,91 @@ export async function challengeUserDuel(
 
 export async function acceptDuel(duel_id: number, card_ids: number[]) {
   const { data } = await apiClient.post(`/api/card-duel/${duel_id}/accept`, { card_ids })
+  return data as DuelSettleResult
+}
+
+export async function getDuelDetail(duel_id: number): Promise<DuelDetail> {
+  const { data } = await apiClient.get(`/api/card-duel/${duel_id}`)
+  return data
+}
+
+export async function getDuelReplay(duel_id: number): Promise<DuelDetail> {
+  const { data } = await apiClient.get(`/api/card-duel/${duel_id}/replay`)
+  return data
+}
+
+export async function enterDuelMatch(card_ids: number[], stake_points = 0) {
+  const { data } = await apiClient.post('/api/card-duel/match/enter', { card_ids, stake_points })
+  return data as { ok: boolean; queue_id: number; deck_bp: number; notice: string; expires_at?: string }
+}
+
+export async function cancelDuelMatch() {
+  const { data } = await apiClient.post('/api/card-duel/match/cancel')
+  return data
+}
+
+export async function getDuelMatchStatus() {
+  const { data } = await apiClient.get('/api/card-duel/match/status')
   return data as {
-    ok: boolean
-    won: boolean
-    notice: string
-    payout_notice?: string
-    battalion_added?: number
-    challenger_power: number
-    defender_power: number
+    in_queue: boolean
+    matched?: boolean
+    duel_id?: number
+    deck_bp?: number
+    expires_at?: string
   }
+}
+
+export interface DuelStats {
+  total_duels: number
+  wins: number
+  losses: number
+  win_rate: number
+  current_streak: number
+  streak_type: string | null
+  ai_wins: number
+  pvp_wins: number
+  duel_elo: number
+  elo_tier: { code: string; label: string }
+  rank_tier: { code: string; label: string }
+}
+
+export interface DuelDeckPreview {
+  count: number
+  total_bp: number
+  avg_bp: number
+  tier: number
+  chemistry: string[]
+  positions: string[]
+  matchup_hints?: string[]
+}
+
+export interface DuelRecommendDeck extends DuelDeckPreview {
+  card_ids: number[]
+  score: number
+  reason: string
+}
+
+export async function getDuelStats(): Promise<DuelStats> {
+  const { data } = await apiClient.get('/api/card-duel/stats')
+  return data
+}
+
+export async function getDuelLeaderboard(limit = 10, by: 'wins' | 'elo' = 'wins') {
+  const { data } = await apiClient.get('/api/card-duel/leaderboard', { params: { limit, by } })
+  return data.items as Array<
+    | { user_id: number; nickname: string; wins: number; duel_elo?: number }
+    | { user_id: number; nickname: string; duel_elo: number; elo_tier: { code: string; label: string } }
+  >
+}
+
+export async function previewDuelDeck(card_ids: number[]): Promise<DuelDeckPreview> {
+  const { data } = await apiClient.post('/api/card-duel/deck-preview', { card_ids })
+  return data
+}
+
+export async function recommendDuelDeck(): Promise<DuelRecommendDeck> {
+  const { data } = await apiClient.get('/api/card-duel/recommend-deck')
+  return data
 }
 
 export async function getDuelHistory(limit = 10): Promise<DuelHistoryItem[]> {

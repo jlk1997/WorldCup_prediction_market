@@ -62,6 +62,13 @@
               {{ mySummary.predict_accuracy_rank ? `准度榜第 ${mySummary.predict_accuracy_rank} 名` : '满5场上榜' }}
             </span>
           </div>
+          <div v-if="mySummary.duel_elo != null" class="my-stat">
+            <span class="label">对决 ELO</span>
+            <strong>{{ mySummary.duel_elo }}</strong>
+            <span class="rank-tag">
+              {{ mySummary.duel_elo_tier?.label || '青铜' }} · 第 {{ mySummary.duel_elo_rank ?? '—' }} 名
+            </span>
+          </div>
         </div>
         <p v-if="mySummary.win_streak >= 2" class="streak-hint">当前 {{ mySummary.win_streak }} 连胜 · 猜中可额外加分</p>
         <p v-if="mySummary.season_gap_to_prev" class="gap-hint">
@@ -87,6 +94,8 @@
         <el-radio-button value="star_accuracy">球星准度</el-radio-button>
         <el-radio-button value="contribution">主队贡献</el-radio-button>
         <el-radio-button value="referral">召友榜</el-radio-button>
+        <el-radio-button value="duel_elo">对决 ELO</el-radio-button>
+        <el-radio-button value="duel_wins">对决胜场</el-radio-button>
         <el-radio-button value="fans">粉丝榜</el-radio-button>
         </el-radio-group>
       </div>
@@ -122,6 +131,11 @@
         </el-select>
       </div>
 
+      <el-alert v-if="board === 'duel_elo' || board === 'duel_wins'" type="info" :closable="false" class="rule-hint">
+        三局两胜卡牌对决 ·
+        <router-link to="/arena#duel">去擂台组牌开战</router-link>
+      </el-alert>
+
       <el-alert v-if="boardDescription" :title="boardDescription" type="info" show-icon :closable="false" class="rule-hint" />
     </div>
 
@@ -129,7 +143,7 @@
       <div class="board glass-panel" v-loading="loading">
         <h2>{{ boardTitle }}<span v-if="periodLabel" class="period-label"> · {{ periodLabel }}</span></h2>
 
-        <template v-if="board === 'points' || board === 'redeem_points' || board === 'predict_accuracy' || board === 'battalion' || board === 'supporter'">
+        <template v-if="board === 'points' || board === 'redeem_points' || board === 'predict_accuracy' || board === 'battalion' || board === 'supporter' || board === 'duel_elo' || board === 'duel_wins'">
           <div
             v-for="row in unifiedRows"
             :key="row.user_id"
@@ -276,6 +290,8 @@ const boardTitle = computed(() => {
     star_accuracy: '球星竞猜准度榜',
     contribution: '主队贡献榜',
     referral: '召友榜',
+    duel_elo: '卡牌对决 ELO 榜',
+    duel_wins: '卡牌对决胜场榜',
     fans: '主队粉丝榜',
   }
   return map[board.value] ?? '排行榜'
@@ -285,13 +301,22 @@ function formatPoints(row: LeaderboardEntry) {
   if (board.value === 'predict_accuracy') {
     return `${row.win_rate ?? 0}% (${row.wins}/${row.settled})`
   }
+  if (board.value === 'duel_elo') {
+    return `${row.points ?? row.duel_elo ?? 0} ELO`
+  }
+  if (board.value === 'duel_wins') {
+    const elo = row.duel_elo ? ` · ELO ${row.duel_elo}` : ''
+    return `${row.points ?? 0} 胜${elo}`
+  }
   const pts = row.points ?? row.season_points ?? row.redeem_points ?? row.battalion_points ?? 0
   const unit = board.value === 'battalion' || board.value === 'supporter' ? '贡献' : '分'
   return `${pts} ${unit}`
 }
 
 function onBoardChange() {
-  if (board.value === 'predict_accuracy') period.value = 'season'
+  if (board.value === 'predict_accuracy' || board.value === 'duel_elo' || board.value === 'duel_wins') {
+    period.value = 'season'
+  }
   if (board.value === 'referral') {
     load()
     return
@@ -318,7 +343,15 @@ async function load() {
     boardDescription.value = ''
     periodLabel.value = ''
 
-    if (board.value === 'points' || board.value === 'redeem_points' || board.value === 'predict_accuracy' || board.value === 'battalion' || board.value === 'supporter') {
+    if (
+      board.value === 'points' ||
+      board.value === 'redeem_points' ||
+      board.value === 'predict_accuracy' ||
+      board.value === 'battalion' ||
+      board.value === 'supporter' ||
+      board.value === 'duel_elo' ||
+      board.value === 'duel_wins'
+    ) {
       const tid =
         board.value === 'battalion'
           ? authState.user?.favorite_team_id ?? undefined
@@ -376,6 +409,8 @@ onMounted(async () => {
     board.value = 'referral'
   } else if (qBoard === 'supporter') {
     board.value = 'supporter'
+  } else if (qBoard === 'duel_elo' || qBoard === 'duel_wins') {
+    board.value = String(qBoard)
   }
   try {
     const teams = await getTeams()

@@ -6,21 +6,33 @@
 
       <h3>卡牌对决</h3>
 
-      <span class="hint">选 3 张卡比战力 · 可用积分入场（可选）</span>
+      <span class="hint">三局两胜属性对决 · 选 3 张卡 · 可用积分入场（可选）</span>
 
     </div>
 
 
 
+    <DuelStatsBar ref="statsBarRef" />
+
     <el-radio-group v-model="mode" size="small" class="mode-tabs">
 
       <el-radio-button value="ai">练习 vs AI</el-radio-button>
-
+      <el-radio-button value="match">快速匹配</el-radio-button>
       <el-radio-button value="pvp">邀请好友</el-radio-button>
 
     </el-radio-group>
 
-
+    <div v-if="matchInQueue" class="match-queue glass-inner">
+      <div class="mq-visual" aria-hidden="true">
+        <span class="mq-ring" />
+        <span class="mq-icon">⚔️</span>
+      </div>
+      <div class="mq-text">
+        <p class="mq-title">正在匹配对手…</p>
+        <p class="mq-sub">战力档 T{{ Math.round(matchDeckBp / 100) }} · 已等待 {{ matchWaitSec }} 秒</p>
+      </div>
+      <el-button size="small" plain :loading="acting" @click="doCancelMatch">取消匹配</el-button>
+    </div>
 
     <div v-if="loading" class="duel-loading">
 
@@ -85,6 +97,9 @@
 
 
         <div class="pick-row">
+          <el-button size="small" plain :loading="recommending" @click="applyRecommendDeck">
+            智能组牌
+          </el-button>
 
           <div
 
@@ -110,6 +125,19 @@
 
 
 
+        <div v-if="deckPreview && pickedIds.length === 3" class="deck-preview glass-inner">
+          <div class="dp-row">
+            <span>卡组战力</span>
+            <strong>均 {{ deckPreview.avg_bp }} · 档 T{{ deckPreview.tier }}</strong>
+          </div>
+          <div v-if="deckPreview.chemistry?.length" class="dp-chem">
+            <span v-for="c in deckPreview.chemistry" :key="c" class="chem-tag">{{ c }}</span>
+          </div>
+          <p v-for="h in deckPreview.matchup_hints" :key="h" class="dp-hint">{{ h }}</p>
+        </div>
+
+
+
         <div class="stake-row">
 
           <span>入场费（0=免费，{{ stakeMin }}-{{ stakeMax }}）</span>
@@ -129,8 +157,9 @@
             :key="c.user_card_id"
 
             class="duel-card"
+            v-memo="[c.user_card_id, pickedIds.includes(c.user_card_id), pickFlashId === c.user_card_id]"
 
-            :class="{ selected: pickedIds.includes(c.user_card_id), [c.rarity]: true }"
+            :class="{ selected: pickedIds.includes(c.user_card_id), [c.rarity]: true, flash: pickFlashId === c.user_card_id }"
 
             @click="togglePick(c.user_card_id)"
 
@@ -139,7 +168,7 @@
             <div class="img" :style="c.image_url ? { backgroundImage: `url(${c.image_url})` } : {}" />
 
             <span class="name">{{ c.name }}</span>
-
+            <span v-if="c.position" class="pos">{{ posLabel(c.position) }}</span>
             <span class="pwr">战力 {{ c.power }}</span>
 
           </div>
@@ -149,18 +178,14 @@
 
 
         <el-button
-
           type="primary"
-
+          class="start-duel-btn"
           :loading="acting"
-
           :disabled="pickedIds.length !== 3 || (mode === 'pvp' && !inviteCode.trim())"
-
           @click="startDuel"
-
         >
 
-          {{ mode === 'ai' ? '开始对决' : '发起挑战' }}
+          {{ mode === 'ai' ? '开始对决' : mode === 'match' ? '开始匹配' : '发起挑战' }}
 
         </el-button>
 
@@ -174,13 +199,16 @@
 
         <ul>
 
-          <li v-for="h in history" :key="h.duel_id">
+          <li v-for="h in history" :key="h.duel_id" class="history-item" @click="viewHistory(h.duel_id)">
 
             <span :class="h.won ? 'win' : 'lose'">{{ h.won ? '胜' : '负' }}</span>
 
             <span class="opp">{{ h.mode === 'pvp' ? h.opponent_nickname : 'AI' }}</span>
 
             {{ h.challenger_power }} : {{ h.defender_power }}
+            <small v-if="h.elo_delta" class="elo-delta" :class="h.elo_delta >= 0 ? 'up' : 'down'">
+              · ELO {{ h.elo_delta >= 0 ? '+' : '' }}{{ h.elo_delta }}
+            </small>
 
             <small v-if="h.stake_points"> · {{ h.stake_points }}分</small>
 
@@ -266,41 +294,34 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue'
-
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
+import DuelStatsBar from '@/components/asset/DuelStatsBar.vue'
 import {
-
   getDuelEligible,
-
   getDuelConfig,
-
   getDuelPending,
-
   getDuelOutgoing,
-
   cancelDuel,
-
   challengeAiDuel,
-
   challengeUserDuel,
-
   acceptDuel,
-
   getDuelHistory,
-
+  enterDuelMatch,
+  cancelDuelMatch,
+  getDuelMatchStatus,
+  previewDuelDeck,
+  recommendDuelDeck,
+  type DuelDeckPreview,
   type DuelEligibleCard,
-
   type DuelHistoryItem,
-
   type DuelPendingItem,
-
   type DuelOutgoingItem,
-
 } from '@/api/asset'
 
 import { extractApiError } from '@/utils/apiError'
+import { readStagedDuelPicks, clearStagedDuelPicks } from '@/composables/useDuelStagedPicks'
 
 import { useAssetRealname } from '@/composables/useAssetRealname'
 
@@ -309,12 +330,14 @@ import { fetchMe } from '@/stores/authStore'
 
 
 const { ensureVerified } = useAssetRealname()
+const router = useRouter()
 
 const loading = ref(true)
-
 const acting = ref(false)
-
-const mode = ref<'ai' | 'pvp'>('ai')
+const mode = ref<'ai' | 'pvp' | 'match'>('ai')
+const matchInQueue = ref(false)
+const matchDeckBp = ref(0)
+let matchPollTimer: ReturnType<typeof setInterval> | null = null
 
 const eligible = ref<DuelEligibleCard[]>([])
 
@@ -339,12 +362,145 @@ const acceptDialog = ref(false)
 const acceptTarget = ref<DuelPendingItem | null>(null)
 
 const acceptPicks = ref<number[]>([])
+const deckPreview = ref<DuelDeckPreview | null>(null)
+const recommending = ref(false)
+const statsBarRef = ref<InstanceType<typeof DuelStatsBar> | null>(null)
+const pickFlashId = ref<number | null>(null)
+const matchWaitSec = ref(0)
+let matchWaitTimer: ReturnType<typeof setInterval> | null = null
+let previewDebounceTimer: ReturnType<typeof setTimeout> | null = null
+
+function applyStagedPicks() {
+  const staged = readStagedDuelPicks()
+  if (staged.length !== 3) return
+  const valid = staged.filter((id) => eligible.value.some((c) => c.user_card_id === id))
+  if (valid.length === 3) {
+    pickedIds.value = valid
+    clearStagedDuelPicks()
+  }
+}
+
+function startMatchPoll() {
+  stopMatchPoll()
+  startMatchWaitTimer()
+  matchPollTimer = setInterval(() => {
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
+    void pollMatchStatus()
+  }, 4000)
+}
+
+const POS_LABELS: Record<string, string> = { FWD: '前锋', MID: '中场', DEF: '后卫', GK: '门将' }
+function posLabel(p?: string) {
+  return POS_LABELS[p || ''] || p || ''
+}
+
+watch(
+  pickedIds,
+  (ids) => {
+    if (previewDebounceTimer) clearTimeout(previewDebounceTimer)
+    if (ids.length !== 3) {
+      deckPreview.value = null
+      return
+    }
+    const snapshot = [...ids]
+    previewDebounceTimer = setTimeout(async () => {
+      try {
+        deckPreview.value = await previewDuelDeck(snapshot)
+      } catch {
+        deckPreview.value = null
+      }
+    }, 320)
+  },
+  { deep: true },
+)
 
 
 function cardName(id: number) {
-
   return eligible.value.find((c) => c.user_card_id === id)?.name || '—'
+}
 
+async function applyRecommendDeck() {
+  if (eligible.value.length < 3) {
+    ElMessage.warning('可用卡牌不足 3 张')
+    return
+  }
+  recommending.value = true
+  try {
+    const rec = await recommendDuelDeck()
+    pickedIds.value = rec.card_ids.slice(0, 3)
+    ElMessage.success(rec.reason || '已为你推荐最优卡组')
+  } catch (e) {
+    ElMessage.error(extractApiError(e, '智能组牌失败'))
+  } finally {
+    recommending.value = false
+  }
+}
+
+function navigateToBattle(
+  duelId: number,
+  extra?: { payout?: string; battalion?: number; elo_delta?: number; duel_elo?: number },
+) {
+  const query: Record<string, string> = {}
+  if (extra?.payout) query.payout = extra.payout
+  if (extra?.battalion) query.battalion = String(extra.battalion)
+  if (extra?.elo_delta != null) query.elo_delta = String(extra.elo_delta)
+  if (extra?.duel_elo != null) query.duel_elo = String(extra.duel_elo)
+  router.push({ path: `/arena/battle/${duelId}`, query })
+}
+
+function viewHistory(duelId: number) {
+  router.push(`/arena/battle/${duelId}`)
+}
+
+function stopMatchPoll() {
+  if (matchPollTimer) {
+    clearInterval(matchPollTimer)
+    matchPollTimer = null
+  }
+  if (matchWaitTimer) {
+    clearInterval(matchWaitTimer)
+    matchWaitTimer = null
+  }
+  matchWaitSec.value = 0
+}
+
+function startMatchWaitTimer() {
+  matchWaitSec.value = 0
+  if (matchWaitTimer) clearInterval(matchWaitTimer)
+  matchWaitTimer = setInterval(() => {
+    matchWaitSec.value += 1
+  }, 1000)
+}
+
+async function pollMatchStatus() {
+  try {
+    const st = await getDuelMatchStatus()
+    matchInQueue.value = st.in_queue === true
+    if (st.deck_bp) matchDeckBp.value = st.deck_bp
+    if (st.matched && st.duel_id) {
+      stopMatchPoll()
+      matchInQueue.value = false
+      pickedIds.value = []
+      ElMessage.success('匹配成功，即将进入对决！')
+      router.push(`/arena/battle/${st.duel_id}`)
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+async function doCancelMatch() {
+  acting.value = true
+  try {
+    await cancelDuelMatch()
+    stopMatchPoll()
+    matchInQueue.value = false
+    ElMessage.info('已取消匹配')
+  } catch (e: unknown) {
+    ElMessage.error(extractApiError(e, '取消失败'))
+  } finally {
+    acting.value = false
+  }
 }
 
 function cardPower(id: number) {
@@ -394,7 +550,10 @@ function togglePick(id: number) {
   }
 
   pickedIds.value.push(id)
-
+  pickFlashId.value = id
+  setTimeout(() => {
+    if (pickFlashId.value === id) pickFlashId.value = null
+  }, 320)
 }
 
 
@@ -446,131 +605,92 @@ function openAccept(p: DuelPendingItem) {
 
 
 async function startDuel() {
-
   if (!(await ensureVerified('卡牌对决'))) return
-
   if (pickedIds.value.length !== 3) return
-
   try {
-
     const msg =
-
       stake.value > 0
-
         ? `确认消耗 ${stake.value} 可用积分参与对决？胜者获得扣除手续费后的奖励。`
-
         : mode.value === 'ai'
-
           ? '确认开始免费练习对决？'
-
-          : `确认向邀请码 ${inviteCode.value.trim()} 发起挑战？`
-
+          : mode.value === 'match'
+            ? '确认进入快速匹配队列？匹配成功后自动开战。'
+            : `确认向邀请码 ${inviteCode.value.trim()} 发起挑战？`
     await ElMessageBox.confirm(msg, '卡牌对决', {
-
       customClass: 'wc-message-box',
-
       roundButton: true,
-
-      confirmButtonText: mode.value === 'ai' ? '开战' : '发起',
-
+      confirmButtonText: mode.value === 'pvp' ? '发起' : '开战',
       cancelButtonText: '取消',
-
     })
-
   } catch {
-
     return
-
   }
-
   acting.value = true
-
   try {
-
-    if (mode.value === 'ai') {
-
+    if (mode.value === 'match') {
+      const res = await enterDuelMatch(pickedIds.value, stake.value)
+      matchInQueue.value = true
+      matchDeckBp.value = res.deck_bp
+      startMatchWaitTimer()
+      ElMessage.success(res.notice || '已进入匹配队列')
+      stopMatchPoll()
+      startMatchPoll()
+      await pollMatchStatus()
+    } else if (mode.value === 'ai') {
       const res = await challengeAiDuel(pickedIds.value, stake.value)
-
-      const extra = res.battalion_added ? ` · 军团 +${res.battalion_added}` : ''
-
-      ElMessage.success(`${res.notice} ${res.payout_notice || ''}${extra}`)
-
-    } else {
-
-      const res = await challengeUserDuel(pickedIds.value, {
-
-        invite_code: inviteCode.value.trim(),
-
-        stake_points: stake.value,
-
+      pickedIds.value = []
+      navigateToBattle(res.duel_id, {
+        payout: res.payout_notice,
+        battalion: res.battalion_added,
+        elo_delta: res.elo_delta,
+        duel_elo: res.duel_elo,
       })
-
+    } else {
+      const res = await challengeUserDuel(pickedIds.value, {
+        invite_code: inviteCode.value.trim(),
+        stake_points: stake.value,
+      })
       ElMessage.success(res.notice || '挑战已发出')
-
+      pickedIds.value = []
+      inviteCode.value = ''
+      await refreshAll()
     }
-
-    pickedIds.value = []
-
-    inviteCode.value = ''
-
-    await refreshAll()
-
   } catch (e: unknown) {
-
     ElMessage.error(extractApiError(e, '对决失败'))
-
   } finally {
-
     acting.value = false
-
   }
-
 }
 
 
 
 async function doAccept() {
-
   if (!(await ensureVerified('卡牌对决'))) return
-
   if (!acceptTarget.value || acceptPicks.value.length !== 3) return
-
   acting.value = true
-
   try {
-
     const res = await acceptDuel(acceptTarget.value.duel_id, acceptPicks.value)
-
-    const extra = res.battalion_added ? ` · 军团 +${res.battalion_added}` : ''
-
-    ElMessage.success(`${res.notice} ${res.payout_notice || ''}${extra}`)
-
     acceptDialog.value = false
-
     acceptTarget.value = null
-
     acceptPicks.value = []
-
-    await refreshAll()
-
+    navigateToBattle(res.duel_id, {
+      payout: res.payout_notice,
+      battalion: res.battalion_added,
+      elo_delta: res.elo_delta,
+      duel_elo: res.duel_elo,
+    })
   } catch (e: unknown) {
-
     ElMessage.error(extractApiError(e, '应战失败'))
-
   } finally {
-
     acting.value = false
-
   }
-
 }
 
 
 
 async function refreshAll() {
-
   await Promise.all([loadEligible(), loadHistory(), loadPending(), loadOutgoing(), fetchMe()])
-
+  await statsBarRef.value?.refresh?.()
 }
 
 
@@ -650,23 +770,30 @@ async function doCancel(duelId: number) {
 
 
 onMounted(async () => {
-
   try {
-
     const cfg = await getDuelConfig()
-
     stakeMin.value = cfg.stake_min
-
     stakeMax.value = cfg.stake_max
-
     await Promise.all([loadEligible(), loadHistory(), loadPending(), loadOutgoing()])
-
+    applyStagedPicks()
+    await pollMatchStatus()
+    if (matchInQueue.value) {
+      startMatchPoll()
+    }
   } finally {
-
     loading.value = false
-
   }
+  window.addEventListener('duel-matched', onDuelMatched as EventListener)
+})
 
+function onDuelMatched() {
+  void statsBarRef.value?.refresh?.()
+}
+
+onUnmounted(() => {
+  stopMatchPoll()
+  if (previewDebounceTimer) clearTimeout(previewDebounceTimer)
+  window.removeEventListener('duel-matched', onDuelMatched as EventListener)
 })
 
 </script>
@@ -760,13 +887,11 @@ onMounted(async () => {
 }
 
 .pick-row {
-
   display: flex;
-
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-
   margin: 12px 0;
-
 }
 
 .picked-slot {
@@ -923,13 +1048,120 @@ onMounted(async () => {
 
 }
 
-.history li {
-
+.history li,
+.history-item {
   padding: 4px 0;
-
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
+  cursor: pointer;
 }
+.history-item:hover {
+  color: #e8c88a;
+}
+.duel-card .pos {
+  font-size: 0.62rem;
+  color: #9ec8ff;
+}
+.deck-preview {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(232, 200, 138, 0.08);
+  border: 1px solid rgba(232, 200, 138, 0.2);
+}
+.dp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  margin-bottom: 6px;
+}
+.dp-row strong {
+  color: #e8c88a;
+}
+.dp-chem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.chem-tag {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(95, 200, 143, 0.15);
+  color: #7dd3a8;
+}
+.dp-hint {
+  margin: 4px 0 0;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.match-queue {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(126, 184, 255, 0.08);
+  border: 1px solid rgba(126, 184, 255, 0.25);
+}
+.mq-visual {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.mq-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(126, 184, 255, 0.35);
+  animation: mq-pulse 1.4s ease-out infinite;
+}
+.mq-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.mq-text {
+  flex: 1;
+  min-width: 0;
+}
+.mq-title {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #9ec8ff;
+}
+.mq-sub {
+  margin: 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+@keyframes mq-pulse {
+  0% { transform: scale(0.85); opacity: 0.9; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.start-duel-btn {
+  width: 100%;
+  margin-top: 8px;
+  min-height: 44px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.duel-card.flash {
+  animation: pick-flash 0.32s ease;
+}
+@keyframes pick-flash {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); box-shadow: 0 0 12px rgba(232, 200, 138, 0.45); }
+  100% { transform: scale(1); }
+}
+.elo-delta.up { color: #7dd3a8; }
+.elo-delta.down { color: #e07a7a; }
 
 .win { color: #5fc88f; margin-right: 6px; }
 

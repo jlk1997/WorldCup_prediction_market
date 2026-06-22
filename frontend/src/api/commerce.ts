@@ -106,6 +106,8 @@ export interface LeaderboardEntry {
   win_rate?: number
   wins?: number
   settled?: number
+  duel_wins?: number
+  duel_elo?: number
   predict_points?: number
   battalion_points?: number
   tier_label?: string
@@ -147,6 +149,12 @@ export interface MyLeaderboardSummary {
   tier_label: string
   predict: { won: number; lost: number; void: number; settled: number; win_rate: number }
   predict_accuracy_rank: number | null
+  duel_elo?: number | null
+  duel_elo_rank?: number | null
+  duel_wins_rank?: number | null
+  duel_elo_tier?: { code: string; label: string } | null
+  duel_wins?: number | null
+  duel_losses?: number | null
 }
 
 export async function getPredictableMatches() {

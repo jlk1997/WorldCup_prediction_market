@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.exceptions import BadRequestError, NotFoundError
-from app.data.asset_catalog import estimate_card_value
+from app.data.combat_stats import build_combat_attrs, normalize_position
 from app.db.models.commerce import (
     CardDuel,
     CardDuelLog,
@@ -22,6 +22,15 @@ from app.db.models.commerce import (
 )
 from app.db.repositories.user_repository import WalletRepository
 from app.services.card_asset_service import CardAssetService
+from app.services.combat_engine import (
+    battle_power,
+    bp_tier,
+    build_combat_card_from_row,
+    build_combat_card_from_virtual,
+    deck_average_bp,
+    deck_summary,
+    resolve_duel,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -136,16 +145,172 @@ class CardDuelService:
                     "image_url": card.image_url,
                     "star": row.star,
                     "rating": attrs.get("overall_rating"),
+                    "position": normalize_position(attrs.get("position")),
                     "power": power,
+                    "bp": power,
+                    "combat_stats": attrs.get("combat_stats"),
                 }
             )
         return sorted(out, key=lambda x: -x["power"])
 
     def _card_power(self, row: UserCollectibleCard, card: CollectibleCard) -> int:
-        attrs = card.attributes_json if isinstance(card.attributes_json, dict) else {}
-        rating = int(attrs.get("overall_rating") or 0)
-        base = estimate_card_value(card.rarity, row.star, serial_no=row.serial_no, mint_total=row.mint_total)
-        return base + rating * 2
+        cc = build_combat_card_from_row(row, card)
+        return battle_power(cc)
+
+    def _deck_average_bp(self, rows: list[UserCollectibleCard]) -> float:
+        cards = []
+        for row in rows:
+            card = self.db.get(CollectibleCard, row.card_id)
+            if card:
+                cards.append(build_combat_card_from_row(row, card))
+        return deck_average_bp(cards)
+
+    def _bp_tier(self, avg_bp: float) -> int:
+        return bp_tier(avg_bp)
+
+    def _estimate_ai_elo(self, duel: CardDuel) -> int:
+        ai_deck = duel.ai_deck_json or []
+        if not ai_deck:
+            return 1000
+        bps = [float(c.get("bp") or c.get("power") or 200) for c in ai_deck]
+        avg = sum(bps) / len(bps)
+        return max(800, min(1600, int(1000 + (avg - 250) * 1.5)))
+
+    def _apply_duel_elo(
+        self,
+        duel: CardDuel,
+        challenger: User,
+        defender: User | None,
+        winner_id: int | None,
+    ) -> tuple[int, int]:
+        from app.services.duel_elo_service import DEFAULT_ELO, apply_ai_elo, apply_pvp_elo
+
+        if not winner_id:
+            return 0, 0
+
+        ch_elo = int(challenger.duel_elo or DEFAULT_ELO)
+        if duel.mode == "pvp" and defender and duel.defender_id:
+            def_elo = int(defender.duel_elo or DEFAULT_ELO)
+            deltas = apply_pvp_elo(
+                ch_elo, def_elo, winner_id, duel.challenger_id, duel.defender_id
+            )
+            ch_delta = deltas["challenger_delta"]
+            def_delta = deltas["defender_delta"]
+            duel.challenger_elo_delta = ch_delta
+            duel.defender_elo_delta = def_delta
+            challenger.duel_elo = max(100, ch_elo + ch_delta)
+            defender.duel_elo = max(100, def_elo + def_delta)
+            return ch_delta, def_delta
+
+        if duel.mode == "ai":
+            ai_elo = self._estimate_ai_elo(duel)
+            player_won = winner_id == duel.challenger_id
+            ch_delta = apply_ai_elo(ch_elo, ai_elo, player_won)
+            duel.challenger_elo_delta = ch_delta
+            duel.defender_elo_delta = 0
+            challenger.duel_elo = max(100, ch_elo + ch_delta)
+            return ch_delta, 0
+
+        return 0, 0
+
+    def _load_user_combat_cards(self, card_ids: list[int], user_id: int, *, side: str) -> list:
+        cards = []
+        for cid in card_ids:
+            row = self.db.get(UserCollectibleCard, cid)
+            if not row or row.user_id != user_id:
+                continue
+            card = self.db.get(CollectibleCard, row.card_id)
+            if card:
+                cards.append(build_combat_card_from_row(row, card, side=side))
+        return cards
+
+    def _generate_ai_deck(self, challenger_rows: list[UserCollectibleCard]) -> list[dict]:
+        """按挑战者卡组平均 BP 从 catalog 生成 AI 对手。"""
+        target_bp = self._deck_average_bp(challenger_rows) or 200.0
+        lo, hi = target_bp * 0.85, target_bp * 1.15
+        catalog = (
+            self.db.query(CollectibleCard)
+            .filter(CollectibleCard.active.is_(True), CollectibleCard.series == "team_squad")
+            .limit(200)
+            .all()
+        )
+        if len(catalog) < 3:
+            catalog = self.db.query(CollectibleCard).filter(CollectibleCard.active.is_(True)).limit(200).all()
+        candidates = []
+        for card in catalog:
+            attrs = card.attributes_json if isinstance(card.attributes_json, dict) else {}
+            if not attrs.get("combat_stats"):
+                combat = build_combat_attrs(
+                    card_code=card.code,
+                    series=card.series or "",
+                    position=attrs.get("position"),
+                    overall_rating=attrs.get("overall_rating"),
+                )
+                attrs = {**attrs, **combat}
+            cc = build_combat_card_from_virtual(
+                {
+                    "name": card.name,
+                    "rarity": card.rarity,
+                    "image_url": card.image_url,
+                    "position": attrs.get("position"),
+                    "star": 1,
+                    "stats": attrs.get("combat_stats"),
+                    "overall_rating": attrs.get("overall_rating"),
+                    "team_id": card.team_id,
+                    "card_code": card.code,
+                },
+                side="defender",
+            )
+            bp = battle_power(cc)
+            if lo <= bp <= hi or not candidates:
+                candidates.append(
+                    {
+                        "name": card.name,
+                        "rarity": card.rarity,
+                        "image_url": card.image_url,
+                        "position": cc.position,
+                        "star": 1,
+                        "combat_stats": cc.stats,
+                        "overall_rating": cc.overall_rating,
+                        "team_id": card.team_id,
+                        "card_code": card.code,
+                        "bp": bp,
+                    }
+                )
+        if len(candidates) < 3:
+            for card in catalog:
+                attrs = card.attributes_json if isinstance(card.attributes_json, dict) else {}
+                candidates.append(
+                    {
+                        "name": card.name,
+                        "rarity": card.rarity or "rare",
+                        "image_url": card.image_url,
+                        "position": normalize_position(attrs.get("position")),
+                        "star": 1,
+                        "combat_stats": attrs.get("combat_stats") or {},
+                        "overall_rating": attrs.get("overall_rating") or 75,
+                        "team_id": card.team_id,
+                        "card_code": card.code,
+                        "bp": target_bp,
+                    }
+                )
+                if len(candidates) >= 10:
+                    break
+        # 尽量覆盖不同位置
+        by_pos: dict[str, list] = {}
+        for c in candidates:
+            by_pos.setdefault(c["position"], []).append(c)
+        picked: list[dict] = []
+        for pos in ("FWD", "MID", "DEF", "GK"):
+            if pos in by_pos and by_pos[pos]:
+                picked.append(random.choice(by_pos[pos]))
+            if len(picked) >= 3:
+                break
+        while len(picked) < 3 and candidates:
+            extra = random.choice(candidates)
+            if extra not in picked:
+                picked.append(extra)
+        return picked[:3] if picked else candidates[:3]
 
     def _validate_cards(
         self,
@@ -216,6 +381,8 @@ class CardDuelService:
             "win_battalion": self.settings.card_duel_win_battalion,
             "pending_expire_hours": self.settings.card_duel_pending_expire_hours,
             "max_pending_per_user": self.settings.card_duel_max_pending_per_user,
+            "quick_match_enabled": self.settings.card_duel_quick_match_enabled,
+            "match_window_sec": self.settings.card_duel_match_window_sec,
         }
 
     def challenge_user(
@@ -427,58 +594,59 @@ class CardDuelService:
             for d, u in rows
         ]
 
-    def _ai_pick_cards(self) -> list[int]:
-        return [0, 0, 0]
-
-    def _total_power(self, card_ids: list[int], user_id: int | None = None) -> int:
-        if not card_ids or card_ids == [0, 0, 0]:
-            return random.randint(200, 450)
-        q = (
-            self.db.query(UserCollectibleCard, CollectibleCard)
-            .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
-            .filter(UserCollectibleCard.id.in_(card_ids))
-        )
-        if user_id:
-            q = q.filter(UserCollectibleCard.user_id == user_id)
-        total = 0
-        for row, card in q.all():
-            total += self._card_power(row, card)
-        return total
-
-    def _resolve_best_of_3(self, duel: CardDuel) -> tuple[int, int, str]:
-        c_ids = duel.challenger_card_ids or []
-        d_ids = duel.defender_card_ids or []
-        c_wins = d_wins = 0
-        for rnd in range(1, 4):
-            cp = self._card_power_for_slot(c_ids, rnd - 1, duel.challenger_id)
-            dp = self._card_power_for_slot(d_ids, rnd - 1, duel.defender_id)
-            side = "challenger" if cp >= dp else "defender"
-            if side == "challenger":
-                c_wins += 1
-            else:
-                d_wins += 1
+    def _resolve_best_of_3(self, duel: CardDuel) -> tuple[int, int, str, dict[str, Any]]:
+        c_cards = self._load_side_combat_cards(duel, "challenger")
+        d_cards = self._load_side_combat_cards(duel, "defender")
+        result = resolve_duel(c_cards, d_cards, mode="best_of_3")
+        c_wins = result["challenger_round_wins"]
+        d_wins = result["defender_round_wins"]
+        for rnd_data in result["rounds"]:
             self.db.add(
                 CardDuelLog(
                     duel_id=duel.id,
-                    round_no=rnd,
-                    challenger_power=cp,
-                    defender_power=dp,
-                    winner_side=side,
+                    round_no=rnd_data["round"],
+                    challenger_power=int(rnd_data["challenger_score"]),
+                    defender_power=int(rnd_data["defender_score"]),
+                    winner_side=rnd_data["winner_side"],
+                    result_json=rnd_data,
                 )
             )
         winner = duel.challenger_id if c_wins >= d_wins else (duel.defender_id or 0)
-        return c_wins, d_wins, "challenger" if winner == duel.challenger_id else "defender"
+        return c_wins, d_wins, "challenger" if winner == duel.challenger_id else "defender", result
 
-    def _card_power_for_slot(self, card_ids: list[int], idx: int, user_id: int | None) -> int:
-        if idx >= len(card_ids) or not card_ids[idx]:
-            return random.randint(60, 150)
-        row = self.db.get(UserCollectibleCard, card_ids[idx])
-        if not row:
-            return random.randint(60, 150)
-        card = self.db.get(CollectibleCard, row.card_id)
-        if not card:
-            return random.randint(60, 150)
-        return self._card_power(row, card)
+    def _load_side_combat_cards(self, duel: CardDuel, side: str) -> list:
+        if side == "challenger":
+            ids = duel.challenger_card_ids or []
+            uid = duel.challenger_id
+        else:
+            ids = duel.defender_card_ids or []
+            uid = duel.defender_id
+        if duel.mode == "ai" and side == "defender":
+            deck = duel.ai_deck_json or []
+            return [build_combat_card_from_virtual(v, side="defender") for v in deck]
+        if not uid:
+            return []
+        return self._load_user_combat_cards(ids, uid, side=side)
+
+    def _resolve_total_power(self, duel: CardDuel) -> tuple[int, int, str, dict[str, Any]]:
+        c_cards = self._load_side_combat_cards(duel, "challenger")
+        d_cards = self._load_side_combat_cards(duel, "defender")
+        result = resolve_duel(c_cards, d_cards, mode="total_power")
+        rnd = result["rounds"][0]
+        self.db.add(
+            CardDuelLog(
+                duel_id=duel.id,
+                round_no=1,
+                challenger_power=int(rnd["challenger_score"]),
+                defender_power=int(rnd["defender_score"]),
+                winner_side=rnd["winner_side"],
+                result_json=rnd,
+            )
+        )
+        cp = int(rnd["challenger_score"])
+        dp = int(rnd["defender_score"])
+        winner = duel.challenger_id if cp >= dp else (duel.defender_id or 0)
+        return cp, dp, "challenger" if winner == duel.challenger_id else "defender", result
 
     def challenge_ai(
         self, user: User, card_ids: list[int], *, stake_points: int = 0
@@ -493,8 +661,8 @@ class CardDuelService:
         if stake > 0 and (user_locked.redeem_points or 0) < stake:
             raise BadRequestError("可用积分不足")
 
-        self._validate_cards(user_locked, card_ids)
-        ai_cards = self._ai_pick_cards()
+        ch_rows = self._validate_cards(user_locked, card_ids)
+        ai_deck = self._generate_ai_deck(ch_rows)
 
         duel = CardDuel(
             challenger_id=user_locked.id,
@@ -502,7 +670,8 @@ class CardDuelService:
             mode="ai",
             status="pending",
             challenger_card_ids=card_ids,
-            defender_card_ids=ai_cards,
+            defender_card_ids=[0, 0, 0],
+            ai_deck_json=ai_deck,
             stake_points=stake,
         )
         self.db.add(duel)
@@ -526,26 +695,19 @@ class CardDuelService:
         if duel.status == "settled":
             raise BadRequestError("对决已结算")
 
+        replay: dict[str, Any]
         if self.settings.card_duel_mode == "total_power":
-            cp = self._total_power(duel.challenger_card_ids, duel.challenger_id)
-            dp = self._total_power(duel.defender_card_ids or [], duel.defender_id)
+            cp, dp, _, replay = self._resolve_total_power(duel)
             duel.challenger_power = cp
             duel.defender_power = dp
             winner_id = duel.challenger_id if cp >= dp else duel.defender_id
-            self.db.add(
-                CardDuelLog(
-                    duel_id=duel.id,
-                    round_no=1,
-                    challenger_power=cp,
-                    defender_power=dp,
-                    winner_side="challenger" if winner_id == duel.challenger_id else "defender",
-                )
-            )
         else:
-            c_wins, d_wins, _ = self._resolve_best_of_3(duel)
+            c_wins, d_wins, _, replay = self._resolve_best_of_3(duel)
             duel.challenger_power = c_wins
             duel.defender_power = d_wins
             winner_id = duel.challenger_id if c_wins >= d_wins else duel.defender_id
+
+        duel.replay_json = replay
 
         duel.winner_id = winner_id
         duel.status = "settled"
@@ -577,13 +739,30 @@ class CardDuelService:
             except Exception:
                 logger.exception("duel battalion reward failed")
 
+        ch_elo_delta = def_elo_delta = 0
+        try:
+            ch_elo_delta, def_elo_delta = self._apply_duel_elo(
+                duel, challenger, defender, winner_id
+            )
+        except Exception:
+            logger.exception("duel elo apply failed")
+
         all_card_ids = list(duel.challenger_card_ids or []) + list(duel.defender_card_ids or [])
         self._release_duel_locks(all_card_ids)
 
         self.db.commit()
         viewer = acting_user or challenger
         won = winner_id == viewer.id
-        return {
+        viewer_elo_delta = (
+            ch_elo_delta if viewer.id == duel.challenger_id else def_elo_delta
+        )
+        if viewer.id == duel.challenger_id:
+            viewer_elo = int(challenger.duel_elo or 1000)
+        elif defender and viewer.id == defender.id:
+            viewer_elo = int(defender.duel_elo or 1000)
+        else:
+            viewer_elo = int(getattr(viewer, "duel_elo", None) or 1000)
+        result = {
             "ok": True,
             "duel_id": duel.id,
             "won": won,
@@ -593,7 +772,86 @@ class CardDuelService:
             "stake_points": stake,
             "payout_notice": payout_notice,
             "battalion_added": battalion_added,
+            "elo_delta": viewer_elo_delta,
+            "duel_elo": viewer_elo,
             "notice": "对决胜利！" if won else "对决失败，再接再厉",
+            "rounds": replay.get("rounds", []),
+            "replay": replay,
+        }
+        try:
+            from app.core.user_ws_hub import push_user_event
+
+            ws_payload = {
+                "type": "duel_settled",
+                "duel_id": duel.id,
+                "won": won,
+                "elo_delta": viewer_elo_delta,
+                "duel_elo": viewer_elo,
+            }
+            push_user_event(viewer.id, ws_payload)
+            if duel.mode == "pvp" and defender and defender.id != viewer.id:
+                other_delta = def_elo_delta if viewer.id == duel.challenger_id else ch_elo_delta
+                push_user_event(
+                    defender.id if viewer.id == duel.challenger_id else challenger.id,
+                    {
+                        **ws_payload,
+                        "won": winner_id
+                        == (defender.id if viewer.id == duel.challenger_id else challenger.id),
+                        "elo_delta": other_delta,
+                        "duel_elo": int(
+                            (defender if viewer.id == duel.challenger_id else challenger).duel_elo
+                            or 1000
+                        ),
+                    },
+                )
+        except Exception:
+            logger.debug("duel_settled ws push skipped")
+        return result
+
+    def get_duel_detail(self, user: User, duel_id: int) -> dict[str, Any]:
+        duel = self.db.get(CardDuel, duel_id)
+        if not duel:
+            raise NotFoundError("对决不存在")
+        if user.id not in (duel.challenger_id, duel.defender_id or -1):
+            raise NotFoundError("无权查看该对决")
+        logs = (
+            self.db.query(CardDuelLog)
+            .filter(CardDuelLog.duel_id == duel.id)
+            .order_by(CardDuelLog.round_no.asc())
+            .all()
+        )
+        rounds = [log.result_json for log in logs if log.result_json]
+        if not rounds and duel.replay_json:
+            rounds = duel.replay_json.get("rounds", [])
+        nick_map = {}
+        for uid in filter(None, [duel.challenger_id, duel.defender_id, duel.winner_id]):
+            u = self.db.get(User, uid)
+            if u:
+                nick_map[uid] = u.nickname
+        is_challenger = duel.challenger_id == user.id
+        return {
+            "duel_id": duel.id,
+            "mode": duel.mode,
+            "status": duel.status,
+            "won": duel.winner_id == user.id if duel.status == "settled" else None,
+            "role": "challenger" if is_challenger else "defender",
+            "challenger_nickname": nick_map.get(duel.challenger_id, "—"),
+            "defender_nickname": nick_map.get(duel.defender_id, "AI 教练") if duel.mode == "ai" else nick_map.get(duel.defender_id, "—"),
+            "challenger_power": duel.challenger_power,
+            "defender_power": duel.defender_power,
+            "winner_id": duel.winner_id,
+            "stake_points": duel.stake_points,
+            "rounds": rounds,
+            "replay": duel.replay_json,
+            "ai_deck": duel.ai_deck_json if duel.mode == "ai" else None,
+            "settled_at": duel.settled_at.isoformat() if duel.settled_at else None,
+            "challenger_elo_delta": duel.challenger_elo_delta if duel.status == "settled" else None,
+            "defender_elo_delta": duel.defender_elo_delta if duel.status == "settled" else None,
+            "your_elo_delta": (
+                duel.challenger_elo_delta if is_challenger else duel.defender_elo_delta
+            )
+            if duel.status == "settled"
+            else None,
         }
 
     def history(self, user: User, limit: int = 20) -> list[dict[str, Any]]:
@@ -632,7 +890,252 @@ class CardDuelService:
                     "challenger_power": d.challenger_power,
                     "defender_power": d.defender_power,
                     "stake_points": d.stake_points,
+                    "elo_delta": (
+                        d.challenger_elo_delta if is_challenger else d.defender_elo_delta
+                    ),
                     "at": d.settled_at.isoformat() if d.settled_at else None,
                 }
             )
         return out
+
+    def deck_preview(self, user: User, card_ids: list[int]) -> dict[str, Any]:
+        if len(card_ids) != DUEL_CARD_COUNT:
+            raise BadRequestError(f"请选择 {DUEL_CARD_COUNT} 张卡牌")
+        rows = (
+            self.db.query(UserCollectibleCard)
+            .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.id.in_(card_ids))
+            .all()
+        )
+        if len(rows) != DUEL_CARD_COUNT:
+            raise BadRequestError("包含无效卡牌")
+        cards = []
+        for cid in card_ids:
+            row = next((r for r in rows if r.id == cid), None)
+            if not row:
+                continue
+            card = self.db.get(CollectibleCard, row.card_id)
+            if card:
+                cards.append(build_combat_card_from_row(row, card))
+        summary = deck_summary(cards)
+        hints = []
+        positions = summary.get("positions") or []
+        if len(positions) >= 2:
+            from app.services.combat_engine import MATCHUP_HINTS
+
+            for i in range(min(3, len(positions))):
+                for mh in MATCHUP_HINTS:
+                    if positions[i] == mh["att"]:
+                        hints.append(f"第{i + 1}局（{positions[i]}）: {mh['hint']}")
+                        break
+        summary["matchup_hints"] = hints[:3]
+        return summary
+
+    def _duel_participant_subquery(self):
+        ch = self.db.query(CardDuel.challenger_id.label("uid")).filter(
+            CardDuel.status == "settled"
+        )
+        df = self.db.query(CardDuel.defender_id.label("uid")).filter(
+            CardDuel.status == "settled",
+            CardDuel.defender_id.isnot(None),
+        )
+        return ch.union(df).subquery()
+
+    def duel_quick_summary(self, user: User) -> dict[str, int]:
+        from sqlalchemy import or_
+
+        uid = user.id
+        base = self.db.query(CardDuel).filter(
+            CardDuel.status == "settled",
+            or_(CardDuel.challenger_id == uid, CardDuel.defender_id == uid),
+        )
+        total = base.count()
+        wins = base.filter(CardDuel.winner_id == uid).count()
+        return {"total_duels": total, "wins": wins, "losses": max(0, total - wins)}
+
+    def duel_elo_rank(self, user_id: int) -> int | None:
+        from sqlalchemy import func
+
+        sub = self._duel_participant_subquery()
+        user = self.db.get(User, user_id)
+        if not user:
+            return None
+        elo = int(user.duel_elo or 1000)
+        higher = (
+            self.db.query(func.count(User.id))
+            .join(sub, User.id == sub.c.uid)
+            .filter(User.duel_elo > elo)
+            .scalar()
+            or 0
+        )
+        return int(higher) + 1
+
+    def duel_wins_rank(self, user_id: int) -> int | None:
+        from sqlalchemy import func
+
+        sub = (
+            self.db.query(
+                CardDuel.winner_id.label("uid"),
+                func.count(CardDuel.id).label("wins"),
+            )
+            .filter(CardDuel.status == "settled", CardDuel.winner_id.isnot(None))
+            .group_by(CardDuel.winner_id)
+            .subquery()
+        )
+        row = (
+            self.db.query(sub.c.uid, sub.c.wins)
+            .filter(sub.c.uid == user_id)
+            .first()
+        )
+        if not row:
+            return None
+        higher = (
+            self.db.query(func.count())
+            .select_from(sub)
+            .filter(sub.c.wins > row.wins)
+            .scalar()
+            or 0
+        )
+        return int(higher) + 1
+
+    def duel_stats(self, user: User) -> dict[str, Any]:
+        rows = (
+            self.db.query(CardDuel)
+            .filter(
+                (CardDuel.challenger_id == user.id) | (CardDuel.defender_id == user.id),
+                CardDuel.status == "settled",
+            )
+            .order_by(CardDuel.id.desc())
+            .limit(50)
+            .all()
+        )
+        wins = losses = 0
+        streak = 0
+        streak_type: str | None = None
+        for d in rows:
+            won = d.winner_id == user.id
+            if wins + losses == 0:
+                streak = 1
+                streak_type = "win" if won else "lose"
+            elif (won and streak_type == "win") or (not won and streak_type == "lose"):
+                streak += 1
+            else:
+                break
+            if won:
+                wins += 1
+            else:
+                losses += 1
+        total = wins + losses
+        ai_wins = sum(1 for d in rows if d.winner_id == user.id and d.mode == "ai")
+        pvp_wins = sum(1 for d in rows if d.winner_id == user.id and d.mode == "pvp")
+        from app.services.duel_elo_service import DEFAULT_ELO, elo_tier
+
+        duel_elo = int(getattr(user, "duel_elo", None) or DEFAULT_ELO)
+        return {
+            "total_duels": total,
+            "wins": wins,
+            "losses": losses,
+            "win_rate": round(wins / total * 100, 1) if total else 0,
+            "current_streak": streak,
+            "streak_type": streak_type,
+            "ai_wins": ai_wins,
+            "pvp_wins": pvp_wins,
+            "duel_elo": duel_elo,
+            "elo_tier": elo_tier(duel_elo),
+            "rank_tier": self._duel_rank_tier(wins, total),
+        }
+
+    def duel_leaderboard(self, limit: int = 20, *, by: str = "wins") -> list[dict[str, Any]]:
+        from app.services.duel_elo_service import elo_tier
+
+        if by == "elo":
+            sub = self._duel_participant_subquery()
+            rows = (
+                self.db.query(User.id, User.nickname, User.duel_elo)
+                .join(sub, User.id == sub.c.uid)
+                .order_by(User.duel_elo.desc(), User.id.asc())
+                .limit(min(limit, 50))
+                .all()
+            )
+            return [
+                {
+                    "user_id": r.id,
+                    "nickname": r.nickname,
+                    "duel_elo": int(r.duel_elo or 1000),
+                    "elo_tier": elo_tier(int(r.duel_elo or 1000)),
+                }
+                for r in rows
+            ]
+
+        from sqlalchemy import func
+
+        sub = (
+            self.db.query(
+                CardDuel.winner_id.label("uid"),
+                func.count(CardDuel.id).label("wins"),
+            )
+            .filter(CardDuel.status == "settled", CardDuel.winner_id.isnot(None))
+            .group_by(CardDuel.winner_id)
+            .subquery()
+        )
+        rows = (
+            self.db.query(User.id, User.nickname, User.duel_elo, sub.c.wins)
+            .join(sub, User.id == sub.c.uid)
+            .order_by(sub.c.wins.desc())
+            .limit(min(limit, 50))
+            .all()
+        )
+        return [
+            {
+                "user_id": r.id,
+                "nickname": r.nickname,
+                "wins": int(r.wins),
+                "duel_elo": int(r.duel_elo or 1000),
+            }
+            for r in rows
+        ]
+
+    def recommend_deck(self, user: User) -> dict[str, Any]:
+        rows = (
+            self.db.query(UserCollectibleCard, CollectibleCard)
+            .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
+            .filter(UserCollectibleCard.user_id == user.id)
+            .all()
+        )
+        staked_ids = self._staked_card_ids(user.id)
+        cards = []
+        for row, card in rows:
+            if (row.count or 1) > 1:
+                continue
+            if row.lock_state and row.lock_state != "none":
+                continue
+            if row.id in staked_ids:
+                continue
+            cards.append(build_combat_card_from_row(row, card))
+        if len(cards) < DUEL_CARD_COUNT:
+            raise BadRequestError(f"可用卡牌不足 {DUEL_CARD_COUNT} 张，无法智能组牌")
+        from app.services.duel_elo_service import recommend_deck_from_cards
+
+        result = recommend_deck_from_cards(cards)
+        by_id = {c.user_card_id: c for c in cards if c.user_card_id}
+        result["cards"] = [
+            {
+                "user_card_id": cid,
+                "name": by_id[cid].name if cid in by_id else "—",
+                "position": by_id[cid].position,
+                "bp": battle_power(by_id[cid]) if cid in by_id else 0,
+            }
+            for cid in result.get("card_ids") or []
+        ]
+        return result
+
+    def _duel_rank_tier(self, wins: int, total: int) -> dict[str, str]:
+        if total < 3:
+            return {"code": "rookie", "label": "新秀"}
+        rate = wins / total if total else 0
+        if wins >= 30 and rate >= 0.6:
+            return {"code": "master", "label": "对决大师"}
+        if wins >= 15 and rate >= 0.55:
+            return {"code": "veteran", "label": "老将"}
+        if wins >= 5:
+            return {"code": "regular", "label": "常客"}
+        return {"code": "rookie", "label": "新秀"}

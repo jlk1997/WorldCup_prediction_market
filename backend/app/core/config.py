@@ -206,6 +206,9 @@ class Settings(BaseSettings):
     card_duel_mode: str = "best_of_3"  # best_of_3 | total_power
     card_duel_pending_expire_hours: int = 72
     card_duel_max_pending_per_user: int = 5
+    card_duel_match_window_sec: int = 300
+    card_duel_bp_rng_pct: float = 0.03
+    card_duel_quick_match_enabled: bool = True
     # 实名认证（mock：开发期直接通过；生产对接三要素）
     realname_mock: bool = True
 

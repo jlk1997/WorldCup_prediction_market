@@ -44,6 +44,7 @@ class User(Base):
     referred_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
     # 资产平台：实名认证（合规转赠/交易前置，仅存哈希，不存明文）
     real_name_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    duel_elo: Mapped[int] = mapped_column(Integer, default=1000, nullable=False)
     real_name_hash: Mapped[str | None] = mapped_column(String(128))
     real_name_verified_at: Mapped[datetime | None] = mapped_column(DateTime)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
@@ -816,6 +817,10 @@ class CardDuel(Base):
     winner_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     challenger_power: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     defender_power: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    replay_json: Mapped[dict | None] = mapped_column(JSONB)
+    ai_deck_json: Mapped[list | None] = mapped_column(JSONB)
+    challenger_elo_delta: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    defender_elo_delta: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     settled_at: Mapped[datetime | None] = mapped_column(DateTime)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
 
@@ -829,6 +834,25 @@ class CardDuelLog(Base):
     challenger_power: Mapped[int] = mapped_column(Integer, nullable=False)
     defender_power: Mapped[int] = mapped_column(Integer, nullable=False)
     winner_side: Mapped[str] = mapped_column(String(16), nullable=False)  # challenger/defender
+    result_json: Mapped[dict | None] = mapped_column(JSONB)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class CardDuelMatchQueue(Base):
+    """快速匹配队列。"""
+
+    __tablename__ = "card_duel_match_queue"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    card_ids: Mapped[list] = mapped_column(JSONB, nullable=False)
+    deck_bp: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    stake_points: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    tier: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="waiting", nullable=False)  # waiting/matched/expired/cancelled
+    duel_id: Mapped[int | None] = mapped_column(ForeignKey("card_duels.id", ondelete="SET NULL"), nullable=True)
+    matched_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
 
 

@@ -15,7 +15,10 @@ _subscribers: dict[int, set[asyncio.Queue]] = defaultdict(set)
 
 
 def push_predict_settled(user_id: int, payload: dict[str, Any]) -> None:
-    msg = {"type": "predict_settled", "payload": payload}
+    push_user_event(user_id, {"type": "predict_settled", "payload": payload})
+
+
+def push_user_event(user_id: int, msg: dict[str, Any]) -> None:
     _pending[user_id].append(msg)
     for q in list(_subscribers.get(user_id, ())):
         try:

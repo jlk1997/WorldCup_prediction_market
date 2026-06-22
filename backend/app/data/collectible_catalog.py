@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
+from app.data.combat_stats import build_combat_attrs, merge_combat_into_attributes
 from app.db.models import PlayerDetailed, Team
 
 RARITIES = ("common", "rare", "epic", "legend")
@@ -153,12 +154,21 @@ def build_card_catalog(db: Session) -> tuple[list[dict], list[dict]]:
                 "rarity": rarity,
                 "series": "team_squad",
                 "image_url": team_logos.get(player.team_id),
-                "attributes_json": {
-                    "position": player.position,
-                    "overall_rating": player.overall_rating,
-                    "is_starter": bool(player.is_starter),
-                    "club": player.club,
-                },
+                "attributes_json": merge_combat_into_attributes(
+                    {
+                        "position": player.position,
+                        "overall_rating": player.overall_rating,
+                        "is_starter": bool(player.is_starter),
+                        "club": player.club,
+                    },
+                    build_combat_attrs(
+                        card_code=code,
+                        series="team_squad",
+                        position=player.position,
+                        overall_rating=player.overall_rating,
+                        player_stats=player.stats if isinstance(player.stats, dict) else None,
+                    ),
+                ),
                 "is_limited": False,
                 "sort_order": sort,
             }

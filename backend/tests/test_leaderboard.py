@@ -81,3 +81,16 @@ def test_predict_accuracy_board_min_samples(db: Session):
     me = next((r for r in board["rows"] if r["user_id"] == user.id), None)
     assert me is not None
     assert me["win_rate"] == 80.0
+
+
+def test_duel_elo_board(db: Session):
+    u1 = _make_user(db, duel_elo=1200)
+    u2 = _make_user(db, duel_elo=1300)
+    svc = LeaderboardService(db)
+    board = svc.get_duel_board(by="elo", limit=20, viewer_id=u1.id)
+    assert board["board"] == "duel_elo"
+    ids = [r["user_id"] for r in board["rows"]]
+    assert u2.id in ids
+    me = next(r for r in board["rows"] if r["user_id"] == u1.id)
+    assert me["is_me"] is True
+    assert me["tier_label"]

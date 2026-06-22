@@ -299,6 +299,7 @@ class MatchAnalysisOrchestrator:
                 facts = self._gather_facts(team1_name, team2_name, steps, progress)
 
                 if self.settings.agent_enable_tool_loop:
+                    self.router.user_id = user_id
                     self._optional_tool_loop(llm, team1_name, team2_name, steps, progress)
 
                 self._emit(progress, {"type": "phase", "phase": "llm", "message": "News + Tactical 并行分析"})

@@ -215,6 +215,18 @@
               <strong v-else>—</strong>
             </div>
             <div class="asset-row">
+              <span>对战战力</span>
+              <strong class="gold">{{ selectedCard.asset.battle_power ?? '—' }}</strong>
+            </div>
+            <div v-if="combatStatEntries.length" class="combat-stats">
+              <span class="combat-stats-label">六维属性</span>
+              <div v-for="s in combatStatEntries" :key="s.key" class="combat-stat-row">
+                <span>{{ s.label }}</span>
+                <div class="combat-bar"><div :style="{ width: s.value + '%' }" /></div>
+                <span>{{ s.value }}</span>
+              </div>
+            </div>
+            <div class="asset-row">
               <span>估值</span>
               <strong class="gold">{{ selectedCard.asset.estimated_value }} 可用积分</strong>
             </div>
@@ -239,10 +251,21 @@
               </el-button>
               <span v-else class="stack-tip">或合成升星消耗叠卡</span>
             </div>
+            <div v-else-if="selectedCard.asset.lock_state === 'duel'" class="asset-cooling">
+              当前对决中 · <router-link to="/arena">前往擂台</router-link>
+            </div>
             <div v-else-if="selectedCard.asset.lock_state !== 'none'" class="asset-cooling">
               当前{{ lockStateLabel(selectedCard.asset.lock_state) }}
             </div>
-            <p class="asset-note">资产以可用积分计价，为站内虚拟权益，无现金价值、不可提现。</p>
+            <p class="asset-note">对战战力用于竞技场；估值/回购以可用积分计，无现金价值、不可提现。</p>
+            <div v-if="canDuel(selectedCard)" class="duel-stage-row">
+              <el-button size="small" type="warning" plain @click="stageForDuel">
+                {{ stagedCountLabel(selectedCard.user_card_id!) }}
+              </el-button>
+              <router-link v-if="stagedPickCount >= 1" to="/arena#duel" class="duel-go-link">
+                去擂台组牌 ({{ stagedPickCount }}/3)
+              </router-link>
+            </div>
           </div>
           <div v-if="selectedCard.highlights?.length" class="highlights">
             <strong>高光印记</strong>
@@ -424,6 +447,10 @@ import { buildSynthesisDrop, openCollectibleReveal } from '@/stores/collectibleR
 import { openCollectibleShare } from '@/composables/useCollectibleShareSheet'
 import { authState } from '@/stores/authStore'
 import { usePageMeta } from '@/composables/usePageMeta'
+import {
+  readStagedDuelPicks,
+  toggleStagedDuelPick,
+} from '@/composables/useDuelStagedPicks'
 
 usePageMeta({
   title: '球星收藏册 — 最后一舞',
@@ -494,6 +521,25 @@ function lockStateLabel(state: string) {
   return LOCK_LABELS[state] || '锁定中'
 }
 
+const STAT_LABELS: Record<string, string> = {
+  pace: '速度',
+  shoot: '射门',
+  pass: '传球',
+  dribble: '盘带',
+  defend: '防守',
+  physical: '力量',
+}
+
+const combatStatEntries = computed(() => {
+  const stats = selectedCard.value?.asset?.combat_stats as Record<string, number> | undefined
+  if (!stats) return []
+  return Object.entries(stats).map(([key, value]) => ({
+    key,
+    label: STAT_LABELS[key] || key,
+    value: Math.min(99, Math.max(0, Number(value) || 0)),
+  }))
+})
+
 function stackCount(card: CollectibleCardBrief): number {
   return card.asset?.stack_count ?? card.count ?? 1
 }
@@ -510,6 +556,36 @@ function canCirculate(card: CollectibleCardBrief): boolean {
   const a = card.asset
   if (!a) return false
   return a.tradable && !isStacked(card) && a.lock_state === 'none' && !a.cooling_down
+}
+
+function canDuel(card: CollectibleCardBrief): boolean {
+  const a = card.asset
+  if (!card.owned || !card.user_card_id || !a) return false
+  if (isStacked(card) || a.cooling_down) return false
+  if (a.lock_state && a.lock_state !== 'none') return false
+  return true
+}
+
+const stagedPickCount = computed(() => readStagedDuelPicks().length)
+
+function stagedCountLabel(userCardId: number): string {
+  const picks = readStagedDuelPicks()
+  if (picks.includes(userCardId)) return '已加入组牌篮 ✓'
+  return picks.length >= 3 ? '组牌篮已满' : '加入对决组牌篮'
+}
+
+function stageForDuel() {
+  const id = selectedCard.value?.user_card_id
+  if (!id || !selectedCard.value || !canDuel(selectedCard.value)) return
+  const picks = toggleStagedDuelPick(id)
+  if (picks.includes(id)) {
+    ElMessage.success(`已加入组牌篮 (${picks.length}/3)`)
+  } else {
+    ElMessage.info('已从组牌篮移除')
+  }
+  if (picks.length === 3) {
+    router.push('/arena#duel')
+  }
 }
 
 async function refreshSelectedCard() {
@@ -623,7 +699,7 @@ async function onStake() {
   if (!(await ensureVerified('质押'))) return
   try {
     await confirmCollectibleAction(
-      '质押该卡可产被动可用积分并为该球队竞猜加成，质押期间不可流通。确认质押？',
+      '质押该卡可产被动可用积分并为该球队竞猜加成；质押期间不可挂牌、不可出战对决。确认质押？',
       '质押球星卡',
       '确认质押',
       'info',
@@ -1465,6 +1541,36 @@ onMounted(async () => {
 .asset-row .gold {
   color: var(--wc-accent-gold);
 }
+.combat-stats {
+  margin: 8px 0 10px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.combat-stats-label {
+  display: block;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 6px;
+}
+.combat-stat-row {
+  display: grid;
+  grid-template-columns: 2.5em 1fr 2em;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  margin-bottom: 4px;
+}
+.combat-bar {
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.combat-bar div {
+  height: 100%;
+  background: linear-gradient(90deg, #e8c88a, #c99850);
+  border-radius: 3px;
+}
 .asset-cooling {
   margin-top: 6px;
   font-size: 0.72rem;
@@ -1478,10 +1584,25 @@ onMounted(async () => {
   color: var(--wc-text-muted);
 }
 .asset-note {
-  margin: 8px 0 0;
-  font-size: 0.64rem;
-  color: var(--wc-text-muted);
-  line-height: 1.4;
+  margin: 10px 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.45;
+}
+.duel-stage-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.duel-go-link {
+  font-size: 0.75rem;
+  color: #9ec8ff;
+  text-decoration: none;
+}
+.duel-go-link:hover {
+  color: #e8c88a;
 }
 .asset-actions {
   display: flex;

@@ -437,6 +437,12 @@ def leaderboard_board(
             "description": BOARD_RULES["supporter"].get(p, BOARD_RULES["supporter"]["season"]),
             "rows": rows,
         }
+    elif board in ("duel_elo", "duel_wins"):
+        data = svc.get_duel_board(
+            by="wins" if board == "duel_wins" else "elo",
+            limit=limit,
+            viewer_id=viewer,
+        )
     else:
         data = svc.get_points_board(period, limit, viewer)
     return LeaderboardBoardOut.model_validate(data)

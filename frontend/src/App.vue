@@ -201,6 +201,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { Menu } from '@element-plus/icons-vue'
 import StadiumModeSelector from './components/StadiumModeSelector.vue'
 import AppLogo from './components/AppLogo.vue'
@@ -298,6 +299,7 @@ onMounted(async () => {
   await ensureOfficialQqGroupConfig()
   startHeaderNotificationPoll()
   window.addEventListener('daily-status-refresh', onDailyStatusRefresh)
+  window.addEventListener('duel-matched', onDuelMatched as EventListener)
   await initAuth()
   if (authState.accessToken) {
     const pendingNo =
@@ -324,7 +326,15 @@ onMounted(async () => {
 onUnmounted(() => {
   unsubscribeLive?.()
   window.removeEventListener('daily-status-refresh', onDailyStatusRefresh)
+  window.removeEventListener('duel-matched', onDuelMatched as EventListener)
 })
+
+function onDuelMatched(ev: Event) {
+  const duelId = (ev as CustomEvent).detail?.duel_id
+  if (!duelId || route.path.startsWith('/arena/battle/')) return
+  ElMessage.success('匹配成功，即将进入对决！')
+  router.push(`/arena/battle/${duelId}`)
+}
 
 watch(moreOpen, (open) => setUiOverlay('more-drawer', open))
 watch(showFeatureTour, (open) => setUiOverlay('onboarding-tour', open))

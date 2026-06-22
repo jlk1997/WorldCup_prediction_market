@@ -46,6 +46,12 @@ BOARD_RULES = {
     "predict_accuracy": {
         "season": "至少 5 场已结算竞猜，按猜中率排序",
     },
+    "duel_elo": {
+        "season": "卡牌对决 ELO 排位（三局两胜 PVP/练习，青铜至大师）",
+    },
+    "duel_wins": {
+        "season": "卡牌对决累计胜场榜",
+    },
 }
 
 
@@ -379,6 +385,64 @@ class LeaderboardService:
                 "win_rate": win_rate,
             },
             "predict_accuracy_rank": acc_rank,
+            **self._duel_summary_fields(user),
+        }
+
+    def _duel_summary_fields(self, user: User) -> dict:
+        from app.services.card_duel_service import CardDuelService
+        from app.services.duel_elo_service import elo_tier
+
+        svc = CardDuelService(self.db)
+        quick = svc.duel_quick_summary(user)
+        duel_elo = int(getattr(user, "duel_elo", None) or 1000)
+        tier = elo_tier(duel_elo)
+        total = quick["total_duels"]
+        return {
+            "duel_elo": duel_elo,
+            "duel_elo_rank": svc.duel_elo_rank(user.id) if total > 0 else None,
+            "duel_wins_rank": svc.duel_wins_rank(user.id) if quick["wins"] > 0 else None,
+            "duel_elo_tier": tier,
+            "duel_wins": quick["wins"],
+            "duel_losses": quick["losses"],
+        }
+
+    def get_duel_board(self, *, by: str = "elo", limit: int = 50, viewer_id: int | None = None) -> dict:
+        from app.services.card_duel_service import CardDuelService
+
+        by = "wins" if by == "wins" else "elo"
+        items = CardDuelService(self.db).duel_leaderboard(limit=limit, by=by)
+        rows = []
+        for idx, item in enumerate(items):
+            if by == "elo":
+                rows.append(
+                    {
+                        "user_id": item["user_id"],
+                        "nickname": item["nickname"],
+                        "rank": idx + 1,
+                        "points": item["duel_elo"],
+                        "tier_label": item["elo_tier"]["label"],
+                        "is_me": viewer_id is not None and item["user_id"] == viewer_id,
+                    }
+                )
+            else:
+                rows.append(
+                    {
+                        "user_id": item["user_id"],
+                        "nickname": item["nickname"],
+                        "rank": idx + 1,
+                        "points": item["wins"],
+                        "duel_elo": item.get("duel_elo"),
+                        "is_me": viewer_id is not None and item["user_id"] == viewer_id,
+                    }
+                )
+        board_key = "duel_elo" if by == "elo" else "duel_wins"
+        return {
+            "board": board_key,
+            "period": "season",
+            "period_label": "当前赛季",
+            "metric": "duel_elo" if by == "elo" else "duel_wins",
+            "description": BOARD_RULES[board_key]["season"],
+            "rows": rows,
         }
 
     def _season_points_rank(self, user: User) -> int | None:

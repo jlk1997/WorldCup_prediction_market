@@ -80,6 +80,7 @@ class AgentAssetContextService:
             "fantasy_week_score": fantasy_score,
             "fantasy_rank": fantasy_rank,
             "pending_duel_invites": pending_duels,
+            "duel_elo": int(getattr(user, "duel_elo", None) or 1000),
             "real_name_verified": bool(user.real_name_verified),
             "disclaimer": "球星卡为站内虚拟藏品，无现金价值；分析中勿宣传投资或保值。",
         }

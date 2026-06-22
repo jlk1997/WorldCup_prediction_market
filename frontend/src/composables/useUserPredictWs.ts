@@ -34,6 +34,11 @@ export function useUserPredictWs() {
           if (data?.type === 'predict_settled' && data.payload) {
             handlePredictSettledPush(data.payload as Record<string, unknown>)
           }
+          if (data?.type === 'duel_matched' && data.duel_id) {
+            window.dispatchEvent(
+              new CustomEvent('duel-matched', { detail: { duel_id: data.duel_id } }),
+            )
+          }
         } catch {
           /* ignore */
         }
