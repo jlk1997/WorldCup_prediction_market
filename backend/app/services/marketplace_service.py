@@ -426,8 +426,10 @@ class MarketplaceService:
         series: str | None = None,
         list_type: str | None = None,
         sort: str = "recent",
+        scope: str = "all",
         page: int = 1,
         limit: int = 24,
+        viewer_id: int | None = None,
     ) -> dict[str, Any]:
         now = _utcnow()
         q = (
@@ -444,6 +446,10 @@ class MarketplaceService:
             q = q.filter(CollectibleCard.series == series)
         if list_type:
             q = q.filter(CardListing.list_type == list_type)
+        if viewer_id and scope == "mine":
+            q = q.filter(CardListing.seller_id == viewer_id)
+        elif viewer_id and scope == "others":
+            q = q.filter(CardListing.seller_id != viewer_id)
         if sort == "price_asc":
             q = q.order_by(func.coalesce(func.nullif(CardListing.current_bid, 0), CardListing.price_points).asc())
         elif sort == "price_desc":
@@ -462,7 +468,10 @@ class MarketplaceService:
         if uc_ids:
             uc_map = {r.id: r for r in self.db.query(UserCollectibleCard).filter(UserCollectibleCard.id.in_(uc_ids)).all()}
 
-        items = [self._listing_brief(listing, card, uc_map.get(listing.user_card_id)) for listing, card in rows]
+        items = [
+            self._listing_brief(listing, card, uc_map.get(listing.user_card_id), viewer_id=viewer_id)
+            for listing, card in rows
+        ]
         return {
             "items": items,
             "total": total,
@@ -471,7 +480,14 @@ class MarketplaceService:
             "disclaimer": MARKET_DISCLAIMER,
         }
 
-    def _listing_brief(self, listing: CardListing, card: CollectibleCard, row: UserCollectibleCard | None) -> dict:
+    def _listing_brief(
+        self,
+        listing: CardListing,
+        card: CollectibleCard,
+        row: UserCollectibleCard | None,
+        *,
+        viewer_id: int | None = None,
+    ) -> dict:
         cur = listing.current_bid or listing.price_points
         return {
             "listing_id": listing.id,
@@ -490,15 +506,16 @@ class MarketplaceService:
             "mint_total": row.mint_total if row else None,
             "expires_at": listing.expires_at.isoformat() if listing.expires_at else None,
             "seller_id": listing.seller_id,
+            "is_mine": bool(viewer_id and listing.seller_id == viewer_id),
         }
 
-    def listing_detail(self, listing_id: int) -> dict[str, Any]:
+    def listing_detail(self, listing_id: int, *, viewer_id: int | None = None) -> dict[str, Any]:
         listing = self.db.get(CardListing, listing_id)
         if not listing:
             raise NotFoundError("挂牌不存在")
         card = self.db.get(CollectibleCard, listing.card_id)
         row = self.db.get(UserCollectibleCard, listing.user_card_id)
-        brief = self._listing_brief(listing, card, row)
+        brief = self._listing_brief(listing, card, row, viewer_id=viewer_id)
         brief["status"] = listing.status
         brief["market"] = self.card_market_data(listing.card_id)
         brief["disclaimer"] = MARKET_DISCLAIMER
@@ -601,4 +618,4 @@ class MarketplaceService:
         uc_map: dict[int, UserCollectibleCard] = {}
         if uc_ids:
             uc_map = {r.id: r for r in self.db.query(UserCollectibleCard).filter(UserCollectibleCard.id.in_(uc_ids)).all()}
-        return [self._listing_brief(listing, card, uc_map.get(listing.user_card_id)) for listing, card in rows]
+        return [self._listing_brief(listing, card, uc_map.get(listing.user_card_id), viewer_id=user.id) for listing, card in rows]

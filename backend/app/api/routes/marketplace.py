@@ -18,13 +18,21 @@ def browse(
     series: str | None = None,
     list_type: str | None = None,
     sort: str = "recent",
+    scope: str = "all",
     page: int = 1,
     limit: int = 24,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     return MarketplaceService(db).browse(
-        rarity=rarity, series=series, list_type=list_type, sort=sort, page=page, limit=limit
+        rarity=rarity,
+        series=series,
+        list_type=list_type,
+        sort=sort,
+        scope=scope,
+        page=page,
+        limit=limit,
+        viewer_id=user.id,
     )
 
 
@@ -40,7 +48,7 @@ def card_market(card_id: int, user: User = Depends(get_current_user), db: Sessio
 
 @router.get("/listing/{listing_id}")
 def listing_detail(listing_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return MarketplaceService(db).listing_detail(listing_id)
+    return MarketplaceService(db).listing_detail(listing_id, viewer_id=user.id)
 
 
 class CreateListingRequest(BaseModel):

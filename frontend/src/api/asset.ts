@@ -497,6 +497,7 @@ export interface MarketListing {
   mint_total?: number | null
   expires_at?: string | null
   seller_id: number
+  is_mine?: boolean
   status?: string
 }
 
@@ -516,6 +517,7 @@ export async function browseMarket(params: {
   series?: string
   list_type?: string
   sort?: string
+  scope?: 'all' | 'mine' | 'others'
   page?: number
   limit?: number
 }): Promise<{ items: MarketListing[]; total: number; page: number; has_more: boolean; disclaimer: string }> {
