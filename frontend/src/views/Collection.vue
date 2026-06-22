@@ -46,6 +46,7 @@
     <CollectibleEventBanner
       v-if="passSummary?.events?.length && activeTab !== 'pass'"
       :events="passSummary.events"
+      :cheer-status="passSummary.event_cheer_status"
       :loading="eventCheerLoading"
       class="page-event-banner"
       @cheer="onEventCheer"
@@ -147,6 +148,7 @@
           </div>
           <CollectibleEventBanner
             :events="passSummary?.events"
+            :cheer-status="passSummary?.event_cheer_status"
             :loading="eventCheerLoading"
             @cheer="onEventCheer"
           />
@@ -656,7 +658,7 @@ async function onBuyback() {
   }
   try {
     const res = await buybackCard(id)
-    ElMessage.success(`回购完成，获得 ${res.points_gained} 可用积分`)
+    ElMessage.success(`回购完成，+${res.points_gained} 可用积分（累计积分不变，可用于商城兑换）`)
     detailOpen.value = false
     await refreshAfterMutation()
     await fetchMe()
@@ -961,9 +963,18 @@ async function onXpBoost() {
 }
 
 async function onEventCheer(teamId: number) {
+  if (passSummary.value?.event_cheer_status?.cheered_today) {
+    ElMessage.info('今日已应援过，明日再来')
+    return
+  }
   eventCheerLoading.value = true
   try {
     const res = await eventCheerDrop(teamId)
+    if (res.already_claimed || res.collectible_drop?.already_claimed) {
+      ElMessage.info('今日已应援过，请勿重复点击')
+      await ensurePassSummary(true)
+      return
+    }
     if (res.collectible_drop?.dropped) {
       openCollectibleReveal(res.collectible_drop, { subtitle: '活动应援掉落' })
     } else {

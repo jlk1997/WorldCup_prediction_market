@@ -8,6 +8,9 @@
         <span><strong>{{ authState.user.season_points }}</strong> 累计积分</span>
         <span class="redeem"><strong>{{ authState.user.redeem_points ?? 0 }}</strong> 可用积分</span>
       </div>
+      <p v-if="authState.user" class="balance-hint">
+        累计积分仅来自竞猜/召友等成就，用于冲榜；卡牌回购、交易等只增加可用积分。
+      </p>
       <div v-if="passBenefitsLine" class="pass-value-strip">
         🎫 {{ passBenefitsLine }}
         <router-link to="/shop" class="pass-link">去领取 / 续费</router-link>
@@ -484,6 +487,12 @@ onMounted(load)
   gap: 16px;
   margin-top: 8px;
   font-size: 0.9rem;
+}
+.balance-hint {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
 }
 .pass-value-strip {
   margin-top: 10px;

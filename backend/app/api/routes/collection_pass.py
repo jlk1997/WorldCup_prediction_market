@@ -39,6 +39,7 @@ def get_summary_lite(user: User = Depends(get_current_user), db: Session = Depen
     svc = CollectionPassService(db)
     summary = svc.get_summary_lite(user)
     summary["events"] = svc.event_summary()
+    summary["event_cheer_status"] = CollectibleService(db).event_cheer_status(user)
     return summary
 
 
@@ -47,6 +48,7 @@ def get_summary(user: User = Depends(get_current_user), db: Session = Depends(ge
     svc = CollectionPassService(db)
     summary = svc.get_summary(user)
     summary["events"] = svc.event_summary()
+    summary["event_cheer_status"] = CollectibleService(db).event_cheer_status(user)
     return summary
 
 
@@ -83,9 +85,11 @@ def event_cheer(body: EventCheerRequest, user: User = Depends(get_current_user),
     from datetime import date
 
     drop = CollectibleService(db).event_cheer_drop(user, body.team_id)
-    ref_id = _team_date_ref(body.team_id, date.today())
-    CollectionPassService.hook_award(
-        user, db, "event_cheer", "team_date", ref_id, action="cheer"
-    )
+    already = bool(drop.get("already_claimed"))
+    if not already:
+        ref_id = _team_date_ref(body.team_id, date.today())
+        CollectionPassService.hook_award(
+            user, db, "event_cheer", "team_date", ref_id, action="cheer"
+        )
     db.commit()
-    return {"collectible_drop": drop}
+    return {"collectible_drop": drop, "already_claimed": already}

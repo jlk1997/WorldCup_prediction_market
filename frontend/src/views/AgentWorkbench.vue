@@ -252,7 +252,15 @@
 
         <TeamCompareBar v-if="team1 && team2" :team1="team1" :team2="team2" />
 
-        <p v-if="streamError" class="stream-error">{{ streamError }}</p>
+        <div v-if="streamError" class="stream-error-panel glass-inner">
+          <p class="stream-error-title">分析未完成</p>
+          <p class="stream-error">{{ streamError }}</p>
+          <p v-if="failedPhase" class="stream-error-phase">失败阶段：{{ phaseLabel(failedPhase) }}</p>
+          <div class="stream-error-actions">
+            <el-button type="primary" size="small" @click="runAnalysis(false)">重新分析</el-button>
+            <el-button v-if="forceRefresh" size="small" plain @click="retryWithoutForceRefresh">不强制刷新重试</el-button>
+          </div>
+        </div>
 
         <div v-if="report" ref="reportSection" class="report-section">
 
@@ -523,6 +531,7 @@ const cached = ref(false)
 
 const report = ref<AgentReport | null>(null)
 const streamError = ref('')
+const failedPhase = ref('')
 const waitingHint = ref('')
 
 const history = ref<RunBrief[]>([])
@@ -955,6 +964,17 @@ async function refreshBillingPreview() {
   }
 }
 
+function phaseLabel(phase: string): string {
+  const map: Record<string, string> = {
+    facts: '数据采集',
+    llm: '新闻/战术分析',
+    predict: '综合报告生成',
+    critic: '事实核查',
+    done: '完成',
+  }
+  return map[phase] || phase
+}
+
 function formatAnalyzeError(message: string): string {
   if (/429|过于频繁|Too Many Requests|rate limit/i.test(message)) {
     return 'MiniMax 请求过于频繁，请等待 1～2 分钟后再试'
@@ -962,7 +982,15 @@ function formatAnalyzeError(message: string): string {
   if (/相同对阵|正在进行中|排队/i.test(message)) {
     return `${message}（可稍后再试，或换一场对阵）`
   }
+  if (/AI 分析失败|生成报告时失败/i.test(message) && !/退回/.test(message)) {
+    return `${message}。如已扣球迷币，系统将自动退回；也可取消「强制刷新」后重试以命中缓存。`
+  }
   return message
+}
+
+async function retryWithoutForceRefresh() {
+  forceRefresh.value = false
+  await runAnalysis(false)
 }
 
 function cancelAnalysis() {
@@ -1012,6 +1040,7 @@ async function runAnalysis(fromAuto = false) {
   startAnalyzeHeartbeat()
 
   streamError.value = ''
+  failedPhase.value = ''
   waitingHint.value = ''
 
   const previousReport = report.value
@@ -1084,6 +1113,7 @@ async function runAnalysis(fromAuto = false) {
     }
     const msg = formatAnalyzeError(getErrorMessage(e))
     streamError.value = msg
+    failedPhase.value = currentPhase.value
     if (!report.value && previousReport) {
       report.value = previousReport
     }
@@ -1358,14 +1388,38 @@ onMounted(async () => {
   font-size: 0.82rem;
   color: var(--wc-accent-gold);
 }
-.stream-error {
-  margin: 0 0 12px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  color: #f89898;
-  background: rgba(245, 108, 108, 0.12);
+.stream-error-panel {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
   border: 1px solid rgba(245, 108, 108, 0.35);
+  background: rgba(245, 108, 108, 0.08);
+}
+.stream-error-title {
+  margin: 0 0 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f89898;
+}
+.stream-error {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: rgba(255, 200, 200, 0.95);
+  line-height: 1.45;
+}
+.stream-error-phase {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: var(--wc-text-muted);
+}
+.stream-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 .cancel-btn {
   margin-top: 10px;

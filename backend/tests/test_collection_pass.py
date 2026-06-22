@@ -3,7 +3,7 @@
 import uuid
 
 import pytest
-from datetime import timedelta
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
 from app.data.collection_pass_catalog import MAX_LEVEL, XP_SOURCES
@@ -315,6 +315,57 @@ def test_claim_all_rewards(db: Session):
     assert len(result["claims"]) == 6
     summary = svc.get_summary(user)
     assert summary["claimable_count"] == 0
+
+
+def test_event_cheer_idempotent_no_double_charge(db: Session):
+    """每日每队仅扣一次球迷币，重复请求不重复扣费。"""
+    from app.db.models import Team
+    from app.db.models.commerce import CollectibleCard, CollectibleEvent
+    from app.services.collectible_service import CollectibleService
+
+    user = _user(db)
+    _season(db)
+    team = db.query(Team).first()
+    if not team:
+        pytest.skip("no teams in database")
+    user.favorite_team_id = team.id
+    user.fan_coins = 500
+    db.add(
+        CollectibleEvent(
+            code=f"test_event_{uuid.uuid4().hex[:8]}",
+            name="Test",
+            event_series="event_limited",
+            coin_action_cost=15,
+            starts_at=datetime.utcnow() - timedelta(days=1),
+            ends_at=datetime.utcnow() + timedelta(days=7),
+            active=True,
+        )
+    )
+    db.add(
+        CollectibleCard(
+            code=f"event_test_card_{uuid.uuid4().hex[:8]}",
+            name="Test Event Card",
+            rarity="rare",
+            series="event_limited",
+            team_id=team.id,
+            active=True,
+        )
+    )
+    db.commit()
+
+    svc = CollectibleService(db)
+    r1 = svc.event_cheer_drop(user, team.id)
+    db.commit()
+    db.refresh(user)
+    coins_after_first = user.fan_coins
+    assert r1.get("already_claimed") is False
+    assert coins_after_first == 485
+
+    r2 = svc.event_cheer_drop(user, team.id)
+    db.commit()
+    db.refresh(user)
+    assert r2.get("already_claimed") is True
+    assert user.fan_coins == coins_after_first
 
 
 def test_event_cheer_requires_main_team(db: Session):

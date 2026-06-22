@@ -593,7 +593,6 @@ def redeem_shop_rules(db: Session = Depends(get_db)):
 
     settings = get_settings()
     ratio = settings.predict_win_redeem_ratio
-    pct = int(ratio * 100)
     catalog_docs = ProductCatalogService(db).catalog_docs()
     items = [
         {
@@ -612,8 +611,8 @@ def redeem_shop_rules(db: Session = Depends(get_db)):
         "economy": {
             "season_points_label": "累计积分",
             "redeem_points_label": "可用积分",
-            "season_points_desc": "猜中、召友荣誉等获得，用于累计积分榜排名，兑换不扣减。",
-            "redeem_points_desc": f"仅竞猜猜中获得（约为累计积分的 {pct}%），用于积分兑换商城消费。",
+            "season_points_desc": "猜中、召友荣誉等活跃成就获得，用于累计积分榜排名；兑换与回购不扣减、也不增加。",
+            "redeem_points_desc": "竞猜猜中、卡牌回购/交易、套组奖励、质押产出等获得，用于积分兑换商城与卡牌流通。",
             "predict_win_redeem_ratio": ratio,
             "no_loss_reward": True,
         },

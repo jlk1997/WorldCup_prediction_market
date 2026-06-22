@@ -134,11 +134,13 @@ def test_buyback_adds_redeem_points(db: Session):
     user, row, _card = _user_card(db, redeem=100)
     user.real_name_verified = True
     db.commit()
-    before = user.redeem_points
+    before_redeem = user.redeem_points
+    before_season = user.season_points
     res = CardTransferService(db).buyback(user, row.id)
     user = db.get(User, user.id)
     assert res["points_gained"] > 0
-    assert user.redeem_points == before + res["points_gained"]
+    assert user.redeem_points == before_redeem + res["points_gained"]
+    assert user.season_points == before_season
     assert db.get(UserCollectibleCard, row.id) is None
 
 

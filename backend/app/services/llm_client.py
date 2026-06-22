@@ -126,6 +126,8 @@ class LLMClient:
             raise LLMError(f"MiniMax 调用失败: {exc}") from exc
 
         self._record_usage(completion)
+        if not completion.choices:
+            raise LLMError("MiniMax 返回空 choices")
         content = (completion.choices[0].message.content or "").strip()
         return self._parse_json(content)
 
@@ -159,13 +161,29 @@ class LLMClient:
         except LLMError:
             return {}
 
+    @staticmethod
+    def _strip_markdown_fence(content: str) -> str:
+        text = (content or "").strip()
+        if text.startswith("```"):
+            text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE)
+            text = re.sub(r"\s*```\s*$", "", text)
+        return text.strip()
+
     def _parse_json(self, content: str) -> dict:
+        content = self._strip_markdown_fence(content)
+        if not content:
+            raise LLMError("MiniMax 返回空内容")
         try:
             return json.loads(content)
         except json.JSONDecodeError:
             match = re.search(r"\{[\s\S]*\}", content)
             if match:
-                return json.loads(match.group())
+                try:
+                    return json.loads(match.group())
+                except json.JSONDecodeError:
+                    pass
+            snippet = content[:240].replace("\n", " ")
+            logger.warning("LLM JSON parse failed, snippet=%s…", snippet)
             raise LLMError("LLM 返回内容无法解析为 JSON")
 
     def complete_with_tools(

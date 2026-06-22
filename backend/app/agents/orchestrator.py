@@ -10,6 +10,8 @@ import json
 
 import logging
 
+import time
+
 from collections.abc import Callable
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -37,6 +39,7 @@ from app.agents.prompts import (
 )
 
 from app.agents.report_validator import compute_live_fingerprint, validate_and_fix_report
+from app.agents.predict_fallback import build_fallback_predict_raw
 
 from app.agents.tool_registry import TOOL_DEFINITIONS, ToolRouter
 
@@ -308,10 +311,19 @@ class MatchAnalysisOrchestrator:
                 )
 
                 self._emit(progress, {"type": "phase", "phase": "predict", "message": "PredictAgent 综合报告"})
+                validation_warnings: list[str] = []
                 raw = self._run_predict_agent(llm, team1_name, team2_name, context, steps, progress)
 
-                validation_warnings: list[str] = []
-                if mode in self.settings.agent_critic_mode_set:
+                if raw.get("_degraded"):
+                    validation_warnings.append(
+                        "AI 主模型暂时不可用，已生成基于排名与已知数据的简版参考（置信度较低，建议稍后重试完整分析）"
+                    )
+                    raw["critic_notes"] = (
+                        (raw.get("critic_notes") or "").strip()
+                        + " 本次为降级简版报告，完整 AI 分析可稍后再试。"
+                    ).strip()
+
+                if mode in self.settings.agent_critic_mode_set and not raw.get("_degraded"):
                     self._emit(progress, {"type": "phase", "phase": "critic", "message": "CriticAgent 事实核查"})
                     critic = self._run_critic_agent(llm, facts, raw, steps, progress)
                     confidence = float(critic.get("confidence", raw.get("confidence", 0.7)))
@@ -393,6 +405,7 @@ class MatchAnalysisOrchestrator:
             except Exception as exc:
                 self.db.rollback()
                 mark_inflight_failed(lock_key)
+                refunded = False
                 if charged and billing_decision and user_id:
                     try:
                         refund_svc = AiBillingService(self.db)
@@ -400,6 +413,7 @@ class MatchAnalysisOrchestrator:
                         if analysis_job_id:
                             AiAnalysisJobService(self.db).fail_job(analysis_job_id, str(exc), refunded=True)
                         self.db.commit()
+                        refunded = True
                     except Exception:
                         logger.exception("AI billing refund failed")
                         self.db.rollback()
@@ -412,9 +426,15 @@ class MatchAnalysisOrchestrator:
                         self.db.rollback()
                 if reserved_tokens:
                     token_budget.release_reserved(ESTIMATED_TOKENS_PER_ANALYZE)
+                logger.exception("Agent analyze failed (%s): %s", type(exc).__name__, exc)
                 if isinstance(exc, (LLMError, ServiceUnavailableError, BadRequestError)):
+                    if refunded:
+                        raise type(exc)(f"{exc.message}（球迷币已自动退回）") from exc
                     raise
-                raise ServiceUnavailableError("AI 分析失败，请稍后重试") from exc
+                refund_note = "（球迷币已自动退回）" if refunded else ""
+                raise ServiceUnavailableError(
+                    f"AI 分析在生成报告时失败，请稍后重试{refund_note}"
+                ) from exc
             finally:
                 release_inflight(lock_key, inflight_token)
         finally:
@@ -980,23 +1000,46 @@ class MatchAnalysisOrchestrator:
             "请输出最终 JSON 分析报告。win_probability 三项之和必须等于 1。"
         )
 
-        try:
+        last_exc: LLMError | None = None
+        raw: dict | None = None
+        for attempt in range(3):
+            temp = self.settings.agent_predict_temperature
+            if attempt > 0:
+                temp = max(0.25, temp - 0.05 * attempt)
+            try:
+                raw = llm.complete_json(
+                    PREDICT_AGENT_SYSTEM,
+                    prompt,
+                    max_tokens=2400,
+                    temperature=temp,
+                )
+                break
+            except LLMError as exc:
+                last_exc = exc
+                logger.warning("PredictAgent attempt %s/3 failed: %s", attempt + 1, exc)
+                if attempt < 2:
+                    time.sleep(0.6 * (attempt + 1))
 
-            raw = llm.complete_json(
-
-                PREDICT_AGENT_SYSTEM,
-
-                prompt,
-
-                max_tokens=2400,
-
-                temperature=self.settings.agent_predict_temperature,
-
+        if raw is None:
+            reason = str(last_exc) if last_exc else "unknown"
+            logger.warning("PredictAgent fallback for %s vs %s: %s", team1, team2, reason)
+            raw = build_fallback_predict_raw(
+                team1,
+                team2,
+                context,
+                str(context.get("mode") or "pre_match"),
+                reason=reason,
             )
-
-        except LLMError as exc:
-
-            raise LLMError(f"PredictAgent 失败: {exc}") from exc
+            self._append_step(
+                steps,
+                {
+                    "agent": "PredictAgent",
+                    "action": "fallback_synthesize",
+                    "output": {"degraded": True, "reason": reason},
+                },
+                progress,
+            )
+            return raw
 
         self._append_step(steps, {"agent": "PredictAgent", "action": "synthesize", "output": raw}, progress)
 

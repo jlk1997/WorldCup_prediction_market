@@ -126,6 +126,8 @@ class WalletRepository:
     def deduct_coins(self, user: User, amount: int, reason: str, ref_type: str | None = None, ref_id: int | None = None) -> User:
         if amount <= 0:
             return user
+        if ref_id is not None and self._coin_ledger_exists(user.id, reason, ref_type, ref_id):
+            return user
         if (user.fan_coins or 0) < amount:
             from app.core.exceptions import BadRequestError
 

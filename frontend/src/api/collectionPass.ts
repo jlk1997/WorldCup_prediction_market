@@ -48,6 +48,16 @@ export type CollectibleEventBrief = {
   boost_json?: Record<string, unknown>
 }
 
+export type EventCheerStatus = {
+  can_cheer: boolean
+  cheered_today: boolean
+  team_id?: number | null
+  team_name?: string | null
+  coin_cost?: number
+  event_code?: string
+  reason?: string | null
+}
+
 export type CollectionPassSummaryLite = {
   season: {
     code: string
@@ -69,6 +79,7 @@ export type CollectionPassSummaryLite = {
   claimed_premium_levels: number[]
   quests: { daily: PassQuest[]; weekly: PassQuest[] }
   events?: CollectibleEventBrief[]
+  event_cheer_status?: EventCheerStatus
   compliance_notice: string
   premium_sku: string
   premium_price_fen: number
@@ -218,7 +229,10 @@ export async function buyPassXpBoost() {
 }
 
 export async function eventCheerDrop(teamId: number) {
-  const { data } = await apiClient.post<{ collectible_drop: CollectibleDropResult }>(
+  const { data } = await apiClient.post<{
+    collectible_drop: CollectibleDropResult & { already_claimed?: boolean }
+    already_claimed?: boolean
+  }>(
     '/api/collection-pass/event-cheer',
     { team_id: teamId },
   )

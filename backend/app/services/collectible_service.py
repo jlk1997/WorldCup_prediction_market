@@ -293,6 +293,52 @@ class CollectibleService:
             "redeem_points": user.redeem_points,
         }
 
+    def event_cheer_status(self, user: User) -> dict[str, Any]:
+        """今日活动应援是否已完成（每队每日 1 次）。"""
+        from app.services.collection_pass_service import CollectionPassService
+        from app.services.arena_service import _team_date_ref
+
+        if not user.favorite_team_id:
+            return {
+                "can_cheer": False,
+                "cheered_today": False,
+                "team_id": None,
+                "team_name": None,
+                "reason": "no_main_team",
+            }
+        events = CollectionPassService(self.db).get_active_events()
+        if not events:
+            return {
+                "can_cheer": False,
+                "cheered_today": False,
+                "team_id": user.favorite_team_id,
+                "team_name": None,
+                "reason": "no_active_event",
+            }
+        team = self.db.get(Team, user.favorite_team_id)
+        today = _utcnow().date()
+        ref_id = _team_date_ref(user.favorite_team_id, today)
+        existing = (
+            self.db.query(CollectibleDropLog)
+            .filter(
+                CollectibleDropLog.user_id == user.id,
+                CollectibleDropLog.source == "event_cheer",
+                CollectibleDropLog.ref_type == "team_date",
+                CollectibleDropLog.ref_id == ref_id,
+            )
+            .first()
+        )
+        cheered = existing is not None
+        return {
+            "can_cheer": not cheered,
+            "cheered_today": cheered,
+            "team_id": user.favorite_team_id,
+            "team_name": team.name if team else None,
+            "coin_cost": events[0].coin_action_cost,
+            "event_code": events[0].code,
+            "reason": None if not cheered else "already_cheered_today",
+        }
+
     def event_cheer_drop(self, user: User, team_id: int) -> dict[str, Any]:
         from app.db.models import Team
         from app.services.arena_service import _team_date_ref
@@ -327,10 +373,15 @@ class CollectibleService:
             )
             .first()
         )
-        if existing and existing.result_json:
-            return existing.result_json
+        if existing:
+            payload = dict(
+                existing.result_json
+                or {"dropped": False, "cards": [], "shards": [], "source": "event_cheer"}
+            )
+            payload["already_claimed"] = True
+            return payload
 
-        self.wallet.deduct_coins(user, event.coin_action_cost, "event_cheer", "team", team_id)
+        self.wallet.deduct_coins(user, event.coin_action_cost, "event_cheer", "team_date", ref_id)
         boost = event.boost_json or {}
         forced_code = None
         if boost.get("forced_card_code"):
@@ -347,7 +398,7 @@ class CollectibleService:
             if card:
                 forced_code = card.code
         if forced_code:
-            return self.drop_cards(
+            result = self.drop_cards(
                 user,
                 "event_cheer",
                 "team_date",
@@ -355,13 +406,16 @@ class CollectibleService:
                 card_code=forced_code,
                 team_boost_id=team_id,
             )
-        return self.drop_cards(
-            user,
-            "event_cheer",
-            "team_date",
-            ref_id,
-            team_boost_id=team_id,
-        )
+        else:
+            result = self.drop_cards(
+                user,
+                "event_cheer",
+                "team_date",
+                ref_id,
+                team_boost_id=team_id,
+            )
+        result["already_claimed"] = False
+        return result
 
     def _buy_shards_with_coins(self, user: User, rarity: str, deficit: int) -> int:
         from app.core.config import get_settings

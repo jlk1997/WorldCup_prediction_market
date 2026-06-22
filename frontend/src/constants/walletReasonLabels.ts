@@ -36,6 +36,12 @@ const pointReasonOverrides: Record<string, string> = {
   redeem_purchase: '积分兑换消费',
   referral_tier_5: '召友里程碑',
   referral_weekly_rank: '召友周榜荣誉分',
+  card_buyback: '卡牌官方回购（可用积分）',
+  market_sale: '交易行出售（可用积分）',
+  market_buy: '交易行购买',
+  collectible_set_reward: '套组奖励（可用积分）',
+  card_stake_yield: '卡牌质押产出',
+  card_duel_win: '卡牌对决奖励',
 }
 
 export function walletReasonLabel(code: string) {
