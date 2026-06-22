@@ -1,105 +1,139 @@
 <template>
   <div class="market-page page-shell mobile-page">
-    <!-- 不透明内容区，避免背景人像干扰阅读 -->
-    <div class="market-shell">
-      <header class="market-hero">
-        <div class="hero-row">
-          <div>
-            <h1>球星卡交易行</h1>
-            <p class="hero-sub">站内积分流通 · 虚拟收藏 · 不可提现</p>
+    <!-- 顶栏：与商城页一致的 glass-panel 风格 -->
+    <header class="market-header glass-panel">
+      <div class="header-row">
+        <div class="header-copy">
+          <span class="eyebrow">数字资产 · 二级流通</span>
+          <h1>球星卡交易行</h1>
+        </div>
+        <button type="button" class="icon-refresh" :disabled="loading" aria-label="刷新" @click="reload">
+          <span :class="{ spin: loading }">↻</span>
+        </button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-pill primary">
+          <span class="stat-label">可用积分</span>
+          <strong class="stat-val tabular-nums">{{ redeemBalance != null ? redeemBalance.toLocaleString() : '—' }}</strong>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">当前在售</span>
+          <strong class="stat-val tabular-nums">{{ loading ? '…' : listings.length }}</strong>
+        </div>
+      </div>
+
+      <p class="header-note">以可用积分买卖球星卡 · 站内虚拟收藏 · 不可提现</p>
+
+      <nav class="quick-links" aria-label="快捷入口">
+        <router-link to="/collection" class="qlink">📋 去挂牌</router-link>
+        <router-link to="/mint" class="qlink">✨ 首发打新</router-link>
+        <router-link to="/me/assets" class="qlink">💎 我的资产</router-link>
+      </nav>
+    </header>
+
+    <!-- 吸顶筛选条 -->
+    <div class="sticky-tools">
+      <div class="scope-segment" role="tablist">
+        <button
+          v-for="tab in scopeTabs"
+          :key="tab.value"
+          type="button"
+          role="tab"
+          class="seg-btn"
+          :class="{ active: filters.scope === tab.value, mine: tab.value === 'mine' }"
+          :aria-selected="filters.scope === tab.value"
+          @click="setScope(tab.value)"
+        >
+          <span class="seg-icon" aria-hidden="true">{{ tab.icon }}</span>
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <div class="sort-strip">
+        <button
+          v-for="chip in sortChips"
+          :key="chip.value"
+          type="button"
+          class="sort-chip"
+          :class="{ active: filters.sort === chip.value }"
+          @click="toggleFilter('sort', chip.value)"
+        >
+          {{ chip.label }}
+        </button>
+        <button
+          type="button"
+          class="filter-toggle"
+          :class="{ active: filtersExpanded || activeFilterCount > 0 }"
+          @click="filtersExpanded = !filtersExpanded"
+        >
+          筛选
+          <span v-if="activeFilterCount" class="filter-badge">{{ activeFilterCount }}</span>
+          <span class="chev" :class="{ up: filtersExpanded }">▾</span>
+        </button>
+      </div>
+
+      <Transition name="filter-slide">
+        <div v-if="filtersExpanded" class="filter-drawer">
+          <div class="drawer-group">
+            <span class="drawer-label">稀有度</span>
+            <div class="drawer-chips">
+              <button
+                v-for="chip in rarityChips"
+                :key="chip.value"
+                type="button"
+                class="dchip"
+                :class="{ active: filters.rarity === chip.value }"
+                @click="toggleFilter('rarity', chip.value)"
+              >
+                {{ chip.label }}
+              </button>
+            </div>
           </div>
-          <div v-if="redeemBalance != null" class="hero-balance">
-            <span class="hb-label">可用积分</span>
-            <strong class="hb-val tabular-nums">{{ redeemBalance.toLocaleString() }}</strong>
+          <div class="drawer-group">
+            <span class="drawer-label">类型</span>
+            <div class="drawer-chips">
+              <button
+                v-for="chip in typeChips"
+                :key="chip.value"
+                type="button"
+                class="dchip"
+                :class="{ active: filters.list_type === chip.value }"
+                @click="toggleFilter('list_type', chip.value)"
+              >
+                {{ chip.label }}
+              </button>
+            </div>
           </div>
+          <button v-if="activeFilterCount" type="button" class="clear-filters" @click="clearFilters">清除筛选</button>
         </div>
-      </header>
+      </Transition>
+    </div>
 
-      <AssetHubBar compact :show-balance="false" />
-
-      <!-- 筛选区：Tab + 芯片，合并为一块 -->
-      <section class="filter-panel" aria-label="筛选与范围">
-        <div class="scope-row" role="tablist">
-          <button
-            v-for="tab in scopeTabs"
-            :key="tab.value"
-            type="button"
-            role="tab"
-            class="scope-pill"
-            :class="{ active: filters.scope === tab.value, mine: tab.value === 'mine' }"
-            :aria-selected="filters.scope === tab.value"
-            @click="setScope(tab.value)"
-          >
-            {{ tab.label }}
-          </button>
-        </div>
-
-        <div class="chip-scroll" aria-label="筛选条件">
-          <button
-            v-for="chip in rarityChips"
-            :key="chip.value"
-            type="button"
-            class="filter-chip"
-            :class="{ active: filters.rarity === chip.value }"
-            @click="toggleFilter('rarity', chip.value)"
-          >
-            {{ chip.label }}
-          </button>
-          <span class="chip-divider" aria-hidden="true" />
-          <button
-            v-for="chip in typeChips"
-            :key="chip.value"
-            type="button"
-            class="filter-chip"
-            :class="{ active: filters.list_type === chip.value }"
-            @click="toggleFilter('list_type', chip.value)"
-          >
-            {{ chip.label }}
-          </button>
-          <span class="chip-divider" aria-hidden="true" />
-          <button
-            v-for="chip in sortChips"
-            :key="chip.value"
-            type="button"
-            class="filter-chip"
-            :class="{ active: filters.sort === chip.value }"
-            @click="toggleFilter('sort', chip.value)"
-          >
-            {{ chip.label }}
-          </button>
-        </div>
-
-        <div class="filter-actions">
-          <span v-if="listings.length" class="result-count">{{ listings.length }} 件在售</span>
-          <button type="button" class="icon-btn" :disabled="loading" aria-label="刷新" @click="reload">
-            <span :class="{ spin: loading }">↻</span>
-          </button>
-          <button type="button" class="text-btn" @click="goMyListings">资产管理</button>
-        </div>
-      </section>
-
-      <!-- 列表 -->
+    <!-- 列表 -->
+    <main class="market-main">
       <div v-if="loading" class="market-grid">
         <div v-for="i in 6" :key="i" class="sk-card">
-          <el-skeleton :rows="0" animated />
-          <el-skeleton :rows="2" animated />
+          <el-skeleton animated />
         </div>
       </div>
-      <div v-else-if="!listings.length" class="empty-state">
-        <div class="empty-icon">🏪</div>
-        <p>{{ emptyTitle }}</p>
-        <span>{{ emptyHint }}</span>
+
+      <div v-else-if="!listings.length" class="empty-state glass-panel">
+        <div class="empty-art">🏪</div>
+        <h2>{{ emptyTitle }}</h2>
+        <p>{{ emptyHint }}</p>
         <div class="empty-actions">
           <template v-if="filters.scope === 'mine'">
-            <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
-            <button type="button" class="empty-btn secondary" @click="setScope('all')">浏览全部</button>
+            <router-link to="/collection" class="cta-btn">去收藏册挂牌</router-link>
+            <button type="button" class="cta-btn ghost" @click="setScope('all')">浏览全部</button>
           </template>
           <template v-else>
-            <router-link to="/collection" class="empty-btn">去收藏册挂牌</router-link>
-            <router-link to="/mint" class="empty-btn secondary">首发打新</router-link>
+            <router-link to="/collection" class="cta-btn">去收藏册挂牌</router-link>
+            <router-link to="/mint" class="cta-btn ghost">首发打新</router-link>
           </template>
         </div>
       </div>
+
       <div v-else class="market-grid">
         <article
           v-for="item in listings"
@@ -115,55 +149,43 @@
           ]"
           @click="openDetail(item)"
         >
-          <div v-if="item.is_mine" class="mine-ribbon">我的</div>
-
-          <div class="card-visual">
-            <img
-              v-if="item.image_url"
-              :src="item.image_url"
-              :alt="item.card_name"
-              class="card-photo"
-              loading="lazy"
-            />
-            <div v-else class="card-photo placeholder">{{ item.card_name.slice(0, 1) }}</div>
-            <div class="card-scrim" aria-hidden="true" />
-
-            <div class="tag-row">
-              <span class="tag rarity" :class="item.rarity">{{ rarityLabel(item.rarity) }}</span>
-              <span class="tag type">{{ item.list_type === 'auction' ? '竞拍' : '一口价' }}</span>
-              <span v-if="item.serial_no" class="tag serial">
+          <div class="card-frame">
+            <div class="frame-top">
+              <span class="pill rarity" :class="item.rarity">{{ rarityLabel(item.rarity) }}</span>
+              <span class="pill mode">{{ item.list_type === 'auction' ? '竞拍' : '一口价' }}</span>
+              <span v-if="item.is_mine" class="pill owner">我的</span>
+              <span v-if="item.serial_no" class="pill serial">
                 #{{ item.serial_no }}<template v-if="item.mint_total">/{{ item.mint_total }}</template>
               </span>
             </div>
-          </div>
 
-          <div class="card-foot">
-            <div class="foot-main">
-              <h3 class="card-title">
-                {{ item.card_name }}
-                <span v-if="item.star > 1" class="star">★{{ item.star }}</span>
-              </h3>
-              <div class="price-line">
-                <strong class="price tabular-nums">{{ item.current_price }}</strong>
-                <span class="unit">积分</span>
+            <div class="frame-art">
+              <img
+                v-if="item.image_url"
+                :src="item.image_url"
+                :alt="item.card_name"
+                class="art-img"
+                loading="lazy"
+              />
+              <div v-else class="art-img placeholder">{{ item.card_name.slice(0, 1) }}</div>
+            </div>
+
+            <div class="frame-bottom">
+              <div class="name-block">
+                <h3 class="card-name">
+                  {{ item.card_name }}
+                  <span v-if="item.star > 1" class="star">★{{ item.star }}</span>
+                </h3>
+                <p v-if="item.is_mine" class="sub-hint mine">点击管理 · 不可自购</p>
+                <p v-else-if="item.list_type === 'auction'" class="sub-hint" :class="{ urgent: isEndingSoon(item.expires_at) }">
+                  {{ countdown(item.expires_at) }}
+                </p>
+              </div>
+              <div class="price-tag" :class="{ mine: item.is_mine }">
+                <strong class="tabular-nums">{{ item.current_price }}</strong>
+                <span>积分</span>
               </div>
             </div>
-            <div class="foot-action" :class="{ mine: item.is_mine }">
-              <template v-if="item.is_mine">管理</template>
-              <template v-else-if="item.list_type === 'auction'">
-                {{ isEndingSoon(item.expires_at) ? '抢拍' : '出价' }}
-              </template>
-              <template v-else>购买</template>
-            </div>
-          </div>
-
-          <div v-if="item.is_mine" class="mine-footnote">不可自购</div>
-          <div
-            v-else-if="item.list_type === 'auction'"
-            class="auction-footnote"
-            :class="{ urgent: isEndingSoon(item.expires_at) }"
-          >
-            {{ countdown(item.expires_at) }}
           </div>
         </article>
       </div>
@@ -174,8 +196,8 @@
         </button>
       </div>
 
-      <p class="disclaimer">{{ disclaimer }}</p>
-    </div>
+      <p v-if="disclaimer" class="disclaimer">{{ disclaimer }}</p>
+    </main>
 
     <!-- 详情弹窗 -->
     <el-dialog
@@ -275,7 +297,6 @@ import {
   getAssetHubSummary,
   type MarketListing,
 } from '@/api/asset'
-import AssetHubBar from '@/components/asset/AssetHubBar.vue'
 import { authState, fetchMe } from '@/stores/authStore'
 import { extractApiError } from '@/utils/apiError'
 import PriceSparkline from '@/components/asset/PriceSparkline.vue'
@@ -307,13 +328,13 @@ const filters = reactive({
 })
 
 const scopeTabs = [
-  { value: 'all' as const, label: '全部' },
-  { value: 'others' as const, label: '淘货' },
-  { value: 'mine' as const, label: '我的' },
+  { value: 'all' as const, label: '全部', icon: '🌐' },
+  { value: 'others' as const, label: '淘货', icon: '🛒' },
+  { value: 'mine' as const, label: '我的', icon: '📌' },
 ]
 
 const rarityChips = [
-  { value: '', label: '全部稀有度' },
+  { value: '', label: '全部' },
   { value: 'common', label: '普通' },
   { value: 'rare', label: '稀有' },
   { value: 'epic', label: '史诗' },
@@ -321,15 +342,15 @@ const rarityChips = [
 ]
 
 const typeChips = [
-  { value: '', label: '全部类型' },
+  { value: '', label: '全部' },
   { value: 'fixed', label: '一口价' },
   { value: 'auction', label: '竞拍' },
 ]
 
 const sortChips = [
   { value: 'recent', label: '最新' },
-  { value: 'price_asc', label: '价低→高' },
-  { value: 'price_desc', label: '价高→低' },
+  { value: 'price_asc', label: '价↑' },
+  { value: 'price_desc', label: '价↓' },
   { value: 'ending', label: '将结束' },
 ]
 
@@ -339,6 +360,14 @@ const bidAmount = ref(0)
 const minBid = ref(0)
 const acting = ref(false)
 const redeemBalance = ref<number | null>(null)
+const filtersExpanded = ref(false)
+
+const activeFilterCount = computed(() => {
+  let n = 0
+  if (filters.rarity) n += 1
+  if (filters.list_type) n += 1
+  return n
+})
 
 const emptyTitle = computed(() => {
   if (filters.scope === 'mine') return '你还没有在售挂牌'
@@ -386,6 +415,12 @@ function toggleFilter(key: 'rarity' | 'list_type' | 'sort', value: string) {
   } else {
     filters[key] = value
   }
+  reload()
+}
+
+function clearFilters() {
+  filters.rarity = ''
+  filters.list_type = ''
   reload()
 }
 
@@ -530,405 +565,496 @@ onMounted(reload)
 </script>
 
 <style scoped>
-/* ===== 页面容器：不透明底板 ===== */
+/* ===== 页面 ===== */
 .market-page {
-  max-width: 960px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
-.market-shell {
-  background: rgba(8, 10, 22, 0.92);
-  border: 1px solid rgba(212, 165, 116, 0.12);
-  border-radius: 16px;
-  padding: 14px 14px 20px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(12px);
-}
-
-/* ===== Hero ===== */
-.market-hero {
+/* ===== 顶栏 ===== */
+.market-header {
+  padding: 16px 16px 14px;
   margin-bottom: 12px;
+  border-radius: 16px;
 }
-.hero-row {
+.header-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 14px;
 }
-.market-hero h1 {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: var(--wc-accent-gold);
-  letter-spacing: 0.02em;
-}
-.hero-sub {
-  margin: 4px 0 0;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.4;
-}
-.hero-balance {
-  flex-shrink: 0;
-  text-align: right;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(212, 165, 116, 0.1);
-  border: 1px solid rgba(212, 165, 116, 0.22);
-}
-.hb-label {
+.eyebrow {
   display: block;
-  font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(212, 165, 116, 0.75);
+  margin-bottom: 4px;
 }
-.hb-val {
-  font-size: 1.1rem;
+.market-header h1 {
+  margin: 0;
+  font-size: 1.45rem;
   font-weight: 800;
+  font-family: var(--wc-font-serif, inherit);
+  color: var(--wc-text-primary, #f0ece4);
+  line-height: 1.2;
+}
+.icon-refresh {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-refresh:disabled { opacity: 0.45; }
+.icon-refresh .spin {
+  display: inline-block;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.stat-pill {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.stat-pill.primary {
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.14), rgba(180, 120, 60, 0.08));
+  border-color: rgba(212, 165, 116, 0.25);
+}
+.stat-label {
+  display: block;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+.stat-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--wc-text-primary, #f0ece4);
+  line-height: 1.1;
+}
+.stat-pill.primary .stat-val {
+  color: var(--wc-accent-gold, #e7af5c);
+}
+.header-note {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.45;
+}
+.quick-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.qlink {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  padding: 8px 6px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.15s, border-color 0.15s;
+}
+.qlink:hover {
+  background: rgba(212, 165, 116, 0.1);
+  border-color: rgba(212, 165, 116, 0.25);
   color: var(--wc-accent-gold);
 }
 
-/* ===== 筛选面板 ===== */
-.filter-panel {
-  background: rgba(16, 18, 34, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 10px;
+/* ===== 吸顶筛选 ===== */
+.sticky-tools {
+  position: sticky;
+  top: calc(var(--wc-mobile-header-height, 52px) + 4px);
+  z-index: 40;
   margin-bottom: 14px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(10, 12, 26, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
-.scope-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+.scope-segment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
   padding: 3px;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  margin-bottom: 8px;
+  border-radius: 11px;
+  background: rgba(0, 0, 0, 0.35);
 }
-.scope-pill {
-  flex: 1;
-  padding: 8px 4px;
+.seg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 9px 4px;
   border: none;
-  border-radius: 8px;
+  border-radius: 9px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.15s;
 }
-.scope-pill.active {
-  background: rgba(212, 165, 116, 0.2);
+.seg-icon { font-size: 0.85rem; }
+.seg-btn.active {
+  background: rgba(212, 165, 116, 0.22);
   color: var(--wc-accent-gold);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
-.scope-pill.active.mine {
-  background: rgba(80, 150, 230, 0.22);
-  color: #9fd0ff;
+.seg-btn.active.mine {
+  background: rgba(70, 140, 220, 0.28);
+  color: #a8d4ff;
 }
-.chip-scroll {
+
+.sort-strip {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   overflow-x: auto;
-  padding-bottom: 4px;
-  margin-bottom: 8px;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
-.chip-scroll::-webkit-scrollbar {
-  display: none;
-}
-.filter-chip {
+.sort-strip::-webkit-scrollbar { display: none; }
+.sort-chip {
   flex-shrink: 0;
-  padding: 5px 11px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sort-chip.active {
+  border-color: rgba(212, 165, 116, 0.45);
+  background: rgba(212, 165, 116, 0.14);
+  color: var(--wc-accent-gold);
+  font-weight: 600;
+}
+.filter-toggle {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.72rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
-}
-.filter-chip.active {
-  border-color: rgba(212, 165, 116, 0.5);
-  background: rgba(212, 165, 116, 0.15);
-  color: var(--wc-accent-gold);
-}
-.chip-divider {
-  width: 1px;
-  flex-shrink: 0;
-  align-self: stretch;
-  margin: 4px 2px;
-  background: rgba(255, 255, 255, 0.08);
-}
-.filter-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.result-count {
-  flex: 1;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
-}
-.icon-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.icon-btn:disabled {
-  opacity: 0.5;
-}
-.icon-btn .spin {
-  display: inline-block;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-.text-btn {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  background: rgba(212, 165, 116, 0.1);
-  color: var(--wc-accent-gold);
-  font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
 }
+.filter-toggle.active {
+  border-color: rgba(126, 184, 255, 0.4);
+  color: #9fd0ff;
+}
+.filter-badge {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #5a9ef0;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+.chev {
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+}
+.chev.up { transform: rotate(180deg); }
+
+.filter-drawer {
+  padding-top: 10px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.drawer-group { margin-bottom: 10px; }
+.drawer-label {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+.drawer-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dchip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.dchip.active {
+  border-color: rgba(212, 165, 116, 0.45);
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--wc-accent-gold);
+}
+.clear-filters {
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.filter-slide-enter-active,
+.filter-slide-leave-active {
+  transition: opacity 0.2s, max-height 0.25s ease;
+  overflow: hidden;
+  max-height: 200px;
+}
+.filter-slide-enter-from,
+.filter-slide-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
 
 /* ===== 卡牌网格 ===== */
+.market-main {
+  padding-bottom: 8px;
+}
 .market-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
-@media (min-width: 640px) {
+@media (min-width: 560px) {
   .market-grid {
-    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .listing-card {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
   cursor: pointer;
-  background: #12152a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.2s ease;
 }
-.listing-card:active {
-  transform: scale(0.98);
-}
-.listing-card.rarity-legend {
-  border-color: rgba(231, 175, 92, 0.45);
-}
-.listing-card.rarity-epic {
-  border-color: rgba(168, 120, 224, 0.4);
-}
-.listing-card.rarity-rare {
-  border-color: rgba(100, 160, 220, 0.3);
-}
-.listing-card.mine {
-  border-color: rgba(90, 160, 240, 0.55);
-  box-shadow: 0 0 0 1px rgba(90, 160, 240, 0.15), 0 4px 20px rgba(40, 100, 180, 0.15);
-}
-.listing-card.ending-soon {
-  outline: 1px solid rgba(255, 140, 80, 0.4);
-}
+.listing-card:active { transform: scale(0.97); }
 
-.mine-ribbon {
-  position: absolute;
-  top: 10px;
-  right: -28px;
-  z-index: 3;
-  width: 96px;
-  padding: 4px 0;
-  text-align: center;
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #fff;
-  background: linear-gradient(90deg, #3a7bd5, #5a9ef0);
-  transform: rotate(36deg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.card-visual {
+.card-frame {
   position: relative;
-  aspect-ratio: 3 / 3.6;
-  background: linear-gradient(165deg, #1a1e38 0%, #0d0f1c 100%);
-  overflow: hidden;
-}
-.card-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-.card-photo.placeholder {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: rgba(212, 165, 116, 0.35);
-  background: linear-gradient(160deg, #222640, #141828);
+  flex-direction: column;
+  aspect-ratio: 3 / 4.35;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #161a32 0%, #0e1020 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
-.card-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.55) 100%);
-  pointer-events: none;
+.listing-card.rarity-rare .card-frame {
+  border-color: rgba(126, 184, 255, 0.45);
+  box-shadow: 0 6px 22px rgba(126, 184, 255, 0.12);
+}
+.listing-card.rarity-epic .card-frame {
+  border-color: rgba(201, 120, 138, 0.5);
+  box-shadow: 0 6px 22px rgba(201, 120, 138, 0.15);
+}
+.listing-card.rarity-legend .card-frame {
+  border-color: rgba(232, 197, 71, 0.55);
+  box-shadow: 0 8px 26px rgba(232, 197, 71, 0.18);
+}
+.listing-card.mine .card-frame {
+  border-color: rgba(90, 160, 240, 0.55);
+  box-shadow: 0 0 0 1px rgba(90, 160, 240, 0.12), 0 6px 22px rgba(50, 110, 200, 0.18);
+}
+.listing-card.ending-soon .card-frame {
+  outline: 2px solid rgba(255, 140, 80, 0.35);
+  outline-offset: -1px;
 }
 
-.tag-row {
+.frame-top {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  z-index: 2;
+  padding: 8px;
+  pointer-events: none;
 }
-.tag {
+.pill {
   font-size: 0.58rem;
   font-weight: 700;
-  padding: 3px 7px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.65);
-  color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(6, 8, 18, 0.75);
+  color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.tag.rarity.legend {
+.pill.rarity.legend {
   background: linear-gradient(90deg, #b8860b, #e7af5c);
   color: #1a1208;
+  border: none;
 }
-.tag.rarity.epic {
+.pill.rarity.epic {
   background: rgba(138, 80, 184, 0.9);
+  border: none;
 }
-.tag.rarity.rare {
-  background: rgba(50, 100, 180, 0.85);
+.pill.rarity.rare {
+  background: rgba(50, 100, 180, 0.88);
+  border: none;
 }
-.tag.type {
-  color: #f0d9b5;
+.pill.mode { color: #f0d9b5; }
+.pill.owner {
+  background: rgba(60, 130, 210, 0.88);
+  border: none;
+  color: #fff;
 }
-.tag.serial {
+.pill.serial {
   margin-left: auto;
   color: #e8c88a;
   font-variant-numeric: tabular-nums;
 }
-.tag.mine {
-  background: rgba(60, 130, 210, 0.85);
-  color: #fff;
-}
 
-.card-foot {
+.frame-art {
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 10px 8px;
-  background: #12152a;
+  justify-content: center;
+  padding: 28px 12px 8px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(212, 165, 116, 0.08), transparent 65%);
 }
-.foot-main {
+.art-img {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+.art-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: rgba(212, 165, 116, 0.25);
+}
+
+.frame-bottom {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 10px 11px;
+  background: linear-gradient(180deg, rgba(14, 16, 32, 0) 0%, rgba(14, 16, 32, 0.97) 20%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.name-block {
   flex: 1;
   min-width: 0;
 }
-.card-title {
+.card-name {
   margin: 0;
   font-size: 0.84rem;
   font-weight: 700;
-  color: #f0ece4;
+  color: #f5f0e8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.25;
 }
-.card-title .star {
+.card-name .star {
   color: var(--wc-accent-gold);
-  font-size: 0.72rem;
-  margin-left: 2px;
+  font-size: 0.7rem;
 }
-.price-line {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-  margin-top: 3px;
+.sub-hint {
+  margin: 3px 0 0;
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.4);
 }
-.price-line .price {
-  font-size: 1.15rem;
+.sub-hint.mine { color: #7eb8ff; font-weight: 600; }
+.sub-hint.urgent { color: #ff9a6c; font-weight: 600; }
+
+.price-tag {
+  flex-shrink: 0;
+  text-align: right;
+  padding: 6px 9px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.28), rgba(140, 90, 40, 0.2));
+  border: 1px solid rgba(212, 165, 116, 0.35);
+}
+.price-tag strong {
+  display: block;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--wc-accent-gold);
   line-height: 1;
 }
-.price-line .unit {
-  font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.45);
+.price-tag span {
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.5);
 }
-.foot-action {
-  flex-shrink: 0;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.35), rgba(160, 110, 50, 0.25));
-  color: #fff8ee;
-  border: 1px solid rgba(212, 165, 116, 0.4);
+.price-tag.mine {
+  background: rgba(60, 130, 210, 0.2);
+  border-color: rgba(100, 170, 240, 0.35);
 }
-.foot-action.mine {
-  background: rgba(60, 130, 210, 0.25);
-  border-color: rgba(100, 170, 240, 0.45);
-  color: #b8dcff;
-}
-.mine-footnote,
-.auction-footnote {
-  padding: 0 10px 8px;
-  font-size: 0.62rem;
-  font-weight: 600;
-  text-align: center;
-  background: #12152a;
-}
-.mine-footnote {
-  color: #7eb8ff;
-}
-.auction-footnote {
-  color: #f0b86c;
-}
-.auction-footnote.urgent {
-  color: #ff9a6c;
-}
+.price-tag.mine strong { color: #9fd0ff; }
 
 /* ===== 空态 / 加载 ===== */
 .empty-state {
   text-align: center;
-  padding: 36px 16px;
-  background: rgba(16, 18, 34, 0.8);
-  border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.08);
+  padding: 40px 20px;
+  border-radius: 16px;
 }
-.empty-icon {
-  font-size: 2rem;
-  margin-bottom: 8px;
-  opacity: 0.7;
+.empty-art {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+.empty-state h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--wc-text-primary);
 }
 .empty-state p {
-  margin: 0 0 6px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-}
-.empty-state span {
+  margin: 0;
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -936,50 +1062,51 @@ onMounted(reload)
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
   flex-wrap: wrap;
 }
-.empty-btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(231, 175, 92, 0.25), rgba(180, 130, 60, 0.15));
+.cta-btn {
+  padding: 9px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(231, 175, 92, 0.3), rgba(160, 110, 50, 0.2));
   color: var(--wc-accent-gold);
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
-  border: none;
+  border: 1px solid rgba(212, 165, 116, 0.35);
   cursor: pointer;
 }
-.empty-btn.secondary {
-  background: rgba(255, 255, 255, 0.06);
+.cta-btn.ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.7);
 }
 .sk-card {
-  border-radius: 14px;
-  padding: 10px;
-  background: rgba(16, 18, 34, 0.8);
+  aspect-ratio: 3 / 4.35;
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(16, 18, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .load-more {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 .load-btn {
-  padding: 10px 28px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.75);
+  padding: 10px 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  background: rgba(212, 165, 116, 0.08);
+  color: var(--wc-accent-gold);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
 }
-.load-btn:disabled {
-  opacity: 0.6;
-}
+.load-btn:disabled { opacity: 0.55; }
 .disclaimer {
-  margin-top: 16px;
+  margin-top: 18px;
   font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.32);
   line-height: 1.5;
   text-align: center;
 }
@@ -993,6 +1120,22 @@ onMounted(reload)
 .dialog-tags {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
+}
+.dialog-tags .tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+.dialog-tags .tag.rarity.legend {
+  background: linear-gradient(90deg, #b8860b, #e7af5c);
+  color: #1a1208;
+}
+.dialog-tags .tag.mine {
+  background: rgba(60, 130, 210, 0.85);
 }
 .detail-body {
   display: flex;
@@ -1000,33 +1143,34 @@ onMounted(reload)
   gap: 14px;
 }
 .detail-visual {
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   background: #12152a;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 .detail-visual.mine {
   border-color: rgba(90, 160, 240, 0.45);
 }
 .detail-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   display: block;
 }
 .detail-photo.placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 3rem;
-  color: rgba(212, 165, 116, 0.3);
+  color: rgba(212, 165, 116, 0.25);
 }
 .own-banner {
   padding: 12px 14px;
-  border-radius: 10px;
-  background: rgba(40, 90, 160, 0.2);
-  border: 1px solid rgba(100, 180, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(40, 90, 160, 0.18);
+  border: 1px solid rgba(100, 180, 255, 0.28);
 }
 .own-banner strong {
   display: block;
@@ -1037,24 +1181,24 @@ onMounted(reload)
 .own-banner p {
   margin: 0;
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
   line-height: 1.45;
 }
 .price-hero {
   text-align: center;
-  padding: 14px;
-  border-radius: 12px;
-  background: rgba(212, 165, 116, 0.08);
-  border: 1px solid rgba(212, 165, 116, 0.2);
+  padding: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(120, 80, 40, 0.06));
+  border: 1px solid rgba(212, 165, 116, 0.22);
 }
 .ph-label {
   display: block;
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
   margin-bottom: 4px;
 }
 .ph-val {
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: var(--wc-accent-gold);
   line-height: 1;
@@ -1063,7 +1207,7 @@ onMounted(reload)
   display: block;
   margin-top: 4px;
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.4);
 }
 .detail-meta {
   margin: 0;
@@ -1072,24 +1216,23 @@ onMounted(reload)
   gap: 8px;
 }
 .meta-item {
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .meta-item dt {
   margin: 0;
   font-size: 0.62rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.42);
 }
 .meta-item dd {
-  margin: 2px 0 0;
-  font-size: 0.88rem;
+  margin: 3px 0 0;
+  font-size: 0.9rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
-.meta-item dd.mine {
-  color: #8ec8ff;
-}
+.meta-item dd.mine { color: #8ec8ff; }
 .market-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1098,13 +1241,13 @@ onMounted(reload)
 .market-stats .stat {
   text-align: center;
   padding: 8px 4px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
 }
 .market-stats .stat span {
   display: block;
   font-size: 0.58rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.42);
 }
 .market-stats .stat b {
   font-size: 0.88rem;
@@ -1116,20 +1259,15 @@ onMounted(reload)
   gap: 8px;
   align-items: center;
 }
-.action-area .el-button {
-  flex: 1;
-}
+.action-area .el-button { flex: 1; }
 .dialog-disclaimer {
   font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   line-height: 1.4;
   margin: 0;
   text-align: center;
 }
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
+.tabular-nums { font-variant-numeric: tabular-nums; }
 </style>
 
 <style>
