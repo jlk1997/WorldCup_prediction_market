@@ -134,7 +134,7 @@ const chainHint = computed(() => {
 
 const complianceNotice =
   props.complianceNotice ||
-  '数字藏品为平台内虚拟收藏，无金钱价值，不可交易、不可转赠、不可提现。'
+  '数字藏品为平台内虚拟收藏，无现金价值。可用积分流通需实名，不可提现。'
 
 function clearStageTimers() {
   stageTimers.forEach(clearTimeout)

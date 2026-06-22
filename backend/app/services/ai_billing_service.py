@@ -63,16 +63,67 @@ class AiBillingService:
             base += self.settings.season_pass_extra_ai_free
         return base
 
-    def mode_coin_cost(self, mode: str, force_refresh: bool) -> int:
+    def mode_coin_cost(self, mode: str, force_refresh: bool, discount_pct: float = 0.0) -> int:
         if mode == "live":
             cost = self.settings.ai_coin_cost_live
         else:
             cost = self.settings.ai_coin_cost_pre_match
         if force_refresh:
             cost += self.settings.ai_coin_cost_force_refresh
+        if discount_pct > 0 and cost > 0:
+            cost = max(1, int(round(cost * (1 - min(discount_pct, 0.9)))))
         return cost
 
-    def preview(self, user: User, mode: str, force_refresh: bool, cache_hit: bool) -> BillingDecision:
+    def card_discount_pct(self, user: User, team_ids: set[int] | None) -> float:
+        """持有或质押相关球队卡 → AI 分析折扣（赋能）。"""
+        if not team_ids:
+            return 0.0
+        try:
+            from app.db.models.commerce import CardStake, CollectibleCard, UserCollectibleCard
+
+            holds = (
+                self.db.query(UserCollectibleCard.id)
+                .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
+                .filter(
+                    UserCollectibleCard.user_id == user.id,
+                    CollectibleCard.team_id.in_(team_ids),
+                )
+                .first()
+            )
+            staked = (
+                self.db.query(CardStake.id)
+                .join(CollectibleCard, CardStake.card_id == CollectibleCard.id)
+                .filter(
+                    CardStake.user_id == user.id,
+                    CardStake.status == "active",
+                    CollectibleCard.team_id.in_(team_ids),
+                )
+                .first()
+            )
+            return self.settings.asset_ai_card_discount_pct if (holds or staked) else 0.0
+        except Exception:
+            return 0.0
+
+    def resolve_team_ids(self, *team_names: str | None) -> set[int]:
+        names = [n for n in team_names if n]
+        if not names:
+            return set()
+        try:
+            from app.db.models import Team
+
+            rows = self.db.query(Team.id).filter(Team.name.in_(names)).all()
+            return {r[0] for r in rows}
+        except Exception:
+            return set()
+
+    def preview(
+        self,
+        user: User,
+        mode: str,
+        force_refresh: bool,
+        cache_hit: bool,
+        team_ids: set[int] | None = None,
+    ) -> BillingDecision:
         if cache_hit:
             return BillingDecision(
                 charge_coins=0,
@@ -82,14 +133,16 @@ class AiBillingService:
                 mode=mode,
                 force_refresh=force_refresh,
             )
-        return self._decide_charge(user, mode, force_refresh, dry_run=True)
+        return self._decide_charge(user, mode, force_refresh, dry_run=True, team_ids=team_ids)
 
-    def charge_before_llm(self, user_id: int, mode: str, force_refresh: bool) -> BillingDecision:
+    def charge_before_llm(
+        self, user_id: int, mode: str, force_refresh: bool, team_ids: set[int] | None = None
+    ) -> BillingDecision:
         self.assert_global_token_budget()
         locked = self.db.query(User).filter(User.id == user_id).with_for_update().first()
         if not locked:
             raise BadRequestError("用户不存在")
-        decision = self._decide_charge(locked, mode, force_refresh, dry_run=False)
+        decision = self._decide_charge(locked, mode, force_refresh, dry_run=False, team_ids=team_ids)
         if decision.charge_coins > 0:
             ref_id = int(time.time() * 1000) & 0x7FFFFFFF
             self.wallet.deduct_coins(
@@ -171,11 +224,19 @@ class AiBillingService:
         used = row.free_used if row else 0
         return max(0, limit - used)
 
-    def _decide_charge(self, user: User, mode: str, force_refresh: bool, dry_run: bool) -> BillingDecision:
+    def _decide_charge(
+        self,
+        user: User,
+        mode: str,
+        force_refresh: bool,
+        dry_run: bool,
+        team_ids: set[int] | None = None,
+    ) -> BillingDecision:
         limit = self.daily_free_limit(user)
         row = self._get_usage_row(user.id, _utcnow().date(), for_update=not dry_run)
         free_used = row.free_used if row else 0
-        coin_cost = self.mode_coin_cost(mode, force_refresh)
+        discount = self.card_discount_pct(user, team_ids)
+        coin_cost = self.mode_coin_cost(mode, force_refresh, discount)
 
         if free_used < limit:
             return BillingDecision(

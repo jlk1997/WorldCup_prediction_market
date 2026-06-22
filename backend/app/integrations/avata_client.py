@@ -150,6 +150,26 @@ class AvataClient:
             },
         )
 
+    def transfer_nft(
+        self,
+        class_id: str,
+        nft_id: str,
+        *,
+        owner: str,
+        recipient: str,
+        operation_id: str | None = None,
+    ) -> dict[str, Any]:
+        """托管账户间 NFT 转移（合规转赠/二级成交结算用）。
+
+        owner/recipient 均为平台托管的文昌链地址，平台先在服务端校验合规规则后再调链。
+        """
+        op = operation_id or self.new_operation_id("xfer")
+        return self.request(
+            "POST",
+            f"/v3/native/nft/nfts/{class_id}/{owner}/{nft_id}",
+            data={"recipient": recipient, "operation_id": op},
+        )
+
     def query_tx(self, operation_id: str) -> dict[str, Any]:
         return self.request("GET", f"/v3/native/tx/{operation_id}")
 
@@ -171,7 +191,10 @@ class AvataClient:
                 }
             }
         if path.startswith("/v3/native/nft/nfts/") and method == "POST":
-            class_id = path.rsplit("/", 1)[-1]
+            segments = [s for s in path.split("/") if s]
+            # mint: /v3/native/nft/nfts/{class_id}
+            # transfer: /v3/native/nft/nfts/{class_id}/{owner}/{nft_id}
+            class_id = segments[4] if len(segments) > 4 else "mock_class"
             return {
                 "data": {
                     "operation_id": op,

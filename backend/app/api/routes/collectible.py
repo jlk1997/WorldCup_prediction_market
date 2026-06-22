@@ -89,8 +89,13 @@ def synthesis_options(user: User = Depends(get_current_user), db: Session = Depe
 
 
 @router.get("/card/{card_code}")
-def get_card(card_code: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return CollectibleService(db).get_card_detail(user, card_code)
+def get_card(
+    card_code: str,
+    user_card_id: int | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return CollectibleService(db).get_card_detail(user, card_code, user_card_id=user_card_id)
 
 
 @router.post("/synthesize")

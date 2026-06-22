@@ -165,6 +165,50 @@ class Settings(BaseSettings):
     # NFT 元数据 URI 前缀（须公网可访问；留空则从 CORS/端口推导）
     public_api_base_url_env: str = Field(default="", validation_alias="PUBLIC_API_BASE_URL")
 
+    # ============ 足球数字资产平台（合规·积分计价二级流通） ============
+    # 资产货币 = 可用积分(redeem_points)；人民币只进不出，二级一律积分计价
+    asset_currency_label: str = "可用积分"
+    # 新获卡牌冷却持有期（天）后方可流通（合规反炒作/反代充）
+    asset_holding_cooldown_days: int = 7
+    # 转赠：日/季次数与单笔上限
+    asset_gift_daily_limit: int = 3
+    asset_gift_season_limit: int = 30
+    # 交易行手续费（成交价百分比，进入积分 sink）
+    asset_market_fee_pct: float = 0.08
+    # 挂牌价区间（积分）
+    asset_listing_min_points: int = 10
+    asset_listing_max_points: int = 1_000_000
+    # 竞拍最小加价（积分）
+    asset_auction_min_increment: int = 10
+    # 挂牌有效期（小时）
+    asset_listing_default_hours: int = 72
+    # 官方回购地板价（按稀有度，积分）。给资产一个价格底与退出
+    asset_buyback_floor: str = "common:30,rare:120,epic:400,legend:1500"
+    # 质押日产被动收益（按稀有度，可用积分/天）
+    asset_stake_daily_yield: str = "common:2,rare:6,epic:18,legend:50"
+    # 质押同时给该卡所属球队的竞猜加成（百分比）
+    asset_stake_predict_boost_pct: float = 0.05
+    # 持队徽卡竞猜加成（百分比，叠加上限）
+    asset_crest_predict_boost_pct: float = 0.03
+    asset_predict_boost_cap_pct: float = 0.20
+    # 持球员/球队卡 → AI 分析折扣（百分比）
+    asset_ai_card_discount_pct: float = 0.30
+    # 数字阵容容量与每周奖励
+    fantasy_lineup_size: int = 5
+    fantasy_weekly_reward_coins: int = 60
+    fantasy_reward_top_n: int = 10
+    fantasy_reward_tiers: str = "1:200,2:120,3:80,4-10:40"
+    # 卡牌对决
+    card_duel_stake_min: int = 10
+    card_duel_stake_max: int = 100
+    card_duel_fee_pct: float = 0.10
+    card_duel_win_battalion: int = 25
+    card_duel_mode: str = "best_of_3"  # best_of_3 | total_power
+    card_duel_pending_expire_hours: int = 72
+    card_duel_max_pending_per_user: int = 5
+    # 实名认证（mock：开发期直接通过；生产对接三要素）
+    realname_mock: bool = True
+
     # Collection Pass (藏品赛季手册)
     collection_pass_premium_price_fen: int = 4500
     collection_pass_xp_boost_coin_cost: int = 30
@@ -174,6 +218,56 @@ class Settings(BaseSettings):
     collection_pass_event_cheer_cost: int = 15
     collection_pass_max_level_skip: int = 10
     collection_pass_max_shard_deficit: int = 500
+
+    @staticmethod
+    def _parse_rarity_int_map(raw: str) -> dict[str, int]:
+        result: dict[str, int] = {}
+        for part in (raw or "").split(","):
+            part = part.strip()
+            if not part or ":" not in part:
+                continue
+            key, val = part.split(":", 1)
+            try:
+                result[key.strip()] = int(val.strip())
+            except ValueError:
+                continue
+        return result
+
+    @property
+    def asset_buyback_floor_map(self) -> dict[str, int]:
+        return self._parse_rarity_int_map(self.asset_buyback_floor)
+
+    @property
+    def asset_stake_daily_yield_map(self) -> dict[str, int]:
+        return self._parse_rarity_int_map(self.asset_stake_daily_yield)
+
+    @property
+    def fantasy_reward_tier_map(self) -> dict[int, int]:
+        """Parse tier string like '1:200,2:120,3:80,4-10:40' into rank->coins."""
+        result: dict[int, int] = {}
+        for part in (self.fantasy_reward_tiers or "").split(","):
+            part = part.strip()
+            if not part or ":" not in part:
+                continue
+            rank_part, val_part = part.split(":", 1)
+            try:
+                coins = int(val_part.strip())
+            except ValueError:
+                continue
+            rank_part = rank_part.strip()
+            if "-" in rank_part:
+                lo, hi = rank_part.split("-", 1)
+                try:
+                    for r in range(int(lo), int(hi) + 1):
+                        result[r] = coins
+                except ValueError:
+                    continue
+            else:
+                try:
+                    result[int(rank_part)] = coins
+                except ValueError:
+                    continue
+        return result
 
     @property
     def avata_configured(self) -> bool:

@@ -109,6 +109,29 @@
               使用免费额度（剩 {{ billingPreview.data.free_remaining }} 次）
             </span>
             <span v-else class="cost-value paid">扣 {{ billingPreview.data.charge_coins }} 球迷币</span>
+            <span
+              v-if="billingPreview.data.card_discount_pct && billingPreview.data.card_discount_pct > 0"
+              class="asset-discount"
+            >
+              · 持卡折扣 -{{ billingPreview.data.card_discount_pct }}%
+            </span>
+          </div>
+
+          <div
+            v-if="billingPreview?.data?.asset_context && authState.accessToken"
+            class="asset-context-bar"
+          >
+            <span>资产估值 {{ billingPreview.data.asset_context.portfolio_value_points.toLocaleString() }} 积分</span>
+            <span v-if="billingPreview.data.asset_context.match_team_cards">
+              · 本场相关卡 ×{{ billingPreview.data.asset_context.match_team_cards }}
+            </span>
+            <span v-if="billingPreview.data.asset_context.fantasy_week_score">
+              · 阵容 {{ billingPreview.data.asset_context.fantasy_week_score }} 分
+            </span>
+            <span v-if="billingPreview.data.asset_context.pending_duel_invites" class="duel-pending">
+              · {{ billingPreview.data.asset_context.pending_duel_invites }} 场待应战
+            </span>
+            <router-link to="/me/assets" class="asset-link">我的资产 →</router-link>
           </div>
 
           <el-alert
@@ -1240,6 +1263,27 @@ onMounted(async () => {
 .cost-value.cache { color: #8fd48a; }
 .cost-value.free { color: var(--wc-accent-gold); }
 .cost-value.paid { color: #f0a0b0; }
+.asset-discount { color: #7dd3a8; font-size: 0.82rem; font-weight: 600; }
+.asset-context-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  color: var(--wc-text-muted);
+  background: rgba(125, 211, 168, 0.06);
+  border: 1px solid rgba(125, 211, 168, 0.15);
+}
+.asset-context-bar .duel-pending { color: #f0b86c; }
+.asset-link {
+  margin-left: auto;
+  color: var(--wc-accent-gold);
+  text-decoration: none;
+  font-weight: 600;
+}
 .run-btn {
   min-width: 168px;
   padding: 10px 20px;

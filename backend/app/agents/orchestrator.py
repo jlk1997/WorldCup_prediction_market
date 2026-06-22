@@ -265,7 +265,19 @@ class MatchAnalysisOrchestrator:
                 token_budget.reserve(ESTIMATED_TOKENS_PER_ANALYZE)
                 reserved_tokens = True
                 billing_svc = AiBillingService(self.db)
-                billing_decision = billing_svc.charge_before_llm(user_id, mode, force_refresh)
+                _card_team_ids = billing_svc.resolve_team_ids(team1_name, team2_name)
+                user_asset_ctx: dict = {}
+                if user_id:
+                    from app.db.models.commerce import User
+
+                    u = self.db.get(User, user_id)
+                    if u:
+                        from app.services.agent_asset_context import AgentAssetContextService
+
+                        user_asset_ctx = AgentAssetContextService(self.db).build(u, _card_team_ids)
+                billing_decision = billing_svc.charge_before_llm(
+                    user_id, mode, force_refresh, team_ids=_card_team_ids
+                )
                 self.db.commit()
                 charged = True
                 analysis_job_id = AiAnalysisJobService(self.db).start_job(
@@ -291,7 +303,9 @@ class MatchAnalysisOrchestrator:
                     llm, facts, team1_name, team2_name, steps, progress, mode
                 )
 
-                context = self._build_predict_context(mode, facts, news_digest, tactical_brief, {})
+                context = self._build_predict_context(
+                    mode, facts, news_digest, tactical_brief, {}, user_asset=user_asset_ctx
+                )
 
                 self._emit(progress, {"type": "phase", "phase": "predict", "message": "PredictAgent 综合报告"})
                 raw = self._run_predict_agent(llm, team1_name, team2_name, context, steps, progress)
@@ -885,6 +899,8 @@ class MatchAnalysisOrchestrator:
 
         tool_notes: dict,
 
+        user_asset: dict | None = None,
+
     ) -> dict:
 
         ctx = {
@@ -912,6 +928,8 @@ class MatchAnalysisOrchestrator:
             },
 
             "tool_notes": tool_notes or None,
+
+            "user_asset": user_asset or None,
 
         }
 

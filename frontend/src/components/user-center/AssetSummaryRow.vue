@@ -37,6 +37,10 @@
         <span class="asset-label">连胜</span>
         <span class="asset-value sm">{{ user?.win_streak ?? 0 }}</span>
       </div>
+      <button type="button" class="extra-cell link" @click="$router.push('/me/assets')">
+        <span class="asset-label">球星卡资产</span>
+        <span class="asset-value sm gold">查看 →</span>
+      </button>
     </div>
   </div>
 </template>
@@ -150,5 +154,14 @@ const expanded = ref(false)
   flex: 1;
   min-width: 90px;
   text-align: center;
+}
+.extra-cell.link {
+  border: none;
+  background: rgba(212, 165, 116, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.extra-cell.link:hover {
+  background: rgba(212, 165, 116, 0.15);
 }
 </style>

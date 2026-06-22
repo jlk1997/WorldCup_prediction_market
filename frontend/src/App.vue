@@ -122,6 +122,7 @@
             <el-menu-item index="/teams">球队库</el-menu-item>
             <el-menu-item v-if="isLoggedIn" index="/invite">召友</el-menu-item>
             <el-menu-item v-if="isLoggedIn" index="/collection">收藏册</el-menu-item>
+            <el-menu-item v-if="isLoggedIn" index="/me/assets">我的资产</el-menu-item>
             <el-menu-item index="/shop">商城</el-menu-item>
             <el-menu-item v-if="isLoggedIn" index="/me">球迷中心</el-menu-item>
           </el-menu>
@@ -143,6 +144,9 @@
                 <el-dropdown-item command="/news">资讯</el-dropdown-item>
                 <el-dropdown-item command="/teams">球队库</el-dropdown-item>
                 <el-dropdown-item v-if="isLoggedIn" command="/collection">球星收藏册</el-dropdown-item>
+                <el-dropdown-item v-if="isLoggedIn" command="/me/assets">我的资产</el-dropdown-item>
+                <el-dropdown-item v-if="isLoggedIn" command="/market">交易行</el-dropdown-item>
+                <el-dropdown-item v-if="isLoggedIn" command="/fantasy">数字阵容</el-dropdown-item>
                 <el-dropdown-item command="/shop">商城</el-dropdown-item>
                 <el-dropdown-item v-if="isLoggedIn" command="/invite">召友中心</el-dropdown-item>
                 <el-dropdown-item v-if="isLoggedIn" command="/me">球迷中心</el-dropdown-item>

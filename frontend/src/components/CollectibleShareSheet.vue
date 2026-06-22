@@ -49,7 +49,7 @@
         <el-button plain @click="savePoster">保存海报</el-button>
       </div>
 
-      <p class="compliance">数字藏品为平台内虚拟收藏，无金钱价值，不可交易、不可转赠、不可提现。</p>
+      <p class="compliance">数字藏品为平台内虚拟收藏，无现金价值。可用积分二级流通需实名，不可提现。</p>
     </div>
   </component>
 </template>

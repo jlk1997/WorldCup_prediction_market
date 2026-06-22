@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import sys
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -96,6 +96,55 @@ def run_once():
                 logger.info("Collectible AVATA mint batch: %s", chain_result)
         except Exception:
             logger.exception("Collectible AVATA mint batch failed")
+        try:
+            from app.services.marketplace_service import MarketplaceService
+
+            auction_result = MarketplaceService(db).settle_expired_auctions()
+            if auction_result.get("settled") or auction_result.get("expired"):
+                logger.info("Marketplace auctions settled: %s", auction_result)
+            fixed_result = MarketplaceService(db).expire_stale_listings()
+            if fixed_result.get("expired"):
+                logger.info("Marketplace fixed listings expired: %s", fixed_result)
+        except Exception:
+            logger.exception("Marketplace auction settlement failed")
+        try:
+            from app.services.primary_mint_service import PrimaryMintService
+
+            lottery_result = PrimaryMintService(db).draw_pending_lotteries()
+            if lottery_result.get("drawn"):
+                logger.info("Mint lottery auto-draw: %s", lottery_result)
+        except Exception:
+            logger.exception("Mint lottery auto-draw failed")
+        try:
+            from app.db.models import Match
+            from app.services.fantasy_service import FantasyService
+
+            fantasy = FantasyService(db)
+            recent_cutoff = datetime.utcnow() - timedelta(days=3)
+            finished = (
+                db.query(Match)
+                .filter(Match.status == "finished", Match.live_updated_at >= recent_cutoff)
+                .order_by(Match.id.desc())
+                .limit(50)
+                .all()
+            )
+            total_fantasy = sum(fantasy.score_match(m) for m in finished)
+            if total_fantasy:
+                logger.info("Fantasy lineups scored: %s", total_fantasy)
+            if datetime.utcnow().weekday() == 0:
+                settle = fantasy.settle_previous_week()
+                if settle.get("awarded"):
+                    logger.info("Fantasy weekly settlement: %s", settle)
+        except Exception:
+            logger.exception("Fantasy scoring failed")
+        try:
+            from app.services.card_duel_service import CardDuelService
+
+            duel_exp = CardDuelService(db).expire_pending_pvp_duels()
+            if duel_exp.get("expired"):
+                logger.info("Card duel pending expired: %s", duel_exp)
+        except Exception:
+            logger.exception("Card duel expiry failed")
         logger.info(
             "Ingest complete: live=%s news=%s enrich=%s standings=%s settled=%s voided=%s",
             live,

@@ -42,6 +42,7 @@ def _apply_internal_fixture(
     match: Match,
     fixture: InternalFixture,
     client: BsdClient | None = None,
+    db: Session | None = None,
 ) -> bool:
     if not fixture.external_id:
         return False
@@ -50,6 +51,7 @@ def _apply_internal_fixture(
     if not match.external_fixture_id:
         return False
 
+    prev_status = match.status
     match.status = fixture.status
     t1_score, t2_score = scores_for_team1_team2(
         match.team1_name,
@@ -80,6 +82,16 @@ def _apply_internal_fixture(
         raw_events = client.get_incidents(fixture.external_id)
         if raw_events:
             match.events_json = normalize_bsd_incidents(raw_events)
+
+    if db and prev_status != "finished" and match.status == "finished":
+        try:
+            from app.services.fantasy_service import FantasyService
+
+            scored = FantasyService(db).score_match(match)
+            if scored:
+                logger.info("Fantasy scored match #%s: %s lineups", match.id, scored)
+        except Exception:
+            logger.exception("fantasy score on finish failed match=%s", match.id)
 
     return True
 
@@ -114,6 +126,7 @@ def _sync_events_batch(
     *,
     date_from: str,
     date_to: str,
+    db: Session | None = None,
 ) -> tuple[int, list[dict]]:
     """Bulk-update linked matches from league events list (fewer API calls than per-event GET)."""
     events = client.list_league_events(date_from=date_from, date_to=date_to)
@@ -124,7 +137,7 @@ def _sync_events_batch(
         if not eid or eid in updated_external_ids:
             continue
         match = matches_by_external_id.get(eid)
-        if match and _apply_internal_fixture(match, fixture, client):
+        if match and _apply_internal_fixture(match, fixture, client, db):
             updated += 1
             updated_external_ids.add(eid)
     return updated, events
@@ -153,6 +166,7 @@ def _reconcile_stale_matches(
     now: datetime,
     client: BsdClient,
     updated_external_ids: set[int],
+    db: Session | None = None,
 ) -> int:
     """Re-link or refresh matches that should have started but are still scheduled locally."""
     from app.ingest.bsd_adapter import resolve_event_status
@@ -196,7 +210,7 @@ def _reconcile_stale_matches(
                 )
         if best_id in updated_external_ids:
             continue
-        if _apply_internal_fixture(match, fixture, client):
+        if _apply_internal_fixture(match, fixture, client, db):
             updated += 1
             updated_external_ids.add(best_id)
         elif kick <= now - timedelta(hours=6):
@@ -218,6 +232,7 @@ def _recover_stale_live_matches(
     now: datetime,
     client: BsdClient,
     updated_external_ids: set[int],
+    db: Session | None = None,
 ) -> int:
     """Force-refresh matches stuck in live long after kickoff."""
     from app.ingest.bsd_adapter import resolve_event_status
@@ -248,7 +263,7 @@ def _recover_stale_live_matches(
                 match.team1_name,
                 match.team2_name,
             )
-        if _apply_internal_fixture(match, fixture, client):
+        if _apply_internal_fixture(match, fixture, client, db):
             updated += 1
             updated_external_ids.add(eid)
     return updated
@@ -294,7 +309,7 @@ class LiveMatchSyncService:
         for event in self.client.get_live_events():
             fixture = event_to_internal(event)
             match = by_external_id.get(fixture.external_id)
-            if match and _apply_internal_fixture(match, fixture, self.client):
+            if match and _apply_internal_fixture(match, fixture, self.client, self.db):
                 live_feed += 1
                 updated += 1
                 if fixture.external_id:
@@ -310,6 +325,7 @@ class LiveMatchSyncService:
             updated_external_ids,
             date_from=bulk_from,
             date_to=bulk_to,
+            db=self.db,
         )
         updated += bulk_updated
 
@@ -320,6 +336,7 @@ class LiveMatchSyncService:
             now,
             self.client,
             updated_external_ids,
+            self.db,
         )
         updated += reconciled
 
@@ -335,7 +352,7 @@ class LiveMatchSyncService:
             logger.info("BSD catch-up: %s scheduled matches past kickoff", stale_scheduled)
 
         live_recovered = _recover_stale_live_matches(
-            matches, now, self.client, updated_external_ids
+            matches, now, self.client, updated_external_ids, self.db
         )
         updated += live_recovered
 
@@ -349,7 +366,7 @@ class LiveMatchSyncService:
             if not event:
                 continue
             fixture = event_to_internal(event)
-            if _apply_internal_fixture(match, fixture, self.client):
+            if _apply_internal_fixture(match, fixture, self.client, self.db):
                 updated += 1
                 individual += 1
 

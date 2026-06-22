@@ -9,7 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.routes import agent, arena, collectible, collection_pass, commerce, health, legal, live, news, players, predictions, profile, referral, schedule, stats, sync, teams, ui_config, websocket
+from app.api.routes import agent, arena, asset, card_duel, collectible, collection_pass, commerce, health, legal, live, marketplace, mint, news, players, predictions, profile, referral, schedule, stats, sync, teams, ui_config, websocket
 from app.core.config import get_settings
 from app.core.exceptions import AppError, RateLimitError, rate_limit_error_body
 from app.core.middleware import GlobalRateLimitMiddleware, RequestLoggingMiddleware, SecurityHeadersMiddleware, setup_logging
@@ -114,6 +114,19 @@ async def _lifespan(_: FastAPI):
             db.close()
     except Exception:
         logger.exception("Stale AI job recovery on startup failed")
+    if not settings.production_mode:
+        try:
+            from app.services.primary_mint_service import PrimaryMintService
+
+            db = SessionLocal()
+            try:
+                PrimaryMintService(db).seed_collab_events()
+                db.commit()
+                logger.info("Dev collab catalog/events seeded")
+            finally:
+                db.close()
+        except Exception:
+            logger.exception("Dev collab seed on startup failed")
     try:
         yield
     finally:
@@ -191,6 +204,10 @@ def create_app() -> FastAPI:
     app.include_router(arena.router)
     app.include_router(collectible.router)
     app.include_router(collection_pass.router)
+    app.include_router(asset.router)
+    app.include_router(card_duel.router)
+    app.include_router(marketplace.router)
+    app.include_router(mint.router)
     app.include_router(referral.router)
     app.include_router(legal.router)
     app.include_router(ui_config.router)

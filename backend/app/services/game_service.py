@@ -676,6 +676,23 @@ class GameService:
             .count()
         )
 
+    def _match_team_ids(self, match: Match) -> set[int]:
+        names = [n for n in (match.team1_name, match.team2_name) if n]
+        if not names:
+            return set()
+        rows = self.db.query(Team.id).filter(Team.name.in_(names)).all()
+        return {r[0] for r in rows}
+
+    def _asset_predict_boost(self, user: User, match: Match) -> float:
+        try:
+            from app.services.card_stake_service import CardStakeService
+
+            team_ids = self._match_team_ids(match)
+            return CardStakeService(self.db).compute_predict_boost(user, team_ids)
+        except Exception:
+            logger.exception("asset predict boost failed user=%s", user.id)
+            return 0.0
+
     def _settle_one(self, user: User, pred: GamePrediction, match: Match) -> dict | None:
         if pred.status != "pending":
             return None
@@ -708,6 +725,10 @@ class GameService:
                 total_season = int(total_season * self.settings.loss_streak_win_multiplier)
             if (user.referral_tier_granted or 0) >= 10:
                 total_season = int(total_season * 1.05)
+            # 资产加成：质押相关球队卡 / 持队徽卡 → 竞猜赢取加成
+            asset_boost = self._asset_predict_boost(user, match)
+            if asset_boost > 0:
+                total_season = int(total_season * (1 + asset_boost))
             redeem_ratio = self.settings.predict_win_redeem_ratio
             total_redeem = int(total_season * redeem_ratio)
             pred.points_awarded = total_season

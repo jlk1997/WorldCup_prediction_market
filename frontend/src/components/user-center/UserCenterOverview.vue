@@ -75,6 +75,16 @@
       </button>
     </div>
 
+    <div v-if="isLoggedIn" class="asset-hub">
+      <span class="hub-label">数字资产</span>
+      <div class="hub-grid">
+        <button type="button" class="hub-btn" @click="$router.push('/me/assets')">我的资产</button>
+        <button type="button" class="hub-btn" @click="$router.push('/market')">交易行</button>
+        <button type="button" class="hub-btn" @click="$router.push('/mint')">首发打新</button>
+        <button type="button" class="hub-btn" @click="$router.push('/fantasy')">数字阵容</button>
+      </div>
+    </div>
+
     <div v-if="inviteSummary" class="invite-strip glass-inner" @click="openInviteShare">
       <span v-if="inviteSummary.next_tier">
         再邀 {{ inviteSummary.next_tier.remaining }} 人解锁「{{ inviteSummary.next_tier.title }}」
@@ -103,6 +113,7 @@ import CollectionPassNudgeBar from '../collectible/CollectionPassNudgeBar.vue'
 import TodayTasksCard from './TodayTasksCard.vue'
 import AssetSummaryRow from './AssetSummaryRow.vue'
 import type { AuthUser } from '../../stores/authStore'
+import { isLoggedIn } from '../../stores/authStore'
 import type { ProfileStatus } from '../../api/profile'
 import type { DailyStatus } from '../../api/commerce'
 import type { ReferralMe } from '../../api/referral'
@@ -307,6 +318,40 @@ const showRecommendations = computed(() => {
   color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   border: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.asset-hub {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(125, 211, 168, 0.05);
+  border: 1px solid rgba(125, 211, 168, 0.12);
+}
+.hub-label {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.hub-btn {
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 14, 28, 0.45);
+  color: var(--wc-text-secondary);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.hub-btn:hover {
+  border-color: rgba(212, 165, 116, 0.35);
+  color: var(--wc-accent-gold);
 }
 
 .more-links {

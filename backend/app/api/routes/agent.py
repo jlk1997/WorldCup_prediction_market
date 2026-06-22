@@ -129,8 +129,29 @@ def ai_billing_preview(
             **cache_kwargs,
         )
     cache_hit = bool(cached_run and cached_run.final_output)
-    decision = AiBillingService(db).preview(user, req.mode, req.force_refresh, cache_hit)
-    return {"status": "success", "cache_hit": cache_hit, "data": decision.to_dict()}
+    billing = AiBillingService(db)
+    team_ids = billing.resolve_team_ids(req.team1_name, req.team2_name)
+    decision = billing.preview(user, req.mode, req.force_refresh, cache_hit, team_ids=team_ids)
+    payload = decision.to_dict()
+    discount = billing.card_discount_pct(user, team_ids)
+    payload["card_discount_pct"] = discount
+    from app.services.agent_asset_context import AgentAssetContextService
+
+    payload["asset_context"] = AgentAssetContextService(db).build(user, team_ids)
+    return {"status": "success", "cache_hit": cache_hit, "data": payload}
+
+
+@router.get("/asset-context")
+def agent_asset_context(
+    team1_name: str | None = Query(None),
+    team2_name: str | None = Query(None),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    billing = AiBillingService(db)
+    team_ids = billing.resolve_team_ids(team1_name, team2_name) if team1_name and team2_name else set()
+    ctx = AgentAssetContextService(db).build(user, team_ids or None)
+    return {"status": "success", "data": ctx}
 
 
 @router.post("/analyze", response_model=AgentAnalyzeResponse)

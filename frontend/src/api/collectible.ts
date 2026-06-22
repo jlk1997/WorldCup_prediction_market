@@ -23,6 +23,21 @@ export interface CollectibleCardBrief {
   chain?: CollectibleChainBrief | null
   upgrade_cost?: { shards: number; redeem_points: number }
   can_upgrade?: boolean
+  asset?: CardAssetBrief | null
+}
+
+export interface CardAssetBrief {
+  card_id: number
+  serial_no: number | null
+  mint_total: number | null
+  tradable: boolean
+  stack_count?: number
+  lock_state: 'none' | 'listed' | 'staked'
+  holding_until: string | null
+  cooling_down: boolean
+  estimated_value: number
+  buyback_quote: number
+  currency: string
 }
 
 export interface CollectibleChainBrief {
@@ -180,9 +195,10 @@ export async function getCollectibleSets() {
   return data.sets
 }
 
-export async function getCollectibleCard(code: string) {
+export async function getCollectibleCard(code: string, user_card_id?: number) {
   const { data } = await apiClient.get<CollectibleCardBrief & { compliance_notice: string }>(
     `/api/collectible/card/${encodeURIComponent(code)}`,
+    { params: user_card_id ? { user_card_id } : undefined },
   )
   return data
 }

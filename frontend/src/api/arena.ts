@@ -107,6 +107,7 @@ export async function getArenaOverview() {
     matchday_goal: MatchdayGoal
     matchday_goal_secondary: MatchdayGoal
     spot_cheer: SpotCheerStatus
+    card_boost_pct: number
     quick_stats: ArenaQuickStats
   }
 }

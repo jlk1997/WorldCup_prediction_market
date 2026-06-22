@@ -71,7 +71,7 @@ function buildPosterOptions(
     subtitle: '最后一舞 · 球星收藏册',
     statsLine: owned && card.star ? `★${card.star}` : undefined,
     badge: variant === 'set_complete' ? '套组成就' : '数字藏品',
-    footer: '虚拟收藏 · 不可交易 · 仅供炫耀',
+    footer: '虚拟收藏 · 可用积分流通 · 仅供炫耀',
     qrUrl: url,
     cardImageUrl: card.image_url || undefined,
     rarity: card.rarity as SharePosterOptions['rarity'],

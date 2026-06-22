@@ -160,6 +160,14 @@ const navItems = computed(() => {
 
   if (isLoggedIn.value) {
 
+    items.push({ path: '/market', label: '交易行' })
+
+    items.push({ path: '/mint', label: '首发打新' })
+
+    items.push({ path: '/fantasy', label: '数字阵容' })
+
+    items.push({ path: '/me/assets', label: '我的资产' })
+
     items.push({ path: '/invite', label: '召友中心' })
 
   }

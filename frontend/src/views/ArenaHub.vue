@@ -11,6 +11,10 @@
       :default-open="(overview.quick_stats?.today_cheerable ?? 0) > 0"
     />
 
+    <section class="glass-panel block card-duel-block">
+      <CardDuelPanel />
+    </section>
+
     <div v-if="overview" class="arena-layout">
       <div class="col-main">
         <section class="glass-panel block standing-card" v-if="overview.standing.team_id">
@@ -35,6 +39,19 @@
             <div class="stat-item" v-if="overview.standing.gap_to_prev">
               <span class="stat-label">距上一名</span>
               <span class="stat-value">{{ overview.standing.gap_to_prev }} 点</span>
+            </div>
+            <div class="stat-item" v-if="overview.card_boost_pct > 0">
+              <span class="stat-label">
+                卡牌军团加成
+                <el-tooltip placement="top">
+                  <template #content>
+                    持有主队队徽卡 +3%/张（上限9%）· 质押同队球员卡 +5%/张（上限15%）· 传奇卡额外 +2%
+                    <br />前往收藏册持有/质押更多卡牌提升助威贡献
+                  </template>
+                  <span class="boost-hint">?</span>
+                </el-tooltip>
+              </span>
+              <span class="stat-value boost">+{{ overview.card_boost_pct }}%</span>
             </div>
           </div>
         </section>
@@ -186,6 +203,7 @@
           <p class="block-desc">
             今日剩余 {{ overview.spot_cheer.remaining }}/{{ overview.spot_cheer.daily_limit }} 次 ·
             {{ overview.spot_cheer.cost }} 币 +{{ overview.spot_cheer.battalion_per_cheer }} 贡献/次
+            <span v-if="overview.card_boost_pct > 0" class="card-boost-inline"> · 卡牌加成 +{{ overview.card_boost_pct }}%</span>
           </p>
           <div class="spot-dots" aria-hidden="true">
             <span
@@ -300,6 +318,7 @@ usePageMeta({ title: '球迷擂台 — 最后一舞', path: '/arena', noIndex: t
 
 import CheerProgressBar from '../components/CheerProgressBar.vue'
 import ArenaPlaybook from '../components/ArenaPlaybook.vue'
+import CardDuelPanel from '../components/asset/CardDuelPanel.vue'
 import {
   boostStar,
   getArenaOverview,
@@ -602,6 +621,29 @@ onMounted(load)
 
 .stat-value.gold {
   color: var(--wc-accent-gold);
+}
+
+.stat-value.boost {
+  color: #7dd3a8;
+}
+
+.boost-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+  border-radius: 50%;
+  font-size: 0.62rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--wc-text-muted);
+  cursor: help;
+}
+
+.card-boost-inline {
+  color: #7dd3a8;
+  font-weight: 600;
 }
 
 .tier-badge {

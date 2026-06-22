@@ -108,6 +108,23 @@ class ArenaService:
         self.db = db
         self.wallet = WalletRepository(db)
 
+    def apply_duel_win_reward(self, user: User, duel_id: int) -> int:
+        """卡牌对决胜利奖励军团点数（每场对决幂等）。"""
+        from app.core.config import get_settings
+
+        delta = get_settings().card_duel_win_battalion
+        if delta <= 0:
+            return 0
+        if not self.record_activity(
+            user,
+            "card_duel_win",
+            battalion_delta=delta,
+            ref_type="card_duel",
+            ref_id=duel_id,
+        ):
+            return 0
+        return delta
+
     def record_activity(
         self,
         user: User,
@@ -197,6 +214,15 @@ class ArenaService:
         cheer_pts, battalion = cheer_rewards_for_affiliation(affiliation)
         underdog = self._underdog_battalion_bonus(match_id, team_id)
         battalion += underdog
+        card_boost_pct = 0.0
+        try:
+            from app.services.card_battalion_service import CardBattalionService
+
+            card_boost_pct = CardBattalionService(self.db).compute_battalion_card_boost(user, team_id)
+            if card_boost_pct > 0:
+                battalion = int(round(battalion * (1 + card_boost_pct)))
+        except Exception:
+            pass
         star_player_id = None
         star_heat = 0
         if affiliation in ("primary", "secondary"):
@@ -222,6 +248,7 @@ class ArenaService:
             "cheer_points": cheer_pts,
             "affiliation": affiliation,
             "underdog_bonus": underdog if recorded else 0,
+            "card_boost_pct": round(card_boost_pct * 100, 1) if recorded else 0,
         }
 
     def try_predict_cheer_combo(self, user: User, match_id: int) -> dict:
@@ -355,6 +382,16 @@ class ArenaService:
             for m in today_rows
             if m.get("predict_combo_pending") or m.get("predict_combo_after_cheer")
         )
+        card_boost_pct = 0.0
+        if user.favorite_team_id:
+            try:
+                from app.services.card_battalion_service import CardBattalionService
+
+                card_boost_pct = CardBattalionService(self.db).compute_battalion_card_boost(
+                    user, user.favorite_team_id
+                )
+            except Exception:
+                pass
         out = {
             "standing": standing,
             "next_match_arena": next_arena,
@@ -362,6 +399,7 @@ class ArenaService:
             "matchday_goal": goal,
             "matchday_goal_secondary": goal_secondary,
             "spot_cheer": spot,
+            "card_boost_pct": round(card_boost_pct * 100, 1),
             "quick_stats": {
                 "today_matches": len(today_rows),
                 "today_cheerable": cheerable,

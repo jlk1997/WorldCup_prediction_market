@@ -19,6 +19,8 @@
       </div>
     </header>
 
+    <AssetHubBar compact :show-balance="!!authState.accessToken" />
+
     <div v-if="album" class="stats-bar glass-panel">
       <div class="stat">
         <strong>{{ album.owned_count }}/{{ album.total }}</strong>
@@ -202,6 +204,44 @@
             <strong>位置</strong> {{ selectedCard.attributes.position }}
           </p>
           <p v-if="(selectedCard.star ?? 0) > 0"><strong>星级</strong> ★{{ selectedCard.star }}</p>
+          <div v-if="selectedCard.owned && selectedCard.asset" class="asset-panel glass-inner">
+            <div class="asset-row">
+              <span>序列号</span>
+              <strong v-if="selectedCard.asset.serial_no">
+                #{{ selectedCard.asset.serial_no }}<template v-if="selectedCard.asset.mint_total">/{{ selectedCard.asset.mint_total }}</template>
+              </strong>
+              <strong v-else>—</strong>
+            </div>
+            <div class="asset-row">
+              <span>估值</span>
+              <strong class="gold">{{ selectedCard.asset.estimated_value }} 可用积分</strong>
+            </div>
+            <div class="asset-row">
+              <span>官方回购价</span>
+              <strong>{{ selectedCard.asset.buyback_quote }} 可用积分</strong>
+            </div>
+            <div v-if="selectedCard.asset.cooling_down" class="asset-cooling">
+              新获卡牌冷却中，冷却期后可流通
+            </div>
+            <div v-else-if="isStacked(selectedCard)" class="asset-cooling stack-hint">
+              <p>叠卡 ×{{ stackCount(selectedCard) }}，暂不可整堆流通</p>
+              <el-button
+                v-if="maxSplitAmount(selectedCard) > 0"
+                size="small"
+                type="primary"
+                plain
+                :loading="assetActing"
+                @click="openSplitDialog"
+              >
+                拆分 {{ maxSplitAmount(selectedCard) }} 张可流通
+              </el-button>
+              <span v-else class="stack-tip">或合成升星消耗叠卡</span>
+            </div>
+            <div v-else-if="selectedCard.asset.lock_state !== 'none'" class="asset-cooling">
+              当前{{ lockStateLabel(selectedCard.asset.lock_state) }}
+            </div>
+            <p class="asset-note">资产以可用积分计价，为站内虚拟权益，无现金价值、不可提现。</p>
+          </div>
           <div v-if="selectedCard.highlights?.length" class="highlights">
             <strong>高光印记</strong>
             <ul>
@@ -225,7 +265,7 @@
             >
               重新排队铸造
             </el-button>
-            <p class="chain-note">由 AVATA 平台托管，不可转赠交易</p>
+            <p class="chain-note">由 AVATA 平台托管，经合规校验后可转赠/交易行流通</p>
           </div>
         </div>
         <div v-if="selectedCard.owned && (selectedCard.star ?? 0) < 3" class="detail-actions">
@@ -250,9 +290,84 @@
             球迷币补碎片升星
           </el-button>
         </div>
+        <div
+          v-if="selectedCard.owned && selectedCard.asset && canCirculate(selectedCard)"
+          class="asset-actions"
+        >
+          <el-button size="small" type="primary" plain @click="openListDialog">挂牌出售</el-button>
+          <el-button size="small" plain @click="openGiftDialog">转赠</el-button>
+          <el-button size="small" plain @click="onStake">质押</el-button>
+          <el-button size="small" plain @click="onBuyback">官方回购</el-button>
+        </div>
         <el-button plain @click="shareSelectedCard">分享卡牌</el-button>
       </div>
     </el-drawer>
+
+    <el-dialog v-model="listDialog" title="挂牌出售" width="min(400px, 94vw)" align-center append-to-body class="wc-dialog">
+      <div v-if="listHint" class="list-hint glass-inner">
+        <div class="lh-row">
+          <span>建议价</span>
+          <strong class="gold">{{ listHint.suggested_price }} 积分</strong>
+          <el-button size="small" text type="primary" @click="applySuggestedPrice">采用</el-button>
+        </div>
+        <div class="lh-meta">
+          <span v-if="listHint.floor_price">地板 {{ listHint.floor_price }}</span>
+          <span v-if="listHint.last_trade_price">最近 {{ listHint.last_trade_price }}</span>
+          <span>估值 {{ listHint.estimated_value }}</span>
+          <span>回购 {{ listHint.buyback_floor }}</span>
+        </div>
+        <p class="lh-net">成交后约到手 {{ listHint.net_after_fee }} 积分（手续费 {{ listHint.fee_pct }}%）</p>
+      </div>
+      <el-form label-position="top">
+        <el-form-item label="挂牌类型">
+          <el-radio-group v-model="listForm.type">
+            <el-radio-button label="fixed">一口价</el-radio-button>
+            <el-radio-button label="auction">竞拍</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="listForm.type === 'auction' ? '起拍价（可用积分）' : '价格（可用积分）'">
+          <el-input-number
+            v-model="listForm.price"
+            :min="listHint?.price_range.min ?? 10"
+            :max="listHint?.price_range.max ?? 1000000"
+            :step="10"
+          />
+        </el-form-item>
+      </el-form>
+      <p class="dialog-note">{{ listHint?.disclaimer || '资产仅站内流通，无现金价值。' }}</p>
+      <template #footer>
+        <el-button @click="listDialog = false">取消</el-button>
+        <el-button type="primary" :loading="assetActing" @click="doList">确认挂牌</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="splitDialog" title="拆分叠卡" width="min(380px, 94vw)" align-center append-to-body class="wc-dialog">
+      <p class="dialog-note">
+        从叠卡堆中拆出独立卡牌，每张获得新序列号。拆分后新卡进入 7 天冷却，之后可挂牌/转赠/质押。
+      </p>
+      <el-form label-position="top">
+        <el-form-item :label="`拆分数量（最多 ${splitMax} 张，堆中至少保留 1 张）`">
+          <el-input-number v-model="splitAmount" :min="1" :max="splitMax" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="splitDialog = false">取消</el-button>
+        <el-button type="primary" :loading="assetActing" @click="doSplit">确认拆分</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="giftDialog" title="转赠球星卡" width="min(380px, 94vw)" align-center append-to-body class="wc-dialog">
+      <el-form label-position="top">
+        <el-form-item label="对方邀请码">
+          <el-input v-model="giftForm.code" placeholder="输入好友的邀请码" maxlength="12" />
+        </el-form-item>
+      </el-form>
+      <p class="dialog-note">转赠需双方完成实名认证；转赠后对方需冷却期后方可再次流通。</p>
+      <template #footer>
+        <el-button @click="giftDialog = false">取消</el-button>
+        <el-button type="primary" :loading="assetActing" @click="doGift">确认转赠</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -268,6 +383,10 @@ import CollectionPassStickyBar from '@/components/collectible/CollectionPassStic
 import CollectionPassTrack from '@/components/collectible/CollectionPassTrack.vue'
 import CollectionQuestList from '@/components/collectible/CollectionQuestList.vue'
 import CollectibleEventBanner from '@/components/collectible/CollectibleEventBanner.vue'
+import { createListing, giftCard, buybackCard, stakeCard, splitCard, getListingHint, type ListingHint } from '@/api/asset'
+import AssetHubBar from '@/components/asset/AssetHubBar.vue'
+import { extractApiError } from '@/utils/apiError'
+import { useAssetRealname } from '@/composables/useAssetRealname'
 import {
   buyPassXpBoost,
   claimAllPassRewards,
@@ -306,7 +425,7 @@ import { usePageMeta } from '@/composables/usePageMeta'
 
 usePageMeta({
   title: '球星收藏册 — 最后一舞',
-  description: '猜中掉落球星卡，收集套组赢奖励。数字藏品无金钱价值，不可交易。',
+  description: '猜中掉落球星卡，收集套组赢奖励。可用积分二级流通，无现金价值、不可提现。',
   path: '/collection',
   noIndex: true,
 })
@@ -351,6 +470,204 @@ const synthLoading = ref<string | null>(null)
 const upgradeLoading = ref(false)
 const retryLoading = ref(false)
 const passLoading = ref(false)
+
+// ===== 资产流通（挂牌/转赠/质押/回购/拆分）=====
+const { ensureVerified } = useAssetRealname()
+const listDialog = ref(false)
+const giftDialog = ref(false)
+const splitDialog = ref(false)
+const assetActing = ref(false)
+const listForm = ref<{ type: string; price: number }>({ type: 'fixed', price: 100 })
+const giftForm = ref<{ code: string }>({ code: '' })
+const splitAmount = ref(1)
+const splitMax = ref(1)
+const listHint = ref<ListingHint | null>(null)
+
+const LOCK_LABELS: Record<string, string> = {
+  listed: '已挂牌',
+  staked: '已质押',
+  duel: '对决中',
+}
+function lockStateLabel(state: string) {
+  return LOCK_LABELS[state] || '锁定中'
+}
+
+function stackCount(card: CollectibleCardBrief): number {
+  return card.asset?.stack_count ?? card.count ?? 1
+}
+
+function isStacked(card: CollectibleCardBrief): boolean {
+  return stackCount(card) > 1
+}
+
+function maxSplitAmount(card: CollectibleCardBrief): number {
+  return Math.max(0, stackCount(card) - 1)
+}
+
+function canCirculate(card: CollectibleCardBrief): boolean {
+  const a = card.asset
+  if (!a) return false
+  return a.tradable && !isStacked(card) && a.lock_state === 'none' && !a.cooling_down
+}
+
+async function refreshSelectedCard() {
+  const code = selectedCard.value?.code
+  const id = selectedCard.value?.user_card_id
+  if (!code) return
+  try {
+    selectedCard.value = await getCollectibleCard(code, id)
+  } catch {
+    /* keep current */
+  }
+}
+
+function openSplitDialog() {
+  if (!selectedCard.value) return
+  splitMax.value = maxSplitAmount(selectedCard.value)
+  splitAmount.value = 1
+  splitDialog.value = true
+}
+
+async function doSplit() {
+  const id = selectedCard.value?.user_card_id
+  if (!id) return
+  assetActing.value = true
+  try {
+    const res = await splitCard(id, splitAmount.value)
+    ElMessage.success(res.notice)
+    splitDialog.value = false
+    await refreshAfterMutation()
+    await refreshSelectedCard()
+  } catch (e: unknown) {
+    ElMessage.error(assetErr(e) || '拆分失败')
+  } finally {
+    assetActing.value = false
+  }
+}
+
+async function openListDialog() {
+  if (!(await ensureVerified('挂牌出售'))) return
+  listHint.value = null
+  if (selectedCard.value?.asset) {
+    listForm.value.price = Math.max(10, selectedCard.value.asset.estimated_value)
+  }
+  listDialog.value = true
+  const id = selectedCard.value?.user_card_id
+  if (id) {
+    try {
+      listHint.value = await getListingHint(id)
+      listForm.value.price = listHint.value.suggested_price
+    } catch {
+      /* fallback to estimated */
+    }
+  }
+}
+
+function applySuggestedPrice() {
+  if (listHint.value) listForm.value.price = listHint.value.suggested_price
+}
+
+async function openGiftDialog() {
+  if (!(await ensureVerified('转赠'))) return
+  giftForm.value.code = ''
+  giftDialog.value = true
+}
+
+async function doList() {
+  const id = selectedCard.value?.user_card_id
+  if (!id) return
+  assetActing.value = true
+  try {
+    await createListing({
+      user_card_id: id,
+      list_type: listForm.value.type,
+      price_points: listForm.value.price,
+    })
+    ElMessage.success('挂牌成功，已在交易行展示')
+    listDialog.value = false
+    await refreshAfterMutation()
+    await refreshSelectedCard()
+  } catch (e: unknown) {
+    ElMessage.error(assetErr(e) || '挂牌失败')
+  } finally {
+    assetActing.value = false
+  }
+}
+
+async function doGift() {
+  const id = selectedCard.value?.user_card_id
+  if (!id) return
+  if (!giftForm.value.code.trim()) {
+    ElMessage.warning('请输入对方邀请码')
+    return
+  }
+  assetActing.value = true
+  try {
+    const res = await giftCard(id, giftForm.value.code.trim())
+    ElMessage.success(res.notice || '转赠成功')
+    giftDialog.value = false
+    detailOpen.value = false
+    await refreshAfterMutation()
+  } catch (e: unknown) {
+    ElMessage.error(assetErr(e) || '转赠失败')
+  } finally {
+    assetActing.value = false
+  }
+}
+
+async function onStake() {
+  const id = selectedCard.value?.user_card_id
+  if (!id) return
+  if (!(await ensureVerified('质押'))) return
+  try {
+    await confirmCollectibleAction(
+      '质押该卡可产被动可用积分并为该球队竞猜加成，质押期间不可流通。确认质押？',
+      '质押球星卡',
+      '确认质押',
+      'info',
+    )
+  } catch {
+    return
+  }
+  try {
+    const res = await stakeCard(id)
+    ElMessage.success(`质押成功 · 每日 ${res.daily_yield} 可用积分`)
+    await refreshAfterMutation()
+    await refreshSelectedCard()
+  } catch (e: unknown) {
+    ElMessage.error(assetErr(e) || '质押失败')
+  }
+}
+
+async function onBuyback() {
+  const id = selectedCard.value?.user_card_id
+  const quote = selectedCard.value?.asset?.buyback_quote ?? 0
+  if (!id) return
+  if (!(await ensureVerified('官方回购'))) return
+  try {
+    await confirmCollectibleAction(
+      `官方将以 ${quote} 可用积分回购该卡（卡牌被平台回收，仅返还可用积分，无现金价值）。确认回购？`,
+      '官方回购',
+      '确认回购',
+      'warning',
+    )
+  } catch {
+    return
+  }
+  try {
+    const res = await buybackCard(id)
+    ElMessage.success(`回购完成，获得 ${res.points_gained} 可用积分`)
+    detailOpen.value = false
+    await refreshAfterMutation()
+    await fetchMe()
+  } catch (e: unknown) {
+    ElMessage.error(assetErr(e) || '回购失败')
+  }
+}
+
+function assetErr(e: unknown): string {
+  return extractApiError(e)
+}
 const passSummary = ref<CollectionPassSummary | null>(null)
 const passClaimableCount = computed(() => passSummary.value?.claimable_count ?? 0)
 
@@ -663,7 +980,7 @@ async function onEventCheer(teamId: number) {
 
 async function openCardDetail(card: CollectibleCardBrief) {
   try {
-    selectedCard.value = await getCollectibleCard(card.code)
+    selectedCard.value = await getCollectibleCard(card.code, card.user_card_id)
     detailOpen.value = true
   } catch {
     selectedCard.value = card
@@ -1096,5 +1413,104 @@ onMounted(async () => {
 .detail-actions {
   display: flex;
   gap: 8px;
+}
+.asset-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.asset-nav-item {
+  text-align: center;
+  padding: 10px 4px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--wc-accent-gold);
+  background: linear-gradient(135deg, rgba(60, 45, 25, 0.35), rgba(25, 20, 35, 0.5));
+  border: 1px solid rgba(212, 165, 116, 0.18);
+  transition: transform 0.12s;
+}
+.asset-nav-item:active {
+  transform: scale(0.96);
+}
+.asset-panel {
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(60, 45, 25, 0.35), rgba(25, 20, 35, 0.5));
+}
+.asset-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  padding: 3px 0;
+}
+.asset-row span {
+  color: var(--wc-text-muted);
+}
+.asset-row .gold {
+  color: var(--wc-accent-gold);
+}
+.asset-cooling {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #f0b86c;
+}
+.stack-hint p {
+  margin: 0 0 8px;
+}
+.stack-hint .stack-tip {
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+}
+.asset-note {
+  margin: 8px 0 0;
+  font-size: 0.64rem;
+  color: var(--wc-text-muted);
+  line-height: 1.4;
+}
+.asset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dialog-note {
+  font-size: 0.7rem;
+  color: var(--wc-text-muted);
+  line-height: 1.4;
+  margin: 4px 0 0;
+}
+.list-hint {
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.lh-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+.lh-row .gold {
+  color: var(--wc-accent-gold);
+  font-size: 1.05rem;
+  flex: 1;
+}
+.lh-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.66rem;
+  color: var(--wc-text-muted);
+}
+.lh-net {
+  margin: 6px 0 0;
+  font-size: 0.66rem;
+  color: var(--wc-text-muted);
 }
 </style>

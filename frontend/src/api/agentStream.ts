@@ -48,6 +48,21 @@ export async function getAiBillingStatus(): Promise<AiBillingStatus> {
   return res.json()
 }
 
+export interface AgentAssetContext {
+  portfolio_value_points: number
+  redeem_points: number
+  fan_coins: number
+  cards_owned: number
+  match_team_cards: number
+  card_discount_pct: number
+  battalion_boost_pct: number
+  fantasy_week_score: number
+  fantasy_rank: number | null
+  pending_duel_invites: number
+  real_name_verified: boolean
+  disclaimer: string
+}
+
 export interface BillingPreview {
   cache_hit: boolean
   data: {
@@ -57,6 +72,8 @@ export interface BillingPreview {
     daily_free_limit: number
     mode: string
     force_refresh: boolean
+    card_discount_pct?: number
+    asset_context?: AgentAssetContext
   }
 }
 
@@ -73,6 +90,17 @@ export async function getBillingPreview(body: {
   })
   if (!res.ok) throw new Error('无法预估本次扣费')
   return res.json()
+}
+
+export async function getAgentAssetContext(team1?: string, team2?: string): Promise<AgentAssetContext> {
+  const params = new URLSearchParams()
+  if (team1) params.set('team1_name', team1)
+  if (team2) params.set('team2_name', team2)
+  const q = params.toString()
+  const res = await authFetch(`${API_BASE_URL}/api/agent/asset-context${q ? `?${q}` : ''}`, {})
+  if (!res.ok) throw new Error('无法加载资产上下文')
+  const json = await res.json()
+  return json.data
 }
 
 const STREAM_TIMEOUT_MS = 360_000

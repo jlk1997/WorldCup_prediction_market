@@ -244,7 +244,7 @@ async function drawCollectibleLayout(
     : '扫码一起收集'
   await drawQrCard(ctx, opts.qrUrl, opts.chainMinted ? 680 : 650, qrCaption)
 
-  drawFooter(ctx, opts.footer ?? '虚拟收藏 · 不可交易 · 仅供炫耀')
+  drawFooter(ctx, opts.footer ?? '虚拟收藏 · 可用积分流通 · 仅供炫耀')
 }
 
 async function drawCardFrame(

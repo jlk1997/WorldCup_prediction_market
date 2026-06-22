@@ -298,6 +298,56 @@ class CollectibleChainService:
             raise BadRequestError(brief.get("error") or "铸造失败")
         return brief or {"status": row.chain_status}
 
+    def transfer_card_onchain(
+        self,
+        from_user: User,
+        to_user: User,
+        row: UserCollectibleCard,
+    ) -> dict[str, Any]:
+        """托管账户间转移已铸造 NFT。返回 {status, tx_hash, operation_id}。
+
+        仅当链上功能开启且该卡已 minted 才真正调链；否则返回 skipped（DB 所有权迁移由上层处理）。
+        """
+        if not self.active:
+            return {"status": "skipped", "reason": "chain_inactive"}
+        if row.chain_status != CHAIN_STATUS_MINTED or not row.chain_nft_id or not row.chain_class_id:
+            return {"status": "skipped", "reason": "not_minted"}
+
+        from_acct = self.db.query(UserChainAccount).filter(UserChainAccount.user_id == from_user.id).first()
+        to_acct = self.ensure_user_chain_account(to_user)
+        if not from_acct or not from_acct.native_address or not to_acct or not to_acct.native_address:
+            return {"status": "skipped", "reason": "chain_account_unavailable"}
+
+        op = self.client.new_operation_id(f"xfer{row.id}")
+        try:
+            self.client.transfer_nft(
+                row.chain_class_id,
+                row.chain_nft_id,
+                owner=from_acct.native_address,
+                recipient=to_acct.native_address,
+                operation_id=op,
+            )
+        except AvataError as exc:
+            logger.warning("AVATA transfer failed row=%s: %s", row.id, exc)
+            return {"status": "failed", "operation_id": op, "error": str(exc)[:200]}
+
+        # 轮询结果
+        tx_hash = None
+        for _ in range(8):
+            try:
+                resp = self.client.query_tx(op)
+            except AvataError:
+                break
+            data = resp.get("data") or {}
+            status = data.get("status")
+            if status == 1:
+                tx_hash = data.get("tx_hash")
+                break
+            if status == 2:
+                return {"status": "failed", "operation_id": op, "error": data.get("message")}
+            time.sleep(1.0)
+        return {"status": "minted", "operation_id": op, "tx_hash": tx_hash}
+
     def _notify_minted(self, row: UserCollectibleCard) -> None:
         try:
             from app.services.notification_service import NotificationService
@@ -322,7 +372,7 @@ class CollectibleChainService:
             "name": card.name,
             "description": (
                 f"最后一舞 · 世界杯2026 球星数字藏品。"
-                f"玩法获得，无金钱价值，不可交易/转赠/提现。"
+                f"玩法获得或合规流通，以可用积分计价，无金钱价值，不可提现。"
                 f"发行链：{self.settings.avata_chain_name}（AVATA 托管）。"
             ),
             "image": image,
@@ -333,9 +383,12 @@ class CollectibleChainService:
                 {"trait_type": "星级", "value": row.star},
                 {"trait_type": "来源", "value": row.source},
                 {"trait_type": "持有人", "value": user.nickname},
-                {"trait_type": "合规声明", "value": "虚拟收藏·不可交易"},
+                {"trait_type": "序列号", "value": f"#{row.serial_no}" if row.serial_no else "—"},
+                {"trait_type": "合规声明", "value": "虚拟收藏·积分计价流通"},
             ],
-            "compliance_notice": "数字藏品为平台内虚拟收藏，无金钱价值，不可交易、不可转赠、不可提现。",
+            "compliance_notice": (
+                "数字藏品为平台内虚拟收藏，二级流通以可用积分计价，无金钱价值，不可提现。"
+            ),
         }
 
     def chain_brief(self, row: UserCollectibleCard | None) -> dict[str, Any] | None:
@@ -351,3 +404,9 @@ class CollectibleChainService:
             "minted_at": row.chain_minted_at.isoformat() if row.chain_minted_at else None,
             "error": row.chain_error,
         }
+
+    def mark_recalled(self, row: UserCollectibleCard) -> None:
+        """回购后标记链上凭证已平台回收（不发链上 burn，仅 DB 标记）。"""
+        row.chain_status = "recalled"
+        row.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
+        self.db.flush()

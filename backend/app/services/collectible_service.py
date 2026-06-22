@@ -36,7 +36,8 @@ RARITY_ORDER = ("common", "rare", "epic", "legend")
 MAX_STAR = 3
 
 COMPLIANCE_NOTICE = (
-    "数字藏品为平台内虚拟收藏，无金钱价值，不可交易、不可转赠、不可提现。"
+    "球星卡为平台内虚拟数字藏品，以可用积分（站内虚拟积分，无现金价值、不可提现）进行收藏与流通。"
+    "行情仅供收藏体验参考，不构成任何投资建议。"
 )
 
 # Catalog metadata cache (invalidated on sync_collectible_catalog)
@@ -415,7 +416,12 @@ class CollectibleService:
         if rarity:
             base = base.filter(CollectibleCard.rarity == rarity)
         if series:
-            base = base.filter(CollectibleCard.series == series)
+            if series == "collab":
+                from app.data.collab_catalog import COLLAB_SERIES_CLUB, COLLAB_SERIES_KOL
+
+                base = base.filter(CollectibleCard.series.in_([COLLAB_SERIES_CLUB, COLLAB_SERIES_KOL]))
+            else:
+                base = base.filter(CollectibleCard.series == series)
 
         catalog_total = base.order_by(None).count()
         owned_q = (
@@ -429,7 +435,12 @@ class CollectibleService:
         if rarity:
             owned_q = owned_q.filter(CollectibleCard.rarity == rarity)
         if series:
-            owned_q = owned_q.filter(CollectibleCard.series == series)
+            if series == "collab":
+                from app.data.collab_catalog import COLLAB_SERIES_CLUB, COLLAB_SERIES_KOL
+
+                owned_q = owned_q.filter(CollectibleCard.series.in_([COLLAB_SERIES_CLUB, COLLAB_SERIES_KOL]))
+            else:
+                owned_q = owned_q.filter(CollectibleCard.series == series)
         owned_total = owned_q.count()
 
         cards_out: list[dict[str, Any]] = []
@@ -468,17 +479,24 @@ class CollectibleService:
                     )
                     .all()
                 )
-                owned_map = {r.card_id: r for r in owned_rows}
+                owned_map: dict[int, list[UserCollectibleCard]] = {}
+                for r in owned_rows:
+                    owned_map.setdefault(r.card_id, []).append(r)
             else:
                 owned_map = {}
             for card in cards_page:
-                row = owned_map.get(card.id)
-                if row:
+                rows_for = owned_map.get(card.id)
+                if rows_for:
+                    primary = max(rows_for, key=lambda r: (r.star or 1, r.id))
+                    total_count = sum(r.count or 1 for r in rows_for)
                     item = (
-                        self._card_album_brief(card, row)
+                        self._card_album_brief(card, primary)
                         if brief
-                        else {**self._card_detail(card, row), "owned": True}
+                        else {**self._card_detail(card, primary), "owned": True}
                     )
+                    item["count"] = total_count
+                    if len(rows_for) > 1 or total_count > (primary.count or 1):
+                        item["stack_instances"] = len(rows_for)
                     cards_out.append({**item, "owned": True})
                 else:
                     cards_out.append(
@@ -645,18 +663,35 @@ class CollectibleService:
             "redeem_points": user.redeem_points,
         }
 
-    def get_card_detail(self, user: User, card_code: str) -> dict[str, Any]:
+    def get_card_detail(self, user: User, card_code: str, *, user_card_id: int | None = None) -> dict[str, Any]:
         card = self.db.query(CollectibleCard).filter(CollectibleCard.code == card_code).first()
         if not card:
             raise NotFoundError("卡牌不存在")
-        row = (
-            self.db.query(UserCollectibleCard)
-            .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.card_id == card.id)
-            .first()
+        q = self.db.query(UserCollectibleCard).filter(
+            UserCollectibleCard.user_id == user.id,
+            UserCollectibleCard.card_id == card.id,
         )
+        if user_card_id:
+            q = q.filter(UserCollectibleCard.id == user_card_id)
+        rows = q.all()
+        row = rows[0] if len(rows) == 1 else None
+        if len(rows) > 1:
+            if user_card_id:
+                row = next((r for r in rows if r.id == user_card_id), rows[0])
+            else:
+                # 优先展示可流通的单卡，否则展示叠卡堆
+                singles = [r for r in rows if (r.count or 1) == 1]
+                stacks = [r for r in rows if (r.count or 1) > 1]
+                row = singles[0] if singles else (stacks[0] if stacks else rows[0])
+        total_count = sum(r.count or 1 for r in rows) if rows else 0
         detail = self._card_detail(card, row) if row else self._card_catalog_brief(card)
         detail["owned"] = row is not None
         detail["compliance_notice"] = COMPLIANCE_NOTICE
+        if row and rows:
+            detail["count"] = row.count or 1
+            if len(rows) > 1 or total_count > (row.count or 1):
+                detail["total_owned"] = total_count
+                detail["split_instances"] = len(rows)
         if not row:
             detail["star"] = 0
             detail["count"] = 0
@@ -909,8 +944,13 @@ class CollectibleService:
             "matchday_limited": "比赛日限定",
             "pass_limited": "手册限定",
             "event_limited": "活动限定",
+            "club_collab": "联名·俱乐部",
+            "kol_special": "联名·IP",
         }
         options = [{"value": r[0], "label": labels.get(r[0], r[0])} for r in rows if r[0]]
+        has_collab = any(r[0] in ("club_collab", "kol_special") for r in rows)
+        if has_collab and not any(o["value"] == "collab" for o in options):
+            options.insert(0, {"value": "collab", "label": "联名/IP"})
         _catalog_cache["series_options"] = options
         return options
 
@@ -1079,6 +1119,20 @@ class CollectibleService:
         )
         self.db.add(row)
         self.db.flush()
+        # 资产化：分配序列号、设估值、冷却期
+        try:
+            from app.data.asset_catalog import estimate_card_value
+            from app.services.card_asset_service import CardAssetService
+
+            asset = CardAssetService(self.db)
+            serial, mint_total = asset.assign_serial(card.id)
+            row.serial_no = serial
+            if mint_total:
+                row.mint_total = mint_total
+            row.acquired_value = estimate_card_value(card.rarity, 1, serial_no=serial, mint_total=mint_total)
+            asset.apply_cooldown(row)
+        except Exception:
+            logger.exception("Collectible serial assign failed user=%s card=%s", user.id, card.id)
         try:
             from app.services.collectible_chain_service import CollectibleChainService
 
@@ -1247,6 +1301,8 @@ class CollectibleService:
             "obtained_at": row.obtained_at.isoformat() if row.obtained_at else None,
             "user_card_id": row.id,
         }
+        # 资产化字段
+        detail["asset"] = self._asset_brief(card, row)
         chain = self._chain_brief(row)
         if chain:
             detail["chain"] = chain
@@ -1263,6 +1319,44 @@ class CollectibleService:
                     and (owner.redeem_points or 0) >= cost["redeem_points"]
                 )
         return detail
+
+    def _asset_brief(self, card: CollectibleCard, row: UserCollectibleCard) -> dict[str, Any]:
+        try:
+            from app.core.config import get_settings
+            from app.data.asset_catalog import estimate_card_value
+            from app.services.card_asset_service import CardAssetService
+
+            if not row.serial_no:
+                try:
+                    CardAssetService(self.db).backfill_serial(row)
+                    self.db.flush()
+                except Exception:
+                    logger.exception("serial backfill failed row=%s", row.id)
+
+            settings = get_settings()
+            now = _utcnow()
+            cooling = bool(row.holding_until and row.holding_until > now)
+            buyback_floor = settings.asset_buyback_floor_map.get(card.rarity, 0)
+            buyback_mult = {1: 1.0, 2: 1.4, 3: 2.0}.get(int(row.star or 1), 1.0)
+            stack_count = row.count or 1
+            return {
+                "card_id": card.id,
+                "serial_no": row.serial_no,
+                "mint_total": row.mint_total,
+                "tradable": bool(row.tradable) and stack_count <= 1,
+                "stack_count": stack_count,
+                "lock_state": row.lock_state or "none",
+                "holding_until": row.holding_until.isoformat() if row.holding_until else None,
+                "cooling_down": cooling,
+                "estimated_value": estimate_card_value(
+                    card.rarity, row.star, serial_no=row.serial_no, mint_total=row.mint_total
+                ),
+                "buyback_quote": int(buyback_floor * buyback_mult),
+                "currency": "redeem_points",
+            }
+        except Exception:
+            logger.exception("asset brief failed card=%s", card.id)
+            return {}
 
     def _chain_enabled(self) -> bool:
         try:
@@ -1317,3 +1411,38 @@ class CollectibleService:
                 }
             )
         return out
+
+    def seed_collab_cards(self) -> dict[str, int]:
+        """幂等创建联名/IP 卡牌 catalog。"""
+        from app.data.collab_catalog import COLLAB_CARDS
+
+        created = updated = 0
+        for spec in COLLAB_CARDS:
+            row = (
+                self.db.query(CollectibleCard).filter(CollectibleCard.code == spec["code"]).first()
+            )
+            attrs = {"mint_total": spec.get("mint_total"), "collab": True}
+            if not row:
+                row = CollectibleCard(
+                    code=spec["code"],
+                    name=spec["name"],
+                    rarity=spec["rarity"],
+                    series=spec["series"],
+                    image_url=spec.get("image_url"),
+                    active=True,
+                    attributes_json=attrs,
+                    sort_order=900,
+                )
+                self.db.add(row)
+                created += 1
+            else:
+                row.name = spec["name"]
+                row.rarity = spec["rarity"]
+                row.series = spec["series"]
+                if spec.get("image_url"):
+                    row.image_url = spec["image_url"]
+                row.attributes_json = {**(row.attributes_json or {}), **attrs}
+                row.active = True
+                updated += 1
+        self.db.commit()
+        return {"created": created, "updated": updated}

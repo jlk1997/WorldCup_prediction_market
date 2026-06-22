@@ -112,6 +112,36 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/market',
+      name: 'Marketplace',
+      component: () => import('../views/Marketplace.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/mint',
+      name: 'MintEvent',
+      component: () => import('../views/MintEvent.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/admin/economy',
+      name: 'AdminEconomy',
+      component: () => import('../views/AdminEconomy.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/fantasy',
+      name: 'Fantasy',
+      component: () => import('../views/Fantasy.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/me/assets',
+      name: 'MyAssets',
+      component: () => import('../views/MyAssets.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/leaderboard',
       name: 'Leaderboard',
       component: () => import('../views/Leaderboard.vue'),

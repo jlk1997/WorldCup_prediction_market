@@ -248,6 +248,15 @@ def rate_limit_referral_register(inviter_id: int, ip: str | None, *, limit: int 
     )
 
 
+def rate_limit_card_duel(user_id: int) -> None:
+    check_rate_limit(
+        f"rl:card_duel:{user_id}",
+        limit=40,
+        window_sec=60,
+        message="对决操作过于频繁，请稍后再试",
+    )
+
+
 def rate_limit_global_ip(request: Request) -> None:
     from app.core.config import get_settings
 
