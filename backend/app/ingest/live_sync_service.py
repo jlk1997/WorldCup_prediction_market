@@ -18,10 +18,13 @@ from app.ingest.bsd_link_service import (
     link_matches_to_bsd,
     list_group_event_candidates,
     list_knockout_event_candidates,
+    list_team_pair_event_candidates,
     pick_best_bsd_event,
     apply_bsd_schedule_to_match,
     relink_mismatched_knockout_matches,
     _group_events_by_round,
+    _knockout_events_from_catalog,
+    _lookup_team_pair_events,
 )
 from app.ingest.quota import invalidate_live_cache
 from app.core.match_cache import invalidate_match_caches
@@ -181,6 +184,7 @@ def _reconcile_stale_matches(
 
     round_events = _group_events_by_round(league_events)
     group_events = [e for e in league_events if e.get("group_name")]
+    all_ko = _knockout_events_from_catalog(league_events)
     updated = 0
     for match in matches:
         if match.status != "scheduled" or not match.external_fixture_id:
@@ -189,10 +193,23 @@ def _reconcile_stale_matches(
         if not kick or kick > now:
             continue
         if match.round_type == "knockout" or match.bracket_round:
-            candidates = list_knockout_event_candidates(match, round_events)
+            candidates = list_knockout_event_candidates(
+                match, round_events, all_knockout_events=all_ko,
+            )
+            if not candidates:
+                candidates = list_team_pair_event_candidates(match, all_ko or league_events)
+            if not candidates:
+                candidates = _lookup_team_pair_events(match, client, round_events)
         else:
             candidates = list_group_event_candidates(match, group_events)
-        if not any(int(c.get("id") or 0) == match.external_fixture_id for c in candidates):
+        pair_hits = list_team_pair_event_candidates(match, candidates)
+        if pair_hits:
+            candidates = pair_hits
+        elif not candidates and match.external_fixture_id:
+            candidates = [{"id": match.external_fixture_id}]
+        elif match.external_fixture_id and not any(
+            int(c.get("id") or 0) == match.external_fixture_id for c in candidates
+        ):
             candidates.append({"id": match.external_fixture_id})
         candidates = _refresh_bsd_candidates(candidates, client)
         best = pick_best_bsd_event(match, candidates)
@@ -201,7 +218,19 @@ def _reconcile_stale_matches(
         best_id = int(best["id"])
         fixture = event_to_internal(best)
         if best_id != match.external_fixture_id:
-            if fixture.status in ("finished", "live") or fixture.home_score is not None:
+            if list_team_pair_event_candidates(match, [best]):
+                logger.info(
+                    "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
+                    match.id,
+                    match.team1_name,
+                    match.team2_name,
+                    match.external_fixture_id,
+                    best_id,
+                    fixture.status,
+                )
+                match.external_fixture_id = best_id
+                match.external_provider = "bsd"
+            elif fixture.status in ("finished", "live") or fixture.home_score is not None:
                 logger.info(
                     "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
                     match.id,

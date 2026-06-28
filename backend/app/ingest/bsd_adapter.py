@@ -94,11 +94,53 @@ def resolve_event_status(event: dict) -> str:
     return mapped
 
 
+def _bsd_team_raw_name(raw: str | dict | None) -> str | None:
+    if raw is None:
+        return None
+    if isinstance(raw, dict):
+        for key in ("name", "short_name", "full_name", "display_name"):
+            val = raw.get(key)
+            if val:
+                return str(val).strip()
+        return None
+    text = str(raw).strip()
+    return text or None
+
+
+def _bsd_team_id(raw: str | dict | None, event: dict, side: str) -> int | None:
+    id_key = f"{side}_team_id"
+    if event.get(id_key) is not None:
+        return int(event[id_key])
+    if isinstance(raw, dict) and raw.get("id") is not None:
+        return int(raw["id"])
+    return None
+
+
+def event_bsd_team_ids(event: dict) -> frozenset[int] | None:
+    home_raw = event.get("home_team")
+    away_raw = event.get("away_team")
+    home_id = _bsd_team_id(home_raw, event, "home")
+    away_id = _bsd_team_id(away_raw, event, "away")
+    if home_id is not None and away_id is not None:
+        return frozenset({home_id, away_id})
+    return None
+
+
 def event_to_internal(event: dict, *, venue_name: str | None = None) -> InternalFixture:
     home_raw = event.get("home_team")
     away_raw = event.get("away_team")
-    home = bsd_name_to_local(home_raw) if home_raw and not is_knockout_placeholder(home_raw) else None
-    away = bsd_name_to_local(away_raw) if away_raw and not is_knockout_placeholder(away_raw) else None
+    home_name_raw = _bsd_team_raw_name(home_raw)
+    away_name_raw = _bsd_team_raw_name(away_raw)
+    home = (
+        bsd_name_to_local(home_name_raw)
+        if home_name_raw and not is_knockout_placeholder(home_name_raw)
+        else None
+    )
+    away = (
+        bsd_name_to_local(away_name_raw)
+        if away_name_raw and not is_knockout_placeholder(away_name_raw)
+        else None
+    )
     event_date = event.get("event_date")
     local_date, local_time, venue = bsd_event_to_local_schedule(event)
     return InternalFixture(

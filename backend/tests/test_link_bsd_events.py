@@ -70,6 +70,34 @@ def test_match_knockout_by_bracket_order():
     assert hit["id"] == 100
 
 
+def test_match_knockout_by_team_id():
+    from app.ingest.bsd_link_service import list_team_pair_event_candidates
+
+    local = Match(
+        id=4,
+        bracket_round="r16",
+        bracket_order=3,
+        round_type="knockout",
+        team1_name="葡萄牙",
+        team2_name="克罗地亚",
+    )
+    events = [
+        {
+            "id": 8400,
+            "round_name": "Round of 16",
+            "home_team_id": 491,
+            "away_team_id": 494,
+            "home_team": {"id": 491, "name": "Portugal"},
+            "away_team": {"id": 494, "name": "Croatia"},
+            "event_date": "2026-07-03T03:00:00+00:00",
+            "status": "notstarted",
+        },
+    ]
+    hits = list_team_pair_event_candidates(local, events)
+    assert len(hits) == 1
+    assert hits[0]["id"] == 8400
+
+
 def test_match_knockout_by_team_pair():
     local = Match(
         id=3,

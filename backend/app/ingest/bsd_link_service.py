@@ -12,8 +12,8 @@ from sqlalchemy.orm import Session
 from app.data.bsd_team_names import normalize_group_label
 from app.db.models import Match
 from app.core.match_kickoff import parse_kickoff, parse_match_kickoff
-from app.ingest.bsd_adapter import LOCAL_BRACKET_TO_BSD_ROUND, event_to_internal, team_pair_key
-from app.ingest.bsd_client import BsdClient
+from app.ingest.bsd_adapter import LOCAL_BRACKET_TO_BSD_ROUND, event_bsd_team_ids, event_to_internal, team_pair_key
+from app.ingest.bsd_client import BsdClient, load_team_bsd_mapping
 from app.services.bracket_templates import is_placeholder_name
 
 logger = logging.getLogger(__name__)
@@ -108,9 +108,40 @@ def _match_group_stage(local: Match, bsd_events: list[dict]) -> dict | None:
     return pick_best_bsd_event(local, candidates)
 
 
+def local_match_bsd_team_ids(local: Match) -> frozenset[int] | None:
+    mapping = load_team_bsd_mapping()
+    t1 = mapping.get(local.team1_name or "")
+    t2 = mapping.get(local.team2_name or "")
+    if t1 is None or t2 is None:
+        return None
+    return frozenset({int(t1), int(t2)})
+
+
+def list_team_pair_event_candidates(local: Match, bsd_events: list[dict]) -> list[dict]:
+    """Find BSD events matching local team pair by ID or Chinese name."""
+    if is_placeholder_name(local.team1_name) or is_placeholder_name(local.team2_name):
+        return []
+    pair_names = team_pair_key(local.team1_name, local.team2_name)
+    pair_ids = local_match_bsd_team_ids(local)
+    if not pair_names and not pair_ids:
+        return []
+    out: list[dict] = []
+    for event in bsd_events:
+        if pair_ids and event_bsd_team_ids(event) == pair_ids:
+            out.append(event)
+            continue
+        internal = event_to_internal(event)
+        event_pair = team_pair_key(internal.home_name, internal.away_name)
+        if pair_names and event_pair and event_pair == pair_names:
+            out.append(event)
+    return out
+
+
 def list_knockout_event_candidates(
     local: Match,
     round_events: dict[str, list[dict]],
+    *,
+    all_knockout_events: list[dict] | None = None,
 ) -> list[dict]:
     """BSD knockout events that match local team pair within the same bracket round."""
     bracket_round = local.bracket_round
@@ -119,16 +150,12 @@ def list_knockout_event_candidates(
     bsd_round = LOCAL_BRACKET_TO_BSD_ROUND.get(bracket_round)
     if not bsd_round:
         return []
-    pair = team_pair_key(local.team1_name, local.team2_name)
-    if not pair or is_placeholder_name(local.team1_name) or is_placeholder_name(local.team2_name):
-        return []
-    out: list[dict] = []
-    for event in round_events.get(bsd_round, []):
-        internal = event_to_internal(event)
-        event_pair = team_pair_key(internal.home_name, internal.away_name)
-        if event_pair and event_pair == pair:
-            out.append(event)
-    return out
+    in_round = list_team_pair_event_candidates(local, round_events.get(bsd_round, []))
+    if in_round:
+        return in_round
+    if all_knockout_events:
+        return list_team_pair_event_candidates(local, all_knockout_events)
+    return []
 
 
 def _match_knockout(local: Match, round_events: dict[str, list[dict]]) -> dict | None:
@@ -152,6 +179,37 @@ def _match_knockout(local: Match, round_events: dict[str, list[dict]]) -> dict |
     return None
 
 
+def _knockout_events_from_catalog(bsd_events: list[dict]) -> list[dict]:
+    return [e for e in bsd_events if e.get("round_name") and not e.get("group_name")]
+
+
+def _lookup_team_pair_events(
+    local: Match,
+    client: BsdClient,
+    round_events: dict[str, list[dict]],
+) -> list[dict]:
+    """Fetch BSD events by team_id when catalog summaries omit team fields."""
+    pair_ids = local_match_bsd_team_ids(local)
+    if pair_ids:
+        found: list[dict] = []
+        seen: set[int] = set()
+        for tid in pair_ids:
+            for ev in client.list_league_events(
+                team_id=tid,
+                date_from="2026-06-01",
+                date_to="2026-07-31",
+            ):
+                eid = ev.get("id")
+                if not eid or int(eid) in seen:
+                    continue
+                if event_bsd_team_ids(ev) == pair_ids:
+                    seen.add(int(eid))
+                    found.append(ev)
+        if found:
+            return found
+    return _refresh_bsd_knockout_candidates(local, round_events, client)
+
+
 def relink_mismatched_knockout_matches(
     matches: list[Match],
     bsd_events: list[dict],
@@ -159,6 +217,7 @@ def relink_mismatched_knockout_matches(
 ) -> int:
     """Fix knockout rows linked by bracket index to the wrong BSD event."""
     round_events = _group_events_by_round(bsd_events)
+    all_ko = _knockout_events_from_catalog(bsd_events)
     by_id = {int(e["id"]): e for e in bsd_events if e.get("id")}
     relinked = 0
     for match in matches:
@@ -167,17 +226,21 @@ def relink_mismatched_knockout_matches(
         if is_placeholder_name(match.team1_name) or is_placeholder_name(match.team2_name):
             continue
         pair = team_pair_key(match.team1_name, match.team2_name)
-        if not pair:
+        pair_ids = local_match_bsd_team_ids(match)
+        if not pair and not pair_ids:
             continue
         current = by_id.get(int(match.external_fixture_id or 0))
-        if current:
-            internal = event_to_internal(current)
-            event_pair = team_pair_key(internal.home_name, internal.away_name)
-            if event_pair and event_pair == pair:
+        if current and list_team_pair_event_candidates(match, [current]):
+            continue
+        if match.external_fixture_id and client and not current:
+            current = client.get_event(int(match.external_fixture_id))
+            if current and list_team_pair_event_candidates(match, [current]):
                 continue
-        candidates = list_knockout_event_candidates(match, round_events)
+        candidates = list_knockout_event_candidates(
+            match, round_events, all_knockout_events=all_ko,
+        )
         if not candidates and client:
-            candidates = _refresh_bsd_knockout_candidates(match, round_events, client)
+            candidates = _lookup_team_pair_events(match, client, round_events)
         best = pick_best_bsd_event(match, candidates)
         if not best:
             continue
@@ -228,6 +291,7 @@ def link_matches_to_bsd(db: Session, client: BsdClient | None = None, *, apply: 
 
     bsd_events = client.get_all_worldcup_events()
     round_events = _group_events_by_round(bsd_events)
+    all_ko = _knockout_events_from_catalog(bsd_events)
     group_events = [e for e in bsd_events if e.get("group_name")]
 
     matches = list(db.scalars(select(Match)).all())
@@ -237,6 +301,9 @@ def link_matches_to_bsd(db: Session, client: BsdClient | None = None, *, apply: 
     for match in matches:
         if match.round_type == "knockout" or match.bracket_round:
             event = _match_knockout(match, round_events)
+            if not event:
+                pair_hits = list_team_pair_event_candidates(match, all_ko)
+                event = pick_best_bsd_event(match, pair_hits)
         else:
             event = _match_group_stage(match, group_events)
 

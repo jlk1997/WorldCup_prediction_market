@@ -40,6 +40,37 @@ def test_event_to_internal_group_match():
     assert fx.local_time == "03:00"
 
 
+def test_event_to_internal_dict_teams():
+    event = {
+        "id": 9001,
+        "home_team": {"id": 498, "name": "Colombia"},
+        "away_team": {"id": 491, "name": "Portugal"},
+        "home_team_id": 498,
+        "away_team_id": 491,
+        "status": "finished",
+        "home_score": 2,
+        "away_score": 1,
+        "event_date": "2026-06-28T19:00:00+00:00",
+        "round_name": "Round of 32",
+    }
+    fx = event_to_internal(event)
+    assert fx.home_name == "哥伦比亚"
+    assert fx.away_name == "葡萄牙"
+    assert fx.status == "finished"
+
+
+def test_event_bsd_team_ids():
+    from app.ingest.bsd_adapter import event_bsd_team_ids
+
+    ids = event_bsd_team_ids(
+        {
+            "home_team": {"id": 493, "name": "England"},
+            "away_team": {"id": 494, "name": "Croatia"},
+        }
+    )
+    assert ids == frozenset({493, 494})
+
+
 def test_bsd_event_to_local_schedule():
     from app.ingest.bsd_adapter import bsd_event_to_local_schedule
 
