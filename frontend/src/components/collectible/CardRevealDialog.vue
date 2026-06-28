@@ -127,8 +127,10 @@ const shardLine = computed(() => {
 const chainHint = computed(() => {
   const card = cards.value[0]
   if (!card || card.is_duplicate) return ''
-  if (card.chain?.status === 'minted') return '文昌链凭证已铸造'
-  if (props.drop?.chain_enabled) return '文昌链数字藏品铸造中，可在收藏册查看进度'
+  if (card.chain?.status === 'minted') return '文昌链凭证已铸造，可在收藏册分享链证书'
+  if (props.drop?.chain_enabled) {
+    return '新卡将排队铸造文昌链数字凭证，可在收藏册查看 NFT ID 与溯源'
+  }
   return ''
 })
 

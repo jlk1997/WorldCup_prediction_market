@@ -43,6 +43,10 @@
 
       <CollectibleHookBanner v-if="authState.user" :signin-streak="dailyStatus?.signin_streak ?? 0" />
 
+      <AiDiscountBar v-if="authState.user" />
+
+      <TodayHomePanel v-if="authState.user" class="predict-today-home" />
+
       <el-alert v-else-if="authState.user" title="加载每日任务…" type="info" show-icon :closable="false" />
 
       <GuestLoginBanner v-else />
@@ -244,6 +248,15 @@
             </template>
 
             <template v-else>
+
+              <PredictMatchAiStrip
+                v-if="m.team1 && m.team2"
+                :team1="m.team1"
+                :team2="m.team2"
+                :insight="matchInsight(m)"
+                :predicted="!!m.user_predicted"
+                @follow="(pick) => followAiPick(m.id, pick)"
+              />
 
               <div class="pick-row" :data-coach="isFirstOpenMatch(m) ? 'pick' : undefined">
 
@@ -469,6 +482,7 @@ import CollectionPassNudgeBar from '../components/collectible/CollectionPassNudg
 import CollectionPassMiniCard from '../components/collectible/CollectionPassMiniCard.vue'
 import MatchDayShareBar from '../components/MatchDayShareBar.vue'
 import { fetchDailyStatus, useDailyStatusRef } from '../stores/dailyStatusStore'
+import { fetchTodayHome } from '../stores/todayHomeStore'
 import { usePredictHighlightScroll } from '../composables/usePredictHighlightScroll'
 import { isMatchPredictable } from '../utils/matchKickoff'
 import PassDailyClaimBar from '../components/PassDailyClaimBar.vue'
@@ -486,6 +500,11 @@ import GuestLoginBanner from '../components/GuestLoginBanner.vue'
 import StreakRiskBanner from '../components/StreakRiskBanner.vue'
 import WinFeedBar from '../components/WinFeedBar.vue'
 import CollectibleHookBanner from '../components/collectible/CollectibleHookBanner.vue'
+import PredictMatchAiStrip from '../components/PredictMatchAiStrip.vue'
+import AiDiscountBar from '../components/AiDiscountBar.vue'
+import TodayHomePanel from '../components/TodayHomePanel.vue'
+import { useScheduleInsights } from '../composables/useScheduleInsights'
+import type { ScheduleItem } from '../types/api'
 import { openCollectibleReveal } from '../stores/collectibleRevealStore'
 import type { CollectibleDropResult } from '../api/collectible'
 
@@ -701,6 +720,41 @@ const activeMatches = computed(() =>
     return isMatchPredictable({ date: m.date, time: m.time })
   }),
 )
+
+const insightSchedule = computed(
+  () =>
+    activeMatches.value
+      .filter((m) => m.team1 && m.team2)
+      .map(
+        (m) =>
+          ({
+            id: m.id,
+            team1: m.team1,
+            team2: m.team2,
+            is_live: false,
+            status: 'scheduled',
+          }) as ScheduleItem,
+      ),
+)
+
+const { getInsight } = useScheduleInsights(insightSchedule)
+
+function matchInsight(m: GameMatch) {
+  if (!m.team1 || !m.team2) return null
+  return getInsight({
+    id: m.id,
+    team1: m.team1,
+    team2: m.team2,
+    is_live: false,
+    status: 'scheduled',
+  } as ScheduleItem)
+}
+
+function followAiPick(matchId: number, pick: string) {
+  picks[matchId] = pick
+  updatePreview(matchId)
+  ElMessage.success('已按 AI 倾向预选，确认后提交')
+}
 
 const comboOpportunityCount = computed(
   () =>
@@ -1061,6 +1115,7 @@ async function submit(matchId: number) {
     }
     delete submitErrors[matchId]
     await fetchDailyStatus(true)
+    void fetchTodayHome(true)
     const total = dailyStatus.value?.predict_count_total ?? 0
     if (total === 1) {
       window.dispatchEvent(new CustomEvent('second-predict-coach'))
@@ -1219,6 +1274,11 @@ watch(
 
   overflow: visible;
 
+}
+
+:deep(.predict-today-home) {
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 @media (min-width: 769px) {

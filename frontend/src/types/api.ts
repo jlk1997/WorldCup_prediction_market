@@ -131,6 +131,8 @@ export interface AgentInsight {
   predicted_score?: string
   confidence?: number | null
   win_probability?: { team1: number; draw: number; team2: number } | null
+  betting_pick?: string | null
+  pick_label?: string | null
   mode?: string | null
   created_at?: string | null
 }

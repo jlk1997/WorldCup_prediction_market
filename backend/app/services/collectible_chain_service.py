@@ -48,8 +48,9 @@ class CollectibleChainService:
 
     def process_pending(self, limit: int = 20) -> dict[str, int]:
         if not self.active:
-            return {"processed": 0, "minted": 0, "failed": 0}
+            return {"processed": 0, "minted": 0, "failed": 0, "expired": 0}
 
+        expired = self._expire_stale_pending()
         rows = (
             self.db.query(UserCollectibleCard, CollectibleCard, User)
             .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
@@ -77,9 +78,52 @@ class CollectibleChainService:
                 row.chain_status = CHAIN_STATUS_FAILED
                 row.chain_error = "internal_error"
                 failed += 1
-        if processed:
+        if processed or expired:
             self.db.commit()
-        return {"processed": processed, "minted": minted, "failed": failed}
+        return {"processed": processed, "minted": minted, "failed": failed, "expired": expired}
+
+    def _expire_stale_pending(self) -> int:
+        """长时间 pending/minting 标记 failed，允许用户 retry。"""
+        from datetime import timedelta
+
+        from sqlalchemy import func
+
+        cutoff = _utcnow() - timedelta(minutes=self.settings.chain_pending_timeout_minutes)
+        ts = func.coalesce(UserCollectibleCard.updated_at, UserCollectibleCard.obtained_at)
+        rows = (
+            self.db.query(UserCollectibleCard)
+            .filter(
+                UserCollectibleCard.chain_status.in_([CHAIN_STATUS_PENDING, CHAIN_STATUS_MINTING]),
+                ts < cutoff,
+            )
+            .all()
+        )
+        for row in rows:
+            row.chain_status = CHAIN_STATUS_FAILED
+            row.chain_error = "mint_timeout"
+        return len(rows)
+
+    def refresh_mint_status(self, user: User, user_card_id: int) -> dict[str, Any]:
+        """轮询 minting 状态或触发 pending 处理（用户主动刷新）。"""
+        if not self.active:
+            raise BadRequestError("链上功能未启用")
+        row = (
+            self.db.query(UserCollectibleCard)
+            .filter(UserCollectibleCard.id == user_card_id, UserCollectibleCard.user_id == user.id)
+            .with_for_update()
+            .first()
+        )
+        if not row:
+            raise NotFoundError("卡牌不存在")
+        card = self.db.get(CollectibleCard, row.card_id)
+        if not card:
+            raise NotFoundError("卡牌不存在")
+        if row.chain_status == CHAIN_STATUS_MINTING and row.chain_operation_id:
+            self._poll_mint(row)
+        elif row.chain_status == CHAIN_STATUS_PENDING:
+            self._start_mint(user, row, card)
+        self.db.commit()
+        return self.chain_brief(row) or {"status": row.chain_status}
 
     def ensure_user_chain_account(self, user: User) -> UserChainAccount | None:
         if not self.active:
@@ -113,7 +157,7 @@ class CollectibleChainService:
                 acct.hex_address = addresses[0].get("hex_address")
                 acct.status = "active"
             else:
-                acct.status = "minting"
+                acct.status = "pending"
         except AvataError as exc:
             logger.warning("AVATA create account failed user=%s: %s", user.id, exc)
             acct.status = "failed"
@@ -126,11 +170,39 @@ class CollectibleChainService:
         try:
             resp = self.client.query_tx(acct.operation_id)
             data = resp.get("data") or {}
-            if data.get("status") == 1:
-                # Account creation may not return address in tx query; re-create if missing
-                pass
+            status = data.get("status")
+            if status == 2:
+                acct.status = "failed"
+                return
+            if status != 1:
+                return
+            addr = self._extract_address_from_tx(data)
+            if addr:
+                acct.native_address = addr
+                acct.hex_address = data.get("hex_address") or acct.hex_address
+                acct.status = "active"
+                return
+            # 交易成功但未返回地址：清空 operation 以便下次 ensure 重新创建
+            acct.operation_id = None
+            acct.status = "pending"
         except AvataError:
             return
+
+    @staticmethod
+    def _extract_address_from_tx(data: dict[str, Any]) -> str | None:
+        if data.get("native_address"):
+            return str(data["native_address"])
+        accounts = data.get("accounts") or data.get("addresses")
+        if isinstance(accounts, list) and accounts:
+            first = accounts[0]
+            if isinstance(first, dict):
+                return first.get("native_address") or first.get("address")
+            if isinstance(first, str):
+                return first
+        account = data.get("account")
+        if isinstance(account, dict):
+            return account.get("native_address") or account.get("address")
+        return None
 
     def _resolve_class_id(self) -> str | None:
         if self.settings.avata_nft_class_id:
@@ -239,7 +311,27 @@ class CollectibleChainService:
         except AvataError as exc:
             row.chain_status = CHAIN_STATUS_FAILED
             row.chain_error = str(exc)[:500]
+            self._track_chain_event(row.user_id, "chain_mint_failed", row.id, row.chain_error)
             return False
+
+    def _track_chain_event(
+        self,
+        user_id: int,
+        event_name: str,
+        user_card_id: int,
+        error: str | None = None,
+    ) -> None:
+        try:
+            from app.services.product_analytics_service import ProductAnalyticsService
+
+            ProductAnalyticsService(self.db).track(
+                event_name,
+                user_id=user_id,
+                payload={"user_card_id": user_card_id, "error": (error or "")[:120]},
+                commit=False,
+            )
+        except Exception:
+            logger.exception("chain analytics track failed card=%s", user_card_id)
 
     def _poll_mint(self, row: UserCollectibleCard) -> bool:
         if not row.chain_operation_id:
@@ -261,10 +353,12 @@ class CollectibleChainService:
             row.chain_minted_at = _utcnow()
             row.chain_error = None
             self._notify_minted(row)
+            self._track_chain_event(row.user_id, "chain_mint_success", row.id)
             return True
         if status == 2:
             row.chain_status = CHAIN_STATUS_FAILED
             row.chain_error = (data.get("message") or "mint_failed")[:500]
+            self._track_chain_event(row.user_id, "chain_mint_failed", row.id, row.chain_error)
             return False
         row.chain_status = CHAIN_STATUS_MINTING
         return False
@@ -280,7 +374,9 @@ class CollectibleChainService:
         )
         if not row:
             raise NotFoundError("卡牌不存在")
-        if row.chain_status not in (CHAIN_STATUS_FAILED, CHAIN_STATUS_NONE):
+        if row.chain_status not in (CHAIN_STATUS_FAILED, CHAIN_STATUS_NONE, CHAIN_STATUS_PENDING):
+            if row.chain_status == CHAIN_STATUS_MINTING:
+                raise BadRequestError("铸造进行中，请稍后在收藏册刷新状态")
             raise BadRequestError("当前状态不可重试")
         card = self.db.get(CollectibleCard, row.card_id)
         if not card:

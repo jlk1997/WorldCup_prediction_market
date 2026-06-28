@@ -13,10 +13,11 @@
       <span>新赛事限量球星卡即将开售，敬请关注</span>
     </div>
     <div v-else class="mint-list">
-      <div v-for="ev in events" :key="ev.id" class="mint-card glass-inner" :class="[ev.rarity, { collab: isCollab(ev) }]">
+      <div v-for="ev in events" :key="ev.id" :id="'mint-event-' + ev.id" class="mint-card glass-inner" :class="[ev.rarity, { collab: isCollab(ev), matchday: isMatchday(ev), highlighted: highlightId === ev.id }]">
         <div class="mint-banner" :style="ev.image_url ? { backgroundImage: `url(${ev.image_url})` } : {}">
           <span class="phase" :class="ev.phase">{{ phaseLabel(ev) }}</span>
           <span v-if="isCollab(ev)" class="collab-tag">联名/IP</span>
+          <span v-else-if="isMatchday(ev)" class="matchday-tag">比赛日限定</span>
           <span v-else-if="ev.competition" class="comp">{{ ev.competition }}</span>
         </div>
         <div class="mint-body">
@@ -25,6 +26,13 @@
             <span class="rarity" :class="ev.rarity">{{ rarityLabel(ev.rarity) }}</span>
           </div>
           <p class="desc">{{ ev.description }}</p>
+          <div v-if="advisors[ev.id]" class="mint-advisor glass-inner">
+            <span class="adv-verdict">{{ advisors[ev.id]?.verdict }}</span>
+            <ul>
+              <li v-for="(b, bi) in advisors[ev.id]?.bullets" :key="bi">{{ b }}</li>
+            </ul>
+            <p class="adv-disclaimer">{{ advisors[ev.id]?.disclaimer }}</p>
+          </div>
 
           <div class="time-row">
             <span v-if="ev.phase === 'scheduled' && ev.reserve_starts_at" class="time-chip">
@@ -55,8 +63,7 @@
                 <b>{{ ev.price_coins }}</b><span>球迷币</span>
               </template>
               <template v-else>
-                <b class="rmb-muted">¥{{ (ev.price_fen / 100).toFixed(2) }}</b><span class="rmb-muted">人民币首发</span>
-                <span class="coming-soon">即将开放</span>
+                <b>¥{{ (ev.price_fen / 100).toFixed(2) }}</b><span>人民币首发</span>
               </template>
               <span class="mode-tag">{{ modeLabel(ev.sale_mode) }}</span>
             </div>
@@ -83,7 +90,17 @@
                 {{ purchaseLabel(ev) }}
               </el-button>
               <el-button
-                v-else-if="ev.phase === 'live' && ev.currency !== 'coins'"
+                v-if="ev.phase === 'live' && ev.currency === 'rmb'"
+                size="small"
+                type="primary"
+                :disabled="(!ev.can_buy && !ev.pending_payment) || (ev.remaining <= 0 && !ev.pending_payment)"
+                :loading="actingId === ev.id"
+                @click="doRmbPurchase(ev)"
+              >
+                {{ rmbPurchaseLabel(ev) }}
+              </el-button>
+              <el-button
+                v-else-if="ev.phase === 'live' && ev.currency !== 'coins' && ev.currency !== 'rmb'"
                 size="small"
                 disabled
               >
@@ -93,7 +110,7 @@
               <span v-if="ev.phase === 'ended'" class="ended">已结束</span>
             </div>
           </div>
-          <p v-if="ev.currency === 'rmb'" class="rmb-alt">可先参与球迷币场次，或预约等待人民币通道开放</p>
+          <p v-if="ev.currency === 'rmb'" class="rmb-alt">支付成功后自动分配序列号并排队链上铸造</p>
           <div v-if="ev.sale_mode === 'lottery' && ev.reserved && ev.reservation_status === 'reserved'" class="lottery-note pending">
             已报名，等待抽签结果…
           </div>
@@ -103,6 +120,30 @@
       </div>
     </div>
 
+    <!-- 球迷币打新成功：链铸造进度 -->
+    <el-dialog
+      v-model="chainDialogOpen"
+      title="打新成功 · 链上凭证"
+      width="min(380px, 92vw)"
+      align-center
+      append-to-body
+      class="wc-dialog"
+      @closed="stopChainPoll"
+    >
+      <p class="chain-dialog-lead">{{ chainDialogNotice }}</p>
+      <p class="chain-dialog-status">{{ chainStatusLabel }}</p>
+      <p v-if="mintChainDetail?.chain_nft_id" class="chain-dialog-row">
+        NFT ID：<span class="mono">{{ mintChainDetail.chain_nft_id }}</span>
+      </p>
+      <p v-if="mintChainDetail?.chain_tx_hash" class="chain-dialog-row">
+        Tx：<span class="mono">{{ shortTx(mintChainDetail.chain_tx_hash) }}</span>
+      </p>
+      <template #footer>
+        <el-button @click="chainDialogOpen = false">关闭</el-button>
+        <el-button type="primary" @click="goCollectionFromMint">查看收藏册</el-button>
+      </template>
+    </el-dialog>
+
     <p class="disclaimer">
       一级限量发行属合规数字藏品发售；二级流通仅支持站内可用积分计价，平台不支持人民币二级交易与提现。
     </p>
@@ -110,13 +151,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getMintEvents, reserveMint, purchaseMint, type MintEvent } from '@/api/asset'
-import { fetchMe } from '@/stores/authStore'
+import { getMintEvents, reserveMint, purchaseMint, createMintOrder, getMintAdvisor, type MintEvent, type MintAdvisor } from '@/api/asset'
+import { getUserCardChainStatus } from '@/api/collectible'
+import { authState, fetchMe } from '@/stores/authStore'
 import { extractApiError } from '@/utils/apiError'
 import { usePageMeta } from '@/composables/usePageMeta'
 import { useCountdownTick, formatTimeUntil } from '@/composables/useCountdown'
+import { isWeChatBrowser, PENDING_ORDER_KEY, resolvePayChannel, WECHAT_PAY_HINT } from '@/utils/payEnv'
 
 usePageMeta({
   title: '首发打新 — 最后一舞',
@@ -126,9 +170,27 @@ usePageMeta({
 })
 
 const tick = useCountdownTick()
+const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
 const events = ref<MintEvent[]>([])
+const highlightId = ref<number | null>(null)
+const advisors = ref<Record<number, MintAdvisor>>({})
 const actingId = ref<number | null>(null)
+const chainDialogOpen = ref(false)
+const chainDialogNotice = ref('')
+const chainStatus = ref('pending')
+const mintChainDetail = ref<{ chain_nft_id: string | null; chain_tx_hash: string | null } | null>(null)
+let chainPollTimer: ReturnType<typeof setInterval> | null = null
+
+const CHAIN_LABELS: Record<string, string> = {
+  none: '等待排队铸造',
+  pending: '链上铸造排队中',
+  minting: '链上铸造中…',
+  minted: '文昌链凭证已就绪',
+  failed: '链上铸造失败，可在收藏册重试',
+}
+const chainStatusLabel = computed(() => CHAIN_LABELS[chainStatus.value] || '链上铸造处理中')
 
 const RARITY: Record<string, string> = { common: '普通', rare: '稀有', epic: '史诗', legend: '传奇' }
 const MODE: Record<string, string> = { public: '公开发售', whitelist: '白名单', lottery: '抽签' }
@@ -153,21 +215,98 @@ function timeUntil(iso?: string | null, prefix = '还剩') {
   return formatTimeUntil(iso, prefix)
 }
 function purchaseLabel(ev: MintEvent) {
-  if (ev.currency !== 'coins') return '即将开放'
+  if (ev.currency !== 'coins') return '立即打新'
   if (ev.remaining <= 0) return '已售罄'
   if (ev.sale_mode === 'lottery' && ev.reservation_status !== 'won') return '待中签'
   if (ev.sale_mode === 'whitelist' && !ev.reserved) return '需预约'
   return '立即打新'
 }
 
+function rmbPurchaseLabel(ev: MintEvent) {
+  if (ev.pending_payment) return '继续支付'
+  if (ev.remaining <= 0) return '已售罄'
+  if (ev.sale_mode === 'lottery' && ev.reservation_status !== 'won') return '待中签'
+  if (ev.sale_mode === 'whitelist' && !ev.reserved) return '需预约'
+  return '支付宝打新'
+}
+
 function isCollab(ev: MintEvent) {
   return ev.competition === 'Collab2026' || ev.code.startsWith('mint_collab_')
+}
+
+function isMatchday(ev: MintEvent) {
+  return ev.competition === 'matchday_limited'
+}
+
+function scrollToHighlight() {
+  const raw = route.params.id ?? route.query.highlight
+  const id = parseInt(String(raw || ''), 10)
+  if (!id) return
+  highlightId.value = id
+  nextTick(() => {
+    document.getElementById(`mint-event-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  })
+}
+
+function stopChainPoll() {
+  if (chainPollTimer) {
+    clearInterval(chainPollTimer)
+    chainPollTimer = null
+  }
+}
+
+function shortTx(hash: string) {
+  if (hash.length <= 16) return hash
+  return `${hash.slice(0, 8)}…${hash.slice(-6)}`
+}
+
+async function pollMintChain(userCardId: number) {
+  try {
+    const st = await getUserCardChainStatus(userCardId)
+    chainStatus.value = st.chain_status || 'pending'
+    mintChainDetail.value = {
+      chain_nft_id: st.chain_nft_id,
+      chain_tx_hash: st.chain_tx_hash,
+    }
+    if (st.chain_status === 'minted' || st.chain_status === 'failed') {
+      stopChainPoll()
+    }
+  } catch {
+    /* ignore transient errors */
+  }
+}
+
+function startChainPoll(userCardId: number, notice: string) {
+  stopChainPoll()
+  chainDialogNotice.value = notice
+  chainStatus.value = 'pending'
+  mintChainDetail.value = null
+  chainDialogOpen.value = true
+  void pollMintChain(userCardId)
+  chainPollTimer = setInterval(() => void pollMintChain(userCardId), 4000)
+}
+
+function goCollectionFromMint() {
+  chainDialogOpen.value = false
+  router.push('/collection')
 }
 
 async function load() {
   loading.value = true
   try {
     events.value = await getMintEvents()
+    scrollToHighlight()
+    if (authState.user) {
+      const map: Record<number, MintAdvisor> = {}
+      for (const ev of events.value.filter((e) => e.phase === 'live')) {
+        try {
+          map[ev.id] = await getMintAdvisor(ev.id)
+        } catch {
+          /* skip */
+        }
+      }
+      advisors.value = map
+    }
   } finally {
     loading.value = false
   }
@@ -204,6 +343,9 @@ async function doPurchase(ev: MintEvent) {
     ElMessage.success(`${res.notice} 序列号 #${res.serial_no ?? '—'}`)
     await fetchMe()
     await load()
+    if (res.user_card_id) {
+      startChainPoll(res.user_card_id, `${res.card_name} · #${res.serial_no ?? '—'}`)
+    }
   } catch (e: unknown) {
     ElMessage.error(extractApiError(e, '打新失败'))
   } finally {
@@ -211,7 +353,35 @@ async function doPurchase(ev: MintEvent) {
   }
 }
 
+async function doRmbPurchase(ev: MintEvent) {
+  if (isWeChatBrowser()) {
+    ElMessage.warning(WECHAT_PAY_HINT)
+    return
+  }
+  try {
+    await ElMessageBox.confirm(
+      `确认以 ¥${(ev.price_fen / 100).toFixed(2)} 打新「${ev.name}」？`,
+      '人民币首发打新',
+      { customClass: 'wc-message-box', roundButton: true, confirmButtonText: '去支付', cancelButtonText: '再想想' },
+    )
+  } catch {
+    return
+  }
+  actingId.value = ev.id
+  try {
+    const { order, pay_url } = await createMintOrder(ev.id, true, resolvePayChannel())
+    sessionStorage.setItem(PENDING_ORDER_KEY, order.out_trade_no)
+    sessionStorage.setItem('wc_mint_return', '1')
+    window.location.href = pay_url
+  } catch (e: unknown) {
+    ElMessage.error(extractApiError(e, '下单失败'))
+  } finally {
+    actingId.value = null
+  }
+}
+
 onMounted(load)
+onUnmounted(stopChainPoll)
 </script>
 
 <style scoped>
@@ -338,6 +508,26 @@ onMounted(load)
   color: var(--wc-text-muted);
   line-height: 1.5;
 }
+.mint-advisor {
+  margin: 8px 0;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 0.75rem;
+}
+.adv-verdict {
+  color: #a371f7;
+  font-weight: 600;
+}
+.mint-advisor ul {
+  margin: 6px 0;
+  padding-left: 16px;
+  color: var(--wc-text-secondary);
+}
+.adv-disclaimer {
+  margin: 4px 0 0;
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+}
 .time-row {
   display: flex;
   flex-wrap: wrap;
@@ -423,6 +613,28 @@ onMounted(load)
 .lottery-note.pending { background: rgba(110, 181, 224, 0.12); color: #6eb5e0; }
 .lottery-note.won { background: rgba(46, 160, 100, 0.15); color: #5fc88f; }
 .lottery-note.lost { background: rgba(160, 70, 70, 0.12); color: #e07a7a; }
+.mint-card.matchday {
+  border-color: rgba(232, 120, 90, 0.35);
+}
+.mint-card.highlighted {
+  box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.55);
+  animation: mint-pulse 2s ease-in-out 2;
+}
+@keyframes mint-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.35); }
+  50% { box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.65); }
+}
+.matchday-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(232, 100, 70, 0.85);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -445,5 +657,24 @@ onMounted(load)
   padding: 14px;
   border-radius: 12px;
   background: rgba(20, 24, 42, 0.4);
+}
+.chain-dialog-lead {
+  margin: 0 0 8px;
+  font-size: 0.88rem;
+  color: var(--wc-text-secondary);
+}
+.chain-dialog-status {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  color: #7eb8ff;
+}
+.chain-dialog-row {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  color: var(--wc-text-muted);
+  word-break: break-all;
+}
+.chain-dialog-row .mono {
+  color: #c8e6ff;
 }
 </style>

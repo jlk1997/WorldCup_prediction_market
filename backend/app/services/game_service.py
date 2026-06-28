@@ -234,6 +234,9 @@ class GameService:
         self.db.commit()
         self.db.refresh(pred)
         cache_delete_prefix("game:pick_stats:")
+        from app.core.user_surface_cache import invalidate_user_surface
+
+        invalidate_user_surface(user.id)
         self._referral_first_action(user)
         pred._arena_combo_battalion = combo_result.get("battalion_added", 0)  # type: ignore[attr-defined]
         return pred
@@ -351,6 +354,9 @@ class GameService:
             )
         self.db.commit()
         cache_delete("stats:signin_today")
+        from app.core.user_surface_cache import invalidate_user_surface
+
+        invalidate_user_surface(user.id)
         self.db.refresh(user)
         try:
             from app.services.referral_service import ReferralService
@@ -710,6 +716,7 @@ class GameService:
         pred.settled_at = _utcnow()
         user_pick_label = self._pick_label(match, pred.pick)
         result_pick_label = self._pick_label(match, result)
+        ai_ctx = self._ai_pick_for_match(match)
 
         if won:
             pred.status = "won"
@@ -783,6 +790,14 @@ class GameService:
             "result_pick": result,
             "user_pick_label": user_pick_label,
             "result_pick_label": result_pick_label,
+            "ai_pick": ai_ctx.get("ai_pick"),
+            "ai_pick_label": ai_ctx.get("ai_pick_label"),
+            "user_followed_ai": (
+                pred.pick == ai_ctx.get("ai_pick") if ai_ctx.get("ai_pick") else None
+            ),
+            "ai_pick_correct": (
+                ai_ctx.get("ai_pick") == result if ai_ctx.get("ai_pick") else None
+            ),
             "stake_coins": pred.stake_coins,
             "is_free": pred.is_free,
             "win_streak_after": user.win_streak or 0,
@@ -1171,6 +1186,28 @@ class GameService:
         score = (user.fan_cheers_total or 0) // 50 + (user.season_points or 0) // 100
         user.fan_level = max(1, min(99, 1 + score))
 
+    def _ai_pick_for_match(self, match: Match) -> dict[str, str | None]:
+        """Latest cached AI 1/X/2 mapped to predict home/draw/away."""
+        t1, t2 = match.team1_name or "", match.team2_name or ""
+        if not t1 or not t2:
+            return {"ai_pick": None, "ai_pick_label": None}
+        try:
+            from app.agents.insight_helpers import extract_betting_pick
+            from app.db.repositories.agent_repository import AgentRepository
+
+            run = AgentRepository(self.db).find_recent(
+                t1, t2, mode="pre_match", max_age_hours=168
+            )
+            if not run or not run.final_output:
+                return {"ai_pick": None, "ai_pick_label": None}
+            ai_pick, ai_pick_label = extract_betting_pick(
+                run.final_output, t1, t2, run.mode or "pre_match"
+            )
+            return {"ai_pick": ai_pick, "ai_pick_label": ai_pick_label}
+        except Exception:
+            logger.exception("AI pick lookup failed match=%s", match.id)
+            return {"ai_pick": None, "ai_pick_label": None}
+
     def _pick_label(self, match: Match, pick: str) -> str:
         if pick == "home":
             return f"{match.team1_name} 胜"
@@ -1433,6 +1470,12 @@ class GameService:
             return None
 
     def get_daily_status(self, user: User) -> dict:
+        from app.core.user_surface_cache import get_daily_status_cached, set_daily_status_cached
+
+        cached = get_daily_status_cached(user.id)
+        if cached is not None:
+            return cached
+
         today = _utcnow().date()
         free_used = self.wallet.count_free_predictions_today(user.id, today)
         free_limit = self._free_predict_limit(user)
@@ -1472,7 +1515,7 @@ class GameService:
             activation_segment=activation_segment,
             next_predictable_match=next_predictable_match,
         )
-        return {
+        result = {
             "signed_today": signed_today,
             "last_signin_date": user.last_signin_date.isoformat() if user.last_signin_date else None,
             "signin_streak": streak,
@@ -1510,6 +1553,8 @@ class GameService:
             "pass_benefits": self._pass_benefits_today(user),
             "collection_pass_nudge": self._collection_pass_nudge(user),
         }
+        set_daily_status_cached(user.id, result)
+        return result
 
     def get_match_pick_stats(self, match_id: int) -> dict:
         cached = cache_get(f"game:pick_stats:{match_id}")

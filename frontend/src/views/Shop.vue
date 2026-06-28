@@ -10,6 +10,7 @@
       </div>
       <p v-if="authState.user" class="balance-hint">
         累计积分仅来自竞猜/召友等成就，用于冲榜；卡牌回购、交易等只增加可用积分。
+        <router-link to="/shop/orders" class="orders-link">我的订单</router-link>
       </p>
       <div v-if="passBenefitsLine" class="pass-value-strip">
         🎫 {{ passBenefitsLine }}
@@ -24,6 +25,26 @@
           <div class="age-notice-body">
             <strong>虚拟商品购买须知</strong>
             <p>充值球迷币为虚拟道具，购买后不可退款、不可提现。点击「购买」时将弹出确认窗口，需勾选同意后方可支付。</p>
+          </div>
+        </div>
+
+        <div v-if="seasonUltimateProduct" class="season-ultimate-hero glass-panel" :id="`product-${seasonUltimateProduct.sku}`">
+          <div class="hero-copy">
+            <span class="hero-tag">一季畅玩</span>
+            <h2>{{ seasonUltimateProduct.name }}</h2>
+            <p>{{ seasonUltimateProduct.description }}</p>
+            <ul class="hero-perks">
+              <li>90 天通行证 · 猜中 1.2 倍积分</li>
+              <li>手册尊享 + 直升 5 级</li>
+              <li>金框主题 + 100 球迷币</li>
+            </ul>
+          </div>
+          <div class="hero-cta">
+            <div class="hero-price">¥{{ (seasonUltimateProduct.price_fen / 100).toFixed(0) }}</div>
+            <el-button type="primary" :disabled="cashBuyDisabled" @click="requestBuy(seasonUltimateProduct)">
+              立即开通
+            </el-button>
+            <span class="hero-limit">每人限购 1 次</span>
           </div>
         </div>
 
@@ -42,7 +63,7 @@
             <router-link to="/collection?tab=pass" class="intro-link">查看我的手册进度 ›</router-link>
           </div>
           <div
-            v-for="p in sortedCashProducts"
+            v-for="p in listCashProducts"
             :key="p.id"
             class="product glass-panel"
             :class="{ featured: p.featured, [`type-${p.product_type}`]: true, 'sku-highlight': p.sku === highlightSku }"
@@ -50,14 +71,15 @@
           >
             <div class="product-head">
               <h3>{{ p.name }}</h3>
-              <span v-if="p.featured || p.product_type === 'season_pass' || p.product_type === 'collection_pass'" class="rec-tag">推荐</span>
+              <span v-if="p.featured || p.product_type === 'season_pass' || p.product_type === 'collection_pass' || p.product_type === 'season_ultimate'" class="rec-tag">推荐</span>
             </div>
             <p class="desc">{{ p.description }}</p>
             <span v-if="p.product_type === 'collection_pass'" class="pass-compliance-tag">确定性奖励 · 非盲盒</span>
+            <span v-if="p.product_type === 'season_ultimate'" class="pass-compliance-tag ultimate">一季畅玩 · 超值组合</span>
             <div class="price">¥{{ (p.price_fen / 100).toFixed(2) }}</div>
             <div class="grant" v-if="p.coins_grant && p.product_type !== 'season_pass'">+{{ p.coins_grant }} 球迷币</div>
             <EntitlementPreview
-              v-if="p.product_type === 'season_pass' || p.product_type === 'cosmetic' || p.product_type === 'collection_pass'"
+              v-if="p.product_type === 'season_pass' || p.product_type === 'cosmetic' || p.product_type === 'collection_pass' || p.product_type === 'season_ultimate'"
               :avatar-frame="cosmeticPreviewFromProduct(p).avatarFrame"
               :theme-key="cosmeticPreviewFromProduct(p).themeKey"
               :grants="buildProductGrantPreview(p)"
@@ -223,16 +245,31 @@ const passMilestones = PASS_MILESTONE_CARDS
 
 const sortedCashProducts = computed(() => {
   return [...cashProducts.value].sort((a, b) => {
-    const aPass = a.product_type === 'collection_pass' ? 1 : 0
-    const bPass = b.product_type === 'collection_pass' ? 1 : 0
-    if (aPass !== bPass) return bPass - aPass
+    const rank = (p: Product) => {
+      if (p.product_type === 'season_ultimate') return 3
+      if (p.product_type === 'collection_pass') return 2
+      if (p.product_type === 'season_pass') return 1
+      return 0
+    }
+    const ar = rank(a)
+    const br = rank(b)
+    if (ar !== br) return br - ar
     return a.price_fen - b.price_fen
   })
 })
 
+const seasonUltimateProduct = computed(() =>
+  cashProducts.value.find((p) => p.product_type === 'season_ultimate' || p.sku === 'season_ultimate') ?? null,
+)
+
 const hasPassProducts = computed(() =>
   cashProducts.value.some((p) => p.product_type === 'collection_pass'),
 )
+
+const listCashProducts = computed(() => {
+  const sku = seasonUltimateProduct.value?.sku
+  return sortedCashProducts.value.filter((p) => p.sku !== sku)
+})
 
 const sortedRedeemProducts = computed(() => {
   const pts = authState.user?.redeem_points ?? 0
@@ -468,6 +505,56 @@ onMounted(load)
   background: transparent;
 }
 
+.season-ultimate-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  padding: 18px 20px;
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.14), rgba(80, 60, 120, 0.12));
+}
+.hero-tag {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 0.68rem;
+  color: var(--wc-accent-gold);
+  letter-spacing: 0.06em;
+}
+.season-ultimate-hero h2 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+}
+.season-ultimate-hero p {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  color: var(--wc-text-muted);
+}
+.hero-perks {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.78rem;
+  color: var(--wc-text-secondary);
+  line-height: 1.6;
+}
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.hero-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--wc-accent-gold);
+}
+.hero-limit {
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+}
+
 @media (min-width: 769px) {
   .shop {
     padding: 16px 20px 32px;
@@ -493,6 +580,11 @@ onMounted(load)
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.4;
+}
+.orders-link {
+  margin-left: 8px;
+  color: var(--wc-accent-gold);
+  text-decoration: none;
 }
 .pass-value-strip {
   margin-top: 10px;

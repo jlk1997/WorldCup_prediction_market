@@ -71,6 +71,11 @@ export function buildProductGrantPreview(product: Product): string[] {
   if (product.sku === 'collection_pass_plus') {
     lines.push('解锁尊享手册轨道', '直升 10 级', '限定球星卡 · 确定性奖励（非盲盒）')
   }
+  if (product.product_type === 'season_ultimate') {
+    lines.push('解锁尊享手册轨道', '手册直升 +5 级', '头像金框', '全站主题色')
+    const g = product.grant_payload as Record<string, unknown> | undefined
+    if (g?.badge_title) lines.push(`徽章「${g.badge_title}」`)
+  }
   return lines
 }
 
@@ -78,6 +83,13 @@ export function cosmeticPreviewFromProduct(product: Product | null) {
   if (!product) return { avatarFrame: null as string | null, themeKey: null as string | null }
   if (product.product_type === 'cosmetic') {
     return { avatarFrame: 'gold_wc', themeKey: 'team_spirit' }
+  }
+  if (product.product_type === 'season_ultimate') {
+    const g = product.grant_payload as Record<string, string> | undefined
+    return {
+      avatarFrame: g?.avatar_frame ?? 'gold_wc',
+      themeKey: g?.theme_key ?? 'team_spirit',
+    }
   }
   return { avatarFrame: null, themeKey: null }
 }
@@ -92,6 +104,11 @@ export function buildOrderGrantSummary(order: OrderDetail): string[] {
   }
   if (order.product_type === 'cosmetic') {
     lines.push('头像金框', '全站主题色')
+  }
+  if (order.product_type === 'mint_event') {
+    if (order.mint_card_name) lines.push(`限量球星卡「${order.mint_card_name}」`)
+    if (order.mint_serial_no) lines.push(`序列号 #${order.mint_serial_no}`)
+    lines.push('链上铸造异步完成')
   }
   return lines
 }

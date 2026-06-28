@@ -63,6 +63,23 @@ def build_product_grant_summary(product: Product, settings: Settings | None = No
         lines.append(f"每日免费竞猜 +{int(extra)}")
     if payload.get("collection_pass_premium"):
         lines.extend(["解锁尊享手册轨道", "限定球星卡 · 确定性奖励（非盲盒）"])
+    if product.product_type == "mint_event":
+        lines.extend(["限量球星卡首发", "支付成功后分配序列号", "链上铸造异步完成"])
+    if product.product_type == "mint_bundle":
+        if payload.get("mint_event_id"):
+            note = payload.get("mint_coupon_note") or "指定打新白名单资格"
+            lines.append(str(note))
+        if payload.get("ai_live_credits"):
+            lines.append(f"AI 深度分析 ×{int(payload['ai_live_credits'])}")
+        if payload.get("ai_refresh_credits"):
+            lines.append(f"AI 强制刷新 ×{int(payload['ai_refresh_credits'])}")
+        if payload.get("bonus_coins"):
+            lines.append(f"+{int(payload['bonus_coins'])} 球迷币")
+    if product.product_type == "season_ultimate":
+        lines.extend(season_pass_benefit_lines(s))
+        lines.extend(["解锁尊享手册轨道", "手册直升 +5 级", "头像金框", "全站主题色"])
+        if badge_title := payload.get("badge_title"):
+            lines.append(f"徽章「{badge_title}」")
     if payload.get("collection_pass_level_skip"):
         lines.append(f"手册直升 +{int(payload['collection_pass_level_skip'])} 级")
     if badge_title := payload.get("badge_title"):

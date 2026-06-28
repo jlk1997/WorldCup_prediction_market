@@ -39,6 +39,8 @@ class User(Base):
     referral_tier_granted: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     loss_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     free_cheer_tickets: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    ai_pack_live_credits: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    ai_pack_refresh_credits: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="active", nullable=False)
     invite_code: Mapped[str | None] = mapped_column(String(12), unique=True, index=True)
     referred_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
@@ -182,10 +184,12 @@ class Order(Base):
     out_trade_no: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), nullable=False)
+    mint_event_id: Mapped[int | None] = mapped_column(ForeignKey("mint_events.id", ondelete="SET NULL"))
     amount_fen: Mapped[int] = mapped_column(Integer, nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
     alipay_trade_no: Mapped[str | None] = mapped_column(String(64))
     paid_at: Mapped[datetime | None] = mapped_column(DateTime)
+    grant_result_json: Mapped[dict | None] = mapped_column(JSONB)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
 
     product: Mapped["Product"] = relationship("Product")
@@ -893,8 +897,12 @@ class MintReservation(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     event_id: Mapped[int] = mapped_column(ForeignKey("mint_events.id", ondelete="CASCADE"), nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    status: Mapped[str] = mapped_column(String(16), default="reserved", nullable=False)  # reserved/won/lost/claimed
+    status: Mapped[str] = mapped_column(
+        String(16), default="reserved", nullable=False
+    )  # reserved/won/lost/claimed/payment_pending
     claimed_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    pending_order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="SET NULL"))
+    lock_expires_at: Mapped[datetime | None] = mapped_column(DateTime)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
 
 
@@ -908,3 +916,16 @@ class UserAchievement(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     code: Mapped[str] = mapped_column(String(40), nullable=False)
     unlocked_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class ProductAnalyticsEvent(Base):
+    """关键产品漏斗/商业事件（运营可聚合）。"""
+
+    __tablename__ = "product_analytics_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), index=True)
+    event_name: Mapped[str] = mapped_column(String(80), nullable=False, index=True)
+    payload: Mapped[dict | None] = mapped_column(JSONB)
+    session_id: Mapped[str | None] = mapped_column(String(64))
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())

@@ -66,6 +66,35 @@ export function trackEvent(name: string, data?: Record<string, string | number |
   } catch {
     /* ignore */
   }
+
+  void postAnalyticsEvent(name, payload)
+}
+
+const ANALYTICS_ALLOW = new Set([
+  'predict_follow_ai',
+  'predict_submit',
+  'share_poster_open',
+  'share_poster_copy',
+  'mint_order_create',
+  'mint_order_paid',
+  'ai_analysis_start',
+  'ai_analysis_complete',
+  'collectible_share_open',
+  'chain_mint_success',
+  'chain_mint_failed',
+])
+
+async function postAnalyticsEvent(name: string, payload?: Record<string, string>) {
+  if (!ANALYTICS_ALLOW.has(name)) return
+  try {
+    const { apiClient } = await import('../api/client')
+    await apiClient.post('/api/analytics/event', {
+      event_name: name.replace(/-/g, '_'),
+      payload: payload ?? {},
+    })
+  } catch {
+    /* ignore */
+  }
 }
 
 export function trackFunnel(

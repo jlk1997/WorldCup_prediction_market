@@ -91,3 +91,40 @@ class CardBattalionService:
                 }
             )
         return sorted(out, key=lambda x: -x["boost_pct"])
+
+    def room_status(self, user: User) -> dict:
+        """军团 2.0：主队房间集体目标进度。"""
+        if not user.favorite_team_id:
+            return {"active": False, "reason": "请先选择主队"}
+        from app.db.models import Team
+
+        team = self.db.get(Team, user.favorite_team_id)
+        from sqlalchemy import text
+
+        rows = self.db.execute(
+            text(
+                """
+                SELECT goal_type, target_value, current_value, reward_card_code
+                FROM battalion_room_goals
+                WHERE team_id = :tid AND active = true
+                ORDER BY id ASC
+                """
+            ),
+            {"tid": user.favorite_team_id},
+        ).mappings().all()
+        if not rows:
+            rows = [
+                {
+                    "goal_type": "predict_rate",
+                    "target_value": 100,
+                    "current_value": min(user.battalion_points_season or 0, 100),
+                    "reward_card_code": None,
+                }
+            ]
+        return {
+            "active": True,
+            "team_id": user.favorite_team_id,
+            "team_name": team.name if team else "",
+            "goals": [dict(r) for r in rows],
+            "my_contribution": user.battalion_points_season or 0,
+        }

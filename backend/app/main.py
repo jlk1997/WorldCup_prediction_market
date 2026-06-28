@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.routes import agent, arena, asset, card_duel, collectible, collection_pass, commerce, health, legal, live, marketplace, mint, news, players, predictions, profile, referral, schedule, stats, sync, teams, ui_config, websocket
@@ -146,6 +147,7 @@ def create_app() -> FastAPI:
     )
 
     app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(GZipMiddleware, minimum_size=800)
     app.add_middleware(GlobalRateLimitMiddleware)
     app.add_middleware(RequestLoggingMiddleware)
     app.add_middleware(
@@ -213,8 +215,12 @@ def create_app() -> FastAPI:
     app.include_router(ui_config.router)
 
     from app.api.routes import share as share_routes
+    from app.api.routes import widget as widget_routes
+    from app.api.routes import analytics as analytics_routes
 
     app.include_router(share_routes.router)
+    app.include_router(widget_routes.router)
+    app.include_router(analytics_routes.router)
 
     return app
 

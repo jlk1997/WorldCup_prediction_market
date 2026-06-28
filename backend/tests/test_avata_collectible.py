@@ -79,7 +79,17 @@ def test_chain_service_queue_and_process(db: Session):
     assert row.chain_status == CHAIN_STATUS_PENDING
 
     result = chain.process_pending()
+    db.commit()
     db.refresh(row)
     assert result["processed"] >= 1
+    if row.chain_status == CHAIN_STATUS_PENDING:
+        result = chain.process_pending()
+        db.commit()
+        db.refresh(row)
+    assert row.chain_status in (CHAIN_STATUS_MINTED, "minting")
+    if row.chain_status != CHAIN_STATUS_MINTED:
+        chain.process_pending()
+        db.commit()
+        db.refresh(row)
     assert row.chain_status == CHAIN_STATUS_MINTED
     assert row.chain_nft_id

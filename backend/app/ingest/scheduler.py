@@ -113,8 +113,30 @@ def run_once():
             lottery_result = PrimaryMintService(db).draw_pending_lotteries()
             if lottery_result.get("drawn"):
                 logger.info("Mint lottery auto-draw: %s", lottery_result)
+            status_result = PrimaryMintService(db).sync_event_statuses()
+            if status_result.get("updated"):
+                logger.info("Mint event status sync: %s", status_result)
+            expire_mint = PrimaryMintService(db).expire_pending_mint_orders()
+            if expire_mint.get("expired"):
+                logger.info("Expired pending mint orders: %s", expire_mint)
         except Exception:
             logger.exception("Mint lottery auto-draw failed")
+        try:
+            from app.services.matchday_orchestration_service import MatchdayOrchestrationService
+
+            md = MatchdayOrchestrationService(db).run_matchday_cycle()
+            if md.get("ai_pushes") or md.get("matchday_activated"):
+                logger.info("Matchday orchestration: %s", md)
+        except Exception:
+            logger.exception("Matchday orchestration failed")
+        try:
+            from app.services.payment_service import PaymentService
+
+            order_expire = PaymentService(db).expire_abandoned_pending_orders()
+            if order_expire.get("generic_expired") or order_expire.get("mint_expired"):
+                logger.info("Expired abandoned orders: %s", order_expire)
+        except Exception:
+            logger.exception("Order expiry failed")
         try:
             from app.db.models import Match
             from app.services.fantasy_service import FantasyService

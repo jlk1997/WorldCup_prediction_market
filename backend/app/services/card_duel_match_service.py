@@ -56,6 +56,7 @@ class CardDuelMatchService:
             raise BadRequestError("可用积分不足")
 
         rows = self.duel_svc._validate_cards(user_locked, card_ids)
+        self.duel_svc._apply_duel_locks(rows)
         deck_bp = int(self.duel_svc._deck_average_bp(rows))
         tier = self.duel_svc._bp_tier(deck_bp)
         window = self.settings.card_duel_match_window_sec
@@ -92,6 +93,7 @@ class CardDuelMatchService:
         )
         if not entry:
             raise NotFoundError("未在匹配队列中")
+        self.duel_svc._release_duel_locks(list(entry.card_ids or []))
         entry.status = "cancelled"
         self.db.commit()
         return {"ok": True, "notice": "已取消匹配"}
@@ -122,6 +124,7 @@ class CardDuelMatchService:
         )
         exp_count = 0
         for entry in expired:
+            self.duel_svc._release_duel_locks(list(entry.card_ids or []))
             entry.status = "expired"
             exp_count += 1
 
@@ -165,6 +168,8 @@ class CardDuelMatchService:
 
     def _create_matched_duel(self, qa: CardDuelMatchQueue, qb: CardDuelMatchQueue) -> None:
         challenger_entry, defender_entry = (qa, qb) if random.random() < 0.5 else (qb, qa)
+        self.duel_svc._release_duel_locks(list(challenger_entry.card_ids or []))
+        self.duel_svc._release_duel_locks(list(defender_entry.card_ids or []))
         challenger = self.db.get(User, challenger_entry.user_id)
         defender = self.db.get(User, defender_entry.user_id)
         if not challenger or not defender:

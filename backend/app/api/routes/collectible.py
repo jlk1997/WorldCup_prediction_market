@@ -124,6 +124,27 @@ def chain_status(user: User = Depends(get_current_user), db: Session = Depends(g
     return CollectibleService(db).get_chain_status(user)
 
 
+@router.get("/user-card/{user_card_id}/chain")
+def user_card_chain(
+    user_card_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    from app.core.exceptions import NotFoundError
+    from app.db.models.commerce import UserCollectibleCard
+
+    row = db.get(UserCollectibleCard, user_card_id)
+    if not row or row.user_id != user.id:
+        raise NotFoundError("卡牌不存在")
+    return {
+        "user_card_id": row.id,
+        "chain_status": row.chain_status or "none",
+        "chain_nft_id": row.chain_nft_id,
+        "chain_tx_hash": row.chain_tx_hash,
+        "serial_no": row.serial_no,
+    }
+
+
 @router.post("/chain/retry/{user_card_id}")
 def retry_chain_mint(
     user_card_id: int,
@@ -133,6 +154,25 @@ def retry_chain_mint(
     result = CollectibleChainService(db).retry_mint(user, user_card_id)
     db.commit()
     return {"chain": result}
+
+
+@router.post("/chain/refresh/{user_card_id}")
+def refresh_chain_mint(
+    user_card_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    result = CollectibleChainService(db).refresh_mint_status(user, user_card_id)
+    return {"chain": result}
+
+
+@router.get("/user-card/{user_card_id}/provenance")
+def user_card_provenance(
+    user_card_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return CollectibleService(db).get_provenance(user, user_card_id)
 
 
 @router.get("/share-url")

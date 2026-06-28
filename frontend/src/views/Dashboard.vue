@@ -51,6 +51,7 @@
       <StreakRiskBanner :status="dailyStatus" class="dashboard-streak-banner" />
 
       <GrowthPrimaryCard :status="dailyStatus" />
+      <TodayHomePanel v-if="authState.accessToken" />
       <CollectionPassMiniCard />
       <CollectionPassNudgeBar :status="dailyStatus" />
       <MatchDayShareBar
@@ -316,6 +317,7 @@ import InvitePromptBar from '../components/InvitePromptBar.vue'
 import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
 import StreakRiskBanner from '../components/StreakRiskBanner.vue'
 import GrowthPrimaryCard from '../components/GrowthPrimaryCard.vue'
+import TodayHomePanel from '../components/TodayHomePanel.vue'
 import CollectionPassNudgeBar from '../components/collectible/CollectionPassNudgeBar.vue'
 import CollectionPassMiniCard from '../components/collectible/CollectionPassMiniCard.vue'
 import MatchDayShareBar from '../components/MatchDayShareBar.vue'

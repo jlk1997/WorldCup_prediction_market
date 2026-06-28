@@ -79,11 +79,27 @@ export interface ListingHint {
   active_listings: number
   fee_pct: number
   net_after_fee: number
+  ai_note?: string
   disclaimer: string
 }
 
 export async function getListingHint(user_card_id: number): Promise<ListingHint> {
   const { data } = await apiClient.get('/api/asset/listing-hint', { params: { user_card_id } })
+  return data
+}
+
+export interface FantasyAdvisorResult {
+  ok: boolean
+  reason?: string
+  recommended?: Array<{ user_card_id: number; name: string; battle_power: number }>
+  summary?: string
+  disclaimer: string
+}
+
+export async function getFantasyAdvisor(matchId?: number): Promise<FantasyAdvisorResult> {
+  const { data } = await apiClient.get('/api/asset/fantasy/advisor', {
+    params: matchId ? { match_id: matchId } : undefined,
+  })
   return data
 }
 
@@ -499,6 +515,7 @@ export interface MarketListing {
   seller_id: number
   is_mine?: boolean
   status?: string
+  chain?: { status: string; nft_id?: string | null; chain_name?: string }
 }
 
 export interface MarketData {
@@ -531,7 +548,13 @@ export async function getMyListings(): Promise<MarketListing[]> {
 }
 
 export async function getListingDetail(listing_id: number): Promise<
-  MarketListing & { market: MarketData; recent_bids: { amount: number; at?: string | null }[]; disclaimer: string }
+  MarketListing & {
+    market: MarketData
+    recent_bids: { amount: number; at?: string | null }[]
+    disclaimer: string
+    ai_note?: string
+    chain?: { status: string; nft_id?: string | null; chain_name?: string }
+  }
 > {
   const { data } = await apiClient.get(`/api/marketplace/listing/${listing_id}`)
   return data
@@ -592,12 +615,26 @@ export interface MintEvent {
   reserved: boolean
   reservation_status?: string | null
   can_buy: boolean
+  pending_payment?: boolean
   disclaimer: string
 }
 
 export async function getMintEvents(): Promise<MintEvent[]> {
   const { data } = await apiClient.get('/api/mint-events')
   return data.items
+}
+
+export interface MintAdvisor {
+  event_id: number
+  event_name: string
+  bullets: string[]
+  verdict: string
+  disclaimer: string
+}
+
+export async function getMintAdvisor(eventId: number): Promise<MintAdvisor> {
+  const { data } = await apiClient.get(`/api/mint-events/${eventId}/advisor`)
+  return data
 }
 
 export async function reserveMint(event_id: number) {
@@ -607,6 +644,63 @@ export async function reserveMint(event_id: number) {
 
 export async function purchaseMint(event_id: number) {
   const { data } = await apiClient.post(`/api/mint-events/${event_id}/purchase`)
+  return data
+}
+
+export async function createMintOrder(
+  event_id: number,
+  ageConfirmed = true,
+  payChannel: 'auto' | 'page' | 'wap' = 'auto',
+) {
+  const { data } = await apiClient.post<{
+    order: { id: number; out_trade_no: string; status: string; amount_fen: number }
+    pay_url: string
+    pay_channel: 'page' | 'wap'
+  }>(`/api/mint-events/${event_id}/create-order`, {
+    age_confirmed: ageConfirmed,
+    pay_channel: payChannel,
+  })
+  return data
+}
+
+export interface MintEventAdmin {
+  id: number
+  code: string
+  name: string
+  card_code: string
+  currency: 'coins' | 'rmb'
+  price_coins: number
+  price_fen: number
+  total_supply: number
+  issued: number
+  sale_mode: string
+  status: string
+  active: boolean
+  starts_at?: string | null
+  ends_at?: string | null
+}
+
+export async function adminListMintEvents(adminSecret: string): Promise<MintEventAdmin[]> {
+  const { data } = await apiClient.get<{ items: MintEventAdmin[] }>('/api/mint-events/admin/events', {
+    headers: { 'X-Admin-Secret': adminSecret },
+  })
+  return data.items
+}
+
+export async function adminCreateMintEvent(
+  adminSecret: string,
+  payload: Record<string, unknown>,
+) {
+  const { data } = await apiClient.post('/api/mint-events/admin/events', payload, {
+    headers: { 'X-Admin-Secret': adminSecret },
+  })
+  return data
+}
+
+export async function adminSeedMintDemo(adminSecret: string) {
+  const { data } = await apiClient.post('/api/mint-events/admin/seed-demo', {}, {
+    headers: { 'X-Admin-Secret': adminSecret },
+  })
   return data
 }
 
@@ -655,6 +749,36 @@ export async function getEconomyDashboard(days = 7, adminSecret?: string): Promi
   const secret = adminSecret ?? getStoredAdminSecret()
   const { data } = await apiClient.get('/api/asset/admin/economy', {
     params: { days },
+    headers: secret ? { 'X-Admin-Secret': secret } : undefined,
+  })
+  return data
+}
+
+export interface OpsDashboard {
+  window_hours: number
+  orders: { paid: number; pending: number; refunded: number; mint_paid: number; success_rate_pct: number }
+  chain: {
+    pending_mints: number
+    failed_mints: number
+    failed_recent?: number
+    none_legacy?: number
+    avata_active?: boolean
+    top_errors?: { error: string; count: number }[]
+    alert?: boolean
+  }
+  ai: { runs: number; queue: Record<string, unknown>; util_pct?: number; alert?: boolean }
+  redis_configured?: boolean
+  funnel_events?: Record<string, number>
+  funnel_total?: number
+  production_mode: boolean
+  alipay_mock: boolean
+  avata_mock: boolean
+}
+
+export async function getOpsDashboard(hours = 24, adminSecret?: string): Promise<OpsDashboard> {
+  const secret = adminSecret ?? getStoredAdminSecret()
+  const { data } = await apiClient.get('/api/asset/admin/ops-dashboard', {
+    params: { hours },
     headers: secret ? { 'X-Admin-Secret': secret } : undefined,
   })
   return data

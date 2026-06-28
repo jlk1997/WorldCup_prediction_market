@@ -9,6 +9,9 @@ export interface ResolvedPredictPayload {
   finalScore: string | null
   userPickLabel: string | null
   resultPickLabel: string | null
+  aiPickLabel: string | null
+  userFollowedAi: boolean | null
+  aiPickCorrect: boolean | null
   pointsAwarded: number
   redeemAwarded: number
   coinsReturned: number
@@ -84,6 +87,19 @@ export function resolvePredictPayload(note: UserNotification | null): ResolvedPr
     finalScore: str(payload.final_score) || null,
     userPickLabel: pick,
     resultPickLabel: str(payload.result_pick_label) || null,
+    aiPickLabel: str(payload.ai_pick_label) || null,
+    userFollowedAi:
+      payload.user_followed_ai === true
+        ? true
+        : payload.user_followed_ai === false
+          ? false
+          : null,
+    aiPickCorrect:
+      payload.ai_pick_correct === true
+        ? true
+        : payload.ai_pick_correct === false
+          ? false
+          : null,
     pointsAwarded: num(payload.points_awarded),
     redeemAwarded: num(payload.redeem_points_awarded),
     coinsReturned: num(payload.coins_returned),

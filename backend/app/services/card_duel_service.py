@@ -213,6 +213,23 @@ class CardDuelService:
 
         return 0, 0
 
+    def _primary_mint_boost_pct(self, user_card_id: int) -> float:
+        from app.db.models.commerce import CardTransferLog
+
+        cutoff = _utcnow() - timedelta(days=self.settings.mint_primary_boost_days)
+        exists = (
+            self.db.query(CardTransferLog.id)
+            .filter(
+                CardTransferLog.user_card_id == user_card_id,
+                CardTransferLog.kind == "primary",
+                CardTransferLog.created_at >= cutoff,
+            )
+            .first()
+        )
+        if exists:
+            return float(self.settings.mint_primary_duel_bp_bonus_pct) / 100.0
+        return 0.0
+
     def _load_user_combat_cards(self, card_ids: list[int], user_id: int, *, side: str) -> list:
         cards = []
         for cid in card_ids:
@@ -221,7 +238,10 @@ class CardDuelService:
                 continue
             card = self.db.get(CollectibleCard, row.card_id)
             if card:
-                cards.append(build_combat_card_from_row(row, card, side=side))
+                chem = self._primary_mint_boost_pct(row.id)
+                cards.append(
+                    build_combat_card_from_row(row, card, side=side, chemistry_bonus_pct=chem)
+                )
         return cards
 
     def _generate_ai_deck(self, challenger_rows: list[UserCollectibleCard]) -> list[dict]:

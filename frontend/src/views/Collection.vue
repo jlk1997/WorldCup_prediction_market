@@ -20,6 +20,8 @@
     </header>
 
     <AssetHubBar compact :show-balance="!!authState.accessToken" />
+    <SeasonNarrativePanel v-if="authState.accessToken" />
+    <BattalionRoomPanel v-if="authState.accessToken" />
 
     <div v-if="album" class="stats-bar glass-panel">
       <div class="stat">
@@ -39,9 +41,18 @@
     <p class="compliance">{{ album?.compliance_notice }}</p>
     <p v-if="chainStatus?.enabled" class="chain-line">
       {{ chainStatus.chain_name }}数字藏品
-      <span v-if="chainStatus.pending_mints"> · {{ chainStatus.pending_mints }} 张上链中</span>
       <span v-if="chainStatus.minted_count"> · 已铸造 {{ chainStatus.minted_count }} 张</span>
+      <span v-if="chainStatus.pending_mints"> · {{ chainStatus.pending_mints }} 张上链中</span>
+      <span v-if="chainStatus.failed_mints"> · {{ chainStatus.failed_mints }} 张失败</span>
     </p>
+
+    <ChainAlertBanner
+      v-if="chainStatus?.enabled && (chainStatus.failed_mints || chainStatus.pending_mints)"
+      :failed-count="chainStatus.failed_mints"
+      :pending-count="chainStatus.pending_mints"
+      :first-failed-user-card-id="chainStatus.first_failed_user_card_id"
+      @retried="refreshChainStatus"
+    />
 
     <CollectibleEventBanner
       v-if="passSummary?.events?.length && activeTab !== 'pass'"
@@ -281,15 +292,57 @@
             <p v-if="selectedCard.chain.nft_id">NFT ID：{{ selectedCard.chain.nft_id }}</p>
             <p v-if="selectedCard.chain.tx_hash">Tx：{{ shortHash(selectedCard.chain.tx_hash) }}</p>
             <p v-if="selectedCard.chain.error" class="chain-error">{{ selectedCard.chain.error }}</p>
-            <el-button
-              v-if="selectedCard.chain.status === 'failed' && selectedCard.user_card_id"
-              size="small"
-              type="warning"
-              :loading="retryLoading"
-              @click="onRetryMint"
-            >
-              重新排队铸造
-            </el-button>
+            <p v-if="(selectedCard.count ?? 1) > 1 && selectedCard.chain.status === 'none'" class="chain-stack-hint">
+              叠卡仅主卡可上链；拆分后可分别为每张铸造凭证
+            </p>
+            <div class="chain-actions">
+              <el-button
+                v-if="selectedCard.chain.status === 'minted'"
+                size="small"
+                plain
+                @click="shareChainCert"
+              >
+                分享链证书
+              </el-button>
+              <el-button
+                v-if="selectedCard.chain.status === 'none' && selectedCard.user_card_id"
+                size="small"
+                type="primary"
+                plain
+                :loading="retryLoading"
+                @click="onRetryMint"
+              >
+                申请铸造凭证
+              </el-button>
+              <el-button
+                v-if="selectedCard.chain.status === 'failed' && selectedCard.user_card_id"
+                size="small"
+                type="warning"
+                :loading="retryLoading"
+                @click="onRetryMint"
+              >
+                重新排队铸造
+              </el-button>
+              <el-button
+                v-if="['pending', 'minting'].includes(selectedCard.chain.status) && selectedCard.user_card_id"
+                size="small"
+                plain
+                :loading="retryLoading"
+                @click="onRefreshMint"
+              >
+                刷新链状态
+              </el-button>
+            </div>
+            <div v-if="provenanceEvents.length" class="provenance-list">
+              <strong>溯源</strong>
+              <ul>
+                <li v-for="(ev, i) in provenanceEvents" :key="i">
+                  <span class="pv-label">{{ ev.label }}</span>
+                  <span v-if="ev.tx_hash" class="pv-tx">{{ shortHash(ev.tx_hash) }}</span>
+                  <span v-if="ev.at" class="pv-at">{{ formatAt(ev.at) }}</span>
+                </li>
+              </ul>
+            </div>
             <p class="chain-note">由 AVATA 平台托管，经合规校验后可转赠/交易行流通</p>
           </div>
         </div>
@@ -342,6 +395,7 @@
           <span>回购 {{ listHint.buyback_floor }}</span>
         </div>
         <p class="lh-net">成交后约到手 {{ listHint.net_after_fee }} 积分（手续费 {{ listHint.fee_pct }}%）</p>
+        <p v-if="listHint.ai_note" class="lh-ai">💡 {{ listHint.ai_note }}</p>
       </div>
       <el-form label-position="top">
         <el-form-item label="挂牌类型">
@@ -410,6 +464,10 @@ import CollectionQuestList from '@/components/collectible/CollectionQuestList.vu
 import CollectibleEventBanner from '@/components/collectible/CollectibleEventBanner.vue'
 import { createListing, giftCard, buybackCard, stakeCard, splitCard, getListingHint, type ListingHint } from '@/api/asset'
 import AssetHubBar from '@/components/asset/AssetHubBar.vue'
+import SeasonNarrativePanel from '@/components/SeasonNarrativePanel.vue'
+import BattalionRoomPanel from '@/components/BattalionRoomPanel.vue'
+import ChainAlertBanner from '@/components/ChainAlertBanner.vue'
+import { openSharePoster } from '@/composables/useSharePoster'
 import { extractApiError } from '@/utils/apiError'
 import { useAssetRealname } from '@/composables/useAssetRealname'
 import {
@@ -427,8 +485,10 @@ import {
   getCollectibleAlbum,
   getCollectibleCard,
   getCollectibleChainStatus,
+  getCollectibleProvenance,
   getCollectibleSets,
   getSynthesisOptions,
+  refreshCollectibleChainMint,
   retryCollectibleChainMint,
   synthesizeCard,
   upgradeCollectibleCard,
@@ -439,6 +499,7 @@ import {
   type SynthesisOption,
   type CollectibleChainStatus,
   type CollectibleActivityItem,
+  type ProvenanceEvent,
   RARITY_LABELS,
   SOURCE_LABELS,
 } from '@/api/collectible'
@@ -498,6 +559,7 @@ const claimingSet = ref<string | null>(null)
 const synthLoading = ref<string | null>(null)
 const upgradeLoading = ref(false)
 const retryLoading = ref(false)
+const provenanceEvents = ref<ProvenanceEvent[]>([])
 const passLoading = ref(false)
 
 // ===== 资产流通（挂牌/转赠/质押/回购/拆分）=====
@@ -904,6 +966,11 @@ async function loadActivityTab() {
   }
 }
 
+async function refreshChainStatus() {
+  chainStatus.value = await getCollectibleChainStatus().catch(() => null)
+  if (selectedCard.value?.user_card_id) await refreshSelectedCard()
+}
+
 async function refreshAfterMutation(reloadPass = false) {
   loadedTabs.delete('sets')
   loadedTabs.delete('synth')
@@ -1066,9 +1133,15 @@ async function onEventCheer(teamId: number) {
 }
 
 async function openCardDetail(card: CollectibleCardBrief) {
+  provenanceEvents.value = []
   try {
     selectedCard.value = await getCollectibleCard(card.code, card.user_card_id)
     detailOpen.value = true
+    if (selectedCard.value?.user_card_id && selectedCard.value.chain) {
+      getCollectibleProvenance(selectedCard.value.user_card_id)
+        .then((p) => { provenanceEvents.value = p.events })
+        .catch(() => {})
+    }
   } catch {
     selectedCard.value = card
     detailOpen.value = true
@@ -1169,6 +1242,17 @@ function shareSelectedCard() {
   openCollectibleShare({ card })
 }
 
+function shareChainCert() {
+  const card = selectedCard.value
+  if (!card?.chain) return
+  openSharePoster({
+    variant: 'chain',
+    title: card.name,
+    subtitle: `文昌链收藏凭证 · ${chainStatusLabel(card.chain.status)}`,
+    extra: card.chain.nft_id ? `NFT ${card.chain.nft_id}` : undefined,
+  })
+}
+
 function chainStatusLabel(status: string) {
   const map: Record<string, string> = {
     none: '未上链',
@@ -1208,6 +1292,22 @@ async function onRetryMint() {
     chainStatus.value = await getCollectibleChainStatus().catch(() => null)
   } catch (e: unknown) {
     ElMessage.error((e as Error)?.message || '重试失败')
+  } finally {
+    retryLoading.value = false
+  }
+}
+
+async function onRefreshMint() {
+  const id = selectedCard.value?.user_card_id
+  if (!id) return
+  retryLoading.value = true
+  try {
+    const chain = await refreshCollectibleChainMint(id)
+    if (selectedCard.value) selectedCard.value.chain = chain
+    ElMessage.success('链状态已刷新')
+    chainStatus.value = await getCollectibleChainStatus().catch(() => null)
+  } catch (e: unknown) {
+    ElMessage.error((e as Error)?.message || '刷新失败')
   } finally {
     retryLoading.value = false
   }
@@ -1364,6 +1464,28 @@ onMounted(async () => {
 .chain-note {
   font-size: 0.65rem !important;
 }
+.chain-stack-hint {
+  font-size: 0.75rem;
+  color: var(--wc-text-muted);
+}
+.chain-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+.provenance-list {
+  margin-top: 10px;
+  text-align: left;
+  font-size: 0.78rem;
+}
+.provenance-list ul {
+  margin: 6px 0 0;
+  padding-left: 16px;
+}
+.pv-label { margin-right: 6px; }
+.pv-tx { color: #9eb4ff; margin-right: 6px; }
+.pv-at { color: var(--wc-text-muted); }
 .album-wrap {
   min-height: 200px;
 }
@@ -1644,5 +1766,11 @@ onMounted(async () => {
   margin: 6px 0 0;
   font-size: 0.66rem;
   color: var(--wc-text-muted);
+}
+.lh-ai {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: #a371f7;
+  line-height: 1.4;
 }
 </style>

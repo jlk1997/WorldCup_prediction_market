@@ -20,6 +20,8 @@ from app.api.schemas.commerce import (
     RedeemProductAdminCreate,
     RedeemProductAdminOut,
     RedeemProductAdminUpdate,
+    CashProductGrantPatch,
+    CashProductBindMint,
     RedeemOrderOut,
     RedeemPurchaseOut,
     RedeemPurchaseRequest,
@@ -157,9 +159,13 @@ def game_matches(
 @router_game.post("/predict", response_model=PredictSubmitResponse)
 def submit_predict(
     body: PredictSubmitRequest,
+    request: Request,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    from app.services.anti_cheat_service import AntiCheatService
+
+    AntiCheatService().check_predict_submit(request, user.id)
     pred = GameService(db).submit_prediction(
         user, body.match_id, body.pick, body.stake_coins, body.use_free
     )
@@ -296,6 +302,27 @@ def claim_qq_group_reward(user: User = Depends(get_current_user), db: Session = 
 @router_game.get("/daily-status")
 def daily_status(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return GameService(db).get_daily_status(user)
+
+
+@router_game.get("/today-home")
+def today_home(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.services.today_home_service import TodayHomeService
+
+    return TodayHomeService(db).build(user)
+
+
+@router_game.get("/battalion-room")
+def battalion_room(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.services.card_battalion_service import CardBattalionService
+
+    return CardBattalionService(db).room_status(user)
+
+
+@router_game.get("/season-narrative")
+def season_narrative(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.services.season_narrative_service import SeasonNarrativeService
+
+    return SeasonNarrativeService(db).narrative_status(user)
 
 
 @router_game.post("/season-pass/daily-claim")
@@ -530,7 +557,16 @@ def predict_share_url(
 
 @router_shop.get("/products", response_model=list[ProductOut])
 def list_products(db: Session = Depends(get_db)):
-    return [ProductOut.model_validate(p) for p in PaymentService(db).list_products()]
+    from app.core.cache import cache_get, cache_set
+    from app.core.user_surface_cache import SHOP_PRODUCTS_TTL
+
+    cache_key = "shop:cash_products_v1"
+    cached = cache_get(cache_key)
+    if cached is not None:
+        return cached
+    rows = [ProductOut.model_validate(p).model_dump(mode="json") for p in PaymentService(db).list_products()]
+    cache_set(cache_key, rows, ttl=SHOP_PRODUCTS_TTL)
+    return rows
 
 
 @router_shop.get("/redeem/products", response_model=list[RedeemProductOut])
@@ -713,6 +749,60 @@ def admin_toggle_redeem_product(
     return _admin_product_out(RedeemProductAdminService(db).toggle_active(product_id))
 
 
+@router_shop.get("/admin/cash-products", response_model=list[ProductOut])
+def admin_list_cash_products(
+    db: Session = Depends(get_db),
+    _: None = Depends(require_admin_secret_in_production),
+):
+    from app.db.models.commerce import Product
+
+    rows = (
+        db.query(Product)
+        .filter(Product.pay_currency == "cash", Product.product_type != "redeem")
+        .order_by(Product.sort_order, Product.id)
+        .all()
+    )
+    return [ProductOut.model_validate(p) for p in rows]
+
+
+@router_shop.patch("/admin/cash-products/{product_id}/grant-payload", response_model=ProductOut)
+def admin_patch_cash_grant_payload(
+    product_id: int,
+    body: CashProductGrantPatch,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_admin_secret_in_production),
+):
+    from app.data.cash_grant_schema import validate_cash_grant_payload
+    from app.db.models.commerce import Product
+
+    product = db.get(Product, product_id)
+    if not product or product.pay_currency != "cash":
+        raise HTTPException(status_code=404, detail="product_not_found")
+    product.grant_payload = validate_cash_grant_payload(
+        body.grant_payload, product_type=product.product_type
+    )
+    db.commit()
+    db.refresh(product)
+    return ProductOut.model_validate(product)
+
+
+@router_shop.post("/admin/cash-products/{product_id}/bind-mint", response_model=ProductOut)
+def admin_bind_mint_bundle(
+    product_id: int,
+    body: CashProductBindMint,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_admin_secret_in_production),
+):
+    from app.db.models.commerce import Product
+    from app.services.mint_bundle_service import MintBundleService
+
+    product = db.get(Product, product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="product_not_found")
+    product = MintBundleService(db).bind_product_event(product, body.mint_event_id)
+    return ProductOut.model_validate(product)
+
+
 @router_shop.post("/admin/sync-catalog")
 def admin_sync_redeem_catalog(
     deactivate_missing: bool = Query(False),
@@ -791,14 +881,47 @@ def mock_pay(
     return OrderDetailOut.model_validate(svc.order_detail(order))
 
 
-@router_pay.get("/orders", response_model=list[OrderOut])
+@router_pay.get("/orders", response_model=list[OrderDetailOut])
 def list_my_orders(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
     limit: int = Query(20, ge=1, le=50),
 ):
-    orders = PaymentService(db).list_user_orders(user.id, limit)
-    return [OrderOut.model_validate(o) for o in orders]
+    svc = PaymentService(db)
+    orders = svc.list_user_orders(user.id, limit)
+    return [OrderDetailOut.model_validate(svc.order_detail(o)) for o in orders]
+
+
+@router_pay.post("/orders/by-no/{out_trade_no}/cancel", response_model=OrderDetailOut)
+def cancel_order_by_trade_no(
+    out_trade_no: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    svc = PaymentService(db)
+    order = svc.get_order_by_trade_no(out_trade_no, user.id)
+    order = svc.cancel_pending_order(user.id, order)
+    return OrderDetailOut.model_validate(svc.order_detail(order))
+
+
+@router_pay.post("/orders/{order_id}/cancel", response_model=OrderDetailOut)
+def cancel_order(
+    order_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    svc = PaymentService(db)
+    order = svc.get_order(order_id, user.id)
+    order = svc.cancel_pending_order(user.id, order)
+    return OrderDetailOut.model_validate(svc.order_detail(order))
+
+
+@router_pay.post("/admin/refund", dependencies=[Depends(require_admin_secret_in_production)])
+def admin_refund_order(
+    order_id: int = Query(..., ge=1),
+    db: Session = Depends(get_db),
+):
+    return PaymentService(db).admin_refund_order(order_id)
 
 
 @router_pay.get("/orders/by-no/{out_trade_no}", response_model=OrderDetailOut)

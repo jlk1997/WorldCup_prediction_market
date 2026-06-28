@@ -177,6 +177,9 @@ class CardTransferService:
                     "points_amount": log.points_amount,
                     "fee_points": log.fee_points,
                     "at": log.created_at.isoformat() if log.created_at else None,
+                    "chain_status": log.chain_status,
+                    "chain_tx_hash": log.chain_tx_hash,
+                    "user_card_id": log.user_card_id,
                 }
             )
         return out

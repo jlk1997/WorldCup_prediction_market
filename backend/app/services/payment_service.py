@@ -105,7 +105,10 @@ class PaymentService:
                 raise BadRequestError("已达该商品购买上限")
 
         payload = product.grant_payload or {}
-        if payload.get("collection_pass_premium") or product.product_type == "collection_pass":
+        if payload.get("collection_pass_premium") or product.product_type in (
+            "collection_pass",
+            "season_ultimate",
+        ):
             from app.services.collection_pass_service import CollectionPassService
 
             user = self.db.get(User, user_id)
@@ -238,7 +241,18 @@ class PaymentService:
             return "failure"
 
         if order.status == "paid":
+            if not order.grant_result_json:
+                self._fulfill_order(
+                    order,
+                    alipay_trade_no=trade_no or order.alipay_trade_no or "",
+                )
+            else:
+                self.db.commit()
+            return "success"
+
+        if order.status == "cancelled":
             self.db.commit()
+            logger.warning("Alipay notify for cancelled order: %s", order.out_trade_no)
             return "success"
 
         if not self._amount_matches_order(order, data):
@@ -274,8 +288,17 @@ class PaymentService:
             raise NotFoundError("订单不存在")
         if order.user_id != user_id:
             raise BadRequestError("无权操作该订单")
-        if order.status == "paid":
+        if order.status == "cancelled":
             self.db.commit()
+            raise BadRequestError("订单已取消，请重新下单")
+        if order.status == "paid":
+            if not order.grant_result_json:
+                self._fulfill_order(
+                    order,
+                    alipay_trade_no=order.alipay_trade_no or "",
+                )
+            else:
+                self.db.commit()
             return order
 
         try:
@@ -320,23 +343,76 @@ class PaymentService:
 
         return self._fulfill_order(order, alipay_trade_no=trade_no)
 
-    def _fulfill_order(self, order: Order, alipay_trade_no: str) -> Order:
-        if order.status == "paid":
-            self.db.commit()
-            return order
-
+    def _fulfill_order(self, order: Order, alipay_trade_no: str | None = None) -> Order:
         product = self.db.get(Product, order.product_id)
         user = self.db.query(User).filter(User.id == order.user_id).with_for_update().first()
         if not product or not user:
             self.db.rollback()
             raise NotFoundError("订单数据异常")
 
-        order.status = "paid"
-        order.alipay_trade_no = alipay_trade_no
-        order.paid_at = _utcnow()
+        if order.grant_result_json:
+            if order.status != "paid":
+                order.status = "paid"
+                if alipay_trade_no:
+                    order.alipay_trade_no = alipay_trade_no
+                if not order.paid_at:
+                    order.paid_at = _utcnow()
+            self.db.commit()
+            self.db.refresh(order)
+            return order
+
+        if order.status != "paid":
+            order.status = "paid"
+            order.alipay_trade_no = alipay_trade_no or order.alipay_trade_no or ""
+            order.paid_at = _utcnow()
+        elif alipay_trade_no and not order.alipay_trade_no:
+            order.alipay_trade_no = alipay_trade_no
+
+        self._apply_product_grants(order, product, user)
+
+        from app.core.user_surface_cache import invalidate_user_surface
+
+        invalidate_user_surface(user.id)
+        self.db.commit()
+        self.db.refresh(order)
+        return order
+
+    def _apply_product_grants(self, order: Order, product: Product, user: User) -> None:
+        payload = product.grant_payload or {}
+        is_mint = product.product_type == "mint_event" or (
+            product.product_type != "mint_bundle"
+            and (order.mint_event_id or payload.get("mint_event_id"))
+        )
+
+        if is_mint:
+            from app.services.primary_mint_service import PrimaryMintService
+
+            PrimaryMintService(self.db).fulfill_paid_order(order)
+            return
+
+        if product.product_type == "mint_bundle":
+            from app.services.mint_bundle_service import MintBundleService
+            from app.services.season_pass_service import SeasonPassService
+
+            MintBundleService(self.db).grant(user, product, order)
+            SeasonPassService(self.db).apply_cosmetic_purchase(user, product)
+            return
+
+        grant_result: dict = {
+            "product_type": product.product_type,
+            "sku": product.sku,
+            "order_id": order.id,
+        }
+
+        if product.product_type == "ai_pack":
+            from app.services.ai_billing_service import AiBillingService
+
+            AiBillingService(self.db).grant_ai_pack(user, payload)
+            grant_result["ai_pack"] = True
 
         if product.coins_grant > 0:
             self.wallet.add_coins(user, product.coins_grant, "purchase", "order", order.id)
+            grant_result["coins_grant"] = product.coins_grant
 
         if product.grant_season_pass_days > 0:
             user.has_season_pass = True
@@ -344,6 +420,7 @@ class PaymentService:
             if base < _utcnow():
                 base = _utcnow()
             user.season_pass_until = base + timedelta(days=product.grant_season_pass_days)
+            grant_result["season_pass_days"] = product.grant_season_pass_days
             if not self.db.query(UserBadge).filter(
                 UserBadge.user_id == user.id, UserBadge.badge_code == "season_pass_2026"
             ).first():
@@ -360,19 +437,22 @@ class PaymentService:
         pass_svc = SeasonPassService(self.db)
         pass_svc.apply_cosmetic_purchase(user, product)
         payload = product.grant_payload or {}
-        if payload.get("collection_pass_premium") or product.product_type == "collection_pass":
+        if payload.get("collection_pass_premium") or product.product_type in (
+            "collection_pass",
+            "season_ultimate",
+        ):
             from app.services.collection_pass_service import CollectionPassService
 
             pass_collection = CollectionPassService(self.db)
             if skip := payload.get("collection_pass_level_skip"):
                 pass_collection.grant_level_skip(user, int(skip))
+                grant_result["collection_pass_level_skip"] = int(skip)
             pass_collection.unlock_premium(user)
+            grant_result["collection_pass_premium"] = True
         if product.grant_season_pass_days > 0:
             pass_svc.grant_daily_if_eligible(user, commit=False)
 
-        self.db.commit()
-        self.db.refresh(order)
-        return order
+        order.grant_result_json = grant_result
 
     def get_order(self, order_id: int, user_id: int) -> Order:
         order = self.db.get(Order, order_id)
@@ -392,7 +472,8 @@ class PaymentService:
         product = self.db.get(Product, order.product_id)
         if not product:
             raise NotFoundError("订单商品不存在")
-        return {
+        grant = order.grant_result_json or {}
+        detail = {
             "id": order.id,
             "out_trade_no": order.out_trade_no,
             "amount_fen": order.amount_fen,
@@ -404,7 +485,101 @@ class PaymentService:
             "grant_season_pass_days": product.grant_season_pass_days,
             "alipay_trade_no": order.alipay_trade_no,
             "grant_summary": build_product_grant_summary(product, self.settings),
+            "mint_event_id": order.mint_event_id,
+            "mint_serial_no": grant.get("serial_no"),
+            "mint_card_name": grant.get("card_name"),
+            "mint_user_card_id": grant.get("user_card_id"),
+            "mint_notice": grant.get("notice"),
+            "created_at": order.created_at,
         }
+        if grant and product.product_type == "mint_event":
+            serial = grant.get("serial_no")
+            name = grant.get("card_name") or product.name
+            detail["grant_summary"] = [
+                f"限量球星卡「{name}」",
+                f"序列号 #{serial}" if serial else "序列号分配中",
+                "链上铸造将在数分钟内完成",
+            ]
+        return detail
+
+    def cancel_pending_order(self, user_id: int, order: Order) -> Order:
+        if order.user_id != user_id:
+            raise BadRequestError("无权操作该订单")
+        if order.status != "pending":
+            raise BadRequestError("仅待支付订单可取消")
+        order.status = "cancelled"
+        if order.mint_event_id:
+            from app.services.primary_mint_service import PrimaryMintService
+
+            PrimaryMintService(self.db).release_mint_lock_for_order(order)
+        self.db.commit()
+        self.db.refresh(order)
+        return order
+
+    def expire_abandoned_pending_orders(self, limit: int = 200) -> dict[str, int]:
+        from app.services.primary_mint_service import PrimaryMintService
+
+        mint_result = PrimaryMintService(self.db).expire_pending_mint_orders(limit=limit)
+        reuse_cutoff = _utcnow() - timedelta(minutes=self.settings.order_pending_reuse_minutes * 2)
+        stale = (
+            self.db.query(Order)
+            .filter(
+                Order.status == "pending",
+                Order.mint_event_id.is_(None),
+                Order.created_at < reuse_cutoff,
+            )
+            .limit(limit)
+            .all()
+        )
+        generic_expired = 0
+        for order in stale:
+            order.status = "cancelled"
+            generic_expired += 1
+        if generic_expired:
+            self.db.commit()
+        return {"mint_expired": mint_result.get("expired", 0), "generic_expired": generic_expired}
+
+    def admin_refund_order(self, order_id: int) -> dict:
+        """Admin 退款：支付宝原路退款（生产）+ 标记 refunded + 回收 mint 发卡。"""
+        order = self.db.query(Order).filter(Order.id == order_id).with_for_update().first()
+        if not order:
+            raise NotFoundError("订单不存在")
+        if order.status not in ("paid",):
+            raise BadRequestError("仅已支付订单可退款")
+        alipay_refund_id = None
+        if (
+            not self.settings.alipay_mock
+            and self.settings.alipay_configured
+            and order.alipay_trade_no
+            and order.amount_fen > 0
+        ):
+            try:
+                alipay = self._build_alipay_client()
+                refund_no = f"RF{order.out_trade_no}"[:64]
+                result = alipay.api_alipay_trade_refund(
+                    out_trade_no=order.out_trade_no,
+                    refund_amount=f"{order.amount_fen / 100:.2f}",
+                    out_request_no=refund_no,
+                )
+                alipay_refund_id = result.get("trade_no") or refund_no
+            except Exception as exc:
+                logger.exception("Alipay refund failed order=%s", order.id)
+                raise BadRequestError(f"支付宝退款失败: {exc}") from exc
+        order.status = "refunded"
+        note = "admin_refund"
+        if alipay_refund_id:
+            note = f"alipay_refund:{alipay_refund_id}"
+        grant = order.grant_result_json or {}
+        user_card_id = grant.get("user_card_id")
+        if user_card_id:
+            from app.db.models.commerce import UserCollectibleCard
+
+            row = self.db.get(UserCollectibleCard, user_card_id)
+            if row and row.user_id == order.user_id:
+                row.tradable = False
+                note = "card_recalled"
+        self.db.commit()
+        return {"ok": True, "order_id": order.id, "status": order.status, "note": note}
 
     def list_user_orders(self, user_id: int, limit: int = 20) -> list[Order]:
         return (

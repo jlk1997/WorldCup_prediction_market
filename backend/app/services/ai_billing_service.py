@@ -36,6 +36,7 @@ class BillingDecision:
     daily_free_limit: int
     mode: str
     force_refresh: bool
+    used_pack_credit: bool = False
 
     def to_dict(self) -> dict:
         return {
@@ -45,6 +46,7 @@ class BillingDecision:
             "daily_free_limit": self.daily_free_limit,
             "mode": self.mode,
             "force_refresh": self.force_refresh,
+            "used_pack_credit": self.used_pack_credit,
         }
 
 
@@ -211,6 +213,8 @@ class AiBillingService:
             "free_remaining": max(0, limit - used),
             "fan_coins": user.fan_coins,
             "has_season_pass": _has_active_pass(user),
+            "ai_pack_live_credits": getattr(user, "ai_pack_live_credits", 0) or 0,
+            "ai_pack_refresh_credits": getattr(user, "ai_pack_refresh_credits", 0) or 0,
             "costs": {
                 "pre_match": self.settings.ai_coin_cost_pre_match,
                 "live": self.settings.ai_coin_cost_live,
@@ -223,6 +227,14 @@ class AiBillingService:
         row = self._get_usage_row(user.id, _utcnow().date())
         used = row.free_used if row else 0
         return max(0, limit - used)
+
+    def grant_ai_pack(self, user: User, payload: dict) -> None:
+        live = int(payload.get("ai_live_credits") or 0)
+        refresh = int(payload.get("ai_refresh_credits") or 0)
+        if live:
+            user.ai_pack_live_credits = (getattr(user, "ai_pack_live_credits", 0) or 0) + live
+        if refresh:
+            user.ai_pack_refresh_credits = (getattr(user, "ai_pack_refresh_credits", 0) or 0) + refresh
 
     def _decide_charge(
         self,
@@ -238,6 +250,23 @@ class AiBillingService:
         discount = self.card_discount_pct(user, team_ids)
         coin_cost = self.mode_coin_cost(mode, force_refresh, discount)
 
+        live_credits = getattr(user, "ai_pack_live_credits", 0) or 0
+        refresh_credits = getattr(user, "ai_pack_refresh_credits", 0) or 0
+        if mode == "live" and live_credits > 0:
+            if not dry_run:
+                user.ai_pack_live_credits = live_credits - 1
+                if force_refresh and refresh_credits > 0:
+                    user.ai_pack_refresh_credits = refresh_credits - 1
+            return BillingDecision(
+                charge_coins=0,
+                used_free_quota=False,
+                free_remaining=max(0, limit - free_used),
+                daily_free_limit=limit,
+                mode=mode,
+                force_refresh=force_refresh,
+                used_pack_credit=True,
+            )
+
         if free_used < limit:
             return BillingDecision(
                 charge_coins=0,
@@ -246,6 +275,18 @@ class AiBillingService:
                 daily_free_limit=limit,
                 mode=mode,
                 force_refresh=force_refresh,
+            )
+
+        if force_refresh and refresh_credits > 0 and not dry_run:
+            user.ai_pack_refresh_credits = refresh_credits - 1
+            return BillingDecision(
+                charge_coins=0,
+                used_free_quota=False,
+                free_remaining=max(0, limit - free_used),
+                daily_free_limit=limit,
+                mode=mode,
+                force_refresh=force_refresh,
+                used_pack_credit=True,
             )
 
         if (user.fan_coins or 0) < coin_cost:

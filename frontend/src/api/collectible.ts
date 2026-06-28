@@ -60,6 +60,7 @@ export interface CollectibleChainStatus {
   pending_mints: number
   minted_count: number
   failed_mints?: number
+  first_failed_user_card_id?: number | null
   account: { native_address?: string; status?: string; chain_name?: string } | null
   compliance_notice: string
 }
@@ -231,8 +232,55 @@ export async function claimCollectibleSet(setCode: string) {
   return data
 }
 
+export async function refreshCollectibleChainMint(userCardId: number) {
+  const { data } = await apiClient.post<{ chain: CollectibleChainBrief }>(
+    `/api/collectible/chain/refresh/${userCardId}`,
+  )
+  return data.chain
+}
+
+export interface ProvenanceEvent {
+  kind: string
+  at: string | null
+  label: string
+  detail?: string
+  nft_id?: string | null
+  tx_hash?: string | null
+  chain_status?: string | null
+  error?: string
+  direction?: string
+  points_amount?: number
+}
+
+export interface CollectibleProvenance {
+  user_card_id: number
+  card_name: string | null
+  serial_no: number | null
+  chain: CollectibleChainBrief | null
+  events: ProvenanceEvent[]
+  compliance_notice: string
+}
+
+export async function getCollectibleProvenance(userCardId: number) {
+  const { data } = await apiClient.get<CollectibleProvenance>(
+    `/api/collectible/user-card/${userCardId}/provenance`,
+  )
+  return data
+}
+
 export async function getCollectibleChainStatus() {
   const { data } = await apiClient.get<CollectibleChainStatus>('/api/collectible/chain/status')
+  return data
+}
+
+export async function getUserCardChainStatus(userCardId: number) {
+  const { data } = await apiClient.get<{
+    user_card_id: number
+    chain_status: string
+    chain_nft_id: string | null
+    chain_tx_hash: string | null
+    serial_no: number | null
+  }>(`/api/collectible/user-card/${userCardId}/chain`)
   return data
 }
 

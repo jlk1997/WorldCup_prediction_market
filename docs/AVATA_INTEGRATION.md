@@ -77,7 +77,28 @@ AVATA_CLASS_OWNER=
 | 端点 | 说明 |
 |------|------|
 | `GET /api/collectible/chain/status` | 用户链账户与铸造统计（需登录） |
+| `GET /api/collectible/user-card/{id}/chain` | 单卡链状态 |
+| `POST /api/collectible/chain/retry/{user_card_id}` | 失败/none 卡重新排队或立即铸造 |
+| `POST /api/collectible/chain/refresh/{user_card_id}` | 刷新 pending/minting 状态 |
+| `GET /api/collectible/user-card/{id}/provenance` | 溯源时间线（获得→铸造→流转） |
 | `GET /api/collectible/metadata/{user_card_id}.json` | NFT 元数据（公开，供 AVATA uri 引用） |
+
+## 上线检查清单
+
+1. `AVATA_ENABLED=true`，生产 `AVATA_MOCK=false`
+2. `AVATA_NFT_CLASS_ID`、`AVATA_CLASS_OWNER` 已填
+3. `PUBLIC_API_BASE_URL=https://你的域名`（无 `/api` 后缀）
+4. `ENABLE_BACKGROUND_INGEST=true` 或独立 ingest worker
+5. `python scripts/check_production_readiness.py` → PASS
+6. `python scripts/diagnose_chain_status.py` 查看 chain_status 分布
+7. 历史卡：`python scripts/backfill_chain_mint.py --dry-run` 后正式执行
+8. `python scripts/e2e_chain_checklist.py --user-card-id <已mint卡ID>`
+
+## 叠卡与 NFT 策略
+
+- **新发卡**（非 duplicate）：自动 `chain_status=pending`，scheduler 异步铸造
+- **叠卡 duplicate**：只增加 `count`，不产生新 NFT；用户可 **拆分叠卡** 后每张单独排队铸造
+- **交易行/转赠**：DB 所有权为准；已 `minted` 卡 best-effort 链上转移 NFT
 
 ## 链上状态
 
@@ -103,5 +124,14 @@ AVATA_CLASS_OWNER=
 - 创建 NFT 类别：`POST /v3/native/nft/classes`
 - 发行 NFT：`POST /v3/native/nft/nfts/{class_id}`
 - 查询上链结果：`GET /v3/native/tx/{operation_id}`
+
+### API 密钥轮换
+
+若密钥泄露或定期轮换：
+
+1. 在 [AVATA 控制台](https://docs.avata.bianjie.ai/) 创建新 Key/Secret
+2. 更新生产 `backend/.env` 中 `AVATA_API_KEY` / `AVATA_API_SECRET`
+3. 滚动重启 backend + ingest worker（无需改 NFT Class ID）
+4. 禁用旧密钥；确认 `python scripts/diagnose_chain_status.py` 中 `avata_active=true`
 
 文档：[AVATA 帮助文档](https://docs.avata.bianjie.ai/)

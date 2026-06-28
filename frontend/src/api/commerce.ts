@@ -344,6 +344,41 @@ export async function getDailyStatus() {
   return data
 }
 
+export interface TodayHomeTodo {
+  kind: string
+  label: string
+  detail?: string
+  path: string
+}
+
+export interface TodayHomeData {
+  daily: DailyStatus
+  hub: Record<string, unknown>
+  live_mints: Array<{ id: number; name: string; remaining: number }>
+  pending_chain_mints: number
+  todos: TodayHomeTodo[]
+  ritual_done: number
+  ritual_total: number
+  match_day: boolean
+  matchday_offer?: {
+    mint_event_id: number
+    name: string
+    remaining: number
+    title: string
+    body: string
+    ab_variant: string
+    path: string
+  } | null
+  failed_chain_mints?: number
+  first_failed_user_card_id?: number | null
+  chain_enabled?: boolean
+}
+
+export async function getTodayHome(): Promise<TodayHomeData> {
+  const { data } = await apiClient.get<TodayHomeData>('/api/game/today-home')
+  return data
+}
+
 export async function getMatchPickStats(matchId: number) {
   const { data } = await apiClient.get<PickStats>(`/api/game/matches/${matchId}/pick-stats`)
   return data
@@ -505,6 +540,12 @@ export interface OrderDetail {
   grant_season_pass_days: number
   grant_summary?: string[]
   alipay_trade_no: string | null
+  mint_event_id?: number | null
+  mint_serial_no?: number | null
+  mint_card_name?: string | null
+  mint_user_card_id?: number | null
+  mint_notice?: string | null
+  created_at?: string | null
 }
 
 export async function createOrder(
@@ -611,6 +652,46 @@ export async function pollOrderUntilPaid(
 
 export async function getOrder(orderId: number) {
   const { data } = await apiClient.get(`/api/pay/orders/${orderId}`)
+  return data
+}
+
+export async function listOrders(limit = 30): Promise<OrderDetail[]> {
+  const { data } = await apiClient.get<OrderDetail[]>('/api/pay/orders', { params: { limit } })
+  return data
+}
+
+export async function cancelOrder(outTradeNo: string): Promise<OrderDetail> {
+  const { data } = await apiClient.post<OrderDetail>(
+    `/api/pay/orders/by-no/${encodeURIComponent(outTradeNo)}/cancel`,
+  )
+  return data
+}
+
+export async function adminRefundOrder(orderId: number, adminSecret: string) {
+  const { data } = await apiClient.post('/api/pay/admin/refund', null, {
+    params: { order_id: orderId },
+    headers: { 'X-Admin-Secret': adminSecret },
+  })
+  return data
+}
+
+export async function adminListCashProducts(adminSecret: string): Promise<Product[]> {
+  const { data } = await apiClient.get<Product[]>('/api/shop/admin/cash-products', {
+    headers: { 'X-Admin-Secret': adminSecret },
+  })
+  return data
+}
+
+export async function adminBindMintBundle(
+  productId: number,
+  mintEventId: number,
+  adminSecret: string,
+): Promise<Product> {
+  const { data } = await apiClient.post<Product>(
+    `/api/shop/admin/cash-products/${productId}/bind-mint`,
+    { mint_event_id: mintEventId },
+    { headers: { 'X-Admin-Secret': adminSecret } },
+  )
   return data
 }
 

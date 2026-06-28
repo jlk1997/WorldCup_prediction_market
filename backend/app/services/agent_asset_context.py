@@ -84,3 +84,40 @@ class AgentAssetContextService:
             "real_name_verified": bool(user.real_name_verified),
             "disclaimer": "球星卡为站内虚拟藏品，无现金价值；分析中勿宣传投资或保值。",
         }
+
+    def mint_advisor(self, user: User, event_id: int) -> dict[str, Any]:
+        from app.db.models.commerce import MintEvent
+
+        event = self.db.get(MintEvent, event_id)
+        if not event or not event.active:
+            from app.core.exceptions import NotFoundError
+
+            raise NotFoundError("打新活动不存在")
+        card = (
+            self.db.query(CollectibleCard)
+            .filter(CollectibleCard.code == event.card_code)
+            .first()
+        )
+        owned = False
+        if card:
+            owned = (
+                self.db.query(UserCollectibleCard.id)
+                .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.card_id == card.id)
+                .first()
+                is not None
+            )
+        ctx = self.build(user, {card.team_id} if card and card.team_id else None)
+        remaining = max(0, (event.total_supply or 0) - (event.issued or 0))
+        bullets = [
+            f"剩余 {remaining}/{event.total_supply}，{'已持有同卡' if owned else '尚未持有该系列'}",
+            f"你已有 {ctx['match_team_cards']} 张相关球队卡，持卡 AI 分析省 {ctx['card_discount_pct']}%",
+            f"军团助威加成约 +{ctx['battalion_boost_pct']}%（若用于主队）",
+        ]
+        verdict = "值得考虑" if not owned and remaining > 0 else "已持有可跳过" if owned else "已接近售罄"
+        return {
+            "event_id": event_id,
+            "event_name": event.name,
+            "bullets": bullets,
+            "verdict": verdict,
+            "disclaimer": "仅供娱乐参考，不构成投资建议。",
+        }

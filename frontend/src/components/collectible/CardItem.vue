@@ -31,6 +31,8 @@
       >
         ⏳
       </div>
+      <div v-else-if="card.chain?.status === 'failed'" class="chain-badge failed" title="铸造失败">!</div>
+      <div v-else-if="card.chain?.status === 'none'" class="chain-badge none" title="未铸造">○</div>
       <div v-if="card.highlights?.length" class="highlight-dot" title="已点亮高光印记" />
 
       <div class="card-name-overlay">
@@ -222,6 +224,19 @@ const rarityLabel = computed(() => RARITY_LABELS[props.card.rarity] || props.car
   background: rgba(232, 197, 71, 0.22);
   color: #e8c547;
   border-color: rgba(232, 197, 71, 0.45);
+}
+
+.chain-badge.failed {
+  background: rgba(255, 90, 90, 0.28);
+  color: #ff8a8a;
+  border-color: rgba(255, 90, 90, 0.5);
+}
+
+.chain-badge.none {
+  background: rgba(140, 150, 170, 0.25);
+  color: #b8c0d0;
+  border-color: rgba(140, 150, 170, 0.4);
+  font-size: 0.55rem;
 }
 
 .highlight-dot {

@@ -97,6 +97,22 @@ class CardAssetService:
             raise BadRequestError(f"新获卡牌冷却中，约 {hours} 小时后可流通")
         self.assert_no_active_listing(row.id)
         self.assert_no_active_stake(row.id)
+        self.assert_not_in_active_fantasy_lineup(row.id, row.user_id)
+
+    def assert_not_in_active_fantasy_lineup(self, user_card_id: int, user_id: int) -> None:
+        from app.db.models.commerce import FantasyLineup
+        from app.services.fantasy_service import current_period_key
+
+        period = current_period_key()
+        lineups = (
+            self.db.query(FantasyLineup)
+            .filter(FantasyLineup.user_id == user_id, FantasyLineup.period_key == period)
+            .all()
+        )
+        for lineup in lineups:
+            slots = lineup.slots_json or []
+            if user_card_id in slots:
+                raise BadRequestError("该卡牌在当前数字阵容中，请先调整阵容后再挂牌")
 
     def assert_no_active_listing(self, user_card_id: int) -> None:
         from app.db.models.commerce import CardListing
@@ -341,6 +357,31 @@ class CardAssetService:
         )
         portfolio = self.portfolio_value(user.id)
 
+        from app.db.models import AgentRun
+
+        ai_runs = (
+            self.db.query(func.count(AgentRun.id)).filter(AgentRun.user_id == user.id).scalar() or 0
+        )
+        group_total = (
+            self.db.query(func.count(CollectibleCard.id))
+            .filter(CollectibleCard.series.in_(["group", "wc2026_group"]), CollectibleCard.active.is_(True))
+            .scalar()
+            or 0
+        )
+        group_owned = 0
+        if group_total:
+            group_owned = (
+                self.db.query(func.count(UserCollectibleCard.id))
+                .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
+                .filter(
+                    UserCollectibleCard.user_id == user.id,
+                    CollectibleCard.series.in_(["group", "wc2026_group"]),
+                )
+                .scalar()
+                or 0
+            )
+        series_group_pct = int(round(group_owned / group_total * 100)) if group_total else 0
+
         metrics = {
             "owned": owned,
             "legend_owned": legend_owned,
@@ -351,6 +392,8 @@ class CardAssetService:
             "collab_owned": collab_owned,
             "crest_teams": crest_teams,
             "portfolio": portfolio,
+            "ai_runs": ai_runs,
+            "series_group_pct": series_group_pct,
         }
         newly: list[str] = []
         for ach in ACHIEVEMENTS:

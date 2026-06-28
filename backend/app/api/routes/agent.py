@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from app.agents.insight_helpers import insight_from_run
 from app.agents.orchestrator import MatchAnalysisOrchestrator
 from app.agents.report_validator import compute_live_fingerprint
 from app.agents.tools import AgentTools
@@ -272,24 +273,9 @@ def agent_insight(
     if not run or not run.final_output:
         return {"status": "success", "data": AgentInsightOut(has_data=False)}
 
-    out = run.final_output
-    wp = out.get("win_probability") or {}
     return {
         "status": "success",
-        "data": AgentInsightOut(
-            has_data=True,
-            run_id=run.id,
-            summary=(out.get("summary") or "")[:280],
-            predicted_score=out.get("predicted_score") or out.get("score") or "-",
-            confidence=float(run.confidence) if run.confidence else float(out.get("confidence", 0.7)),
-            win_probability={
-                "team1": float(wp.get("team1", 0.33)),
-                "draw": float(wp.get("draw", 0.34)),
-                "team2": float(wp.get("team2", 0.33)),
-            },
-            mode=run.mode,
-            created_at=run.created_at,
-        ),
+        "data": insight_from_run(run, team1=team1, team2=team2, summary_max=280),
     }
 
 
@@ -355,21 +341,8 @@ def batch_agent_insights(
         if not run or not run.final_output:
             results[key] = AgentInsightOut(has_data=False).model_dump()
             continue
-        out = run.final_output
-        wp = out.get("win_probability") or {}
-        results[key] = AgentInsightOut(
-            has_data=True,
-            run_id=run.id,
-            summary=(out.get("summary") or "")[:120],
-            predicted_score=out.get("predicted_score") or out.get("score") or "-",
-            confidence=float(run.confidence) if run.confidence else float(out.get("confidence", 0.7)),
-            win_probability={
-                "team1": float(wp.get("team1", 0.33)),
-                "draw": float(wp.get("draw", 0.34)),
-                "team2": float(wp.get("team2", 0.33)),
-            },
-            mode=run.mode,
-            created_at=run.created_at,
+        results[key] = insight_from_run(
+            run, team1=pair.team1, team2=pair.team2, summary_max=120
         ).model_dump()
 
     return {"status": "success", "data": results}
@@ -421,4 +394,23 @@ def get_agent_run(run_id: int, user: User = Depends(get_current_user), db: Sessi
         "created_at": run.created_at,
         "validation_warnings": (run.final_output or {}).get("validation_warnings") or [],
         "data": data,
+    }
+
+
+@router.get("/coach/deck")
+def coach_recommend_deck(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.agents.asset_tools import AgentAssetTools
+
+    return {"status": "success", "data": AgentAssetTools(db, user.id).recommend_duel_deck()}
+
+
+@router.get("/coach/mint/{event_id}")
+def coach_mint_advisor(
+    event_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    from app.services.agent_asset_context import AgentAssetContextService
+
+    return {
+        "status": "success",
+        "data": AgentAssetContextService(db).mint_advisor(user, event_id),
     }

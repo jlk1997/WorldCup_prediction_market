@@ -18,6 +18,7 @@
               {{ myRankLabel }}
             </span>
           </div>
+          <el-button size="small" plain :loading="advising" @click="runAdvisor">AI 阵容顾问</el-button>
         </div>
         <div class="reward-tiers">
           <span v-for="t in rewardTiers" :key="t.rank" class="tier-chip">第{{ t.rank }}名 {{ t.coins }}币</span>
@@ -122,6 +123,7 @@ import {
   getFantasy,
   saveFantasy,
   getFantasyLeaderboard,
+  getFantasyAdvisor,
   type FantasyEligibleCard,
   type FantasyLineup,
   type FantasyScoreLogItem,
@@ -138,6 +140,7 @@ usePageMeta({
 
 const loading = ref(false)
 const saving = ref(false)
+const advising = ref(false)
 const lineup = ref<FantasyLineup | null>(null)
 const eligible = ref<FantasyEligibleCard[]>([])
 const scoreLogs = ref<FantasyScoreLogItem[]>([])
@@ -235,6 +238,28 @@ function confirmRemoveSlot() {
   if (activeSlotIndex.value >= 0) removeSlot(activeSlotIndex.value)
   slotDialog.value = false
   activeSlotIndex.value = -1
+}
+
+async function runAdvisor() {
+  advising.value = true
+  try {
+    const res = await getFantasyAdvisor()
+    if (!res.ok) {
+      ElMessage.warning(res.reason || '无法生成建议')
+      return
+    }
+    selected.value = (res.recommended || []).map((c) => {
+      const full = eligible.value.find((e) => e.user_card_id === c.user_card_id)
+      return full || null
+    })
+    while (selected.value.length < (lineup.value?.size || 5)) selected.value.push(null)
+    dirty.value = true
+    ElMessage.success(res.summary || '已填入 AI 推荐阵容')
+  } catch (e: unknown) {
+    ElMessage.error(extractApiError(e, '顾问失败'))
+  } finally {
+    advising.value = false
+  }
 }
 
 async function save() {

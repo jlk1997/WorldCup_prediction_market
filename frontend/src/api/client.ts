@@ -5,6 +5,7 @@ import {
   handleRateLimitResponse,
   rejectIfRateLimited,
 } from './rateLimitGuard'
+import { getDeviceId } from '../utils/deviceId'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:10086'
 
@@ -22,6 +23,7 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  config.headers['X-Device-Id'] = getDeviceId()
   return config
 })
 

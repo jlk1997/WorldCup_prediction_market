@@ -46,6 +46,8 @@ ACHIEVEMENTS: list[dict] = [
     {"code": "first_collab", "name": "联名藏家", "desc": "拥有第一张联名/IP 卡", "metric": "collab_owned", "threshold": 1},
     {"code": "battalion_card_master", "name": "三军徽章", "desc": "为 3 支球队持有队徽卡", "metric": "crest_teams", "threshold": 3},
     {"code": "portfolio_10k", "name": "万元身家", "desc": "资产组合估值达 10000 积分", "metric": "portfolio", "threshold": 10000},
+    {"code": "ai_analyst_100", "name": "AI 百场分析师", "desc": "累计完成 100 次 AI 分析", "metric": "ai_runs", "threshold": 100},
+    {"code": "series_group_collector", "name": "小组赛收藏家", "desc": "集齐小组赛系列半数以上卡牌", "metric": "series_group_pct", "threshold": 50},
 ]
 
 ACHIEVEMENT_BY_CODE = {a["code"]: a for a in ACHIEVEMENTS}

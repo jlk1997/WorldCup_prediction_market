@@ -39,6 +39,18 @@
       <p v-if="scoreLine" class="score-line">{{ scoreLine }}</p>
       <p v-if="extraLine" class="extra-line">{{ extraLine }}</p>
 
+      <div v-if="aiCompareVisible" class="ai-pick-compare">
+        <div class="ai-pick-row">
+          <span class="ai-pick-label">你的选择</span>
+          <strong>{{ resolved.userPickLabel || '—' }}</strong>
+        </div>
+        <div class="ai-pick-row ai">
+          <span class="ai-pick-label">AI 推荐</span>
+          <strong>{{ resolved.aiPickLabel }}</strong>
+        </div>
+        <p v-if="aiCompareHint" class="ai-pick-hint" :class="aiCompareHintClass">{{ aiCompareHint }}</p>
+      </div>
+
       <div v-if="resolved.status === 'won'" class="reward-grid">
         <div v-if="resolved.pointsAwarded" class="reward-item">
           <span class="reward-val">+{{ resolved.pointsAwarded }}</span>
@@ -62,6 +74,11 @@
       <div v-if="resolved.status === 'won' && resolved.collectibleDrop?.dropped" class="card-drop-cta">
         <p v-if="cardChainPending" class="card-drop-hint">球星卡即将揭晓…</p>
         <el-button type="primary" plain size="small" @click="openCardReveal">立即查看新卡</el-button>
+        <div class="asset-bridge">
+          <el-button size="small" plain @click="goCollection">去收藏册</el-button>
+          <el-button size="small" plain @click="goStake">去质押</el-button>
+          <el-button size="small" plain @click="goArena">去对决</el-button>
+        </div>
       </div>
 
       <p v-if="resolved.status === 'lost' && comfortHint" class="comfort">{{ comfortHint }}</p>
@@ -254,6 +271,35 @@ const voidHint = computed(() => {
   if (!r) return ''
   if (r.voidReason === 'no_score') return predictRevealConfig.hints?.void_no_score
   return predictRevealConfig.hints?.void_default
+})
+
+const aiCompareVisible = computed(() => {
+  const r = resolved.value
+  return Boolean(r?.aiPickLabel && r.status !== 'void')
+})
+
+const aiCompareHint = computed(() => {
+  const r = resolved.value
+  if (!r?.aiPickLabel) return ''
+  if (r.userFollowedAi === true && r.status === 'won') return '跟 AI 选，猜中了 🎯'
+  if (r.userFollowedAi === true && r.status === 'lost') return '跟 AI 选，本场未中'
+  if (r.userFollowedAi === false && r.aiPickCorrect === true && r.status === 'lost') {
+    return 'AI 猜对了，下次可考虑跟 AI'
+  }
+  if (r.userFollowedAi === false && r.aiPickCorrect === false && r.status === 'won') {
+    return '你比 AI 更准 👏'
+  }
+  if (r.aiPickCorrect === true) return 'AI 本场也猜对了'
+  if (r.aiPickCorrect === false) return 'AI 本场也未中'
+  return ''
+})
+
+const aiCompareHintClass = computed(() => {
+  const r = resolved.value
+  if (!r) return ''
+  if (r.status === 'won' && r.userFollowedAi) return 'good'
+  if (r.aiPickCorrect === false && r.status === 'won') return 'good'
+  return ''
 })
 
 const btnNext = computed(() => predictRevealConfig.buttons?.next_match || '去猜下一场')
@@ -467,6 +513,21 @@ function goFanCard() {
   router.push('/me/card')
 }
 
+function goCollection() {
+  void close({ skipCard: true, skipCoach: true })
+  router.push('/collection')
+}
+
+function goStake() {
+  void close({ skipCard: true, skipCoach: true })
+  router.push('/collection?tab=stake')
+}
+
+function goArena() {
+  void close({ skipCard: true, skipCoach: true })
+  router.push('/arena#duel')
+}
+
 async function shareWin() {
   const r = resolved.value
   const predId = Number(note.value?.payload?.prediction_id)
@@ -613,6 +674,37 @@ function goRecords() {
 .extra-line {
   font-size: 0.85rem;
 }
+.ai-pick-compare {
+  margin: 12px 0 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(120, 140, 255, 0.08);
+  border: 1px solid rgba(120, 140, 255, 0.22);
+  text-align: left;
+}
+.ai-pick-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+}
+.ai-pick-row.ai strong {
+  color: #9eb4ff;
+}
+.ai-pick-label {
+  color: var(--wc-text-muted);
+  font-size: 0.78rem;
+}
+.ai-pick-hint {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--wc-text-muted);
+}
+.ai-pick-hint.good {
+  color: var(--wc-accent-gold, #d4a574);
+}
 .reward-grid {
   display: flex;
   flex-wrap: wrap;
@@ -648,6 +740,12 @@ function goRecords() {
   flex-direction: column;
   align-items: center;
   gap: 6px;
+}
+.asset-bridge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
 }
 .card-drop-hint {
   margin: 0;

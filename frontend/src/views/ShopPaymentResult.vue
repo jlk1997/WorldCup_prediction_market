@@ -18,8 +18,20 @@
             <path class="check-mark" fill="none" d="M14 27l8 8 16-18" />
           </svg>
         </div>
-        <h1>{{ isPassOrder ? '尊享手册已解锁' : '支付成功' }}</h1>
-        <p v-if="isPassOrder" class="pass-success-lead">
+        <h1>{{ successTitle }}</h1>
+        <p v-if="isMintOrder && order.mint_serial_no" class="pass-success-lead">
+          序列号 #{{ order.mint_serial_no }} · {{ chainStatusLabel }}
+        </p>
+        <div v-if="isMintOrder && mintChainDetail" class="chain-result glass-inner">
+          <p v-if="mintChainDetail.chain_nft_id">
+            NFT ID：<span class="mono">{{ mintChainDetail.chain_nft_id }}</span>
+          </p>
+          <p v-if="mintChainDetail.chain_tx_hash">
+            Tx：<span class="mono">{{ shortTx(mintChainDetail.chain_tx_hash) }}</span>
+          </p>
+          <p v-if="chainStatus === 'failed'" class="chain-fail-hint">可在收藏册一键重试铸造</p>
+        </div>
+        <p v-else-if="isPassOrder" class="pass-success-lead">
           尊享轨道已开启 · 已达等级奖励可一键领取（确定性发放，非盲盒）
         </p>
         <p class="amount">¥{{ (order.amount_fen / 100).toFixed(2) }}</p>
@@ -57,6 +69,21 @@
 
         <div class="actions">
           <el-button
+            v-if="isMintOrder"
+            type="primary"
+            class="action-btn"
+            @click="goCollection"
+          >
+            查看我的球星卡
+          </el-button>
+          <el-button
+            v-if="isMintOrder"
+            class="action-btn"
+            @click="goCardDuel"
+          >
+            去卡牌对决
+          </el-button>
+          <el-button
             v-if="isPassOrder"
             type="primary"
             class="action-btn"
@@ -64,7 +91,7 @@
           >
             领取手册奖励
           </el-button>
-          <el-button v-else type="primary" class="action-btn" @click="goMe">查看我的权益</el-button>
+          <el-button v-else-if="!isMintOrder" type="primary" class="action-btn" @click="goMe">查看我的权益</el-button>
           <el-button
             v-if="order.product_type === 'collection_pass' && !isPassOrder"
             class="action-btn"
@@ -75,7 +102,7 @@
           <el-button v-if="order.product_type === 'cosmetic'" class="action-btn" @click="goFanCard">
             查看球迷名片
           </el-button>
-          <el-button class="action-btn" @click="goShop">继续逛逛</el-button>
+          <el-button class="action-btn" @click="goShop">{{ isMintOrder ? '继续打新' : '继续逛逛' }}</el-button>
         </div>
       </template>
 
@@ -83,11 +110,14 @@
       <template v-else-if="phase === 'pending'">
         <div class="status-icon pending">⏳</div>
         <h1>支付处理中</h1>
-        <p class="lead">到账可能稍有延迟，请稍后刷新或返回商城查看余额。</p>
+        <p class="lead">到账可能稍有延迟，请稍后刷新或返回查看订单。</p>
         <p v-if="order" class="order-hint">订单号：{{ order.out_trade_no }}</p>
         <div class="actions">
           <el-button type="primary" class="action-btn" :loading="refreshing" @click="refreshStatus">
             刷新状态
+          </el-button>
+          <el-button v-if="order?.status === 'pending'" class="action-btn" :loading="cancelling" @click="cancelPending">
+            取消订单
           </el-button>
           <el-button class="action-btn" @click="goShop">返回商城</el-button>
         </div>
@@ -112,6 +142,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { authState, fetchMe } from '../stores/authStore'
 import {
+  cancelOrder,
   getOrderByTradeNo,
   mockPay,
   pollOrderUntilPaid,
@@ -124,6 +155,7 @@ import { useStadiumStore } from '../stores/stadiumStore'
 import EntitlementPreview from '../components/EntitlementPreview.vue'
 import { buildOrderGrantSummary } from '../utils/entitlements'
 import { clearPendingOrder, resolveOutTradeNo } from '../utils/payEnv'
+import { getUserCardChainStatus } from '../api/collectible'
 
 type Phase = 'processing' | 'success' | 'pending' | 'failed'
 
@@ -136,10 +168,33 @@ const order = ref<OrderDetail | null>(null)
 const failTitle = ref('支付未完成')
 const failMessage = ref('请返回商城重试，或联系客服。')
 const refreshing = ref(false)
+const cancelling = ref(false)
 const balancePulse = ref(false)
+const chainStatus = ref<string>('pending')
+const mintChainDetail = ref<{
+  chain_nft_id: string | null
+  chain_tx_hash: string | null
+} | null>(null)
+let chainPollTimer: ReturnType<typeof setInterval> | null = null
+
+const CHAIN_LABELS: Record<string, string> = {
+  none: '等待排队铸造',
+  pending: '链上铸造排队中',
+  minting: '链上铸造中…',
+  minted: '文昌链凭证已就绪',
+  failed: '链上铸造失败，可在收藏册重试',
+}
+
+const chainStatusLabel = computed(() => CHAIN_LABELS[chainStatus.value] || '链上铸造处理中')
 
 const grantLines = computed(() => (order.value ? buildOrderGrantSummary(order.value) : []))
+const isMintOrder = computed(() => order.value?.product_type === 'mint_event')
 const isPassOrder = computed(() => order.value?.product_type === 'collection_pass')
+const successTitle = computed(() => {
+  if (isMintOrder.value) return '打新成功'
+  if (isPassOrder.value) return '尊享手册已解锁'
+  return '支付成功'
+})
 const showEntitlementPreview = computed(
   () => order.value?.product_type === 'season_pass' || order.value?.product_type === 'cosmetic',
 )
@@ -173,7 +228,43 @@ watch(
 
 onUnmounted(() => {
   setUiOverlay('shop-payment-result', false)
+  stopChainPoll()
 })
+
+function stopChainPoll() {
+  if (chainPollTimer) {
+    clearInterval(chainPollTimer)
+    chainPollTimer = null
+  }
+}
+
+async function pollMintChain(userCardId: number) {
+  try {
+    const st = await getUserCardChainStatus(userCardId)
+    chainStatus.value = st.chain_status || 'pending'
+    mintChainDetail.value = {
+      chain_nft_id: st.chain_nft_id,
+      chain_tx_hash: st.chain_tx_hash,
+    }
+    if (st.chain_status === 'minted' || st.chain_status === 'failed') {
+      stopChainPoll()
+    }
+  } catch {
+    /* ignore transient errors */
+  }
+}
+
+function shortTx(hash: string) {
+  if (hash.length <= 16) return hash
+  return `${hash.slice(0, 8)}…${hash.slice(-6)}`
+}
+
+function startChainPoll(userCardId: number | null | undefined) {
+  stopChainPoll()
+  if (!userCardId) return
+  void pollMintChain(userCardId)
+  chainPollTimer = setInterval(() => void pollMintChain(userCardId), 4000)
+}
 
 function formatTime(iso: string) {
   try {
@@ -193,7 +284,15 @@ async function afterSuccess(detail: OrderDetail) {
   order.value = detail
   phase.value = 'success'
   clearPendingOrder()
+  try {
+    sessionStorage.removeItem('wc_mint_return')
+  } catch {
+    /* ignore */
+  }
   await fetchMe()
+  if (detail.product_type === 'mint_event' && detail.mint_user_card_id) {
+    startChainPoll(detail.mint_user_card_id)
+  }
   balancePulse.value = true
   setTimeout(() => {
     balancePulse.value = false
@@ -295,7 +394,36 @@ function goCollectionPass() {
   router.push('/collection?tab=pass')
 }
 
+function goCollection() {
+  router.push('/collection')
+}
+
+function goCardDuel() {
+  router.push('/arena#duel')
+}
+
+async function cancelPending() {
+  const outTradeNo = order.value?.out_trade_no ?? resolveOutTradeNo(route.query as Record<string, unknown>)
+  if (!outTradeNo) return
+  cancelling.value = true
+  try {
+    await cancelOrder(outTradeNo)
+    phase.value = 'failed'
+    failTitle.value = '订单已取消'
+    failMessage.value = '库存已释放，可重新发起打新或购买。'
+    clearPendingOrder()
+  } catch (e) {
+    showApiError(e)
+  } finally {
+    cancelling.value = false
+  }
+}
+
 function retryPay() {
+  if (sessionStorage.getItem('wc_mint_return')) {
+    router.push('/mint')
+    return
+  }
   router.push('/shop')
 }
 </script>
@@ -379,6 +507,34 @@ h1 {
   font-size: 0.82rem;
   color: #7eb8ff;
   line-height: 1.5;
+}
+
+.chain-result {
+  text-align: left;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--wc-text-muted);
+  line-height: 1.55;
+}
+
+.chain-result p {
+  margin: 0 0 4px;
+}
+
+.chain-result p:last-child {
+  margin-bottom: 0;
+}
+
+.chain-result .mono {
+  color: #c8e6ff;
+  word-break: break-all;
+}
+
+.chain-fail-hint {
+  color: #f0b86c !important;
+  margin-top: 6px !important;
 }
 
 .amount {

@@ -213,6 +213,8 @@ class AgentInsightOut(BaseModel):
     predicted_score: str = "-"
     confidence: float | None = None
     win_probability: dict[str, float] | None = None
+    betting_pick: str | None = None
+    pick_label: str | None = None
     mode: str | None = None
     created_at: datetime | None = None
 

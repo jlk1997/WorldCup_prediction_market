@@ -36,6 +36,12 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
+def _bust_card_market_cache(card_id: int) -> None:
+    from app.core.cache import cache_delete
+
+    cache_delete(f"market:card:{card_id}")
+
+
 def _unique_ref_id(base: int) -> int:
     """生成唯一 ledger ref_id，避免同 listing 多次退款被幂等拦截。"""
     return int(base * 1_000_000 + (int(time.time() * 1000) % 1_000_000))
@@ -90,6 +96,7 @@ class MarketplaceService:
         row.lock_state = "listed"
         self.db.flush()
         self.db.commit()
+        _bust_card_market_cache(card.id)
         return {"ok": True, "listing_id": listing.id, "expires_at": expires.isoformat()}
 
     def cancel_listing(self, user: User, listing_id: int) -> dict[str, Any]:
@@ -110,6 +117,7 @@ class MarketplaceService:
         if row and row.lock_state == "listed":
             row.lock_state = "none"
         self.db.commit()
+        _bust_card_market_cache(listing.card_id)
         return {"ok": True}
 
     # ----------------------- 一口价购买 -----------------------
@@ -372,6 +380,7 @@ class MarketplaceService:
         listing.status = "sold"
         listing.sold_to_id = buyer.id
         listing.sold_price = price
+        _bust_card_market_cache(listing.card_id)
         self.asset.evaluate_achievements(buyer)
         self.asset.evaluate_achievements(seller)
 
@@ -410,6 +419,7 @@ class MarketplaceService:
         listing.status = "sold"
         listing.sold_to_id = winner.id
         listing.sold_price = price
+        _bust_card_market_cache(listing.card_id)
         self.db.query(MarketBid).filter(
             MarketBid.listing_id == listing.id,
             MarketBid.bidder_id == winner.id,
@@ -488,8 +498,10 @@ class MarketplaceService:
         *,
         viewer_id: int | None = None,
     ) -> dict:
+        from app.services.collectible_chain_service import CollectibleChainService
+
         cur = listing.current_bid or listing.price_points
-        return {
+        payload = {
             "listing_id": listing.id,
             "list_type": listing.list_type,
             "card_code": card.code,
@@ -508,6 +520,15 @@ class MarketplaceService:
             "seller_id": listing.seller_id,
             "is_mine": bool(viewer_id and listing.seller_id == viewer_id),
         }
+        if row:
+            chain = CollectibleChainService(self.db).chain_brief(row)
+            if chain and chain.get("status") == "minted":
+                payload["chain"] = {
+                    "status": chain.get("status"),
+                    "nft_id": chain.get("nft_id"),
+                    "chain_name": chain.get("chain_name"),
+                }
+        return payload
 
     def listing_detail(self, listing_id: int, *, viewer_id: int | None = None) -> dict[str, Any]:
         listing = self.db.get(CardListing, listing_id)
@@ -517,7 +538,25 @@ class MarketplaceService:
         row = self.db.get(UserCollectibleCard, listing.user_card_id)
         brief = self._listing_brief(listing, card, row, viewer_id=viewer_id)
         brief["status"] = listing.status
-        brief["market"] = self.card_market_data(listing.card_id)
+        market = self.card_market_data(listing.card_id)
+        brief["market"] = market
+        if row and card:
+            est = CardAssetService(self.db).card_value(row, card)
+            brief["ai_note"] = self._buyer_ai_note(
+                int(brief["current_price"] or 0),
+                market.get("floor_price"),
+                est,
+                int(market.get("active_listings") or 0),
+            )
+            from app.services.collectible_chain_service import CollectibleChainService
+
+            chain = CollectibleChainService(self.db).chain_brief(row)
+            if chain and chain.get("status") == "minted":
+                brief["chain"] = {
+                    "status": chain.get("status"),
+                    "nft_id": chain.get("nft_id"),
+                    "chain_name": chain.get("chain_name"),
+                }
         brief["disclaimer"] = MARKET_DISCLAIMER
         bids = (
             self.db.query(MarketBid)
@@ -532,7 +571,32 @@ class MarketplaceService:
         ]
         return brief
 
+    @staticmethod
+    def _buyer_ai_note(
+        price: int,
+        floor: int | None,
+        est: int | None,
+        active_listings: int,
+    ) -> str:
+        if price <= 0:
+            return "请确认挂牌价格后再决定入手。"
+        if floor and price <= int(floor * 1.08):
+            return "当前价接近地板，性价比较好，适合收藏入手。"
+        if est and price > int(est * 1.25):
+            return "挂牌价高于估值较多，可观望或等地板下行。"
+        if active_listings <= 1:
+            return "该卡流通较少，成交价波动可能较大。"
+        return "价格处于合理区间，可参考地板与近期成交后再决定。"
+
     def card_market_data(self, card_id: int) -> dict[str, Any]:
+        from app.core.cache import cache_get, cache_set
+        from app.core.user_surface_cache import MARKET_CARD_TTL
+
+        cache_key = f"market:card:{card_id}"
+        cached = cache_get(cache_key)
+        if cached is not None:
+            return cached
+
         now = _utcnow()
         day_ago = now - timedelta(hours=24)
         floor = (
@@ -590,7 +654,7 @@ class MarketplaceService:
         last_price = history_points[-1]["price"] if history_points else None
         card = self.db.get(CollectibleCard, card_id)
         buyback_floor = self.settings.asset_buyback_floor_map.get(card.rarity, 0) if card else 0
-        return {
+        payload = {
             "floor_price": int(floor) if floor else None,
             "active_listings": int(active_count),
             "volume_24h": int(vol24),
@@ -600,6 +664,8 @@ class MarketplaceService:
             "buyback_floor": buyback_floor,
             "currency": "redeem_points",
         }
+        cache_set(cache_key, payload, ttl=MARKET_CARD_TTL)
+        return payload
 
     def my_listings(self, user: User) -> list[dict[str, Any]]:
         now = _utcnow()

@@ -295,6 +295,14 @@ class RedeemProductAdminOut(ProductOut):
     updated_at: datetime | None = None
 
 
+class CashProductGrantPatch(BaseModel):
+    grant_payload: dict
+
+
+class CashProductBindMint(BaseModel):
+    mint_event_id: int = Field(ge=1)
+
+
 class OrderOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -312,12 +320,55 @@ class OrderDetailOut(OrderOut):
     grant_season_pass_days: int
     alipay_trade_no: str | None = None
     grant_summary: list[str] = Field(default_factory=list)
+    mint_event_id: int | None = None
+    mint_serial_no: int | None = None
+    mint_card_name: str | None = None
+    mint_user_card_id: int | None = None
+    mint_notice: str | None = None
+    created_at: datetime | None = None
 
 
 class CreateOrderRequest(BaseModel):
     product_id: int
     age_confirmed: bool = Field(description="用户确认已满18周岁并知悉虚拟商品规则")
     pay_channel: Literal["auto", "page", "wap"] = "auto"
+
+
+class MintCreateOrderRequest(BaseModel):
+    age_confirmed: bool = Field(default=True, description="用户确认已满18周岁并知悉虚拟商品规则")
+    pay_channel: Literal["auto", "page", "wap"] = "auto"
+
+
+class MintEventAdminCreate(BaseModel):
+    code: str = Field(min_length=3, max_length=60)
+    name: str = Field(min_length=1, max_length=120)
+    card_code: str
+    currency: Literal["coins", "rmb"] = "rmb"
+    price_coins: int = 0
+    price_fen: int = 0
+    total_supply: int = Field(ge=1, le=1_000_000)
+    per_user_limit: int = Field(default=1, ge=1, le=100)
+    sale_mode: Literal["public", "whitelist", "lottery"] = "public"
+    description: str | None = None
+    competition: str | None = None
+    rarity: str = "epic"
+    starts_at: datetime | None = None
+    ends_at: datetime | None = None
+    active: bool = True
+
+
+class MintEventAdminUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    price_coins: int | None = None
+    price_fen: int | None = None
+    total_supply: int | None = Field(default=None, ge=1)
+    per_user_limit: int | None = Field(default=None, ge=1)
+    sale_mode: Literal["public", "whitelist", "lottery"] | None = None
+    status: str | None = None
+    active: bool | None = None
+    starts_at: datetime | None = None
+    ends_at: datetime | None = None
 
 
 class CreatePayResponse(BaseModel):

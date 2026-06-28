@@ -89,6 +89,9 @@ class CardStakeService:
             user, amount, "stake_yield", "stake_claim", stake.id * 100_000 + stake.total_claimed
         )
         self.db.commit()
+        from app.core.user_surface_cache import invalidate_user_surface
+
+        invalidate_user_surface(user.id)
         return {"ok": True, "points_gained": amount}
 
     def unstake(self, user: User, stake_id: int) -> dict[str, Any]:

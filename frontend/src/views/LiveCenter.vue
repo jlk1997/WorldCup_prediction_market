@@ -45,6 +45,7 @@
                 <div class="score">{{ formatMatchScore(m.home_score, m.away_score, { status: m.status, isLive: m.is_live }) }}</div>
                 <div class="teams">{{ m.team1 }} vs {{ m.team2 }}</div>
                 <div class="meta">{{ matchStatusLabel(m) }}</div>
+                <LiveInsightChip :insight="matchInsight(m)" />
                 <div v-if="arenaByMatch[m.id!]" class="mini-arena">
                   擂台 {{ arenaByMatch[m.id!].home.power }} : {{ arenaByMatch[m.id!].away.power }}
                 </div>
@@ -83,9 +84,18 @@
                 <div class="score">{{ m.home_score ?? 0 }} : {{ m.away_score ?? 0 }}</div>
                 <div class="teams">{{ m.team1 }} vs {{ m.team2 }}</div>
                 <div class="meta">{{ m.minute }}' · {{ m.period || 'LIVE' }}</div>
+                <LiveInsightChip :insight="matchInsight(m)" />
               </div>
               <div class="card-actions">
                 <el-button size="small" @click.stop="goMatch(m)">详情</el-button>
+                <el-button
+                  v-if="isMatchPredictable(m)"
+                  size="small"
+                  plain
+                  @click.stop="$router.push({ path: '/predict', query: { highlight: String(m.id) } })"
+                >
+                  竞猜
+                </el-button>
                 <el-button size="small" type="primary" @click.stop="goAgent(m, true)">赛中 AI</el-button>
               </div>
             </div>
@@ -116,11 +126,13 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useLiveMatches } from '@/composables/useLiveMatches'
 import { useAgentNavigate } from '@/composables/useAgentNavigate'
+import { useScheduleInsights } from '@/composables/useScheduleInsights'
+import LiveInsightChip from '@/components/LiveInsightChip.vue'
 import { apiClient } from '@/api/client'
 import { getMatchArena, type MatchArena } from '@/api/arena'
 import { authState } from '@/stores/authStore'
 import { fetchRecommendations, profileState } from '@/stores/profileStore'
-import type { LiveMatch } from '@/types/api'
+import type { LiveMatch, ScheduleItem } from '@/types/api'
 import MatchTable from '@/components/MatchTable.vue'
 import MatchMobileList from '@/components/MatchMobileList.vue'
 import GuestLoginBanner from '@/components/GuestLoginBanner.vue'
@@ -208,6 +220,36 @@ const myMatchesSorted = computed(() =>
     return ka === 3 ? tb - ta : ta - tb
   }),
 )
+
+const insightMatches = computed(() =>
+  [...liveNow.value, ...myMatchesSorted.value.slice(0, 12)]
+    .filter((m, i, arr) => m.team1 && m.team2 && arr.findIndex((x) => x.id === m.id) === i)
+    .map(
+      (m) =>
+        ({
+          id: m.id,
+          team1: m.team1,
+          team2: m.team2,
+          is_live: m.is_live,
+          status: m.status,
+        }) as ScheduleItem,
+    ),
+)
+
+const { getInsight } = useScheduleInsights(insightMatches, {
+  enabled: computed(() => !!authState.accessToken),
+})
+
+function matchInsight(m: LiveMatch) {
+  if (!m.team1 || !m.team2) return null
+  return getInsight({
+    id: m.id,
+    team1: m.team1,
+    team2: m.team2,
+    is_live: m.is_live,
+    status: m.status,
+  } as ScheduleItem)
+}
 
 const nextMainArena = ref<MatchArena | null>(null)
 const arenaByMatch = ref<Record<number, MatchArena>>({})

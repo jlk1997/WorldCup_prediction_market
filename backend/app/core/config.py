@@ -72,11 +72,14 @@ class Settings(BaseSettings):
     agent_max_steps: int = 8
     agent_default_mode: str = "pre_match"
     agent_enable_tool_loop: bool = False
+    agent_enable_tool_loop_advise: bool = True
     agent_critic_modes: str = "pre_match,post_match"
     agent_predict_temperature: float = 0.35
     agent_cache_hours_pre_match: int = 24
     agent_cache_minutes_live: int = 3
     agent_parallel_llm: bool = True
+    prediction_knowledge_path: str = "world_cup_2026_prediction_knowledge_base.md"
+    prediction_knowledge_enabled: bool = True
 
     # Auth / SMTP
     jwt_secret: str = "change-me-in-production"
@@ -122,6 +125,8 @@ class Settings(BaseSettings):
     ai_coin_cost_live: int = 10
     ai_coin_cost_force_refresh: int = 10
     ai_max_concurrent_llm: int = 1
+    ai_queue_alert_pct: int = 85
+    chain_pending_timeout_minutes: int = 30
     minimax_max_retries: int = 5
     minimax_retry_base_seconds: float = 1.5
     ai_daily_token_budget: int = 500_000
@@ -211,6 +216,10 @@ class Settings(BaseSettings):
     card_duel_quick_match_enabled: bool = True
     # 实名认证（mock：开发期直接通过；生产对接三要素）
     realname_mock: bool = True
+    realname_provider: str = "mock"  # mock | local | api
+    realname_allow_local: bool = False
+    mint_primary_duel_bp_bonus_pct: float = 3.0
+    mint_primary_boost_days: int = 7
 
     # Collection Pass (藏品赛季手册)
     collection_pass_premium_price_fen: int = 4500

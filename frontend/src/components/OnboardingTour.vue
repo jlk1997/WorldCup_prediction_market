@@ -11,7 +11,7 @@
   >
     <template #header>
       <div class="onboard-header">
-        <span class="onboard-badge">首次使用 · 6 步指引</span>
+        <span class="onboard-badge">首次使用 · 9 步指引</span>
         <h2 class="onboard-title">欢迎使用「最后一舞：世界杯2026」</h2>
         <p class="onboard-subtitle">带你快速上手赛事大屏、竞猜大厅与 AI 分析</p>
       </div>
@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, type Component } from 'vue'
 import { useRouter } from 'vue-router'
-import { DataBoard, Trophy, MagicStick, View, Share, Coin } from '@element-plus/icons-vue'
+import { DataBoard, Trophy, MagicStick, View, Share, Coin, Postcard, ShoppingCart } from '@element-plus/icons-vue'
 import { trackEvent } from '@/utils/analytics'
 import { fetchRecommendations, profileState } from '@/stores/profileStore'
 import {
@@ -92,7 +92,7 @@ const visible = ref(true)
 function readStep() {
   const raw = sessionStorage.getItem(STEP_KEY)
   const n = raw ? Number.parseInt(raw, 10) : 0
-  return Number.isFinite(n) && n >= 0 && n < 6 ? n : 0
+  return Number.isFinite(n) && n >= 0 && n < 9 ? n : 0
 }
 
 const step = ref(readStep())
@@ -159,9 +159,33 @@ const steps: TourStep[] = [
     icon: Share,
     color: '#f0a020',
   },
+  {
+    title: '收藏册与球星卡',
+    short: '收藏',
+    desc: '猜中可掉卡 Reveal，收藏册查看序列号与文昌链铸造状态。',
+    tips: ['质押/对决/ Fantasy 用同一张卡', '积分二级交易，无 RMB 二级'],
+    icon: Postcard,
+    color: '#d4a574',
+  },
+  {
+    title: '限量打新',
+    short: '打新',
+    desc: '人民币或球迷币首发限量球星卡，序列号稀缺；AI 顾问帮你参考值不值。',
+    tips: ['实名 + 18+ 确认', '支付结果页可查看链上进度'],
+    icon: ShoppingCart,
+    color: '#58a6ff',
+  },
+  {
+    title: '持卡 AI 折扣',
+    short: '折扣',
+    desc: '持有或质押相关球队卡，AI 分析费自动省 30%；商城可购分析次数包。',
+    tips: ['竞猜大厅内嵌 AI 摘要', '一键跟 AI 选后再确认提交'],
+    icon: MagicStick,
+    color: '#a371f7',
+  },
 ]
 
-const routes = ['/', '/live', '/agent', '/', '/predict', '/invite']
+const routes = ['/', '/live', '/agent', '/', '/predict', '/invite', '/collection', '/mint', '/shop']
 
 function finish() {
   sessionStorage.removeItem(STEP_KEY)

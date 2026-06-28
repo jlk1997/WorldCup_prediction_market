@@ -298,7 +298,9 @@ class MatchAnalysisOrchestrator:
                 self._emit(progress, {"type": "phase", "phase": "facts", "message": "DataAgent 采集事实"})
                 facts = self._gather_facts(team1_name, team2_name, steps, progress)
 
-                if self.settings.agent_enable_tool_loop:
+                if self.settings.agent_enable_tool_loop or (
+                    self.settings.agent_enable_tool_loop_advise and user_asset_ctx
+                ):
                     self.router.user_id = user_id
                     self._optional_tool_loop(llm, team1_name, team2_name, steps, progress)
 
@@ -532,6 +534,28 @@ class MatchAnalysisOrchestrator:
             self._append_step(steps, {"agent": "DataAgent", "action": "get_live_match", "output": live}, progress)
 
             result["live"] = live
+
+        if self.settings.prediction_knowledge_enabled:
+            from app.db.models import Match
+            from app.services.prediction_knowledge_service import snippet_for_teams
+
+            match_row = (
+                self.db.query(Match)
+                .filter(
+                    ((Match.team1_name == team1) & (Match.team2_name == team2))
+                    | ((Match.team1_name == team2) & (Match.team2_name == team1))
+                )
+                .order_by(Match.id.desc())
+                .first()
+            )
+            kb = snippet_for_teams(team1, team2, match=match_row)
+            if kb:
+                result["knowledge_base"] = kb
+                self._append_step(
+                    steps,
+                    {"agent": "DataAgent", "action": "load_prediction_knowledge", "output": kb[:400]},
+                    progress,
+                )
 
         return result
 
@@ -953,6 +977,9 @@ class MatchAnalysisOrchestrator:
             "user_asset": user_asset or None,
 
         }
+
+        if facts.get("knowledge_base"):
+            ctx["prediction_knowledge"] = facts["knowledge_base"]
 
         live = facts.get("live")
 

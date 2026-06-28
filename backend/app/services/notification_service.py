@@ -140,6 +140,10 @@ class NotificationService:
         is_free: bool = False,
         win_streak_after: int = 0,
         loss_streak_after: int = 0,
+        ai_pick: str | None = None,
+        ai_pick_label: str | None = None,
+        user_followed_ai: bool | None = None,
+        ai_pick_correct: bool | None = None,
     ) -> None:
         match_label = f"{team1 or '?'} vs {team2 or '?'}"
         if status == "won":
@@ -189,6 +193,10 @@ class NotificationService:
             "next_match_label": next_match_label,
             "next_match_hours": next_match_hours,
             "prediction_id": prediction_id,
+            "ai_pick": ai_pick,
+            "ai_pick_label": ai_pick_label,
+            "user_followed_ai": user_followed_ai,
+            "ai_pick_correct": ai_pick_correct,
         }
         if next_match_id and next_match_label:
             hours_txt = f"{next_match_hours} 小时后" if next_match_hours is not None else "稍后"
@@ -431,6 +439,64 @@ class NotificationService:
                 "notify_collectible_chain_minted failed user=%s card=%s",
                 user_id,
                 user_card_id,
+            )
+
+    def notify_mint_purchase_success(
+        self,
+        user_id: int,
+        card_name: str,
+        serial_no: int | None,
+        order_id: int,
+    ) -> None:
+        serial_text = f" · 序列号 #{serial_no}" if serial_no else ""
+        try:
+            self._upsert(
+                user_id,
+                "mint_purchase",
+                "打新成功",
+                f"已获得限量球星卡「{card_name}」{serial_text}，可前往收藏册查看并参与对决/阵容",
+                ref_type="order",
+                ref_id=order_id,
+                payload={"action": "/collection", "card_name": card_name, "serial_no": serial_no},
+            )
+        except Exception:
+            logger.exception("notify_mint_purchase_success failed user=%s order=%s", user_id, order_id)
+
+    def notify_fantasy_weekly(
+        self,
+        user_id: int,
+        *,
+        period_key: str,
+        rank: int,
+        score: int,
+        coins_awarded: int = 0,
+        ref_id: int | None = None,
+    ) -> None:
+        if coins_awarded > 0:
+            title = f"Fantasy 周榜第 {rank} 名"
+            body = f"{period_key} 得分 {score}，奖励 {coins_awarded} 球迷币"
+        else:
+            title = "Fantasy 周报"
+            body = f"{period_key} 排名第 {rank} 名，得分 {score}。调整阵容再战本周！"
+        try:
+            self._upsert(
+                user_id,
+                "fantasy_weekly",
+                title,
+                body,
+                ref_type="fantasy_period",
+                ref_id=ref_id if ref_id is not None else user_id,
+                payload={
+                    "action": "/fantasy",
+                    "period_key": period_key,
+                    "rank": rank,
+                    "score": score,
+                    "coins_awarded": coins_awarded,
+                },
+            )
+        except Exception:
+            logger.exception(
+                "notify_fantasy_weekly failed user=%s period=%s", user_id, period_key
             )
 
     def notify_redeem_refund(

@@ -30,6 +30,7 @@
 
           <PredictSettlementNotifier class="hide-mobile" />
           <CollectibleNotifier class="hide-mobile" />
+          <MatchdayGrowthNotifier class="hide-mobile" />
           <ReferralNotifier class="hide-mobile" />
 
           <div
@@ -66,6 +67,7 @@
                 </span>
               </button>
               <CollectibleNotifier v-if="isLoggedIn" />
+              <MatchdayGrowthNotifier v-if="isLoggedIn" />
               <ReferralNotifier v-if="isLoggedIn" />
               <PredictSettlementNotifier v-if="isLoggedIn" />
               <button
@@ -187,6 +189,7 @@
     <LeaderboardRewardDialog v-model="showRewardDialog" />
     <InviteShareSheet />
     <PredictShareSheet />
+    <SharePosterSheet />
     <CollectibleShareSheet />
     <PredictSettlementReveal />
     <CollectibleDropHost />
@@ -214,8 +217,10 @@ import PredictSettlementNotifier from './components/PredictSettlementNotifier.vu
 import PredictSettlementReveal from './components/PredictSettlementReveal.vue'
 import CollectibleDropHost from './components/collectible/CollectibleDropHost.vue'
 import PredictShareSheet from './components/PredictShareSheet.vue'
+import SharePosterSheet from './components/SharePosterSheet.vue'
 import ReferralNotifier from './components/ReferralNotifier.vue'
 import CollectibleNotifier from './components/CollectibleNotifier.vue'
+import MatchdayGrowthNotifier from './components/MatchdayGrowthNotifier.vue'
 import InviteShareSheet from './components/InviteShareSheet.vue'
 import CollectibleShareSheet from './components/CollectibleShareSheet.vue'
 import MobileBottomNav from './components/MobileBottomNav.vue'

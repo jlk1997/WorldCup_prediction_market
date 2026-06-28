@@ -18,6 +18,9 @@ const POLL_SLOW_MS = 120_000
 export const referralNotify = reactive({ unread: 0, latest: null as UserNotification | null })
 export const predictNotify = reactive({ unread: 0, latest: null as UserNotification | null })
 export const collectibleNotify = reactive({ unread: 0, latest: null as UserNotification | null })
+export const growthNotify = reactive({ unread: 0, latest: null as UserNotification | null })
+
+const GROWTH_CATEGORIES = ['matchday_repurchase', 'matchday_ai', 'fantasy_weekly'] as const
 
 export const predictReveal = reactive({
   visible: false,
@@ -63,6 +66,8 @@ async function pollAll() {
     predictNotify.latest = null
     collectibleNotify.unread = 0
     collectibleNotify.latest = null
+    growthNotify.unread = 0
+    growthNotify.latest = null
     return
   }
   try {
@@ -76,6 +81,7 @@ async function pollAll() {
     referralNotify.unread = refCount
     predictNotify.unread = predCount
     collectibleNotify.unread = dropC + setC + chainC
+    growthNotify.unread = GROWTH_CATEGORIES.reduce((n, c) => n + (counts[c] ?? 0), 0)
 
     const fetches: Promise<void>[] = []
     if (refCount > 0) {
@@ -126,6 +132,24 @@ async function pollAll() {
     } else {
       collectibleNotify.latest = null
     }
+    if (growthNotify.unread > 0) {
+      fetches.push(
+        Promise.all(
+          GROWTH_CATEGORIES.map((cat) =>
+            getNotifications({ unread_only: true, category: cat, limit: 1 }),
+          ),
+        ).then((groups) => {
+          const latest = groups.flat().sort((a, b) => b.id - a.id)[0] ?? null
+          growthNotify.latest = latest
+          if (latest) {
+            const payload = latest.payload as Record<string, unknown> | undefined
+            notifyIfHidden(latest.title, latest.body, String(payload?.path || '/'))
+          }
+        }),
+      )
+    } else {
+      growthNotify.latest = null
+    }
     await Promise.all(fetches)
 
     const nextInterval = await resolvePollInterval()
@@ -140,6 +164,7 @@ async function pollAll() {
     referralNotify.unread = 0
     predictNotify.unread = 0
     collectibleNotify.unread = 0
+    growthNotify.unread = 0
   }
 }
 
@@ -187,6 +212,14 @@ export async function markCollectibleRead() {
   await markNotificationsRead([collectibleNotify.latest.id])
   collectibleNotify.unread = Math.max(0, collectibleNotify.unread - 1)
   collectibleNotify.latest = null
+  await pollAll()
+}
+
+export async function markGrowthRead() {
+  if (!growthNotify.latest) return
+  await markNotificationsRead([growthNotify.latest.id])
+  growthNotify.unread = Math.max(0, growthNotify.unread - 1)
+  growthNotify.latest = null
   await pollAll()
 }
 
@@ -247,6 +280,8 @@ export function resetHeaderNotifications() {
   predictNotify.latest = null
   collectibleNotify.unread = 0
   collectibleNotify.latest = null
+  growthNotify.unread = 0
+  growthNotify.latest = null
   predictReveal.visible = false
   predictReveal.queue = []
   predictReveal.index = 0

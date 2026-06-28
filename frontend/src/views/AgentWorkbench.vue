@@ -71,6 +71,8 @@
             <router-link to="/login">登录</router-link>
           </el-alert>
 
+          <AiDiscountBar v-if="authState.accessToken" />
+
           <div v-else-if="predictGateVisible" class="predict-gate glass-inner">
             <h3>先完成首猜，再解锁完整 AI 分析</h3>
             <p>每天 1 次免费竞猜 · 约 30 秒 · 猜中得积分冲榜</p>
@@ -443,6 +445,7 @@ import TeamCompareBar from '@/components/TeamCompareBar.vue'
 
 import BettingGuideCard from '@/components/BettingGuideCard.vue'
 import AiBillingIntro from '@/components/AiBillingIntro.vue'
+import AiDiscountBar from '@/components/AiDiscountBar.vue'
 import { useStadiumScene } from '@/composables/useStadiumScene'
 import { useBreakpoint } from '@/composables/useBreakpoint'
 import { offerStarterPack } from '@/composables/useStarterPackOffer'

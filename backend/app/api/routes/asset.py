@@ -195,3 +195,21 @@ def fantasy_leaderboard(
 @router.get("/admin/economy", dependencies=[Depends(require_admin_secret_in_production)])
 def economy_dashboard(days: int = 7, db: Session = Depends(get_db)):
     return EconomyService(db).dashboard(days=min(max(days, 1), 90))
+
+
+@router.get("/admin/ops-dashboard", dependencies=[Depends(require_admin_secret_in_production)])
+def ops_dashboard(hours: int = 24, db: Session = Depends(get_db)):
+    from app.services.admin_ops_dashboard_service import AdminOpsDashboardService
+
+    return AdminOpsDashboardService(db).snapshot(window_hours=min(max(hours, 1), 168))
+
+
+@router.get("/fantasy/advisor")
+def fantasy_advisor(
+    match_id: int | None = None,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    from app.services.fantasy_advisor_service import FantasyAdvisorService
+
+    return FantasyAdvisorService(db).recommend_lineup(user, match_id=match_id)

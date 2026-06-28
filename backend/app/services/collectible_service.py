@@ -21,6 +21,7 @@ from app.db.models import Match, PlayerDetailed, Team
 from app.db.models.commerce import (
     CardSetDefinition,
     CardSetProgress,
+    CardTransferLog,
     CollectibleCard,
     CollectibleDropLog,
     CollectibleShard,
@@ -1022,6 +1023,17 @@ class CollectibleService:
             .all()
         )
         pending = counts.get("pending", 0) + counts.get("minting", 0)
+        failed = counts.get("failed", 0)
+        first_failed = None
+        if failed:
+            row = (
+                self.db.query(UserCollectibleCard.id)
+                .filter(UserCollectibleCard.user_id == user.id, UserCollectibleCard.chain_status == "failed")
+                .order_by(UserCollectibleCard.updated_at.desc())
+                .first()
+            )
+            if row:
+                first_failed = row[0]
         acct = None
         if settings.avata_active:
             row = self.db.query(UserChainAccount).filter(UserChainAccount.user_id == user.id).first()
@@ -1037,9 +1049,111 @@ class CollectibleService:
             "mock": settings.avata_mock,
             "pending_mints": pending,
             "minted_count": counts.get("minted", 0),
-            "failed_mints": counts.get("failed", 0),
+            "failed_mints": failed,
+            "first_failed_user_card_id": first_failed,
             "account": acct,
             "compliance_notice": "文昌链数字藏品由 AVATA 平台托管，仅限平台内展示，不可转赠交易。",
+        }
+
+    def get_provenance(self, user: User, user_card_id: int) -> dict[str, Any]:
+        """卡牌溯源时间线：获得 → 铸造 → 流转。"""
+        from app.core.exceptions import NotFoundError
+        from app.db.models.commerce import CollectibleCard
+
+        row = (
+            self.db.query(UserCollectibleCard)
+            .filter(UserCollectibleCard.id == user_card_id, UserCollectibleCard.user_id == user.id)
+            .first()
+        )
+        if not row:
+            raise NotFoundError("卡牌不存在")
+        card = self.db.get(CollectibleCard, row.card_id)
+        events: list[dict[str, Any]] = []
+
+        if row.obtained_at:
+            events.append(
+                {
+                    "kind": "obtained",
+                    "at": row.obtained_at.isoformat(),
+                    "label": "获得卡牌",
+                    "detail": row.source or "unknown",
+                }
+            )
+
+        drops = (
+            self.db.query(CollectibleDropLog)
+            .filter(CollectibleDropLog.user_id == user.id)
+            .order_by(CollectibleDropLog.id.desc())
+            .limit(200)
+            .all()
+        )
+        for drop in drops:
+            result = drop.result_json or {}
+            cards = result.get("cards") or []
+            if any(c.get("user_card_id") == row.id for c in cards if isinstance(c, dict)):
+                events.append(
+                    {
+                        "kind": "drop",
+                        "at": drop.created_at.isoformat() if drop.created_at else None,
+                        "label": "玩法掉落",
+                        "detail": drop.source,
+                        "ref_type": drop.ref_type,
+                        "ref_id": drop.ref_id,
+                    }
+                )
+                break
+
+        chain_st = row.chain_status or "none"
+        if chain_st not in ("none", ""):
+            mint_evt: dict[str, Any] = {
+                "kind": "mint",
+                "at": row.chain_minted_at.isoformat() if row.chain_minted_at else None,
+                "label": "文昌链铸造",
+                "detail": chain_st,
+                "nft_id": row.chain_nft_id,
+                "tx_hash": row.chain_tx_hash,
+            }
+            if row.chain_error:
+                mint_evt["error"] = row.chain_error
+            events.append(mint_evt)
+
+        transfers = (
+            self.db.query(CardTransferLog)
+            .filter(CardTransferLog.user_card_id == row.id)
+            .order_by(CardTransferLog.id.asc())
+            .all()
+        )
+        kind_labels = {
+            "gift": "转赠",
+            "trade": "交易行成交",
+            "buyback": "官方回购",
+            "primary": "打新获得",
+        }
+        for log in transfers:
+            events.append(
+                {
+                    "kind": log.kind,
+                    "at": log.created_at.isoformat() if log.created_at else None,
+                    "label": kind_labels.get(log.kind, log.kind),
+                    "detail": log.note,
+                    "points_amount": log.points_amount,
+                    "chain_status": log.chain_status,
+                    "tx_hash": log.chain_tx_hash,
+                    "direction": "in" if log.to_user_id == user.id else "out",
+                }
+            )
+
+        events.sort(key=lambda e: e.get("at") or "")
+        chain = self._chain_brief(row)
+        return {
+            "user_card_id": row.id,
+            "card_name": card.name if card else None,
+            "serial_no": row.serial_no,
+            "chain": chain,
+            "events": events,
+            "compliance_notice": (
+                "溯源记录为平台内虚拟收藏体验数据，链上凭证由 AVATA 托管，无现金价值。"
+            ),
         }
 
     def _total_active_cards(self) -> int:
@@ -1307,7 +1421,7 @@ class CollectibleService:
         """List view: minimal fields, chain status only (no nft ids)."""
         chain_status = row.chain_status if self._chain_enabled() and row.chain_status else None
         chain = None
-        if chain_status and chain_status not in ("none", ""):
+        if self._chain_enabled() and chain_status:
             chain = {
                 "enabled": True,
                 "chain_name": get_settings().avata_chain_name if self._chain_enabled() else "文昌链",

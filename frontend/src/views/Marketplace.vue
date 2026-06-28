@@ -157,6 +157,7 @@
               <span v-if="item.serial_no" class="pill serial">
                 #{{ item.serial_no }}<template v-if="item.mint_total">/{{ item.mint_total }}</template>
               </span>
+              <span v-if="item.chain?.status === 'minted'" class="pill chain" title="文昌链凭证随卡转移">链</span>
             </div>
 
             <div class="frame-art">
@@ -261,6 +262,10 @@
           <div class="stat"><span>24h额</span><b>{{ detail.market.volume_24h }}</b></div>
           <div class="stat"><span>回购价</span><b>{{ detail.market.buyback_floor }}</b></div>
         </div>
+        <p v-if="detail.ai_note" class="detail-ai-note">💡 {{ detail.ai_note }}</p>
+        <p v-if="detail.chain?.status === 'minted'" class="detail-chain-note">
+          文昌链凭证 · NFT {{ detail.chain.nft_id?.slice(0, 12) }}…
+        </p>
         <PriceSparkline v-if="detail.market?.history?.length" :points="detail.market.history.map(h => h.price)" />
 
         <div class="action-area">
@@ -949,6 +954,13 @@ onMounted(reload)
   color: #e8c88a;
   font-variant-numeric: tabular-nums;
 }
+.pill.chain {
+  background: rgba(46, 160, 100, 0.85);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.62rem;
+}
 
 .frame-art {
   flex: 1;
@@ -1260,6 +1272,19 @@ onMounted(reload)
   align-items: center;
 }
 .action-area .el-button { flex: 1; }
+.detail-ai-note {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(158, 180, 255, 0.92);
+  text-align: left;
+}
+.detail-chain-note {
+  margin: 6px 0 0;
+  font-size: 0.75rem;
+  color: #3dd68c;
+  text-align: left;
+}
 .dialog-disclaimer {
   font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.35);

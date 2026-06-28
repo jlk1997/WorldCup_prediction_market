@@ -6,6 +6,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -171,6 +172,9 @@ class FantasyService:
                 UserCollectibleCard.id.in_(ids),
                 UserCollectibleCard.user_id == user.id,
                 CollectibleCard.player_id.isnot(None),
+                (UserCollectibleCard.lock_state.is_(None))
+                | (UserCollectibleCard.lock_state == "none"),
+                (UserCollectibleCard.count.is_(None)) | (UserCollectibleCard.count <= 1),
             )
             .all()
         )
@@ -277,7 +281,9 @@ class FantasyService:
             )
             if exists:
                 continue
-            pts, detail = self._score_lineup_slots(slots, scorers, assisters, match_teams)
+            pts, detail = self._score_lineup_slots(
+                slots, scorers, assisters, match_teams, lineup.user_id
+            )
             if pts <= 0:
                 continue
             self.db.add(
@@ -306,6 +312,7 @@ class FantasyService:
         scorers: dict[str, int],
         assisters: dict[str, int],
         match_teams: set[str],
+        lineup_user_id: int,
     ) -> tuple[int, dict]:
         rows = (
             self.db.query(UserCollectibleCard, CollectibleCard)
@@ -316,6 +323,8 @@ class FantasyService:
         total = 0
         detail: dict[str, Any] = {"players": {}}
         for row, card in rows:
+            if row.user_id != lineup_user_id:
+                continue
             pname = None
             team_id = card.team_id
             if card.player_id:
@@ -387,6 +396,12 @@ class FantasyService:
             if coins <= 0:
                 skipped += 1
                 continue
+            user_locked = (
+                self.db.query(User).filter(User.id == user.id).with_for_update().first()
+            )
+            if not user_locked:
+                skipped += 1
+                continue
             exists = (
                 self.db.query(FantasyWeeklySettlement.id)
                 .filter(
@@ -398,26 +413,73 @@ class FantasyService:
             if exists:
                 skipped += 1
                 continue
-            user_locked = (
-                self.db.query(User).filter(User.id == user.id).with_for_update().first()
-            )
-            if not user_locked:
+            try:
+                with self.db.begin_nested():
+                    self.db.add(
+                        FantasyWeeklySettlement(
+                            user_id=user.id,
+                            period_key=period,
+                            rank=rank,
+                            score=lineup.score or 0,
+                            coins_awarded=coins,
+                        )
+                    )
+                    self.db.flush()
+            except IntegrityError:
                 skipped += 1
                 continue
             self.wallet.add_coins(
                 user_locked, coins, "fantasy_weekly", "fantasy_period", ref_id + rank
             )
-            self.db.add(
-                FantasyWeeklySettlement(
-                    user_id=user.id,
+            lineup.rewarded = True
+            awarded += 1
+            try:
+                from app.services.notification_service import NotificationService
+
+                NotificationService(self.db).notify_fantasy_weekly(
+                    user.id,
                     period_key=period,
                     rank=rank,
                     score=lineup.score or 0,
                     coins_awarded=coins,
+                    ref_id=ref_id + rank,
                 )
-            )
-            lineup.rewarded = True
-            awarded += 1
+            except Exception:
+                logger.exception(
+                    "Fantasy weekly notify failed user=%s period=%s", user.id, period
+                )
         if awarded:
             self.db.commit()
+            self._broadcast_weekly_digests(period, top_n)
         return {"awarded": awarded, "skipped": skipped, "period": period}
+
+    def _broadcast_weekly_digests(self, period: str, top_n: int) -> None:
+        """给当周有阵容但未单独通知的用户发周报（幂等）。"""
+        from app.services.notification_service import NotificationService
+
+        rows = (
+            self.db.query(FantasyLineup, User)
+            .join(User, FantasyLineup.user_id == User.id)
+            .filter(FantasyLineup.period_key == period, FantasyLineup.score > 0)
+            .order_by(FantasyLineup.score.desc())
+            .all()
+        )
+        svc = NotificationService(self.db)
+        for rank, (lineup, user) in enumerate(rows, start=1):
+            if rank <= top_n:
+                continue
+            try:
+                svc.notify_fantasy_weekly(
+                    user.id,
+                    period_key=period,
+                    rank=rank,
+                    score=lineup.score or 0,
+                    coins_awarded=0,
+                    ref_id=_period_ref_id(period) + rank,
+                )
+            except Exception:
+                logger.exception("Fantasy digest failed user=%s", user.id)
+        try:
+            self.db.commit()
+        except Exception:
+            logger.exception("Fantasy digest commit failed period=%s", period)

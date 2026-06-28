@@ -18,6 +18,7 @@ export const needsFirstPredict = computed(
     activationSegment.value === 'never_predicted' || activationSegment.value === 'profile_only',
 )
 export const needsSecondPredict = computed(() => activationSegment.value === 'one_and_done')
+export const isMatchDay = computed(() => dailyStatus.value?.match_day === true)
 
 export function useDailyStatusRef() {
   return dailyStatus

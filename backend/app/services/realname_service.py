@@ -48,10 +48,16 @@ class RealNameService:
         if not _ID_RE.match(id_no):
             raise BadRequestError("身份证号格式不正确")
 
-        # 生产环境应调用三要素/人脸核验；此处按配置 mock
+        # 生产环境应调用三要素/人脸核验；local 模式仅格式校验（staging）
         if not self.settings.realname_mock:
-            # TODO: 对接真实核验渠道
-            raise BadRequestError("实名认证渠道未配置")
+            provider = getattr(self.settings, "realname_provider", "api")
+            allow_local = getattr(self.settings, "realname_allow_local", False)
+            if provider == "local" and allow_local:
+                pass
+            elif provider == "mock":
+                pass
+            else:
+                raise BadRequestError("实名认证渠道未配置")
 
         h = self._hash(real_name, id_no)
         # 防止同一证件绑定多账号（简单去重）
