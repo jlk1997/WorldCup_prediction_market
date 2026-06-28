@@ -6,6 +6,7 @@ export const GuidePriority = {
   CollectibleReveal: 85,
   GuideModal: 70,
   PredictFirstCoach: 60,
+  FirstDuelCoach: 55,
   LeaderboardReward: 50,
   SecondPredictCoach: 40,
 } as const

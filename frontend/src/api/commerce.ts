@@ -292,6 +292,11 @@ export interface DailyStatus {
     cta_label: string
     path: string
   } | null
+  card_owned_count?: number
+  duel_total?: number
+  duel_segment?: 'never_dueled' | 'one_duel' | 'duel_active' | null
+  card_nudge?: { title: string; body: string; path: string } | null
+  primary_pillar?: 'cards' | 'predict' | null
   collection_pass_nudge?: {
     level: number
     next_level: number

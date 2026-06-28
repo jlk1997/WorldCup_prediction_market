@@ -30,6 +30,10 @@ class ProductAnalyticsService:
             "chain_mint_failed",
             "collectible_share",
             "page_view",
+            "duel_match_enter",
+            "duel_complete",
+            "duel_season_tier_up",
+            "duel_fee_sink",
         }
     )
 

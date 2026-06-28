@@ -19,8 +19,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { HomeFilled, Trophy, Coin, MagicStick, User, Postcard } from '@element-plus/icons-vue'
-import { isLoggedIn } from '../stores/authStore'
+import { isLoggedIn, isAuthBootstrapping } from '../stores/authStore'
 import { needsFirstPredict, isMatchDay } from '../stores/dailyStatusStore'
 
 const router = useRouter()
@@ -30,8 +31,8 @@ const tabs = computed(() => [
   { path: '/', label: '首页', icon: HomeFilled, auth: false, hint: false, matchDay: isMatchDay.value },
   { path: '/live', label: '赛事', icon: Trophy, auth: false, hint: false, matchDay: false },
   { path: '/predict', label: '竞猜', icon: Coin, auth: true, hint: needsFirstPredict.value, matchDay: false },
-  { path: '/collection', label: '收藏', icon: Postcard, auth: true, hint: false, matchDay: false },
-  { path: '/agent', label: 'AI', icon: MagicStick, auth: true, hint: false, matchDay: false },
+  { path: '/collection', label: '卡牌', icon: Postcard, auth: true, hint: false, matchDay: false },
+  { path: '/agent', label: 'AI', icon: MagicStick, auth: false, hint: false, matchDay: false },
   { path: '/me', label: '我的', icon: User, auth: true, hint: false, matchDay: false },
 ])
 
@@ -42,6 +43,11 @@ function isActive(path: string) {
 
 function go(item: { path: string; auth: boolean }) {
   if (item.auth && !isLoggedIn.value) {
+    if (isAuthBootstrapping.value) {
+      ElMessage.info('正在验证登录状态，请稍候…')
+      return
+    }
+    ElMessage.warning('请先登录后使用')
     router.push({ path: '/login', query: { redirect: item.path } })
     return
   }

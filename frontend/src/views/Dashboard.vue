@@ -51,6 +51,7 @@
       <StreakRiskBanner :status="dailyStatus" class="dashboard-streak-banner" />
 
       <GrowthPrimaryCard :status="dailyStatus" />
+      <FirstDuelCoach v-if="authState.accessToken" />
       <TodayHomePanel v-if="authState.accessToken" />
       <CollectionPassMiniCard />
       <CollectionPassNudgeBar :status="dailyStatus" />
@@ -141,6 +142,14 @@
                 @click.stop="$router.push({ path: '/predict', query: { highlight: String(focusMatch.id) } })"
               >
                 去竞猜
+              </el-button>
+              <el-button
+                v-if="showFocusDuelCta"
+                plain
+                class="cyber-btn-secondary"
+                @click.stop="$router.push('/collection')"
+              >
+                用主队卡对决
               </el-button>
               <el-button
                 v-if="focusMatch.id && focusCanCheer && authState.user?.profile_completed"
@@ -317,6 +326,7 @@ import InvitePromptBar from '../components/InvitePromptBar.vue'
 import OfficialQqGroupBar from '../components/OfficialQqGroupBar.vue'
 import StreakRiskBanner from '../components/StreakRiskBanner.vue'
 import GrowthPrimaryCard from '../components/GrowthPrimaryCard.vue'
+import FirstDuelCoach from '../components/FirstDuelCoach.vue'
 import TodayHomePanel from '../components/TodayHomePanel.vue'
 import CollectionPassNudgeBar from '../components/collectible/CollectionPassNudgeBar.vue'
 import CollectionPassMiniCard from '../components/collectible/CollectionPassMiniCard.vue'
@@ -459,6 +469,12 @@ const focusCanCheer = computed(
 const focusCanPredict = computed(() => {
   const m = focusMatch.value
   return !!m?.id && isMatchPredictable(m)
+})
+
+const showFocusDuelCta = computed(() => {
+  const cards = dailyStatus.value?.card_owned_count ?? 0
+  const duelSeg = dailyStatus.value?.duel_segment
+  return cards > 0 && duelSeg !== 'duel_active'
 })
 
 const focusEvents = computed(() => {

@@ -1,6 +1,6 @@
 <template>
 
-  <div class="agent-page">
+  <div class="agent-page mobile-page has-bottom-nav">
 
     <div class="layout">
 
@@ -66,23 +66,38 @@
             <p class="mode-desc">{{ modeDescription }}</p>
           </header>
 
-          <el-alert v-if="!authState.accessToken" type="warning" :closable="false" show-icon title="登录后可触发完整 AI 分析">
-            未登录仅可浏览历史缓存摘要。请先
-            <router-link to="/login">登录</router-link>
+          <el-alert
+            v-if="isAuthBootstrapping"
+            type="info"
+            :closable="false"
+            show-icon
+            title="正在验证登录状态"
+            class="auth-bootstrap-alert"
+          >
+            请稍候，正在同步你的球迷账户…
           </el-alert>
 
-          <AiDiscountBar v-if="authState.accessToken" />
+          <AuthGuestBanner
+            title="登录后可启动完整 AI 分析"
+            login-suffix="后选择球队并启动多 Agent 分析"
+          >
+            未登录仅可浏览历史缓存摘要与实力对比。
+            <router-link :to="{ path: '/login', query: { redirect: route.fullPath } }">去登录</router-link>
+          </AuthGuestBanner>
 
-          <div v-else-if="predictGateVisible" class="predict-gate glass-inner">
-            <h3>先完成首猜，再解锁完整 AI 分析</h3>
-            <p>每天 1 次免费竞猜 · 约 30 秒 · 猜中得积分冲榜</p>
-            <div class="predict-gate-actions">
-              <el-button type="primary" @click="goFirstPredict">去竞猜大厅</el-button>
-              <el-button text @click="predictGateDismissed = true">我先看看示例</el-button>
+          <template v-if="isLoggedIn">
+            <AiDiscountBar />
+
+            <div v-if="predictGateVisible" class="predict-gate glass-inner">
+              <h3>先完成首猜，再解锁完整 AI 分析</h3>
+              <p>每天 1 次免费竞猜 · 约 30 秒 · 猜中得积分冲榜</p>
+              <div class="predict-gate-actions">
+                <el-button type="primary" @click="goFirstPredict">去竞猜大厅</el-button>
+                <el-button text @click="predictGateDismissed = true">我先看看示例</el-button>
+              </div>
             </div>
-          </div>
 
-          <div v-else-if="authState.accessToken">
+            <div v-else class="analyze-panel">
           <div v-if="billingStatus" class="billing-chips">
             <div class="bill-chip">
               <span class="label">今日免费</span>
@@ -150,7 +165,7 @@
 
           <AiBillingIntro :visible="showBillingIntro" @ack="ackBilling" />
 
-          <div class="form-row" v-if="authState.accessToken">
+          <div class="form-row" v-if="isLoggedIn">
 
             <el-select v-model="team1" filterable placeholder="主队" style="width:160px" :disabled="loadingAnalyze">
 
@@ -192,7 +207,8 @@
             <span v-if="lastBilling.used_free_quota">（使用免费额度）</span>
           </p>
 
-          </div>
+            </div>
+          </template>
 
         </div>
 
@@ -403,7 +419,7 @@
 
 import { ref, watch, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
 import { fetchRecommendations, profileState } from '@/stores/profileStore'
-import { authState } from '@/stores/authStore'
+import { authState, isLoggedIn, isAuthBootstrapping } from '@/stores/authStore'
 
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 
@@ -446,6 +462,7 @@ import TeamCompareBar from '@/components/TeamCompareBar.vue'
 import BettingGuideCard from '@/components/BettingGuideCard.vue'
 import AiBillingIntro from '@/components/AiBillingIntro.vue'
 import AiDiscountBar from '@/components/AiDiscountBar.vue'
+import AuthGuestBanner from '@/components/AuthGuestBanner.vue'
 import { useStadiumScene } from '@/composables/useStadiumScene'
 import { useBreakpoint } from '@/composables/useBreakpoint'
 import { offerStarterPack } from '@/composables/useStarterPackOffer'
@@ -493,7 +510,7 @@ const predictGateDismissed = ref(false)
 const agentDailyStatus = ref<DailyStatus | null>(null)
 
 const predictGateVisible = computed(() => {
-  if (!authState.accessToken || predictGateDismissed.value) return false
+  if (!isLoggedIn.value || predictGateDismissed.value) return false
   const seg = agentDailyStatus.value?.activation_segment
   return seg === 'never_predicted' || seg === 'profile_only'
 })
@@ -942,7 +959,7 @@ async function loadRun(id: number) {
 
 
 async function loadBillingStatus() {
-  if (!authState.accessToken) return
+  if (!isLoggedIn.value) return
   try {
     billingStatus.value = await getAiBillingStatus()
   } catch {
@@ -951,7 +968,7 @@ async function loadBillingStatus() {
 }
 
 async function refreshBillingPreview() {
-  if (!authState.accessToken || !team1.value || !team2.value) {
+  if (!isLoggedIn.value || !team1.value || !team2.value) {
     billingPreview.value = null
     return
   }
@@ -1009,9 +1026,9 @@ function cancelAnalysis() {
 
 async function runAnalysis(fromAuto = false) {
   if (loadingAnalyze.value) return
-  if (!authState.accessToken) {
+  if (!isLoggedIn.value) {
     ElMessage.warning('请先登录后再使用 AI 分析')
-    router.push('/login')
+    router.push({ path: '/login', query: { redirect: route.fullPath } })
     return
   }
   if (showBillingIntro.value) {
@@ -1194,7 +1211,7 @@ onMounted(async () => {
   await Promise.all([fetchTeams(), fetchHistory(), fetchLiveContext(), loadBillingStatus()])
   await refreshBillingPreview()
 
-  if (authState.accessToken && !team1.value && !team2.value) {
+  if (isLoggedIn.value && !team1.value && !team2.value) {
     try {
       await fetchRecommendations()
       const nm = profileState.recommendations?.next_main_match
@@ -1221,6 +1238,11 @@ onMounted(async () => {
 
 <style scoped>
 .agent-page { padding: 16px 20px 24px; max-width: 1200px; margin: 0 auto; min-height: min-content; background: transparent; }
+@media (max-width: 768px) {
+  .agent-page {
+    padding: 12px 12px calc(var(--wc-bottom-nav-height, 56px) + 16px);
+  }
+}
 .predict-gate {
   padding: 20px 18px;
   border-radius: 12px;
@@ -1332,6 +1354,11 @@ onMounted(async () => {
 .run-btn:disabled { opacity: 0.65; cursor: not-allowed; }
 .run-btn:not(:disabled):hover { filter: brightness(1.06); transform: translateY(-1px); }
 .layout { display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+.history-title {
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  color: var(--wc-text-secondary);
+}
 .history { padding: 12px; max-height: 80vh; overflow-y: auto; }
 .history-filter { width: 100%; margin-bottom: 8px; }
 .history-item { padding: 10px; border-bottom: 1px dashed rgba(139, 41, 66, 0.35); cursor: pointer; font-size: 0.85rem; }
@@ -1437,9 +1464,15 @@ onMounted(async () => {
 .cancel-btn:hover { border-color: rgba(255, 255, 255, 0.35); color: #fff; }
 
 @media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .main { order: 1; }
+  .history { order: 2; }
   .agent-page { padding: 16px; }
-  .history { max-height: 220px; }
+  .history { max-height: none; }
   .form-row { flex-direction: column; align-items: stretch; }
   .form-row .el-select { width: 100%; min-height: 44px; }
   .run-btn { width: 100%; min-height: 44px; }
@@ -1449,11 +1482,16 @@ onMounted(async () => {
 
 @media (max-width: 768px) {
   .history:not(.history-expanded) {
-    max-height: 52px;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
+  }
+  .history:not(.history-expanded) .history-filter,
+  .history:not(.history-expanded) .history-item,
+  .history:not(.history-expanded) .el-empty {
+    display: none;
   }
   .history.history-expanded {
-    max-height: 280px;
+    max-height: min(52vh, 420px);
     overflow-y: auto;
   }
   .history-title {
@@ -1462,6 +1500,11 @@ onMounted(async () => {
     justify-content: space-between;
     align-items: center;
     user-select: none;
+    padding: 10px 12px;
+    margin: 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
   .history-toggle {
     font-size: 0.75rem;

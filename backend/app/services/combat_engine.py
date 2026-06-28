@@ -244,6 +244,7 @@ def resolve_duel(
     defender_cards: list[CombatCard],
     *,
     mode: str = "best_of_3",
+    bp_rng_pct: float | None = None,
 ) -> dict[str, Any]:
     if len(challenger_cards) != 3 or len(defender_cards) != 3:
         raise ValueError("need exactly 3 cards per side")
@@ -279,7 +280,11 @@ def resolve_duel(
         for rnd in range(3):
             if c_wins >= 2 or d_wins >= 2:
                 break
-            rr = resolve_round(challenger_cards[rnd], defender_cards[rnd], rnd + 1)
+            if bp_rng_pct is not None:
+                rng = random.uniform(-bp_rng_pct, bp_rng_pct)
+            else:
+                rng = random.uniform(-0.03, 0.03)
+            rr = resolve_round(challenger_cards[rnd], defender_cards[rnd], rnd + 1, rng_pct=rng)
             rounds.append(rr)
             if rr.winner_side == "challenger":
                 c_wins += 1

@@ -193,10 +193,17 @@ function onVisibility() {
 
 export function startHeaderNotificationPoll() {
   if (started || typeof document === 'undefined') return
+  if (!isLoggedIn.value) return
   started = true
   void pollAll()
   pollTimer = setInterval(() => void pollAll(), pollIntervalMs)
   document.addEventListener('visibilitychange', onVisibility)
+}
+
+export function stopHeaderNotificationPoll() {
+  resetHeaderNotifications()
+  started = false
+  document.removeEventListener('visibilitychange', onVisibility)
 }
 
 export async function markReferralRead() {
@@ -294,6 +301,7 @@ export function resetHeaderNotifications() {
 
 /** Called from WebSocket when predict_settled arrives. */
 export function handlePredictSettledPush(payload: Record<string, unknown>) {
+  if (!isLoggedIn.value) return
   const status = String(payload.status || '')
   const team1 = String(payload.team1 || '?')
   const team2 = String(payload.team2 || '?')

@@ -138,6 +138,26 @@
 
 
 
+        <div v-if="stakeTiers.length" class="stake-tiers">
+          <button
+            v-for="t in stakeTiers"
+            :key="t.stake"
+            type="button"
+            class="tier-chip"
+            :class="{ active: stake === t.stake }"
+            @click="stake = t.stake"
+          >
+            {{ t.label }}{{ t.stake ? ` · ${t.stake}分` : '' }}
+          </button>
+        </div>
+
+        <div v-if="chainQueueEnabled && mintedEligibleCount >= 3" class="match-mode-row">
+          <span>匹配模式</span>
+          <button type="button" class="tier-chip" :class="{ active: matchMode === 'casual' }" @click="matchMode = 'casual'">休闲</button>
+          <button type="button" class="tier-chip" :class="{ active: matchMode === 'ranked' }" @click="matchMode = 'ranked'">排位</button>
+          <button type="button" class="tier-chip" :class="{ active: matchMode === 'chain' }" @click="matchMode = 'chain'">凭证战</button>
+        </div>
+
         <div class="stake-row">
 
           <span>入场费（0=免费，{{ stakeMin }}-{{ stakeMax }}）</span>
@@ -294,7 +314,7 @@
 
 <script setup lang="ts">
 
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import DuelStatsBar from '@/components/asset/DuelStatsBar.vue'
@@ -354,8 +374,15 @@ const stake = ref(0)
 const stakeMin = ref(10)
 
 const stakeMax = ref(100)
+const stakeTiers = ref<{ stake: number; label: string }[]>([])
+const matchMode = ref<'casual' | 'ranked' | 'chain'>('casual')
+const chainQueueEnabled = ref(true)
 
 const inviteCode = ref('')
+
+const mintedEligibleCount = computed(() =>
+  eligible.value.filter((c) => c.chain_status === 'minted').length,
+)
 
 const acceptDialog = ref(false)
 
@@ -628,7 +655,7 @@ async function startDuel() {
   acting.value = true
   try {
     if (mode.value === 'match') {
-      const res = await enterDuelMatch(pickedIds.value, stake.value)
+      const res = await enterDuelMatch(pickedIds.value, stake.value, matchMode.value)
       matchInQueue.value = true
       matchDeckBp.value = res.deck_bp
       startMatchWaitTimer()
@@ -774,6 +801,8 @@ onMounted(async () => {
     const cfg = await getDuelConfig()
     stakeMin.value = cfg.stake_min
     stakeMax.value = cfg.stake_max
+    stakeTiers.value = cfg.stake_tiers || [{ stake: 0, label: '休闲' }]
+    chainQueueEnabled.value = cfg.chain_queue_enabled ?? true
     await Promise.all([loadEligible(), loadHistory(), loadPending(), loadOutgoing()])
     applyStagedPicks()
     await pollMatchStatus()
@@ -928,6 +957,28 @@ onUnmounted(() => {
 
 }
 
+.stake-tiers,
+.match-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.tier-chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--wc-text-secondary);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.tier-chip.active {
+  border-color: var(--wc-accent-gold);
+  color: var(--wc-accent-gold);
+  background: rgba(212, 165, 116, 0.12);
+}
 .stake-row {
 
   display: flex;

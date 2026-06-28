@@ -35,23 +35,46 @@ const DISMISS_MS = 24 * 60 * 60 * 1000
 
 const segment = computed(() => props.status?.activation_segment)
 const nudge = computed(() => props.status?.activation_nudge)
+const cardNudge = computed(() => props.status?.card_nudge)
+const duelSegment = computed(() => props.status?.duel_segment)
+const primaryPillar = computed(() => props.status?.primary_pillar)
 const nextMatch = computed(() => props.status?.next_predictable_match)
 
+const preferCardNudge = computed(() => {
+  if (!cardNudge.value) return false
+  if (primaryPillar.value === 'cards') return true
+  if ((props.status?.card_owned_count ?? 0) > 0 && duelSegment.value === 'never_dueled') return true
+  return false
+})
+
 const variant = computed(() => {
+  if (preferCardNudge.value) return 'cards'
   if (segment.value === 'one_and_done') return 'comeback'
   return 'activation'
 })
 
 const tagLabel = computed(() => {
+  if (preferCardNudge.value) return '卡牌中心'
   if (segment.value === 'profile_only') return '还差一步'
   if (segment.value === 'never_predicted') return '首猜有礼'
   if (segment.value === 'one_and_done') return '养成习惯'
   return '推荐'
 })
 
-const title = computed(() => nudge.value?.title || props.status?.next_action?.label || '完成竞猜')
-const body = computed(() => nudge.value?.body || '免费 · 约 30 秒 · 猜中得积分')
-const ctaLabel = computed(() => nudge.value?.cta_label || '去竞猜')
+const title = computed(() => {
+  if (preferCardNudge.value) return cardNudge.value!.title
+  return nudge.value?.title || props.status?.next_action?.label || '完成竞猜'
+})
+const body = computed(() => {
+  if (preferCardNudge.value) return cardNudge.value!.body
+  return nudge.value?.body || '免费 · 约 30 秒 · 猜中得积分'
+})
+const ctaLabel = computed(() => {
+  if (preferCardNudge.value) {
+    return duelSegment.value === 'never_dueled' ? '快速匹配' : '去卡牌中心'
+  }
+  return nudge.value?.cta_label || '去竞猜'
+})
 const matchLabel = computed(() => nextMatch.value?.label || null)
 
 const redeemHint = computed(() => {
@@ -61,15 +84,18 @@ const redeemHint = computed(() => {
   return `离「${rp.next_name}」还差 ${rp.gap} 分`
 })
 
-const targetPath = computed(
-  () =>
+const targetPath = computed(() => {
+  if (preferCardNudge.value) return cardNudge.value!.path
+  return (
     nudge.value?.path ||
     props.status?.next_action?.path ||
-    (nextMatch.value?.match_id ? `/predict?highlight=${nextMatch.value.match_id}` : '/predict'),
-)
+    (nextMatch.value?.match_id ? `/predict?highlight=${nextMatch.value.match_id}` : '/predict')
+  )
+})
 
 const shouldShow = computed(() => {
   if (!authState.accessToken) return false
+  if (preferCardNudge.value) return true
   const seg = segment.value
   return seg === 'never_predicted' || seg === 'profile_only' || seg === 'one_and_done'
 })

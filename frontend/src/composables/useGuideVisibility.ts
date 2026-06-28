@@ -6,7 +6,7 @@ import { authState, isLoggedIn } from '@/stores/authStore'
 export const AUTH_FLOW_PREFIXES = ['/login', '/onboarding'] as const
 
 /** Pages visited during the 6-step product tour (home appears twice: steps 1 & 4). */
-export const FEATURE_TOUR_ROUTES = ['/', '/live', '/agent', '/predict', '/invite'] as const
+export const FEATURE_TOUR_ROUTES = ['/', '/live', '/agent', '/predict', '/invite', '/collection'] as const
 
 export function isFeatureTourRoute(path: string) {
   return FEATURE_TOUR_ROUTES.some((p) => path === p || path.startsWith(`${p}/`))

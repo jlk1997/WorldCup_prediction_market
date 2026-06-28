@@ -86,6 +86,29 @@ def challenge_user(
 class MatchEnterRequest(BaseModel):
     card_ids: list[int] = Field(..., min_length=3, max_length=3)
     stake_points: int = Field(default=0, ge=0)
+    match_mode: str = Field(default="casual")
+
+
+@router.get("/season/current")
+def season_current(db: Session = Depends(get_db)):
+    from app.services.duel_season_service import DuelSeasonService
+
+    return DuelSeasonService(db).get_current_season_public()
+
+
+@router.get("/season/leaderboard")
+def season_leaderboard(season_id: int | None = None, limit: int = 50, db: Session = Depends(get_db)):
+    from app.services.duel_season_service import DuelSeasonService
+
+    return DuelSeasonService(db).season_leaderboard(season_id=season_id, limit=limit)
+
+
+@router.get("/season/me")
+def season_me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.services.duel_season_service import DuelSeasonService
+
+    snap = DuelSeasonService(db).user_season_snapshot(user)
+    return snap or {"active": False}
 
 
 @router.post("/match/enter")
@@ -98,7 +121,9 @@ def match_enter(
     _rate_limit(user, request)
     from app.services.card_duel_match_service import CardDuelMatchService
 
-    return CardDuelMatchService(db).enter_queue(user, body.card_ids, body.stake_points)
+    return CardDuelMatchService(db).enter_queue(
+        user, body.card_ids, body.stake_points, match_mode=body.match_mode
+    )
 
 
 @router.post("/match/cancel")

@@ -1,6 +1,7 @@
 import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { shouldShowLeaderboardRewardPrompt } from '../utils/leaderboardRewardPrompt'
+import { isLoggedIn } from '../stores/authStore'
 import { isFeatureTourPending } from './useGuideModal'
 import {
   GuidePriority,
@@ -41,6 +42,7 @@ export function useLeaderboardRewardPrompt(options?: {
     clearTimer()
     showRewardDialog.value = false
 
+    if (!isLoggedIn.value) return
     if (!isRewardPromptRoute(route.path)) return
     if (options?.blocked?.value) return
     if (isFeatureTourPending()) return
@@ -51,6 +53,7 @@ export function useLeaderboardRewardPrompt(options?: {
     if (!shouldShowLeaderboardRewardPrompt()) return
 
     timer = setTimeout(() => {
+      if (!isLoggedIn.value) return
       if (!isRewardPromptRoute(route.path)) return
       if (options?.blocked?.value) return
       if (isFeatureTourPending()) return
@@ -75,6 +78,7 @@ export function useLeaderboardRewardPrompt(options?: {
       priority: GuidePriority.LeaderboardReward,
       isActive: () => showRewardDialog.value,
       open: () => {
+        if (!isLoggedIn.value) return
         if (shouldShowLeaderboardRewardPrompt() && isRewardPromptRoute(route.path)) {
           showRewardDialog.value = true
           notifyGuideOpened(REWARD_GUIDE_ID, GuidePriority.LeaderboardReward)

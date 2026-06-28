@@ -11,15 +11,11 @@
     </header>
 
     <div class="quick-nav">
-
-      <button type="button" class="quick-link" @click="$router.push('/predict')">竞猜</button>
-
-      <button type="button" class="quick-link" @click="$router.push('/agent')">AI</button>
-
+      <button type="button" class="quick-link" @click="$router.push('/collection')">卡牌</button>
+      <button type="button" class="quick-link" @click="$router.push('/arena#duel')">对决</button>
       <button type="button" class="quick-link" @click="$router.push('/mint')">打新</button>
-
-      <button type="button" class="quick-link" @click="$router.push('/market')">交易行</button>
-
+      <button type="button" class="quick-link" @click="$router.push('/predict')">竞猜</button>
+      <button type="button" class="quick-link" @click="$router.push('/agent')">AI</button>
     </div>
 
     <div

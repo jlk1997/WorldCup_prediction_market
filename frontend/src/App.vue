@@ -28,10 +28,10 @@
             完善档案
           </div>
 
-          <PredictSettlementNotifier class="hide-mobile" />
-          <CollectibleNotifier class="hide-mobile" />
-          <MatchdayGrowthNotifier class="hide-mobile" />
-          <ReferralNotifier class="hide-mobile" />
+          <PredictSettlementNotifier v-if="isLoggedIn" class="hide-mobile" />
+          <CollectibleNotifier v-if="isLoggedIn" class="hide-mobile" />
+          <MatchdayGrowthNotifier v-if="isLoggedIn" class="hide-mobile" />
+          <ReferralNotifier v-if="isLoggedIn" class="hide-mobile" />
 
           <div
             v-if="isLoggedIn"
@@ -44,6 +44,7 @@
             <span class="nick">{{ authState.user?.nickname }}</span>
             <span class="me-label">球迷中心</span>
           </div>
+          <el-button v-else-if="isAuthBootstrapping" type="info" plain size="small" class="hide-mobile" disabled>验证中…</el-button>
           <el-button v-else type="primary" plain size="small" class="hide-mobile" @click="router.push('/login')">登录</el-button>
 
           <!-- 移动端精简顶栏 -->
@@ -84,6 +85,9 @@
                   <span class="pts-inline">{{ authState.user?.redeem_points ?? 0 }} 分</span>
                 </span>
               </button>
+              <el-button v-else-if="isAuthBootstrapping" type="info" plain size="small" class="mobile-login-btn" disabled>
+                验证中…
+              </el-button>
               <el-button v-else type="primary" plain size="small" class="mobile-login-btn" @click="router.push('/login')">
                 登录
               </el-button>
@@ -230,7 +234,7 @@ import LeaderboardRewardDialog from './components/LeaderboardRewardDialog.vue'
 import LegendsPageBackdrop from './components/LegendsPageBackdrop.vue'
 import { useBreakpoint } from './composables/useBreakpoint'
 import { useLeaderboardRewardPrompt } from './composables/useLeaderboardRewardPrompt'
-import { authState, isLoggedIn, initAuth, fetchMe } from './stores/authStore'
+import { authState, isLoggedIn, isAuthBootstrapping, initAuth, fetchMe } from './stores/authStore'
 import { fetchPaidPendingOrder } from './api/commerce'
 import { clearPendingOrder, PENDING_ORDER_KEY } from './utils/payEnv'
 import { avatarFrameClass as frameClassUtil, hasActiveSeasonPass } from './utils/entitlements'
@@ -238,7 +242,7 @@ import { fetchProfileStatus, fetchRecommendations, profileState } from './stores
 import { useGuideVisibility } from './composables/useGuideVisibility'
 import { useStadiumStore } from './stores/stadiumStore'
 import { subscribeLiveMatches } from './stores/liveMatchesStore'
-import { startHeaderNotificationPoll } from './stores/headerNotificationsStore'
+import { startHeaderNotificationPoll, stopHeaderNotificationPoll } from './stores/headerNotificationsStore'
 import { ensurePredictRevealConfig } from './stores/predictRevealConfigStore'
 import { tryAutoOpenGuide } from './composables/useGuideModal'
 import { useBrowserNotify } from './composables/useBrowserNotify'
@@ -302,11 +306,13 @@ onMounted(async () => {
   unsubscribeLive = subscribeLiveMatches()
   await ensurePredictRevealConfig()
   await ensureOfficialQqGroupConfig()
-  startHeaderNotificationPoll()
   window.addEventListener('daily-status-refresh', onDailyStatusRefresh)
   window.addEventListener('duel-matched', onDuelMatched as EventListener)
   await initAuth()
-  if (authState.accessToken) {
+  if (isLoggedIn.value) {
+    startHeaderNotificationPoll()
+  }
+  if (authState.accessToken && isLoggedIn.value) {
     const pendingNo =
       typeof sessionStorage !== 'undefined'
         ? sessionStorage.getItem(PENDING_ORDER_KEY)
@@ -379,9 +385,14 @@ async function refreshQqGroupClaimState() {
   }
 }
 
-watch(isLoggedIn, () => {
+watch(isLoggedIn, (logged) => {
+  if (logged) {
+    startHeaderNotificationPoll()
+    void syncMatchKickoffReminders()
+  } else {
+    stopHeaderNotificationPoll()
+  }
   void refreshQqGroupClaimState()
-  if (isLoggedIn.value) void syncMatchKickoffReminders()
 }, { immediate: true })
 
 function onDailyStatusRefresh() {

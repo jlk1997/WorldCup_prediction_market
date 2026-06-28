@@ -1316,14 +1316,66 @@ class GameService:
         )
         return {r[0] for r in rows if r[0] is not None}
 
-    def _activation_segment(self, user: User, predict_count: int) -> str:
-        if predict_count >= 2:
+    def _activation_segment(self, user: User, predict_count: int, duel_total: int = 0) -> str:
+        threshold = self.settings.card_duel_activation_duel_threshold
+        if predict_count >= 2 or duel_total >= threshold:
             return "active"
         if predict_count == 1:
             return "one_and_done"
         if user.profile_completed:
             return "profile_only"
         return "never_predicted"
+
+    def _duel_segment(self, duel_total: int) -> str:
+        if duel_total >= 3:
+            return "duel_active"
+        if duel_total >= 1:
+            return "one_duel"
+        return "never_dueled"
+
+    def _card_owned_count(self, user_id: int) -> int:
+        from app.db.models.commerce import UserCollectibleCard
+
+        return (
+            self.db.query(UserCollectibleCard.id)
+            .filter(UserCollectibleCard.user_id == user_id)
+            .count()
+        )
+
+    def _duel_totals(self, user_id: int) -> tuple[int, int]:
+        from app.services.card_duel_service import CardDuelService
+
+        svc = CardDuelService(self.db)
+        total = svc._lifetime_duel_count(user_id)
+        today = svc._duels_today_count(user_id)
+        return total, today
+
+    def _card_nudge(self, card_owned: int, duel_segment: str) -> dict | None:
+        if card_owned == 0:
+            return {
+                "title": "首张球星卡",
+                "body": "猜中比赛必掉 · 约 30 秒完成首猜",
+                "path": "/predict",
+            }
+        if duel_segment in ("never_dueled", "one_duel"):
+            return {
+                "title": "卡牌对决上分",
+                "body": "组 3 张卡快速匹配 · 胜利有机会掉卡",
+                "path": "/collection",
+            }
+        return None
+
+    def _primary_pillar(self, predict_count: int, card_owned: int, duel_segment: str) -> str:
+        if card_owned == 0 or duel_segment != "duel_active":
+            return "cards"
+        if predict_count < 2:
+            return "cards"
+        return "predict"
+
+    def _card_hub_viewed_today(self, user_id: int) -> bool:
+        from app.core.cache import cache_get
+
+        return bool(cache_get(f"user:{user_id}:card_hub_today"))
 
     def _next_predictable_match_for_user(
         self, user: User, *, after_match_id: int | None = None
@@ -1494,7 +1546,11 @@ class GameService:
         match_day = RecommendationService(self.db).is_match_day_for_user(user, today)
         qq_claimed = self.qq_group_claimed(user.id)
         predict_count_total = self._lifetime_predict_count(user.id)
-        activation_segment = self._activation_segment(user, predict_count_total)
+        duel_total, duels_today = self._duel_totals(user.id)
+        card_owned_count = self._card_owned_count(user.id)
+        duel_segment = self._duel_segment(duel_total)
+        card_hub_viewed = self._card_hub_viewed_today(user.id)
+        activation_segment = self._activation_segment(user, predict_count_total, duel_total)
         redeem_progress = self._redeem_progress(user)
         next_predictable_match = None
         if activation_segment in ("never_predicted", "profile_only", "one_and_done"):
@@ -1503,7 +1559,15 @@ class GameService:
             activation_segment, next_predictable_match, redeem_progress
         )
         checklist = self._daily_checklist(
-            signed_today, quiz_answered, free_remaining, free_limit, pending_count, match_day, qq_claimed
+            signed_today,
+            quiz_answered,
+            free_remaining,
+            free_limit,
+            pending_count,
+            match_day,
+            qq_claimed,
+            duel_done_today=duels_today >= 1,
+            card_hub_viewed=card_hub_viewed,
         )
         next_action = self._daily_next_action(
             user,
@@ -1535,6 +1599,11 @@ class GameService:
             "redeem_progress": redeem_progress,
             "activation_segment": activation_segment,
             "predict_count_total": predict_count_total,
+            "card_owned_count": card_owned_count,
+            "duel_total": duel_total,
+            "duel_segment": duel_segment,
+            "card_nudge": self._card_nudge(card_owned_count, duel_segment),
+            "primary_pillar": self._primary_pillar(predict_count_total, card_owned_count, duel_segment),
             "next_predictable_match": next_predictable_match,
             "activation_nudge": activation_nudge,
             "match_day": match_day,
@@ -1631,6 +1700,9 @@ class GameService:
         pending_count: int,
         match_day: bool,
         qq_claimed: bool = True,
+        *,
+        duel_done_today: bool = False,
+        card_hub_viewed: bool = False,
     ) -> list[dict]:
         signin_reward = "+20币"
         if match_day:
@@ -1643,6 +1715,19 @@ class GameService:
                 "label": "免费竞猜",
                 "done": free_remaining <= 0,
                 "reward": f"剩余 {free_remaining}/{free_limit}",
+            },
+            {
+                "key": "duel",
+                "label": "今日对决 1 场",
+                "done": duel_done_today,
+                "reward": "胜利有机会掉卡",
+            },
+            {
+                "key": "card_hub",
+                "label": "查看卡牌中心",
+                "done": card_hub_viewed,
+                "reward": "获卡与对决入口",
+                "optional": True,
             },
             {
                 "key": "pending",

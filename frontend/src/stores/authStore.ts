@@ -37,6 +37,8 @@ interface AuthState {
   refreshToken: string | null
   user: AuthUser | null
   loading: boolean
+  /** 首屏 initAuth 完成后为 true，避免 localStorage 残留 token 闪现用户 UI */
+  authInitialized: boolean
 }
 
 function loadStored(): Partial<Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'>> {
@@ -67,9 +69,16 @@ export const authState = reactive<AuthState>({
   refreshToken: stored.refreshToken ?? null,
   user: stored.user ?? null,
   loading: false,
+  authInitialized: false,
 })
 
-export const isLoggedIn = computed(() => !!authState.accessToken && !!authState.user)
+/** 会话已校验：token + user 且已完成首屏 initAuth */
+export const isLoggedIn = computed(
+  () => authState.authInitialized && !!authState.accessToken && !!authState.user,
+)
+
+/** 首屏正在从 localStorage 恢复并校验 token */
+export const isAuthBootstrapping = computed(() => !authState.authInitialized)
 
 export function getAccessToken(): string | null {
   return authState.accessToken
@@ -178,8 +187,15 @@ let initPromise: Promise<void> | null = null
 export async function initAuth(): Promise<void> {
   if (!initPromise) {
     initPromise = (async () => {
-      if (authState.accessToken) {
-        await fetchMe()
+      try {
+        if (authState.accessToken) {
+          await fetchMe()
+        } else if (authState.user) {
+          authState.user = null
+          persist()
+        }
+      } finally {
+        authState.authInitialized = true
       }
     })()
   }

@@ -130,6 +130,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getDuelDetail, type DuelDetail, type DuelRound } from '@/api/asset'
+import { openCollectibleReveal } from '@/stores/collectibleRevealStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -288,10 +289,22 @@ function playRound() {
   }, 3200)
 }
 
+const revealShown = ref(false)
+
+function maybeShowDropReveal() {
+  if (revealShown.value || !won.value) return
+  const drop = detail.value?.collectible_drop as import('@/api/collectible').CollectibleDropResult | undefined
+  if (drop?.dropped) {
+    revealShown.value = true
+    openCollectibleReveal(drop, { subtitle: '对决胜利掉落' })
+  }
+}
+
 function finishResult() {
   phase.value = 'result'
   won.value = detail.value?.won === true
   clearTimer()
+  maybeShowDropReveal()
 }
 
 function skipToResult() {

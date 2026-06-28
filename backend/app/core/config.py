@@ -214,6 +214,10 @@ class Settings(BaseSettings):
     card_duel_match_window_sec: int = 300
     card_duel_bp_rng_pct: float = 0.03
     card_duel_quick_match_enabled: bool = True
+    card_duel_match_elo_window: int = 200
+    card_duel_activation_duel_threshold: int = 3
+    card_duel_win_drop_chance: float = 0.40
+    card_duel_stake_tiers: str = "0,20,50"
     # 实名认证（mock：开发期直接通过；生产对接三要素）
     realname_mock: bool = True
     realname_provider: str = "mock"  # mock | local | api

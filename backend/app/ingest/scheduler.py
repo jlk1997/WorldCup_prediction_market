@@ -170,6 +170,11 @@ def run_once():
             match_res = CardDuelMatchService(db).process_matchmaking()
             if match_res.get("matched") or match_res.get("expired"):
                 logger.info("Card duel matchmaking: %s", match_res)
+            from app.services.duel_season_service import DuelSeasonService
+
+            season_res = DuelSeasonService(db).settle_ended_seasons()
+            if season_res.get("settled"):
+                logger.info("Duel season settled: %s", season_res)
         except Exception:
             logger.exception("Card duel expiry failed")
         logger.info(

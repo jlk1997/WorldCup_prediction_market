@@ -780,6 +780,12 @@ class CollectibleService:
         next_day = next((d for d in (3, 7, 14) if d > streak), None)
         owned_count = int(owned_count or 0)
         failed_mints = int(failed_mints or 0)
+        try:
+            from app.core.cache import cache_set
+
+            cache_set(f"user:{user.id}:card_hub_today", 1, ttl=86400)
+        except Exception:
+            pass
         return {
             "owned_count": owned_count,
             "total_cards": total_active,

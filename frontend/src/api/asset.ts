@@ -263,6 +263,12 @@ export interface DuelEligibleCard {
   power: number
   bp?: number
   combat_stats?: Record<string, number>
+  chain_status?: string
+}
+
+export interface DuelStakeTier {
+  stake: number
+  label: string
 }
 
 export interface DuelHistoryItem {
@@ -289,11 +295,14 @@ export interface DuelPendingItem {
 export interface DuelConfig {
   stake_min: number
   stake_max: number
+  stake_tiers?: DuelStakeTier[]
   fee_pct: number
   mode: string
   win_battalion: number
   quick_match_enabled?: boolean
   match_window_sec?: number
+  match_elo_window?: number
+  chain_queue_enabled?: boolean
 }
 
 export interface DuelRoundCard {
@@ -334,6 +343,7 @@ export interface DuelDetail {
   replay?: { rounds?: DuelRound[]; winner_side?: string }
   settled_at?: string | null
   your_elo_delta?: number | null
+  collectible_drop?: import('./collectible').CollectibleDropResult | null
 }
 
 export interface DuelSettleResult {
@@ -416,9 +426,41 @@ export async function getDuelReplay(duel_id: number): Promise<DuelDetail> {
   return data
 }
 
-export async function enterDuelMatch(card_ids: number[], stake_points = 0) {
-  const { data } = await apiClient.post('/api/card-duel/match/enter', { card_ids, stake_points })
-  return data as { ok: boolean; queue_id: number; deck_bp: number; notice: string; expires_at?: string }
+export async function enterDuelMatch(
+  card_ids: number[],
+  stake_points = 0,
+  match_mode: 'casual' | 'ranked' | 'chain' = 'casual',
+) {
+  const { data } = await apiClient.post('/api/card-duel/match/enter', {
+    card_ids,
+    stake_points,
+    match_mode,
+  })
+  return data as {
+    ok: boolean
+    queue_id: number
+    deck_bp: number
+    notice: string
+    expires_at?: string
+    match_mode?: string
+  }
+}
+
+export async function getDuelSeasonCurrent() {
+  const { data } = await apiClient.get('/api/card-duel/season/current')
+  return data
+}
+
+export async function getDuelSeasonMe() {
+  const { data } = await apiClient.get('/api/card-duel/season/me')
+  return data
+}
+
+export async function getDuelSeasonLeaderboard(season_id?: number, limit = 50) {
+  const { data } = await apiClient.get('/api/card-duel/season/leaderboard', {
+    params: { season_id, limit },
+  })
+  return data
 }
 
 export async function cancelDuelMatch() {

@@ -95,6 +95,15 @@ class AdminOpsDashboardService:
         from app.services.product_analytics_service import ProductAnalyticsService
 
         funnel = ProductAnalyticsService(self.db).summary(window_hours=window_hours)
+        from app.db.models.commerce import CardDuel
+
+        duel_settled = (
+            self.db.query(func.count(CardDuel.id))
+            .filter(CardDuel.status == "settled", CardDuel.settled_at >= since)
+            .scalar()
+            or 0
+        )
+        duel_fee_sink_events = int((funnel.get("events") or {}).get("duel_fee_sink") or 0)
         return {
             "window_hours": window_hours,
             "orders": {
@@ -120,6 +129,11 @@ class AdminOpsDashboardService:
                 "queue": depth,
                 "util_pct": ai_util_pct,
                 "alert": ai_alert,
+            },
+            "duel": {
+                "settled_window": duel_settled,
+                "fee_sink_events": duel_fee_sink_events,
+                "complete_events": int((funnel.get("events") or {}).get("duel_complete") or 0),
             },
             "redis_configured": bool((self.settings.redis_url or "").strip()),
             "funnel_events": funnel.get("events", {}),

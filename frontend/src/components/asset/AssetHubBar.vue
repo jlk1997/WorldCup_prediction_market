@@ -53,7 +53,15 @@ const loading = ref(false)
 
 const tiles = computed(() => {
   const s = summary.value
+  const duelBadge = (s?.duel_pending_incoming || 0) + (s?.duel_pending_outgoing || 0)
   return [
+    {
+      to: '/arena#duel',
+      label: '卡牌对决',
+      icon: '⚔️',
+      badge: duelBadge,
+      hint: s?.duel_pending_incoming ? '待应战' : duelBadge ? '进行中' : '匹配',
+    },
     {
       to: '/market',
       label: '交易行',
@@ -178,8 +186,13 @@ defineExpose({ refresh, summary, loading })
 }
 .hub-nav {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
+}
+@media (max-width: 520px) {
+  .hub-nav {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 .compact .hub-nav {
   gap: 6px;

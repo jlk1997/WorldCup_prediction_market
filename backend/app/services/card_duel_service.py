@@ -114,7 +114,7 @@ class CardDuelService:
             challenger, stake, "duel_stake_refund", "card_duel", duel.id
         )
 
-    def eligible_cards(self, user: User) -> list[dict[str, Any]]:
+    def eligible_cards(self, user: User, *, minted_only: bool = False) -> list[dict[str, Any]]:
         rows = (
             self.db.query(UserCollectibleCard, CollectibleCard)
             .join(CollectibleCard, UserCollectibleCard.card_id == CollectibleCard.id)
@@ -135,6 +135,8 @@ class CardDuelService:
                 continue
             if row.id in staked_ids:
                 continue
+            if minted_only and (row.chain_status or "none") != "minted":
+                continue
             attrs = card.attributes_json if isinstance(card.attributes_json, dict) else {}
             power = self._card_power(row, card)
             out.append(
@@ -149,6 +151,7 @@ class CardDuelService:
                     "power": power,
                     "bp": power,
                     "combat_stats": attrs.get("combat_stats"),
+                    "chain_status": row.chain_status or "none",
                 }
             )
         return sorted(out, key=lambda x: -x["power"])
@@ -212,6 +215,152 @@ class CardDuelService:
             return ch_delta, 0
 
         return 0, 0
+
+    def _lifetime_duel_count(self, user_id: int) -> int:
+        return (
+            self.db.query(CardDuel.id)
+            .filter(
+                CardDuel.status == "settled",
+                (CardDuel.challenger_id == user_id) | (CardDuel.defender_id == user_id),
+            )
+            .count()
+        )
+
+    def _duels_today_count(self, user_id: int) -> int:
+        today_start = _utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        return (
+            self.db.query(CardDuel.id)
+            .filter(
+                CardDuel.status == "settled",
+                CardDuel.settled_at >= today_start,
+                (CardDuel.challenger_id == user_id) | (CardDuel.defender_id == user_id),
+            )
+            .count()
+        )
+
+    def _duel_win_streak(self, user_id: int) -> int:
+        rows = (
+            self.db.query(CardDuel)
+            .filter(
+                CardDuel.status == "settled",
+                (CardDuel.challenger_id == user_id) | (CardDuel.defender_id == user_id),
+            )
+            .order_by(CardDuel.id.desc())
+            .limit(10)
+            .all()
+        )
+        streak = 0
+        for d in rows:
+            if d.winner_id == user_id:
+                streak += 1
+            else:
+                break
+        return streak
+
+    def _winner_card_ids(self, duel: CardDuel, winner_id: int) -> list[int]:
+        if winner_id == duel.challenger_id:
+            return list(duel.challenger_card_ids or [])
+        return list(duel.defender_card_ids or [])
+
+    def _deck_all_minted(self, duel: CardDuel, winner_id: int) -> bool:
+        ids = self._winner_card_ids(duel, winner_id)
+        if len(ids) != DUEL_CARD_COUNT:
+            return False
+        rows = self.db.query(UserCollectibleCard).filter(UserCollectibleCard.id.in_(ids)).all()
+        if len(rows) != DUEL_CARD_COUNT:
+            return False
+        return all((r.chain_status or "none") == "minted" for r in rows)
+
+    def _record_duel_fee_sink(self, amount: int, duel_id: int) -> None:
+        if amount <= 0:
+            return
+        try:
+            from app.services.product_analytics_service import ProductAnalyticsService
+
+            ProductAnalyticsService(self.db).track(
+                "duel_fee_sink",
+                payload={"amount": amount, "duel_id": duel_id},
+                commit=False,
+            )
+        except Exception:
+            logger.debug("duel_fee_sink track skipped")
+
+    def _award_duel_loss_comfort(self, user: User, duel_id: int) -> None:
+        from app.db.models.commerce import CollectibleDropLog
+        from app.data.collectible_catalog import SHARD_ON_DUPLICATE
+        from app.services.collectible_service import CollectibleService
+
+        today_key = int(_utcnow().strftime("%Y%m%d"))
+        existing = (
+            self.db.query(CollectibleDropLog)
+            .filter(
+                CollectibleDropLog.user_id == user.id,
+                CollectibleDropLog.source == "duel_loss_comfort",
+                CollectibleDropLog.ref_type == "duel_daily_loss",
+                CollectibleDropLog.ref_id == today_key,
+            )
+            .first()
+        )
+        if existing:
+            return
+        shard_amount = SHARD_ON_DUPLICATE.get("common", 5)
+        svc = CollectibleService(self.db)
+        svc._add_shards(user.id, "common", shard_amount)
+        result = {
+            "dropped": False,
+            "cards": [],
+            "shards": [{"rarity": "common", "amount": shard_amount, "reason": "duel_loss"}],
+            "source": "duel_loss_comfort",
+            "chain_enabled": svc._chain_enabled(),
+        }
+        svc._save_drop_log(user.id, "duel_loss_comfort", "duel_daily_loss", today_key, result)
+        try:
+            from app.services.collection_pass_service import CollectionPassService
+
+            CollectionPassService.hook_award(
+                user, self.db, "duel_complete", "card_duel", duel_id, action="duel_complete"
+            )
+        except Exception:
+            logger.debug("duel pass hook loser skipped")
+
+    def _award_duel_win_drops(self, user: User, duel: CardDuel) -> dict[str, Any] | None:
+        from app.services.collectible_service import CollectibleService
+
+        svc = CollectibleService(self.db)
+        primary: dict[str, Any] | None = None
+        today_key = int(_utcnow().strftime("%Y%m%d"))
+
+        daily = svc.drop_cards(user, "duel_daily_win", "duel_daily", today_key)
+        if daily.get("dropped"):
+            primary = daily
+
+        streak = self._duel_win_streak(user.id)
+        if streak >= 3:
+            streak_drop = svc.drop_cards(user, "duel_streak", "duel_streak", streak)
+            if streak_drop.get("dropped") and not primary:
+                primary = streak_drop
+
+        if random.random() < self.settings.card_duel_win_drop_chance:
+            win_drop = svc.drop_cards(user, "duel_win", "card_duel", duel.id)
+            if win_drop.get("dropped") and not primary:
+                primary = win_drop
+
+        if self._deck_all_minted(duel, user.id):
+            chain_drop = svc.drop_cards(user, "duel_chain_bonus", "card_duel_chain", duel.id)
+            if chain_drop.get("dropped") and not primary:
+                primary = chain_drop
+
+        try:
+            from app.services.collection_pass_service import CollectionPassService
+
+            CollectionPassService.hook_award(user, self.db, "duel_win", "card_duel", duel.id, action="duel_win")
+            CollectionPassService.hook_award(
+                user, self.db, "duel_complete", "card_duel", duel.id, action="duel_complete"
+            )
+        except Exception:
+            logger.debug("duel pass hook skipped")
+
+        return primary
 
     def _primary_mint_boost_pct(self, user_card_id: int) -> float:
         from app.db.models.commerce import CardTransferLog
@@ -338,6 +487,7 @@ class CardDuelService:
         card_ids: list[int],
         *,
         expected_lock: str = "none",
+        require_minted: bool = False,
     ) -> list[UserCollectibleCard]:
         if len(card_ids) != DUEL_CARD_COUNT:
             raise BadRequestError(f"请选择 {DUEL_CARD_COUNT} 张卡牌")
@@ -363,6 +513,8 @@ class CardDuelService:
                 raise BadRequestError("锁定中的卡牌不可出战")
             if row.id in staked:
                 raise BadRequestError("质押中的卡牌不可出战")
+            if require_minted and (row.chain_status or "none") != "minted":
+                raise BadRequestError("凭证战需使用已铸造的文昌链卡牌")
         return rows
 
     def _assert_cards_not_in_pending(self, card_ids: list[int]) -> None:
@@ -393,9 +545,32 @@ class CardDuelService:
             raise BadRequestError(f"入场费区间 {lo}-{hi} 可用积分")
 
     def duel_config(self) -> dict[str, Any]:
+        tiers_raw = (self.settings.card_duel_stake_tiers or "0,20,50").split(",")
+        stake_tiers = []
+        tier_labels = {
+            0: "休闲",
+            20: "进阶",
+            50: "排位",
+        }
+        for raw in tiers_raw:
+            try:
+                val = int(raw.strip())
+            except ValueError:
+                continue
+            if val < 0 or val > self.settings.card_duel_stake_max:
+                continue
+            stake_tiers.append(
+                {
+                    "stake": val,
+                    "label": tier_labels.get(val, f"{val}分场"),
+                }
+            )
+        if not stake_tiers:
+            stake_tiers = [{"stake": 0, "label": "休闲"}]
         return {
             "stake_min": self.settings.card_duel_stake_min,
             "stake_max": self.settings.card_duel_stake_max,
+            "stake_tiers": stake_tiers,
             "fee_pct": self.settings.card_duel_fee_pct,
             "mode": self.settings.card_duel_mode,
             "win_battalion": self.settings.card_duel_win_battalion,
@@ -403,6 +578,8 @@ class CardDuelService:
             "max_pending_per_user": self.settings.card_duel_max_pending_per_user,
             "quick_match_enabled": self.settings.card_duel_quick_match_enabled,
             "match_window_sec": self.settings.card_duel_match_window_sec,
+            "match_elo_window": self.settings.card_duel_match_elo_window,
+            "chain_queue_enabled": True,
         }
 
     def challenge_user(
@@ -617,7 +794,7 @@ class CardDuelService:
     def _resolve_best_of_3(self, duel: CardDuel) -> tuple[int, int, str, dict[str, Any]]:
         c_cards = self._load_side_combat_cards(duel, "challenger")
         d_cards = self._load_side_combat_cards(duel, "defender")
-        result = resolve_duel(c_cards, d_cards, mode="best_of_3")
+        result = resolve_duel(c_cards, d_cards, mode="best_of_3", bp_rng_pct=self.settings.card_duel_bp_rng_pct)
         c_wins = result["challenger_round_wins"]
         d_wins = result["defender_round_wins"]
         for rnd_data in result["rounds"]:
@@ -651,7 +828,7 @@ class CardDuelService:
     def _resolve_total_power(self, duel: CardDuel) -> tuple[int, int, str, dict[str, Any]]:
         c_cards = self._load_side_combat_cards(duel, "challenger")
         d_cards = self._load_side_combat_cards(duel, "defender")
-        result = resolve_duel(c_cards, d_cards, mode="total_power")
+        result = resolve_duel(c_cards, d_cards, mode="total_power", bp_rng_pct=self.settings.card_duel_bp_rng_pct)
         rnd = result["rounds"][0]
         self.db.add(
             CardDuelLog(
@@ -736,6 +913,8 @@ class CardDuelService:
         stake = duel.stake_points or 0
         payout_notice = ""
         winner_user = challenger if winner_id == duel.challenger_id else defender
+        loser_user = defender if winner_id == duel.challenger_id else challenger
+        fee = 0
         if stake > 0 and winner_user:
             # PVP：双方 escrow；AI：仅挑战者单份奖池（禁止凭空增发积分）
             pot = stake * 2 if duel.mode == "pvp" else stake
@@ -745,11 +924,18 @@ class CardDuelService:
                 winner_user, gain, "duel_win", "card_duel", duel.id
             )
             payout_notice = f"赢得 {gain} 可用积分"
+            if fee > 0:
+                self._record_duel_fee_sink(fee, duel.id)
         elif stake > 0:
             payout_notice = "本次未获胜，入场费已扣除"
 
+        collectible_drop: dict[str, Any] | None = None
         battalion_added = 0
         if winner_user:
+            try:
+                collectible_drop = self._award_duel_win_drops(winner_user, duel)
+            except Exception:
+                logger.exception("duel win drop failed")
             try:
                 from app.services.arena_service import ArenaService
 
@@ -758,6 +944,11 @@ class CardDuelService:
                 )
             except Exception:
                 logger.exception("duel battalion reward failed")
+        elif loser_user:
+            try:
+                self._award_duel_loss_comfort(loser_user, duel.id)
+            except Exception:
+                logger.exception("duel loss comfort failed")
 
         ch_elo_delta = def_elo_delta = 0
         try:
@@ -766,6 +957,19 @@ class CardDuelService:
             )
         except Exception:
             logger.exception("duel elo apply failed")
+
+        if collectible_drop and isinstance(replay, dict):
+            replay["collectible_drop"] = collectible_drop
+            duel.replay_json = replay
+
+        try:
+            from app.services.duel_season_service import DuelSeasonService
+
+            DuelSeasonService(self.db).record_duel_result(
+                challenger, defender, winner_id=winner_id or 0, duel_id=duel.id
+            )
+        except Exception:
+            logger.exception("duel season record failed")
 
         all_card_ids = list(duel.challenger_card_ids or []) + list(duel.defender_card_ids or [])
         self._release_duel_locks(all_card_ids)
@@ -797,6 +1001,7 @@ class CardDuelService:
             "notice": "对决胜利！" if won else "对决失败，再接再厉",
             "rounds": replay.get("rounds", []),
             "replay": replay,
+            "collectible_drop": collectible_drop,
         }
         try:
             from app.core.user_ws_hub import push_user_event
@@ -849,6 +1054,7 @@ class CardDuelService:
             if u:
                 nick_map[uid] = u.nickname
         is_challenger = duel.challenger_id == user.id
+        user_won = duel.winner_id == user.id if duel.status == "settled" else False
         return {
             "duel_id": duel.id,
             "mode": duel.mode,
@@ -872,6 +1078,11 @@ class CardDuelService:
             )
             if duel.status == "settled"
             else None,
+            "collectible_drop": (
+                (duel.replay_json or {}).get("collectible_drop")
+                if duel.status == "settled" and user_won
+                else None
+            ),
         }
 
     def history(self, user: User, limit: int = 20) -> list[dict[str, Any]]:

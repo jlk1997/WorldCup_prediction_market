@@ -143,11 +143,14 @@ DAILY_QUESTS: list[dict] = [
     {"key": "predict_once", "title": "完成 1 次竞猜", "target": 1, "xp": XP_SOURCES["quest_daily"], "action": "predict_submit"},
     {"key": "cheer_once", "title": "助威 1 次", "target": 1, "xp": XP_SOURCES["quest_daily"], "action": "cheer"},
     {"key": "signin", "title": "今日签到", "target": 1, "xp": XP_SOURCES["quest_daily"], "action": "signin"},
+    {"key": "duel_once", "title": "完成 1 场对决", "target": 1, "xp": XP_SOURCES["quest_daily"], "action": "duel_complete"},
+    {"key": "duel_thrice", "title": "完成 3 场对决", "target": 3, "xp": XP_SOURCES["quest_daily"], "action": "duel_complete"},
 ]
 
 WEEKLY_QUESTS: list[dict] = [
     {"key": "predict_wins_3", "title": "本周猜中 3 场", "target": 3, "xp": XP_SOURCES["quest_weekly"], "action": "predict_win"},
     {"key": "sets_progress", "title": "完成 1 个套组", "target": 1, "xp": XP_SOURCES["quest_weekly"], "action": "set_complete"},
+    {"key": "duel_wins_5", "title": "本周对决胜 5 场", "target": 5, "xp": XP_SOURCES["quest_weekly"], "action": "duel_win"},
 ]
 
 COIN_SHARD_FILL_COST: dict[str, int] = {

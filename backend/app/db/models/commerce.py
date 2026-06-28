@@ -857,7 +857,37 @@ class CardDuelMatchQueue(Base):
     duel_id: Mapped[int | None] = mapped_column(ForeignKey("card_duels.id", ondelete="SET NULL"), nullable=True)
     matched_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    match_mode: Mapped[str] = mapped_column(String(16), default="casual", nullable=False)
     created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class DuelSeason(Base):
+    """卡牌对决排位赛季。"""
+
+    __tablename__ = "duel_seasons"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    starts_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    ends_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="active", nullable=False)
+    reward_json: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now())
+
+
+class DuelSeasonStat(Base):
+    __tablename__ = "duel_season_stats"
+    __table_args__ = (UniqueConstraint("user_id", "season_id", name="uq_duel_season_stats_user_season"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    season_id: Mapped[int] = mapped_column(ForeignKey("duel_seasons.id", ondelete="CASCADE"), nullable=False, index=True)
+    elo: Mapped[int] = mapped_column(Integer, default=1000, nullable=False)
+    wins: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    games: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    tier: Mapped[str] = mapped_column(String(32), default="bronze", nullable=False)
+    reward_claimed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
 
 class MintEvent(Base):

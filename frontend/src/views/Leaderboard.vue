@@ -131,6 +131,11 @@
         </el-select>
       </div>
 
+      <el-alert v-if="duelSeasonLine" type="success" :closable="false" class="rule-hint">
+        {{ duelSeasonLine }}
+        <router-link to="/collection">卡牌中心</router-link>
+      </el-alert>
+
       <el-alert v-if="board === 'duel_elo' || board === 'duel_wins'" type="info" :closable="false" class="rule-hint">
         三局两胜卡牌对决 ·
         <router-link to="/arena#duel">去擂台组牌开战</router-link>
@@ -241,6 +246,7 @@ import { getReferralLeaderboard, type ReferralLeaderboardRow } from '../api/refe
 import { showApiError } from '../utils/errorHandler'
 import { useInviteShare } from '../composables/useInviteShare'
 import InvitePromptBar from '../components/InvitePromptBar.vue'
+import { getDuelSeasonCurrent } from '../api/asset'
 import { usePageMeta } from '../composables/usePageMeta'
 
 usePageMeta({
@@ -268,6 +274,7 @@ const accuracyRows = ref<any[]>([])
 const fanRank = ref<{ team: string; fans: number }[]>([])
 const contribution = ref<{ user_id: number; nickname: string; season_points: number; battalion_points?: number }[]>([])
 const loading = ref(false)
+const duelSeasonLine = ref('')
 const rewardTiers = ref<{ tiers: LeaderboardRewardTier[] } | null>(null)
 const teamOptions = ref<{ id: number; name: string }[]>([])
 const supporterTeamId = ref<number | null>(null)
@@ -411,6 +418,14 @@ onMounted(async () => {
     board.value = 'supporter'
   } else if (qBoard === 'duel_elo' || qBoard === 'duel_wins') {
     board.value = String(qBoard)
+  }
+  try {
+    const season = await getDuelSeasonCurrent()
+    if (season?.active && season.name) {
+      duelSeasonLine.value = `对决赛季「${season.name}」进行中 · 剩余 ${season.days_left ?? 0} 天`
+    }
+  } catch {
+    duelSeasonLine.value = ''
   }
   try {
     const teams = await getTeams()

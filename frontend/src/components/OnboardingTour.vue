@@ -160,9 +160,9 @@ const steps: TourStep[] = [
     color: '#f0a020',
   },
   {
-    title: '收藏册与球星卡',
-    short: '收藏',
-    desc: '猜中可掉卡 Reveal，收藏册查看序列号与文昌链铸造状态。',
+    title: '卡牌中心',
+    short: '卡牌',
+    desc: '猜中得卡 → 快速匹配对决上分 · 文昌链凭证铸造。',
     tips: ['质押/对决/ Fantasy 用同一张卡', '积分二级交易，无 RMB 二级'],
     icon: Postcard,
     color: '#d4a574',

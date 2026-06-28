@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { authState } from '../stores/authStore'
+import { initAuth, isLoggedIn, authState } from '../stores/authStore'
 import { fetchDailyStatus } from '../stores/dailyStatusStore'
 
 const HOME_PREDICT_REDIRECT_KEY = 'wc_home_predict_redirect_done'
@@ -205,23 +205,30 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  if (to.meta.requiresAuth && !authState.accessToken) {
+  await initAuth()
+
+  if (to.meta.requiresAuth && !isLoggedIn.value) {
     return { path: '/login', query: { redirect: to.fullPath } }
   }
-  if (to.meta.guestOnly && authState.accessToken) {
+  if (to.meta.guestOnly && isLoggedIn.value) {
     if (authState.user && !authState.user.profile_completed) {
       return { path: '/onboarding' }
     }
     const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/'
     return redirect.startsWith('/login') ? { path: '/' } : redirect
   }
-  if (to.name === 'Dashboard' && authState.accessToken) {
+  if (to.name === 'Dashboard' && isLoggedIn.value) {
     try {
       if (!sessionStorage.getItem(HOME_PREDICT_REDIRECT_KEY)) {
         const daily = await fetchDailyStatus(true)
         if (daily) {
           sessionStorage.setItem(HOME_PREDICT_REDIRECT_KEY, '1')
           if ((daily.predict_count_total ?? 0) === 0) {
+            const cardOwned = daily.card_owned_count ?? 0
+            const duelSeg = daily.duel_segment
+            if (cardOwned === 0 || duelSeg === 'never_dueled' || duelSeg === 'one_duel') {
+              return { path: '/collection', query: to.query }
+            }
             return { path: '/predict', query: to.query }
           }
         }

@@ -24,6 +24,7 @@ export function syncAuthFromProfile(status?: ProfileStatus | null) {
 }
 
 export async function fetchProfileStatus(force = false) {
+  if (!authState.accessToken) return null
   if (!force && profileState.status) return profileState.status
   profileState.status = await getProfileStatus()
   syncAuthFromProfile(profileState.status)
@@ -31,6 +32,7 @@ export async function fetchProfileStatus(force = false) {
 }
 
 export async function fetchRecommendations(force = false) {
+  if (!authState.accessToken) return null
   const now = Date.now()
   if (!force && profileState.recommendations && now - profileState.loadedAt < STALE_MS) {
     return profileState.recommendations

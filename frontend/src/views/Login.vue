@@ -162,7 +162,7 @@ async function redirectAfterAuth(referralBound: boolean) {
   let profileDone = authState.user?.profile_completed ?? false
   try {
     const status = await fetchProfileStatus(true)
-    profileDone = status.profile_completed
+    if (status) profileDone = status.profile_completed
   } catch {
     /* optional */
   }

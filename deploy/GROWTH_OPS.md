@@ -79,7 +79,7 @@ curl -X POST -H "X-Admin-Secret: YOUR_SECRET" \
 - **官方 QQ 群条** → 未领群福利时首页 / 竞猜页展示
 - **登录后默认** → 建档完成用户登录后跳转 `/predict`；本会话首次进首页且未竞猜也会导向竞猜页
 - **GrowthPrimaryCard** → 合并首猜/第二猜/推荐场次为一张主行动卡，减少横幅堆叠
-- **激活分群引擎** → `daily-status` 返回 `activation_segment` / `next_predictable_match` / `activation_nudge`
+- **激活分群引擎** → `daily-status` 返回 `activation_segment` / `duel_segment` / `card_nudge` / `primary_pillar`
 - **SecondPredictCoach** → 首猜成功 / 猜错关闭后底部引导（全局挂载）
 - **MatchDayShareBar** → 比赛日一键复制 `?ref=&highlight=` 深链
 - **手机底栏** → 未首猜时「竞猜」Tab 显示「猜」提示点
@@ -110,7 +110,17 @@ curl -X POST -H "X-Admin-Secret: YOUR_SECRET" \
 | `never_predicted` | 注册但未猜 | 首页/竞猜页 **ActivationRecoveryBar** · 首次进首页跳 `/predict` | 「免费猜一场 · 30 秒 · 猜中得积分」 |
 | `profile_only` | 已建档未猜 | 同上，文案强调「档案已就绪」 | 「你已选主队，还差一步完成首猜」 |
 | `one_and_done` | 只猜过 1 次 | **SecondPredictCoach** · 每日 next_action 推第二猜 | 「再猜一场 · 离换徽章更近」 |
-| `active` | 猜≥2 次 | 常规每日任务 / 连胜 / 兑换进度 | 维持习惯与比赛日动员 |
+| `active` | 猜≥2 次或对决≥3 场 | 常规每日任务 / 连胜 / 兑换进度 | 维持习惯与比赛日动员 |
+
+**对决分群 `duel_segment`（双轴激活）：**
+
+| 分群 | 含义 | 产品触点 |
+|------|------|----------|
+| `never_dueled` | 有卡未对决 | 卡牌中心 **CardHubHero** 快速匹配 · **GrowthPrimaryCard** |
+| `one_duel` | 对决 1 场 | 同上 + 手册对决任务 |
+| `duel_active` | 对决≥3 场 | 排位赛季榜 · 凭证战队列 |
+
+**增长埋点（对决）：** `duel_match_enter` · `duel_complete` · `duel_fee_sink` · `weekly_card_hub_visit`（页面埋点）
 
 **深链参数：**
 

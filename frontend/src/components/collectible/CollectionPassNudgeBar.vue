@@ -115,11 +115,11 @@ const visible = computed(() => {
   if (!authState.accessToken || dismissed.value || !nudge.value) return false
 
   if (props.requireActive !== false) {
-
     const seg = props.status?.activation_segment
-
-    if (seg && seg !== 'active') return false
-
+    const hasCardsNoDuel =
+      (props.status?.card_owned_count ?? 0) > 0 &&
+      (props.status?.duel_segment === 'never_dueled' || props.status?.duel_segment === 'one_duel')
+    if (seg && seg !== 'active' && !hasCardsNoDuel) return false
   }
 
   return true

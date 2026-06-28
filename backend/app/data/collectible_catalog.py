@@ -64,6 +64,12 @@ DROP_WEIGHTS_BY_SOURCE: dict[str, dict[str, float]] = {
     "referral": {"common": 0.20, "rare": 0.40, "epic": 0.30, "legend": 0.10},
     "synthesis": {"common": 1.0, "rare": 0.0, "epic": 0.0, "legend": 0.0},
     "event_cheer": {"common": 0.20, "rare": 0.35, "epic": 0.35, "legend": 0.10},
+    "duel_win": {"common": 0.45, "rare": 0.35, "epic": 0.17, "legend": 0.03},
+    "duel_daily_win": {"common": 0.30, "rare": 0.40, "epic": 0.25, "legend": 0.05},
+    "duel_streak": {"common": 0.20, "rare": 0.35, "epic": 0.35, "legend": 0.10},
+    "duel_season_reward": {"common": 0.15, "rare": 0.35, "epic": 0.35, "legend": 0.15},
+    "duel_chain_bonus": {"common": 0.10, "rare": 0.30, "epic": 0.40, "legend": 0.20},
+    "duel_loss_comfort": {"common": 0.60, "rare": 0.30, "epic": 0.10, "legend": 0.00},
     "collection_pass": {"common": 0.0, "rare": 0.0, "epic": 0.5, "legend": 0.5},
 }
 

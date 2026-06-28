@@ -3,8 +3,8 @@
     <header class="page-header">
       <div class="header-row">
         <div>
-          <h1>球星收藏册</h1>
-          <p class="subtitle">猜中 · 签到 · 比赛日获得数字藏品</p>
+          <h1>卡牌中心</h1>
+          <p class="subtitle">获卡 · 对决上分 · 文昌链数字藏品</p>
         </div>
         <button
           v-if="passSummary && authState.accessToken"
@@ -20,6 +20,15 @@
     </header>
 
     <AssetHubBar compact :show-balance="!!authState.accessToken" />
+
+    <CardHubHero v-if="isLoggedIn" />
+
+    <section v-if="isLoggedIn" class="play-entry-links glass-panel">
+      <router-link to="/market">交易行</router-link>
+      <router-link to="/arena">球迷擂台</router-link>
+      <router-link to="/mint">首发打新</router-link>
+    </section>
+
     <SeasonNarrativePanel v-if="authState.accessToken" />
     <BattalionRoomPanel v-if="authState.accessToken" />
 
@@ -464,6 +473,7 @@ import CollectionQuestList from '@/components/collectible/CollectionQuestList.vu
 import CollectibleEventBanner from '@/components/collectible/CollectibleEventBanner.vue'
 import { createListing, giftCard, buybackCard, stakeCard, splitCard, getListingHint, type ListingHint } from '@/api/asset'
 import AssetHubBar from '@/components/asset/AssetHubBar.vue'
+import CardHubHero from '@/components/collectible/CardHubHero.vue'
 import SeasonNarrativePanel from '@/components/SeasonNarrativePanel.vue'
 import BattalionRoomPanel from '@/components/BattalionRoomPanel.vue'
 import ChainAlertBanner from '@/components/ChainAlertBanner.vue'
@@ -506,12 +516,13 @@ import {
 import { fetchMe } from '@/stores/authStore'
 import { buildSynthesisDrop, openCollectibleReveal } from '@/stores/collectibleRevealStore'
 import { openCollectibleShare } from '@/composables/useCollectibleShareSheet'
-import { authState } from '@/stores/authStore'
+import { authState, isLoggedIn } from '@/stores/authStore'
 import { usePageMeta } from '@/composables/usePageMeta'
 import {
   readStagedDuelPicks,
   toggleStagedDuelPick,
 } from '@/composables/useDuelStagedPicks'
+import { getAssetHubSummary, type AssetHubSummary } from '@/api/asset'
 
 usePageMeta({
   title: '球星收藏册 — 最后一舞',
@@ -544,6 +555,7 @@ const album = ref<CollectibleAlbum | null>(null)
 const albumPage = ref(1)
 const albumHasMore = ref(false)
 const chainStatus = ref<CollectibleChainStatus | null>(null)
+const assetHubSummary = ref<AssetHubSummary | null>(null)
 const sets = ref<CardSetProgress[]>([])
 const synthOptions = ref<SynthesisOption[]>([])
 const router = useRouter()
@@ -1326,6 +1338,7 @@ onMounted(async () => {
     void ensurePassSummary(false, false)
   }
   getCollectibleChainStatus().then((s) => { chainStatus.value = s }).catch(() => {})
+  getAssetHubSummary().then((s) => { assetHubSummary.value = s }).catch(() => {})
 })
 </script>
 
@@ -1379,6 +1392,72 @@ onMounted(async () => {
   max-width: 960px;
   margin: 0 auto;
   padding-bottom: calc(var(--wc-bottom-nav-height, 56px) + 24px);
+}
+.play-entry {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 165, 116, 0.22);
+}
+.play-entry-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  padding: 4px 0 10px;
+}
+.play-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.play-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.play-text strong {
+  font-size: 0.92rem;
+  color: var(--wc-text-secondary);
+}
+.play-text span {
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+}
+.play-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #e85d5d;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+.play-go {
+  font-size: 0.72rem;
+  color: var(--wc-accent-gold);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.play-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.play-entry-links a {
+  font-size: 0.68rem;
+  color: var(--wc-text-muted);
+  text-decoration: none;
+}
+.play-entry-links a:hover {
+  color: var(--wc-accent-gold);
 }
 .page-header h1 {
   margin: 0 0 4px;

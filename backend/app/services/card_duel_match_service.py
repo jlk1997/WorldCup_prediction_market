@@ -38,7 +38,14 @@ class CardDuelMatchService:
             .first()
         )
 
-    def enter_queue(self, user: User, card_ids: list[int], stake_points: int = 0) -> dict[str, Any]:
+    def enter_queue(
+        self,
+        user: User,
+        card_ids: list[int],
+        stake_points: int = 0,
+        *,
+        match_mode: str = "casual",
+    ) -> dict[str, Any]:
         if not self.settings.card_duel_quick_match_enabled:
             raise BadRequestError("快速匹配暂未开放")
         self.duel_svc.asset.assert_real_name(user)
@@ -49,13 +56,20 @@ class CardDuelMatchService:
         if existing and existing.status == "waiting":
             raise BadRequestError("你已在匹配队列中")
 
+        mode = (match_mode or "casual").lower()
+        if mode not in ("casual", "ranked", "chain"):
+            raise BadRequestError("无效匹配模式")
+        require_minted = mode == "chain"
+
         user_locked = self.duel_svc._lock_user(user.id)
         if not user_locked:
             raise NotFoundError("用户不存在")
         if stake > 0 and (user_locked.redeem_points or 0) < stake:
             raise BadRequestError("可用积分不足")
 
-        rows = self.duel_svc._validate_cards(user_locked, card_ids)
+        rows = self.duel_svc._validate_cards(
+            user_locked, card_ids, require_minted=require_minted
+        )
         self.duel_svc._apply_duel_locks(rows)
         deck_bp = int(self.duel_svc._deck_average_bp(rows))
         tier = self.duel_svc._bp_tier(deck_bp)
@@ -67,18 +81,25 @@ class CardDuelMatchService:
             deck_bp=deck_bp,
             stake_points=stake,
             tier=tier,
+            match_mode=mode,
             status="waiting",
             expires_at=_utcnow() + timedelta(seconds=window),
         )
         self.db.add(entry)
         self.db.commit()
+        mode_notice = {
+            "casual": "休闲匹配",
+            "ranked": "排位匹配",
+            "chain": "文昌链凭证战",
+        }.get(mode, "匹配")
         return {
             "ok": True,
             "queue_id": entry.id,
             "deck_bp": deck_bp,
             "tier": tier,
+            "match_mode": mode,
             "expires_at": entry.expires_at.isoformat(),
-            "notice": "已进入匹配队列，正在寻找对手…",
+            "notice": f"已进入{mode_notice}队列，正在寻找对手…",
         }
 
     def cancel_queue(self, user: User) -> dict[str, Any]:
@@ -109,6 +130,7 @@ class CardDuelMatchService:
             "deck_bp": entry.deck_bp,
             "tier": entry.tier,
             "stake_points": entry.stake_points,
+            "match_mode": getattr(entry, "match_mode", "casual"),
             "duel_id": entry.duel_id,
             "expires_at": entry.expires_at.isoformat() if entry.expires_at else None,
         }
@@ -136,6 +158,13 @@ class CardDuelMatchService:
         )
         matched = 0
         used_ids: set[int] = set()
+        elo_window = self.settings.card_duel_match_elo_window
+        user_elo: dict[int, int] = {}
+        for entry in waiting:
+            if entry.user_id not in user_elo:
+                u = self.db.get(User, entry.user_id)
+                user_elo[entry.user_id] = int(getattr(u, "duel_elo", None) or 1000)
+
         for i, a in enumerate(waiting):
             if a.id in used_ids:
                 continue
@@ -146,7 +175,15 @@ class CardDuelMatchService:
                     continue
                 if a.stake_points != b.stake_points:
                     continue
+                mode_a = getattr(a, "match_mode", "casual") or "casual"
+                mode_b = getattr(b, "match_mode", "casual") or "casual"
+                if mode_a != mode_b:
+                    continue
                 if abs(a.tier - b.tier) > 1:
+                    continue
+                elo_a = user_elo.get(a.user_id, 1000)
+                elo_b = user_elo.get(b.user_id, 1000)
+                if abs(elo_a - elo_b) > elo_window:
                     continue
                 bp_a, bp_b = a.deck_bp or 0, b.deck_bp or 0
                 if bp_a and bp_b:
