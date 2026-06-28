@@ -26,6 +26,45 @@ def test_match_group_stage_by_team_pair():
     assert hit["id"] == 8287
 
 
+def test_apply_bsd_schedule_updates_teams():
+    from app.ingest.bsd_link_service import apply_bsd_schedule_to_match
+
+    match = Match(
+        id=20,
+        bracket_round="r32",
+        bracket_order=7,
+        team1_name="西班牙",
+        team2_name="佛得角",
+        match_date="2026年07月02日",
+        match_time="00:00",
+    )
+    event = {
+        "id": 8370,
+        "home_team": {"id": 475, "name": "Spain"},
+        "away_team": {"id": 483, "name": "Austria"},
+        "event_date": "2026-07-03T03:00:00+00:00",
+        "status": "notstarted",
+    }
+    assert apply_bsd_schedule_to_match(match, event) is True
+    assert match.team1_name == "西班牙"
+    assert match.team2_name == "奥地利"
+    assert match.match_date == "2026年07月03日"
+
+
+def test_knockout_slot_by_bracket_order():
+    from app.ingest.bsd_link_service import _bsd_event_for_knockout_slot, _group_events_by_round
+
+    local = Match(bracket_round="r32", bracket_order=2)
+    round_events = _group_events_by_round([
+        {"id": 100, "round_name": "Round of 32", "event_date": "2026-07-01T01:00:00+00:00"},
+        {"id": 101, "round_name": "Round of 32", "event_date": "2026-07-01T05:00:00+00:00"},
+        {"id": 102, "round_name": "Round of 32", "event_date": "2026-07-01T09:00:00+00:00"},
+    ])
+    hit = _bsd_event_for_knockout_slot(local, round_events)
+    assert hit is not None
+    assert hit["id"] == 101
+
+
 def test_apply_schedule_from_bsd():
     from app.ingest.bsd_link_service import apply_bsd_schedule_to_match
 

@@ -77,13 +77,15 @@ class KnockoutResolverService:
             if key in default_meta and not m.bracket_meta:
                 m.bracket_meta = default_meta[key]
 
-        # R32 from completed group tables (+ thirds when known)
+        # R32 from completed group tables (+ thirds when known) — only before BSD link.
         pairs = build_r32_pairings(tables, third_teams, require_full=groups_done)
         if not pairs and groups_done:
             pairs = build_r32_pairings(tables, third_teams, require_full=False)
         for i, (t1, t2) in enumerate(pairs, 1):
             m = idx.get(("r32", i))
             if not m:
+                continue
+            if m.external_fixture_id:
                 continue
             changed = False
             if is_placeholder_name(m.team1_name) or m.team1_name != t1:

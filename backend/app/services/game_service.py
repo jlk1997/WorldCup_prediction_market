@@ -620,7 +620,7 @@ class GameService:
             notify_payload = {
                 k: v
                 for k, v in payload.items()
-                if k not in ("user_id", "prediction_id", "result_pick")
+                if k not in ("user_id", "prediction_id", "result_pick", "collectible_drop")
             }
             NotificationService(self.db).notify_predict_settled(
                 payload["user_id"],

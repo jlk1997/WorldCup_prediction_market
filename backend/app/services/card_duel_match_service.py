@@ -123,7 +123,7 @@ class CardDuelMatchService:
         entry = self._active_queue(user.id)
         if not entry:
             return {"in_queue": False}
-    return {
+        return {
             "in_queue": entry.status == "waiting",
             "matched": entry.status == "matched",
             "queue_id": entry.id,

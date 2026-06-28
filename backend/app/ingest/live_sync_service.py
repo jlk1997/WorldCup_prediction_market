@@ -17,14 +17,11 @@ from app.ingest.bsd_event_parser import normalize_bsd_incidents
 from app.ingest.bsd_link_service import (
     link_matches_to_bsd,
     list_group_event_candidates,
-    list_knockout_event_candidates,
-    list_team_pair_event_candidates,
     pick_best_bsd_event,
     apply_bsd_schedule_to_match,
-    relink_mismatched_knockout_matches,
+    align_knockout_bsd_slots,
+    _bsd_event_for_knockout_slot,
     _group_events_by_round,
-    _knockout_events_from_catalog,
-    _lookup_team_pair_events,
 )
 from app.ingest.quota import invalidate_live_cache
 from app.core.match_cache import invalidate_match_caches
@@ -61,6 +58,11 @@ def _apply_internal_fixture(
         return False
     if not match.external_fixture_id:
         return False
+
+    if fixture.home_name:
+        match.team1_name = fixture.home_name
+    if fixture.away_name:
+        match.team2_name = fixture.away_name
 
     prev_status = match.status
     match.status = fixture.status
@@ -184,7 +186,6 @@ def _reconcile_stale_matches(
 
     round_events = _group_events_by_round(league_events)
     group_events = [e for e in league_events if e.get("group_name")]
-    all_ko = _knockout_events_from_catalog(league_events)
     updated = 0
     for match in matches:
         if match.status != "scheduled" or not match.external_fixture_id:
@@ -193,19 +194,11 @@ def _reconcile_stale_matches(
         if not kick or kick > now:
             continue
         if match.round_type == "knockout" or match.bracket_round:
-            candidates = list_knockout_event_candidates(
-                match, round_events, all_knockout_events=all_ko,
-            )
-            if not candidates:
-                candidates = list_team_pair_event_candidates(match, all_ko or league_events)
-            if not candidates:
-                candidates = _lookup_team_pair_events(match, client, round_events)
+            slot_event = _bsd_event_for_knockout_slot(match, round_events)
+            candidates = [slot_event] if slot_event else []
         else:
             candidates = list_group_event_candidates(match, group_events)
-        pair_hits = list_team_pair_event_candidates(match, candidates)
-        if pair_hits:
-            candidates = pair_hits
-        elif not candidates and match.external_fixture_id:
+        if not candidates and match.external_fixture_id:
             candidates = [{"id": match.external_fixture_id}]
         elif match.external_fixture_id and not any(
             int(c.get("id") or 0) == match.external_fixture_id for c in candidates
@@ -218,12 +211,13 @@ def _reconcile_stale_matches(
         best_id = int(best["id"])
         fixture = event_to_internal(best)
         if best_id != match.external_fixture_id:
-            if list_team_pair_event_candidates(match, [best]):
+            slot_event = _bsd_event_for_knockout_slot(match, round_events)
+            slot_id = int(slot_event["id"]) if slot_event and slot_event.get("id") else None
+            if slot_id and best_id == slot_id:
                 logger.info(
-                    "Re-link stale match #%s %s vs %s: %s -> %s (%s)",
+                    "Re-link stale match #%s slot %s: %s -> %s (%s)",
                     match.id,
-                    match.team1_name,
-                    match.team2_name,
+                    match.bracket_order,
                     match.external_fixture_id,
                     best_id,
                     fixture.status,
@@ -387,9 +381,19 @@ class LiveMatchSyncService:
         if schedule_fixed:
             logger.info("BSD schedule sync: corrected %s match date/time fields", schedule_fixed)
 
-        relinked = relink_mismatched_knockout_matches(matches, bsd_catalog, self.client)
+        all_knockout = list(
+            self.db.scalars(
+                select(Match).where(Match.round_type == "knockout")
+            ).all()
+        )
+        relinked = align_knockout_bsd_slots(all_knockout, bsd_catalog, self.client)
         if relinked:
-            logger.info("BSD knockout re-link: %s matches corrected", relinked)
+            logger.info("BSD knockout slot align: %s rows updated", relinked)
+            matches = list(
+                self.db.scalars(
+                    select(Match).where(Match.external_fixture_id.isnot(None))
+                ).all()
+            )
             by_external_id = {m.external_fixture_id: m for m in matches if m.external_fixture_id}
 
         for event in self.client.get_live_events():

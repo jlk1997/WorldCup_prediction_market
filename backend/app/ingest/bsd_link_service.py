@@ -59,10 +59,42 @@ def list_group_event_candidates(local: Match, bsd_events: list[dict]) -> list[di
     return out
 
 
-def apply_bsd_schedule_to_match(match: Match, event: dict) -> bool:
-    """Overwrite local placeholder kickoff with BSD authoritative schedule."""
+def _bsd_event_for_knockout_slot(
+    local: Match,
+    round_events: dict[str, list[dict]],
+) -> dict | None:
+    """Official knockout slot: BSD round list sorted by kickoff, index = bracket_order - 1."""
+    bracket_round = local.bracket_round
+    bracket_order = local.bracket_order
+    if not bracket_round or not bracket_order:
+        return None
+    bsd_round = LOCAL_BRACKET_TO_BSD_ROUND.get(bracket_round)
+    if not bsd_round:
+        return None
+    candidates = round_events.get(bsd_round, [])
+    idx = int(bracket_order) - 1
+    if 0 <= idx < len(candidates):
+        return candidates[idx]
+    return None
+
+
+def apply_bsd_teams_to_match(match: Match, event: dict) -> bool:
+    """Overwrite local teams with BSD authoritative home/away (mapped to team1/team2)."""
     fixture = event_to_internal(event)
     changed = False
+    if fixture.home_name and match.team1_name != fixture.home_name:
+        match.team1_name = fixture.home_name
+        changed = True
+    if fixture.away_name and match.team2_name != fixture.away_name:
+        match.team2_name = fixture.away_name
+        changed = True
+    return changed
+
+
+def apply_bsd_schedule_to_match(match: Match, event: dict) -> bool:
+    """Overwrite local placeholder kickoff and teams with BSD authoritative data."""
+    fixture = event_to_internal(event)
+    changed = apply_bsd_teams_to_match(match, event)
     if fixture.local_date and match.match_date != fixture.local_date:
         match.match_date = fixture.local_date
         changed = True
@@ -159,6 +191,10 @@ def list_knockout_event_candidates(
 
 
 def _match_knockout(local: Match, round_events: dict[str, list[dict]]) -> dict | None:
+    """Knockout slots follow official BSD round order (by kickoff), not local pool pairings."""
+    slot_event = _bsd_event_for_knockout_slot(local, round_events)
+    if slot_event:
+        return slot_event
     bracket_round = local.bracket_round
     bracket_order = local.bracket_order
     if not bracket_round:
@@ -166,16 +202,8 @@ def _match_knockout(local: Match, round_events: dict[str, list[dict]]) -> dict |
     candidates = list_knockout_event_candidates(local, round_events)
     if candidates:
         return pick_best_bsd_event(local, candidates)
-    # Placeholder teams: fall back to bracket_order index in BSD round list.
     if not bracket_order:
         return None
-    bsd_round = LOCAL_BRACKET_TO_BSD_ROUND.get(bracket_round)
-    if not bsd_round:
-        return None
-    candidates = round_events.get(bsd_round, [])
-    idx = int(bracket_order) - 1
-    if 0 <= idx < len(candidates):
-        return candidates[idx]
     return None
 
 
@@ -183,91 +211,48 @@ def _knockout_events_from_catalog(bsd_events: list[dict]) -> list[dict]:
     return [e for e in bsd_events if e.get("round_name") and not e.get("group_name")]
 
 
-def _lookup_team_pair_events(
-    local: Match,
-    client: BsdClient,
-    round_events: dict[str, list[dict]],
-) -> list[dict]:
-    """Fetch BSD events by team_id when catalog summaries omit team fields."""
-    pair_ids = local_match_bsd_team_ids(local)
-    if pair_ids:
-        found: list[dict] = []
-        seen: set[int] = set()
-        for tid in pair_ids:
-            for ev in client.list_league_events(
-                team_id=tid,
-                date_from="2026-06-01",
-                date_to="2026-07-31",
-            ):
-                eid = ev.get("id")
-                if not eid or int(eid) in seen:
-                    continue
-                if event_bsd_team_ids(ev) == pair_ids:
-                    seen.add(int(eid))
-                    found.append(ev)
-        if found:
-            return found
-    return _refresh_bsd_knockout_candidates(local, round_events, client)
-
-
-def relink_mismatched_knockout_matches(
+def align_knockout_bsd_slots(
     matches: list[Match],
     bsd_events: list[dict],
     client: BsdClient | None = None,
 ) -> int:
-    """Fix knockout rows linked by bracket index to the wrong BSD event."""
+    """Align each knockout row with its BSD bracket slot and authoritative teams/schedule."""
     round_events = _group_events_by_round(bsd_events)
-    all_ko = _knockout_events_from_catalog(bsd_events)
-    by_id = {int(e["id"]): e for e in bsd_events if e.get("id")}
-    relinked = 0
+    updated = 0
     for match in matches:
-        if not match.bracket_round:
+        if not match.bracket_round or not match.bracket_order:
             continue
-        if is_placeholder_name(match.team1_name) or is_placeholder_name(match.team2_name):
+        slot_event = _bsd_event_for_knockout_slot(match, round_events)
+        if not slot_event and client:
+            slot_event = _bsd_event_for_knockout_slot(
+                match,
+                _group_events_by_round(_refresh_bsd_round_events(match, round_events, client)),
+            )
+        if not slot_event:
             continue
-        pair = team_pair_key(match.team1_name, match.team2_name)
-        pair_ids = local_match_bsd_team_ids(match)
-        if not pair and not pair_ids:
-            continue
-        current = by_id.get(int(match.external_fixture_id or 0))
-        if current and list_team_pair_event_candidates(match, [current]):
-            continue
-        if match.external_fixture_id and client and not current:
-            current = client.get_event(int(match.external_fixture_id))
-            if current and list_team_pair_event_candidates(match, [current]):
-                continue
-        candidates = list_knockout_event_candidates(
-            match, round_events, all_knockout_events=all_ko,
-        )
-        if not candidates and client:
-            candidates = _lookup_team_pair_events(match, client, round_events)
-        best = pick_best_bsd_event(match, candidates)
-        if not best:
-            continue
-        best_id = int(best["id"])
-        if best_id == int(match.external_fixture_id or 0):
-            continue
-        logger.info(
-            "Re-link knockout #%s %s vs %s: %s -> %s",
-            match.id,
-            match.team1_name,
-            match.team2_name,
-            match.external_fixture_id,
-            best_id,
-        )
-        match.external_fixture_id = best_id
-        match.external_provider = "bsd"
-        apply_bsd_schedule_to_match(match, best)
-        relinked += 1
-    return relinked
+        slot_id = int(slot_event["id"])
+        if int(match.external_fixture_id or 0) != slot_id:
+            logger.info(
+                "Align knockout slot #%s order=%s %s: %s -> %s",
+                match.id,
+                match.bracket_order,
+                match.bracket_round,
+                match.external_fixture_id,
+                slot_id,
+            )
+            match.external_fixture_id = slot_id
+            match.external_provider = "bsd"
+            updated += 1
+        if apply_bsd_schedule_to_match(match, slot_event):
+            updated += 1
+    return updated
 
 
-def _refresh_bsd_knockout_candidates(
+def _refresh_bsd_round_events(
     match: Match,
     round_events: dict[str, list[dict]],
     client: BsdClient,
 ) -> list[dict]:
-    """Re-fetch BSD round events when catalog summaries omit team names."""
     bracket_round = match.bracket_round
     if not bracket_round:
         return []
@@ -281,7 +266,16 @@ def _refresh_bsd_knockout_candidates(
             continue
         full = client.get_event(int(eid)) or event
         refreshed.append(full)
-    return list_knockout_event_candidates(match, _group_events_by_round(refreshed))
+    return refreshed
+
+
+def relink_mismatched_knockout_matches(
+    matches: list[Match],
+    bsd_events: list[dict],
+    client: BsdClient | None = None,
+) -> int:
+    """Keep knockout rows on official BSD bracket slots (alias for align_knockout_bsd_slots)."""
+    return align_knockout_bsd_slots(matches, bsd_events, client)
 
 
 def link_matches_to_bsd(db: Session, client: BsdClient | None = None, *, apply: bool = True) -> dict:
