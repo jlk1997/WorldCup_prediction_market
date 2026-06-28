@@ -3,8 +3,8 @@
     <div v-for="m in rows" :key="m.id ?? `${m.team1}-${m.team2}`" class="match-card glass-panel">
       <div class="card-main" @click="m.id && goDetail(m)">
         <div class="teams">{{ m.team1 }} vs {{ m.team2 }}</div>
-        <div class="meta">{{ m.group }} · {{ m.date }} {{ m.time }}</div>
-        <div v-if="m.home_score != null" class="score">{{ m.home_score }} : {{ m.away_score }}</div>
+        <div class="meta">{{ m.group }} · {{ matchStatusLabel(m) }}</div>
+        <div class="score">{{ formatMatchScore(m.home_score, m.away_score, { status: m.status, isLive: m.is_live }) }}</div>
         <div v-if="m.stadium" class="stadium">{{ m.stadium }}</div>
       </div>
       <div class="card-actions">
@@ -31,7 +31,7 @@
 import type { LiveMatch } from '@/types/api'
 import { useRouter } from 'vue-router'
 import { useAgentNavigate } from '@/composables/useAgentNavigate'
-import { isMatchPredictable } from '@/utils/matchKickoff'
+import { formatMatchScore, isMatchPredictable, matchStatusLabel } from '@/utils/matchKickoff'
 
 defineProps<{ rows: LiveMatch[] }>()
 defineEmits<{ analyze: [row: LiveMatch] }>()

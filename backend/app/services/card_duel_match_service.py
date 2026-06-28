@@ -123,7 +123,7 @@ class CardDuelMatchService:
         entry = self._active_queue(user.id)
         if not entry:
             return {"in_queue": False}
-        return {
+    return {
             "in_queue": entry.status == "waiting",
             "matched": entry.status == "matched",
             "queue_id": entry.id,
@@ -133,6 +133,7 @@ class CardDuelMatchService:
             "match_mode": getattr(entry, "match_mode", "casual"),
             "duel_id": entry.duel_id,
             "expires_at": entry.expires_at.isoformat() if entry.expires_at else None,
+            "created_at": entry.created_at.isoformat() if entry.created_at else None,
         }
 
     def process_matchmaking(self) -> dict[str, int]:

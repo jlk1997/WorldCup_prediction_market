@@ -104,8 +104,10 @@
         </el-tab-pane>
 
         <el-tab-pane :label="`未开赛 (${scheduled.length})`" name="scheduled">
+          <p v-if="!scheduled.length" class="tab-hint">暂无未开赛场次 · 已结束比赛请查看「已结束」</p>
           <MatchMobileList v-if="isMobile" :rows="scheduled" @analyze="(m) => goAgent(m)" />
           <MatchTable v-else :rows="scheduled" @analyze="(m) => goAgent(m)" />
+          <el-empty v-if="!scheduled.length" description="暂无未开赛比赛" />
         </el-tab-pane>
 
         <el-tab-pane :label="`已结束 (${finished.length})`" name="finished">
@@ -143,6 +145,7 @@ import {
   formatMatchScore,
   isMatchPredictable,
   isMatchStaleScheduled,
+  isMatchUpcomingScheduled,
   matchStatusLabel,
   parseMatchKickoff,
 } from '@/utils/matchKickoff'
@@ -185,8 +188,24 @@ const { goAgentFromMatch, goMatchDetail } = useAgentNavigate()
 const { matches, loading, refresh, wsConnected } = useLiveMatches(30000)
 
 const liveNow = computed(() => matches.value.filter((m) => m.is_live || m.status === 'live'))
-const scheduled = computed(() => matches.value.filter((m) => (m.status || 'scheduled') === 'scheduled'))
-const finished = computed(() => matches.value.filter((m) => m.status === 'finished'))
+const scheduled = computed(() =>
+  matches.value
+    .filter((m) => isMatchUpcomingScheduled(m))
+    .sort((a, b) => {
+      const ta = parseMatchKickoff(a.date, a.time)?.getTime() ?? Number.MAX_SAFE_INTEGER
+      const tb = parseMatchKickoff(b.date, b.time)?.getTime() ?? Number.MAX_SAFE_INTEGER
+      return ta - tb
+    }),
+)
+const finished = computed(() =>
+  matches.value
+    .filter((m) => m.status === 'finished' || isMatchStaleScheduled(m))
+    .sort((a, b) => {
+      const ta = parseMatchKickoff(a.date, a.time)?.getTime() ?? 0
+      const tb = parseMatchKickoff(b.date, b.time)?.getTime() ?? 0
+      return tb - ta
+    }),
+)
 
 const myTeamNames = computed(() => {
   const names = new Set<string>()
@@ -318,6 +337,9 @@ onMounted(async () => {
   } else {
     tab.value = 'myteams'
   }
+  if (tab.value === 'live' && !liveNow.value.length && scheduled.value.length) {
+    tab.value = 'scheduled'
+  }
 })
 
 watch(myMatches, () => {
@@ -364,7 +386,8 @@ watch(myMatches, () => {
   display: none;
 }
 
-.bracket-hint {
+.bracket-hint,
+.tab-hint {
   font-size: 0.78rem;
   color: var(--wc-text-muted);
   margin: 0 0 8px;

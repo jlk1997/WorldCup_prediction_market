@@ -476,6 +476,7 @@ export async function getDuelMatchStatus() {
     duel_id?: number
     deck_bp?: number
     expires_at?: string
+    created_at?: string
   }
 }
 

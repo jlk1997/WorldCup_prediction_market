@@ -51,6 +51,28 @@ export function isMatchStaleScheduled(m: {
   return isMatchPastKickoff(m)
 }
 
+/** UI/API 展示用：已过开球仍标 scheduled 的场次视为已结束（比分可能仍在同步）。 */
+export function effectiveMatchStatus(m: {
+  status?: string | null
+  is_live?: boolean
+  date?: string | null
+  time?: string | null
+}): 'live' | 'scheduled' | 'finished' | string {
+  if (m.status === 'finished') return 'finished'
+  if (m.is_live || m.status === 'live') return 'live'
+  if (isMatchStaleScheduled(m)) return 'finished'
+  return m.status || 'scheduled'
+}
+
+export function isMatchUpcomingScheduled(m: {
+  status?: string | null
+  is_live?: boolean
+  date?: string | null
+  time?: string | null
+}): boolean {
+  return effectiveMatchStatus(m) === 'scheduled'
+}
+
 export function isMatchPredictable(m: {
   status?: string | null
   is_live?: boolean

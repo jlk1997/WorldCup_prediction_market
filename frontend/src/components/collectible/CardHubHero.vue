@@ -21,15 +21,28 @@
       <router-link :to="dropHint.path" class="drop-go">{{ dropHint.cta }}</router-link>
     </div>
 
-    <div class="hub-actions">
+    <div v-if="matchInQueue" class="hub-queue glass-inner">
+      <div class="queue-visual" aria-hidden="true">
+        <span class="queue-ring" />
+        <span class="queue-icon">⚔️</span>
+      </div>
+      <div class="queue-text">
+        <p class="queue-title">正在匹配对手…</p>
+        <p class="queue-sub">已等待 {{ matchWaitSec }} 秒 · 自动推荐卡组出战</p>
+      </div>
+      <button type="button" class="hub-cancel-btn" :disabled="cancelBusy" @click="cancelQuickMatch">
+        {{ cancelBusy ? '取消中…' : '取消匹配' }}
+      </button>
+    </div>
+
+    <div v-else class="hub-actions">
       <button
         type="button"
         class="hub-match-btn"
-        :disabled="matchBusy || matchInQueue"
+        :disabled="matchBusy"
         @click="startQuickMatch"
       >
-        <span v-if="matchInQueue">匹配中… {{ matchWaitSec }}s</span>
-        <span v-else-if="matchBusy">组牌中…</span>
+        <span v-if="matchBusy">组牌中…</span>
         <span v-else>⚔️ 快速匹配对决</span>
       </button>
       <router-link to="/arena#duel" class="hub-secondary">
@@ -38,7 +51,7 @@
       </router-link>
     </div>
 
-    <p v-if="matchNotice" class="hub-notice">{{ matchNotice }}</p>
+    <p v-if="matchNotice && !matchInQueue" class="hub-notice">{{ matchNotice }}</p>
     <p v-if="matchError" class="hub-error">{{ matchError }}</p>
   </section>
 </template>
@@ -66,6 +79,7 @@ const { ensureVerified } = useAssetRealname()
 const summary = ref<CollectibleSummary | null>(null)
 const pendingCount = ref(0)
 const matchBusy = ref(false)
+const cancelBusy = ref(false)
 const matchInQueue = ref(false)
 const matchWaitSec = ref(0)
 const matchNotice = ref('')
@@ -102,40 +116,86 @@ const dropHint = computed(() => {
   }
 })
 
-function clearTimers() {
+function clearPollTimer() {
   if (pollTimer) {
     clearInterval(pollTimer)
     pollTimer = null
   }
+}
+
+function clearWaitTimer() {
   if (waitTimer) {
     clearInterval(waitTimer)
     waitTimer = null
   }
 }
 
-async function pollMatchStatus() {
-  try {
-    const st = await getDuelMatchStatus()
-    matchInQueue.value = st.in_queue === true
-    if (st.matched && st.duel_id) {
-      clearTimers()
-      matchInQueue.value = false
-      router.push(`/arena/battle/${st.duel_id}`)
-    }
-  } catch {
-    /* ignore */
-  }
+function clearTimers() {
+  clearPollTimer()
+  clearWaitTimer()
 }
 
-function startWaitTimer() {
-  matchWaitSec.value = 0
-  if (waitTimer) clearInterval(waitTimer)
+function elapsedSecondsFromCreated(createdAt?: string | null) {
+  if (!createdAt) return 0
+  const t = new Date(createdAt).getTime()
+  if (!Number.isFinite(t)) return 0
+  return Math.max(0, Math.floor((Date.now() - t) / 1000))
+}
+
+function startWaitTimer(fromSec = 0) {
+  clearWaitTimer()
+  matchWaitSec.value = fromSec
   waitTimer = setInterval(() => {
     matchWaitSec.value += 1
   }, 1000)
 }
 
+function startMatchPoll() {
+  clearPollTimer()
+  pollTimer = setInterval(() => void pollMatchStatus(), 2500)
+}
+
+function applyQueueStatus(st: {
+  in_queue?: boolean
+  matched?: boolean
+  duel_id?: number
+  created_at?: string | null
+  notice?: string
+}) {
+  if (st.matched && st.duel_id) {
+    clearTimers()
+    matchInQueue.value = false
+    router.push(`/arena/battle/${st.duel_id}`)
+    return true
+  }
+  if (st.in_queue) {
+    matchInQueue.value = true
+    matchError.value = ''
+    if (!waitTimer) {
+      startWaitTimer(elapsedSecondsFromCreated(st.created_at))
+    }
+    if (!pollTimer) startMatchPoll()
+    return true
+  }
+  if (matchInQueue.value) {
+    clearTimers()
+    matchInQueue.value = false
+    matchNotice.value = ''
+  }
+  return false
+}
+
+async function pollMatchStatus() {
+  try {
+    const st = await getDuelMatchStatus()
+    applyQueueStatus(st)
+  } catch {
+    /* ignore */
+  }
+}
+
 async function startQuickMatch() {
+  if (matchInQueue.value || matchBusy.value) return
   if (!(await ensureVerified('卡牌对决'))) return
   matchBusy.value = true
   matchError.value = ''
@@ -151,15 +211,34 @@ async function startQuickMatch() {
     trackEvent('duel_match_enter', { source: 'card_hub', match_mode: 'casual' })
     matchInQueue.value = true
     matchNotice.value = res.notice || '已进入匹配队列'
-    startWaitTimer()
     clearTimers()
-    pollTimer = setInterval(() => void pollMatchStatus(), 2500)
+    startWaitTimer(0)
+    startMatchPoll()
     void pollMatchStatus()
   } catch (e: unknown) {
     const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
     matchError.value = typeof msg === 'string' ? msg : '无法进入匹配，请前往擂台手动组牌'
   } finally {
     matchBusy.value = false
+  }
+}
+
+async function cancelQuickMatch() {
+  if (!matchInQueue.value || cancelBusy.value) return
+  cancelBusy.value = true
+  matchError.value = ''
+  try {
+    await cancelDuelMatch()
+    clearTimers()
+    matchInQueue.value = false
+    matchNotice.value = ''
+    matchWaitSec.value = 0
+  } catch (e: unknown) {
+    const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+    matchError.value = typeof msg === 'string' ? msg : '取消匹配失败'
+    void pollMatchStatus()
+  } finally {
+    cancelBusy.value = false
   }
 }
 
@@ -192,10 +271,9 @@ function onDuelMatched(ev: Event) {
 onMounted(async () => {
   await loadMeta()
   const st = await getDuelMatchStatus().catch(() => null)
-  if (st?.in_queue) {
-    matchInQueue.value = true
-    startWaitTimer()
-    pollTimer = setInterval(() => void pollMatchStatus(), 2500)
+  if (st?.in_queue || st?.matched) {
+    matchNotice.value = '已进入匹配队列，正在寻找对手…'
+    applyQueueStatus(st)
   }
   window.addEventListener('duel-matched', onDuelMatched as EventListener)
 })
@@ -203,9 +281,6 @@ onMounted(async () => {
 onUnmounted(() => {
   clearTimers()
   window.removeEventListener('duel-matched', onDuelMatched as EventListener)
-  if (matchInQueue.value) {
-    void cancelDuelMatch().catch(() => {})
-  }
 })
 
 defineExpose({ refresh: loadMeta })
@@ -280,6 +355,70 @@ defineExpose({ refresh: loadMeta })
   font-weight: 700;
   color: var(--wc-accent-gold);
   text-decoration: none;
+}
+.hub-queue {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+}
+.queue-visual {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.queue-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(212, 165, 116, 0.35);
+  border-top-color: var(--wc-accent-gold);
+  border-radius: 50%;
+  animation: hub-spin 1s linear infinite;
+}
+.queue-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+@keyframes hub-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.queue-text {
+  flex: 1;
+  min-width: 0;
+}
+.queue-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--wc-text-secondary);
+}
+.queue-sub {
+  margin: 4px 0 0;
+  font-size: 0.7rem;
+  color: var(--wc-text-muted);
+}
+.hub-cancel-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--wc-text-secondary);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.hub-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 .hub-actions {
   display: flex;

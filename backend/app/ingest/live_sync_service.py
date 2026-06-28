@@ -269,6 +269,45 @@ def _recover_stale_live_matches(
     return updated
 
 
+def _sweep_stale_scheduled(
+    matches: list[Match],
+    now: datetime,
+    client: BsdClient,
+    updated_external_ids: set[int],
+    db: Session | None = None,
+) -> int:
+    """Force-close scheduled rows that are clearly past kickoff (BSD lag or missed bulk window)."""
+    updated = 0
+    for match in matches:
+        if match.status != "scheduled":
+            continue
+        kick = parse_kickoff(match)
+        if not kick or kick > now - timedelta(hours=2):
+            continue
+        eid = match.external_fixture_id
+        if eid and eid not in updated_external_ids:
+            event = client.get_event(eid)
+            if event:
+                fixture = event_to_internal(event)
+                if _apply_internal_fixture(match, fixture, client, db):
+                    updated += 1
+                    updated_external_ids.add(eid)
+                    continue
+        if kick <= now - timedelta(hours=3):
+            if match.home_score is not None and match.away_score is not None:
+                match.status = "finished"
+                updated += 1
+                logger.info(
+                    "Auto-finish stale scheduled #%s %s vs %s (%s:%s)",
+                    match.id,
+                    match.team1_name,
+                    match.team2_name,
+                    match.home_score,
+                    match.away_score,
+                )
+    return updated
+
+
 class LiveMatchSyncService:
     def __init__(self, db: Session):
         self.db = db
@@ -317,8 +356,9 @@ class LiveMatchSyncService:
 
         now = datetime.now(timezone.utc).replace(tzinfo=None)
         near_end = now + timedelta(hours=48)
-        bulk_from = (now - timedelta(days=14)).strftime("%Y-%m-%d")
-        bulk_to = (now + timedelta(days=2)).strftime("%Y-%m-%d")
+        # 世界杯期间拉长窗口，避免较早场次结束后 bulk 拉取漏更新
+        bulk_from = (now - timedelta(days=60)).strftime("%Y-%m-%d")
+        bulk_to = (now + timedelta(days=14)).strftime("%Y-%m-%d")
         bulk_updated, league_events = _sync_events_batch(
             self.client,
             by_external_id,
@@ -370,7 +410,13 @@ class LiveMatchSyncService:
                 updated += 1
                 individual += 1
 
-        if live_feed or bulk_updated or reconciled or live_recovered or individual:
+        all_for_sweep = list(self.db.scalars(select(Match)).all())
+        swept = _sweep_stale_scheduled(
+            all_for_sweep, now, self.client, updated_external_ids, self.db
+        )
+        updated += swept
+
+        if live_feed or bulk_updated or reconciled or live_recovered or individual or swept:
             logger.info(
                 "BSD sync breakdown: live_feed=%s bulk=%s reconcile=%s live_recover=%s individual=%s total=%s",
                 live_feed,
@@ -380,6 +426,8 @@ class LiveMatchSyncService:
                 individual,
                 updated,
             )
+            if swept:
+                logger.info("BSD stale scheduled sweep: %s matches closed", swept)
 
         self.db.commit()
         invalidate_match_caches()
