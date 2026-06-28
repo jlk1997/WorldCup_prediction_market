@@ -68,3 +68,43 @@ def test_match_knockout_by_bracket_order():
     hit = _match_knockout(local, round_events)
     assert hit is not None
     assert hit["id"] == 100
+
+
+def test_match_knockout_by_team_pair():
+    local = Match(
+        id=3,
+        bracket_round="r32",
+        bracket_order=5,
+        round_type="knockout",
+        team1_name="哥伦比亚",
+        team2_name="葡萄牙",
+    )
+    round_events = _group_events_by_round([
+        {
+            "id": 8333,
+            "round_name": "Round of 32",
+            "home_team": "Colombia",
+            "away_team": "Portugal",
+            "event_date": "2026-06-28T19:00:00+00:00",
+            "status": "finished",
+        },
+        {
+            "id": 8334,
+            "round_name": "Round of 32",
+            "home_team": "England",
+            "away_team": "Croatia",
+            "event_date": "2026-06-29T03:00:00+00:00",
+            "status": "finished",
+        },
+        {
+            "id": 8400,
+            "round_name": "Round of 16",
+            "home_team": "Portugal",
+            "away_team": "Croatia",
+            "event_date": "2026-07-03T03:00:00+00:00",
+            "status": "notstarted",
+        },
+    ])
+    hit = _match_knockout(local, round_events)
+    assert hit is not None
+    assert hit["id"] == 8333

@@ -14,7 +14,15 @@ from app.core.match_scores import scores_for_team1_team2
 from app.ingest.bsd_adapter import InternalFixture, event_to_internal
 from app.ingest.bsd_client import BsdClient
 from app.ingest.bsd_event_parser import normalize_bsd_incidents
-from app.ingest.bsd_link_service import link_matches_to_bsd, list_group_event_candidates, pick_best_bsd_event, apply_bsd_schedule_to_match
+from app.ingest.bsd_link_service import (
+    link_matches_to_bsd,
+    list_group_event_candidates,
+    list_knockout_event_candidates,
+    pick_best_bsd_event,
+    apply_bsd_schedule_to_match,
+    relink_mismatched_knockout_matches,
+    _group_events_by_round,
+)
 from app.ingest.quota import invalidate_live_cache
 from app.core.match_cache import invalidate_match_caches
 
@@ -162,7 +170,7 @@ def _refresh_bsd_candidates(candidates: list[dict], client: BsdClient) -> list[d
 
 def _reconcile_stale_matches(
     matches: list[Match],
-    group_events: list[dict],
+    league_events: list[dict],
     now: datetime,
     client: BsdClient,
     updated_external_ids: set[int],
@@ -171,6 +179,8 @@ def _reconcile_stale_matches(
     """Re-link or refresh matches that should have started but are still scheduled locally."""
     from app.ingest.bsd_adapter import resolve_event_status
 
+    round_events = _group_events_by_round(league_events)
+    group_events = [e for e in league_events if e.get("group_name")]
     updated = 0
     for match in matches:
         if match.status != "scheduled" or not match.external_fixture_id:
@@ -178,7 +188,10 @@ def _reconcile_stale_matches(
         kick = parse_kickoff(match)
         if not kick or kick > now:
             continue
-        candidates = list_group_event_candidates(match, group_events)
+        if match.round_type == "knockout" or match.bracket_round:
+            candidates = list_knockout_event_candidates(match, round_events)
+        else:
+            candidates = list_group_event_candidates(match, group_events)
         if not any(int(c.get("id") or 0) == match.external_fixture_id for c in candidates):
             candidates.append({"id": match.external_fixture_id})
         candidates = _refresh_bsd_candidates(candidates, client)
@@ -345,6 +358,11 @@ class LiveMatchSyncService:
         if schedule_fixed:
             logger.info("BSD schedule sync: corrected %s match date/time fields", schedule_fixed)
 
+        relinked = relink_mismatched_knockout_matches(matches, bsd_catalog, self.client)
+        if relinked:
+            logger.info("BSD knockout re-link: %s matches corrected", relinked)
+            by_external_id = {m.external_fixture_id: m for m in matches if m.external_fixture_id}
+
         for event in self.client.get_live_events():
             fixture = event_to_internal(event)
             match = by_external_id.get(fixture.external_id)
@@ -372,7 +390,7 @@ class LiveMatchSyncService:
         group_events = [e for e in league_events if e.get("group_name")]
         reconciled = _reconcile_stale_matches(
             matches,
-            group_events,
+            league_events,
             now,
             self.client,
             updated_external_ids,
